@@ -1,10 +1,11 @@
 	dw BANK(@)
 
-	dw Func_f8008
-	dw Func_f811a
-	dw Func_f8076
+	farcall_table_start
+	farfunc Func_f8008
+	farfunc Func_f811a
+	farfunc Func_f8076
 
-Func_f8008:
+Func_f8008::
 	ld a, $ff
 	ld [$c920], a
 

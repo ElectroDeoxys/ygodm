@@ -1,9 +1,10 @@
 	dw BANK(@)
 
-	dw Func_2c00a
-	dw $44c9
-	dw $4b88
-	dw $5717
+	farcall_table_start
+	farfunc Func_2c00a
+	farfunc $44c9
+	farfunc $4b88
+	farfunc $5717
 
 Func_2c00a:
 	push af

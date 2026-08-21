@@ -1,8 +1,9 @@
 	dw BANK(@)
 
-	dw Func_fc004
+	farcall_table_start
+	farfunc Func_fc004
 
-Func_fc004:
+Func_fc004::
 	push af
 	push bc
 	push de

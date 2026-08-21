@@ -1,35 +1,36 @@
 	dw BANK(@)
 
-	dw $403e ; $03
-	dw $4059 ; $05
-	dw Func_883d ; $07
-	dw $484a ; $09
-	dw $4c60 ; $0b
-	dw $4bfe ; $0d
-	dw $4074 ; $0f
-	dw $40b4 ; $11
-	dw $752c ; $13
-	dw $7547 ; $15
-	dw $7562 ; $17
-	dw $7724 ; $19
-	dw $7711 ; $1b
-	dw $77ee ; $1d
-	dw $7807 ; $1f
-	dw Func_b823 ; $21
-	dw $7840 ; $23
-	dw $757d ; $25
-	dw $785d ; $27
-	dw $787e ; $29
-	dw $7889 ; $2b
-	dw $7894 ; $2d
-	dw $762d ; $2f
-	dw $7679 ; $31
-	dw $789f ; $33
-	dw $78b2 ; $35
-	dw $78cb ; $37
-	dw $78e4 ; $39
-	dw $78fd ; $3b
-	dw $7916 ; $3d
+	farcall_table_start
+	farfunc $403e ; $03
+	farfunc $4059 ; $05
+	farfunc Func_883d ; $07
+	farfunc $484a ; $09
+	farfunc $4c60 ; $0b
+	farfunc $4bfe ; $0d
+	farfunc $4074 ; $0f
+	farfunc $40b4 ; $11
+	farfunc $752c ; $13
+	farfunc $7547 ; $15
+	farfunc $7562 ; $17
+	farfunc $7724 ; $19
+	farfunc $7711 ; $1b
+	farfunc $77ee ; $1d
+	farfunc $7807 ; $1f
+	farfunc Func_b823 ; $21
+	farfunc $7840 ; $23
+	farfunc $757d ; $25
+	farfunc $785d ; $27
+	farfunc $787e ; $29
+	farfunc $7889 ; $2b
+	farfunc $7894 ; $2d
+	farfunc $762d ; $2f
+	farfunc $7679 ; $31
+	farfunc $789f ; $33
+	farfunc $78b2 ; $35
+	farfunc $78cb ; $37
+	farfunc $78e4 ; $39
+	farfunc $78fd ; $3b
+	farfunc $7916 ; $3d
 
 SECTION "Bank 2@40b4", ROMX[$40b4], BANK[$2]
 

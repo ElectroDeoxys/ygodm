@@ -13,9 +13,6 @@ INCLUDE "engine/bank06.asm"
 SECTION "Bank 0b", ROMX
 INCLUDE "engine/bank0b.asm"
 
-SECTION "Bank 1e", ROMX
-INCLUDE "engine/bank1e.asm"
-
 SECTION "Bank 3d", ROMX
 INCLUDE "engine/bank3d.asm"
 

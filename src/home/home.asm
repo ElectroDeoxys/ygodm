@@ -3,27 +3,27 @@ _Start:
 	ld hl, $e000
 	ld sp, hl
 	call Func_1090
-	farcall $05, $04
+	farcall Func_10477
 	ld a, $00
-	farcall $03, $3f
-	farcall $03, $3e
+	farcall Func_fc004
+	farcall Func_f8008
 	call InitTransferVirtualOAM
 	call Func_396
 	call Func_dd8
 	call Func_19f
 
 	ld a, $02
-	farcall $03, $3f
-	farcall $49, $01
+	farcall Func_fc004
+	farcall Func_6595
 	ld a, $04
-	farcall $03, $3f
-	farcall $4b, $01
+	farcall Func_fc004
+	farcall Func_65c4
 	ld a, $06
-	farcall $03, $3f
+	farcall Func_fc004
 	call Func_40c
-	farcall $4d, $01
+	farcall Func_65f3
 
-	farcall $03, $04
+	farcall Func_10020
 
 	call Func_1724
 	ld a, $16
@@ -1886,7 +1886,7 @@ Func_29f1:
 	push bc
 	push de
 	push hl
-	farcall $07, $3e
+	farcall Func_f8076
 	pop hl
 	pop de
 	pop bc

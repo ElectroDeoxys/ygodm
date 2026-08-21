@@ -30,8 +30,6 @@ ROMX $06
 	"Bank 06"
 ROMX $0b
 	"Bank 0b"
-ROMX $1e
-	"Bank 1e"
 ROMX $3d
 	"Bank 3d"
 ROMX $3e

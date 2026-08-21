@@ -1,26 +1,27 @@
 	dw BANK(@)
 
-	dw Func_10020
-	dw Func_10477
-	dw $4484
-	dw $44f5
-	dw $4505
-	dw $4047
-	dw $4140
-	dw $418d
-	dw $4741
-	dw $48f0
-	dw $4919
-	dw $5196
-	dw $51ad
-	dw $52cb
-	dw $4a1b
+	farcall_table_start
+	farfunc Func_10020
+	farfunc Func_10477
+	farfunc $4484
+	farfunc $44f5
+	farfunc $4505
+	farfunc $4047
+	farfunc $4140
+	farfunc $418d
+	farfunc $4741
+	farfunc $48f0
+	farfunc $4919
+	farfunc $5196
+	farfunc $51ad
+	farfunc $52cb
+	farfunc $4a1b
 
 SECTION "Bank 04@4020", ROMX[$4020], BANK[$04]
 
-Func_10020:
+Func_10020::
 	call Func_1576
-	farcall $07, $02
+	farcall Func_883d
 	call Func_10484
 	call Func_10505
 	ld a, $00
@@ -40,7 +41,7 @@ Func_10020:
 
 SECTION "Bank 04@4477", ROMX[$4477], BANK[$04]
 
-Func_10477:
+Func_10477::
 	push af
 	ld a, $00
 	ld [$cf16], a
@@ -575,7 +576,7 @@ Func_109f2:
 	call SeedRNG
 	call Func_10942
 	call Func_10b1f
-	farcall $21, $02
+	farcall Func_b823
 	ld a, $00
 	ld [$cf98], a
 .asm_10a04
