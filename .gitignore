@@ -26,3 +26,6 @@
 *.sn*
 *.sa*
 *.sg1
+
+# *disasm.py output file
+*output.asm

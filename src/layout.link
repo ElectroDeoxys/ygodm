@@ -1,7 +1,51 @@
 ROM0
 	org $0000
 	"NULL"
+	"rst0"
+	org $0008
+	"rst8"
+	org $0010
+	"rst10"
+	org $0018
+	"rst18"
+	org $0020
+	"rst20"
+	org $0028
+	"rst28"
+	org $0030
+	"rst30"
+	org $0038
+	"rst38"
 	org $0100
 	"Header"
+	org $0150
+	"Home"
+ROMX $01
+	"Bank 01"
+ROMX $02
+	"Bank 02"
+ROMX $04
+	"Bank 04"
+ROMX $06
+	"Bank 06"
+ROMX $0b
+	"Bank 0b"
+ROMX $1e
+	"Bank 1e"
+ROMX $3d
+	"Bank 3d"
+ROMX $3e
+	"Bank 3e"
 ROMX $3f
 	"Bank 3f"
+VRAM
+	"VRAM"
+WRAM0
+	"WRAM 1"
+	org $c700
+	"WRAM Audio"
+	"WRAM 2"
+HRAM
+	"HRAM"
+	org $fff5
+	"DMA Transfer"

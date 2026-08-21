@@ -222,7 +222,7 @@ z80_table = [
 	('call z, {}', 2),             # cc
 	('call {}', 2),                # cd
 	('adc ${:02x}', 1),            # ce
-	('get_pointer', 0),            # cf
+	('farcall {}', 2),             # cf
 	('ret nc', 0),                 # d0
 	('pop de', 0),                 # d1
 	('jp nc, {}', 2),              # d2
@@ -257,7 +257,7 @@ z80_table = [
 	('add_de', 0),                 # ef
 	('ldh a, [{}]', 1),            # f0
 	('pop af', 0),                 # f1
-	('db $f2', 0),                 # f2
+	('ld a, [$ff00+c]', 0),        # f2
 	('di', 0),                     # f3
 	('db $f4', 0),                 # f4
 	('push af', 0),                # f5
@@ -362,7 +362,7 @@ def all_byte_labels_are_defined(byte_labels):
 	"""
 	return (False not in [label["definition"] for label in byte_labels.values()])
 
-def load_rom(path='baserom.gbc'):
+def load_rom(path='baserom.gb'):
 	return bytearray(open(path, 'rb').read())
 
 def read_symfile(path='ygodm.sym'):
@@ -573,7 +573,7 @@ class Disassembler(object):
 				which_map = ""
 				addr -= 0x9800
 			else:
-				which_map = ", v0BGMap1"
+				which_map = ", vBGMap1"
 				addr -= 0x9c00
 			y = addr // 0x20
 			x = addr % 0x20
@@ -586,35 +586,43 @@ class Disassembler(object):
 			addr = int(m[2], 16)
 			which_map = ""
 			if addr >= 0x9000:
-				which_map = "v0Tiles2"
+				which_map = "vTiles2"
 				addr -= 0x9000
 			elif addr >= 0x8800:
-				which_map = "v0Tiles1"
+				which_map = "vTiles1"
 				addr -= 0x8800
 			else:
-				which_map = "v0Tiles0"
+				which_map = "vTiles0"
 				addr -= 0x8000
 			tile = addr // 0x10
 			return f"ld {reg}, {which_map} tile ${tile:02x}"
 
 		output = re.sub(r"ld (hl|bc|de), \$([89][a-f0-9]{3})", substitute_vram, output)
 
-		def substitute_hex_farcall(m):
-			offset = int(m[1], 16)
-			bank_id = int(m[2], 16)
-			if offset < 0x4000:
-				bank_id = 0x00
-			label = self.find_label(offset, bank_id)
-			if label is None:
-				global_offset = offset if bank_id == 0 else offset + (bank_id - 1) * 0x4000
-				label = f"Func_{global_offset:0x}"
-			return f"farcall {label}"
-
-		output = re.sub(r"ld hl, \$([1-7][a-f0-9]{3})\n\tld a, \$([a-f0-9]{2})\n\tcall Farcall", substitute_hex_farcall, output)
-
 		return output
 
-	def output_bank_opcodes(self, start_offset, stop_offset, hard_stop=False, parse_data=False):
+	def output_bank_opcodes(self, start_offset, stop_offset, hard_stop=False, parse_data=False, recursive=False):
+		self.ptrs_to_disasm = set([start_offset])
+
+		if not recursive:
+			return self._output_bank_opcodes(start_offset, stop_offset, hard_stop, parse_data)[0]
+
+		routines = {}
+
+		while len(self.ptrs_to_disasm) != 0:
+			next_offset = sorted([ptr for ptr in self.ptrs_to_disasm])[0]
+			self.ptrs_to_disasm.remove(next_offset)
+			if next_offset not in routines:
+				routines[next_offset] = self._output_bank_opcodes(next_offset, stop_offset)[0]
+
+		sorted_ptrs = sorted(routines.keys())
+		outstr = ""
+		for ptr in sorted_ptrs:
+			outstr += f"{routines[ptr]}\n\n"
+
+		return outstr
+
+	def _output_bank_opcodes(self, start_offset, stop_offset, hard_stop=False, parse_data=False):
 		"""
 		Output bank opcodes.
 
@@ -808,6 +816,11 @@ class Disassembler(object):
 						if target_label is None:
 						# if this is a call or jump opcode and the target label is not defined, create an undocumented label descriptor
 							target_label = "Func_%x" % target_offset
+							self.ptrs_to_disasm.add(target_offset)
+
+					elif opcode_byte == 0xcf: # farcall
+						farcall_args = f"${opcode_arg_1:02x}, ${opcode_arg_2:02x}"
+						opcode_output_str = opcode_str.format(farcall_args)
 
 					else:
 					# anything that isn't a call or jump is a load-based command
@@ -962,7 +975,7 @@ def get_raw_addr(addr):
 if __name__ == "__main__":
 	# argument parser
 	ap = argparse.ArgumentParser()
-	ap.add_argument("-r", dest="rom", default="baserom.gbc")
+	ap.add_argument("-r", dest="rom", default="baserom.gb")
 	ap.add_argument("-o", dest="filename", default="disasm_output.asm")
 	ap.add_argument("-s", dest="symfile", default="ygodm.sym")
 	ap.add_argument("-q", "--quiet", dest="quiet", action="store_true")
@@ -970,6 +983,7 @@ if __name__ == "__main__":
 	ap.add_argument("-nw", "--no-write", dest="no_write", action="store_true")
 	ap.add_argument("-d", "--dry-run", dest="dry_run", action="store_true")
 	ap.add_argument("-pd", "--parse_data", dest="parse_data", action="store_true")
+	ap.add_argument("-rec", "--recursive", dest="recursive", action="store_true")
 	ap.add_argument('offset')
 	ap.add_argument('end', nargs='?')
 
@@ -985,7 +999,7 @@ if __name__ == "__main__":
 	stop_addr = get_raw_addr(args.end)
 
 	# run the disassembler and return the output
-	output = disasm.output_bank_opcodes(start_addr,stop_addr,hard_stop=args.dry_run,parse_data=args.parse_data)[0]
+	output = disasm.output_bank_opcodes(start_addr,stop_addr,hard_stop=args.dry_run,parse_data=args.parse_data,recursive=args.recursive)
 	output = post.process(output)
 
 	# suppress output if quiet flag is set

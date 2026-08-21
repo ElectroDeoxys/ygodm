@@ -1,6 +1,7 @@
 rom := ygodm.gb
 
 rom_obj := \
+	src/audio.o \
 	src/home.o \
 	src/main.o \
 	src/ram.o
@@ -23,7 +24,7 @@ RGBGFX  ?= $(RGBDS)rgbgfx
 RGBLINK ?= $(RGBDS)rgblink
 
 RGBASMFLAGS  ?= -Weverything
-RGBLINKFLAGS ?= -Weverything
+RGBLINKFLAGS ?= -Weverything -d
 RGBFIXFLAGS  ?= -Weverything
 RGBGFXFLAGS  ?= -Weverything
 
@@ -46,6 +47,9 @@ all: ygodm compare
 ygodm: ygodm.gb
 
 clean: tidy
+	find src/gfx \
+	     \( -name "*.[12]bpp" \) \
+	     -delete
 
 tidy:
 	$(RM) $(rom) \
@@ -62,7 +66,7 @@ tools:
 	$(MAKE) -C tools/
 
 
-RGBASMFLAGS += -I src/ -P src/includes.asm
+RGBASMFLAGS += -Wtruncation -I src/ -P src/includes.asm
 # Create a sym/map for debug purposes if `make` run with `DEBUG=1`
 ifeq ($(DEBUG),1)
 RGBASMFLAGS += -E
@@ -99,3 +103,15 @@ RGBFIXFLAGS += -sv -k A4 -l 0x33 -m MBC1+RAM+BATTERY -p 0xff -r 2 -t YUGIOU
 $(rom): $(ygodm_obj) src/layout.link
 	$(RGBLINK) $(RGBLINKFLAGS) -l src/layout.link -m $(rom:.gb=.map) -n $(rom:.gb=.sym) -O baserom.gb -o $@ $(filter %.o,$^)
 	$(RGBFIX) $(RGBFIXFLAGS) $@
+
+### Catch-all graphics rules
+
+%.2bpp: %.png
+	$(RGBGFX) --colors dmg $(RGBGFXFLAGS) -o $@ $<
+	$(if $(tools/gfx),\
+		tools/gfx $(tools/gfx) -o $@ $@)
+
+%.1bpp: %.png
+	$(RGBGFX) --colors dmg $(RGBGFXFLAGS) --depth 1 -o $@ $<
+	$(if $(tools/gfx),\
+		tools/gfx $(tools/gfx) --depth 1 -o $@ $@)

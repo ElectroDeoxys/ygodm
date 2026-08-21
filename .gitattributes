@@ -8,6 +8,7 @@
 *.asm text
 *.pal text
 *.link text
+*.inc text
 
 # extra files
 *.c text
