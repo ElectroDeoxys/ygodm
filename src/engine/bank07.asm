@@ -1,12 +1,12 @@
 	dw BANK(@)
 
-Func_1c002::
-.loop_1
-	call Func_168f
-	call Func_175a
-	db $01, LOW(hffe6)
-	jr z, .loop_1
-.asm_1c00c
+DecompressJob::
+.wait_1
+	call YieldJob
+	call TestJobFlag
+	db $01, LOW(hDecompressJobFlags)
+	jr z, .wait_1
+.loop
 	call Func_180f
 	ld d, a
 	call Func_180f
@@ -15,16 +15,16 @@ Func_1c002::
 	ld b, a
 	call Func_187b
 	call Func_188a
-	call Func_173e
-	db $04, LOW(hffe4)
-	call Func_1705
-	db LOW(hffe0)
-	call Func_177b
-	db $01, LOW(hffe6)
-.loop_2
-	call Func_168f
-	call Func_175a
-	db $01, LOW(hffe6)
-	jr z, .loop_2
-	jr .asm_1c00c
+	call SetJobFlag
+	db $04, LOW(hVBlankJobFlags)
+	call ActivateJob
+	db JOB_MAIN
+	call ResetJobFlag
+	db $01, LOW(hDecompressJobFlags)
+.wait_2
+	call YieldJob
+	call TestJobFlag
+	db $01, LOW(hDecompressJobFlags)
+	jr z, .wait_2
+	jr .loop
 ; 0x1c038

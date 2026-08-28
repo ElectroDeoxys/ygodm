@@ -1,11 +1,11 @@
 	dw BANK(@)
 
 	farcall_table_start
-	farfunc Func_f8008
-	farfunc Func_f811a
+	farfunc InitAudio
+	farfunc UpdateAudio
 	farfunc Func_f8076
 
-Func_f8008::
+InitAudio::
 	ld a, $ff
 	ld [$c920], a
 
@@ -200,7 +200,7 @@ Func_f807a:
 	pop hl
 	ret
 
-Func_f811a::
+UpdateAudio::
 	ld a, [$c920]
 	cp $ff
 	jr z, .asm_f8129

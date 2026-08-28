@@ -3,6 +3,7 @@ DEF TRUE  EQU 1
 
 DEF NONE EQU 0
 
+; V-Blank modes
 	const_def 0, 2
 	const VBLANK_00 ; $00
 	const VBLANK_02 ; $02

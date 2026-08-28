@@ -6,7 +6,7 @@ _Start:
 	farcall Func_10477
 	ld a, $00
 	farcall Func_fc004
-	farcall Func_f8008
+	farcall InitAudio
 	call InitTransferVirtualOAM
 	call Func_396
 	call Func_dd8
@@ -269,18 +269,18 @@ VBlank:
 	dw Func_2d57 ; VBLANK_16
 
 Func_444:
-	ld c, LOW(hffe4)
+	ld c, LOW(hVBlankJobFlags)
 	ld a, [$ff00+c]
 	or $80
 	ld [$ff00+c], a
-	ld c, LOW(hffe5)
+	ld c, LOW(hAudioJobFlags)
 	ld a, [$ff00+c]
 	or $80
 	ld [$ff00+c], a
-	call Func_1705
-	db LOW(hffe0)
-	call Func_1705
-	db LOW(hffe1)
+	call ActivateJob
+	db JOB_MAIN
+	call ActivateJob
+	db JOB_AUDIO
 	pop de
 	pop bc
 	pop hl
@@ -293,18 +293,18 @@ Func_45d:
 	ld a, $01
 	ld [wcaa9], a
 	call ReadJoypad
-	ld c, LOW(hffe4)
+	ld c, LOW(hVBlankJobFlags)
 	ld a, [$ff00+c]
 	or $80
 	ld [$ff00+c], a
-	ld c, LOW(hffe5)
+	ld c, LOW(hAudioJobFlags)
 	ld a, [$ff00+c]
 	or $80
 	ld [$ff00+c], a
-	call Func_1705
-	db LOW(hffe0)
-	call Func_1705
-	db LOW(hffe1)
+	call ActivateJob
+	db JOB_MAIN
+	call ActivateJob
+	db JOB_AUDIO
 	pop de
 	pop bc
 	pop hl
@@ -318,18 +318,18 @@ Func_483:
 	ld a, $01
 	ld [wcaa9], a
 	call ReadJoypad
-	ld c, LOW(hffe4)
+	ld c, LOW(hVBlankJobFlags)
 	ld a, [$ff00+c]
 	or $80
 	ld [$ff00+c], a
-	ld c, LOW(hffe5)
+	ld c, LOW(hAudioJobFlags)
 	ld a, [$ff00+c]
 	or $80
 	ld [$ff00+c], a
-	call Func_1705
-	db LOW(hffe0)
-	call Func_1705
-	db LOW(hffe1)
+	call ActivateJob
+	db JOB_MAIN
+	call ActivateJob
+	db JOB_AUDIO
 	pop de
 	pop bc
 	pop hl
@@ -361,18 +361,18 @@ Func_4ac:
 	ld a, $01
 	ld [wcaa9], a
 	call ReadJoypad
-	ld c, LOW(hffe4)
+	ld c, LOW(hVBlankJobFlags)
 	ld a, [$ff00+c]
 	or $80
 	ld [$ff00+c], a
-	ld c, LOW(hffe5)
+	ld c, LOW(hAudioJobFlags)
 	ld a, [$ff00+c]
 	or $80
 	ld [$ff00+c], a
-	call Func_1705
-	db LOW(hffe0)
-	call Func_1705
-	db LOW(hffe1)
+	call ActivateJob
+	db JOB_MAIN
+	call ActivateJob
+	db JOB_AUDIO
 	pop de
 	pop bc
 	pop hl
@@ -397,18 +397,18 @@ Func_51f:
 	ld [wVBlankMode], a
 	ld a, $01
 	ld [wcaa9], a
-	ld c, LOW(hffe4)
+	ld c, LOW(hVBlankJobFlags)
 	ld a, [$ff00+c]
 	or $80
 	ld [$ff00+c], a
-	ld c, LOW(hffe5)
+	ld c, LOW(hAudioJobFlags)
 	ld a, [$ff00+c]
 	or $80
 	ld [$ff00+c], a
-	call Func_1705
-	db LOW(hffe0)
-	call Func_1705
-	db LOW(hffe1)
+	call ActivateJob
+	db JOB_MAIN
+	call ActivateJob
+	db JOB_AUDIO
 	pop de
 	pop bc
 	pop hl
@@ -438,18 +438,18 @@ Func_6ce:
 	ld a, $01
 	ld [wcaa9], a
 	call ReadJoypad
-	ld c, LOW(hffe4)
+	ld c, LOW(hVBlankJobFlags)
 	ld a, [$ff00+c]
 	or $80
 	ld [$ff00+c], a
-	ld c, LOW(hffe5)
+	ld c, LOW(hAudioJobFlags)
 	ld a, [$ff00+c]
 	or $80
 	ld [$ff00+c], a
-	call Func_1705
-	db LOW(hffe0)
-	call Func_1705
-	db LOW(hffe1)
+	call ActivateJob
+	db JOB_MAIN
+	call ActivateJob
+	db JOB_AUDIO
 	pop de
 	pop bc
 	pop hl
@@ -501,18 +501,18 @@ Func_826:
 	ld a, $01
 	ld [wcaa9], a
 	call ReadJoypad
-	ld c, LOW(hffe4)
+	ld c, LOW(hVBlankJobFlags)
 	ld a, [$ff00+c]
 	or $80
 	ld [$ff00+c], a
-	ld c, LOW(hffe5)
+	ld c, LOW(hAudioJobFlags)
 	ld a, [$ff00+c]
 	or $80
 	ld [$ff00+c], a
-	call Func_1705
-	db LOW(hffe0)
-	call Func_1705
-	db LOW(hffe1)
+	call ActivateJob
+	db JOB_MAIN
+	call ActivateJob
+	db JOB_AUDIO
 	pop de
 	pop bc
 	pop hl
@@ -602,18 +602,18 @@ Func_900:
 	ld a, $01
 	ld [wcaa9], a
 	call ReadJoypad
-	ld c, LOW(hffe4)
+	ld c, LOW(hVBlankJobFlags)
 	ld a, [$ff00+c]
 	or $80
 	ld [$ff00+c], a
-	ld c, LOW(hffe5)
+	ld c, LOW(hAudioJobFlags)
 	ld a, [$ff00+c]
 	or $80
 	ld [$ff00+c], a
-	call Func_1705
-	db LOW(hffe0)
-	call Func_1705
-	db LOW(hffe1)
+	call ActivateJob
+	db JOB_MAIN
+	call ActivateJob
+	db JOB_AUDIO
 	pop de
 	pop bc
 	pop hl
@@ -643,18 +643,18 @@ Func_a0a:
 	ld a, $01
 	ld [wcaa9], a
 	call ReadJoypad
-	ld c, LOW(hffe4)
+	ld c, LOW(hVBlankJobFlags)
 	ld a, [$ff00+c]
 	or $80
 	ld [$ff00+c], a
-	ld c, LOW(hffe5)
+	ld c, LOW(hAudioJobFlags)
 	ld a, [$ff00+c]
 	or $80
 	ld [$ff00+c], a
-	call Func_1705
-	db LOW(hffe0)
-	call Func_1705
-	db LOW(hffe1)
+	call ActivateJob
+	db JOB_MAIN
+	call ActivateJob
+	db JOB_AUDIO
 	pop de
 	pop bc
 	pop hl
@@ -693,18 +693,18 @@ Func_b62:
 	ld a, $01
 	ld [wcaa9], a
 	call ReadJoypad
-	ld c, LOW(hffe4)
+	ld c, LOW(hVBlankJobFlags)
 	ld a, [$ff00+c]
 	or $80
 	ld [$ff00+c], a
-	ld c, LOW(hffe5)
+	ld c, LOW(hAudioJobFlags)
 	ld a, [$ff00+c]
 	or $80
 	ld [$ff00+c], a
-	call Func_1705
-	db LOW(hffe0)
-	call Func_1705
-	db LOW(hffe1)
+	call ActivateJob
+	db JOB_MAIN
+	call ActivateJob
+	db JOB_AUDIO
 	pop de
 	pop bc
 	pop hl
@@ -754,18 +754,18 @@ Func_bf0:
 	ld [wVBlankMode], a
 	ld a, $01
 	ld [wcaa9], a
-	ld c, LOW(hffe4)
+	ld c, LOW(hVBlankJobFlags)
 	ld a, [$ff00+c]
 	or $80
 	ld [$ff00+c], a
-	ld c, LOW(hffe5)
+	ld c, LOW(hAudioJobFlags)
 	ld a, [$ff00+c]
 	or $80
 	ld [$ff00+c], a
-	call Func_1705
-	db LOW(hffe0)
-	call Func_1705
-	db LOW(hffe1)
+	call ActivateJob
+	db JOB_MAIN
+	call ActivateJob
+	db JOB_AUDIO
 	pop de
 	pop bc
 	pop hl
@@ -1042,12 +1042,12 @@ SECTION "Home@f74", ROM0[$f74]
 
 Func_f74::
 	push af
-	call Func_177b
-	db $80, LOW(hffe4)
+	call ResetJobFlag
+	db $80, LOW(hVBlankJobFlags)
 .asm_f7a
-	call Func_168f
-	call Func_175a
-	db $80, LOW(hffe4)
+	call YieldJob
+	call TestJobFlag
+	db $80, LOW(hVBlankJobFlags)
 	jr z, .asm_f7a
 	pop af
 	ret
@@ -1055,22 +1055,22 @@ Func_f74::
 
 SECTION "Home@fce", ROM0[$fce]
 
-Func_fce:
+AudioJob:
 .loop
 	ld a, [rRAMB]
 	push af
-	ld a, BANK(Func_f811a)
+	ld a, BANK(UpdateAudio)
 	call Bankswitch1
-	call Func_f811a
+	call UpdateAudio
 	pop af
 	call Bankswitch1
-	call Func_177b
-	db $80, LOW(hffe5)
-.asm_fe3
-	call Func_168f
-	call Func_175a
-	db $80, LOW(hffe5)
-	jr z, .asm_fe3
+	call ResetJobFlag
+	db $80, LOW(hAudioJobFlags)
+.wait
+	call YieldJob
+	call TestJobFlag
+	db $80, LOW(hAudioJobFlags)
+	jr z, .wait
 	jr .loop
 ; 0xfef
 
@@ -1564,7 +1564,7 @@ Func_1576::
 	push hl
 	call Func_179b
 	call Func_172f
-	call Func_15a2
+	call InitJobs
 	call Func_15e9
 
 	ld hl, rIF
@@ -1586,12 +1586,12 @@ Func_1576::
 	pop af
 	ret
 
-Func_15a2:
+InitJobs:
 	push af
 	push bc
 	push hl
-	ld hl, Data_15c8
-	lb bc, $3, LOW(hffeb)
+	ld hl, JobFunctionsAndStack
+	lb bc, $3, LOW(hAudioJobStackPointer)
 .loop
 	ld a, [hli]
 	ld [$ff00+c], a
@@ -1617,38 +1617,49 @@ Func_15a2:
 	pop bc
 	pop af
 	ret
-; 0x15c4
 
-SECTION "Home@15c8", ROM0[$15c8]
+InitialJobStates:
+	db JOBSTATE_RUNNING
+	db JOBSTATE_ACTIVE
+	db JOBSTATE_ACTIVE
+	db JOBSTATE_ACTIVE
 
-Data_15c8:
-	dwb $dcf6, BANK(Func_fce)
-	dw $dcfe, Func_fce
+; arguments:
+; - \1 = job function
+; - \2 = bottom of stack
+MACRO? job_func
+	dw \2 - $8 ; to preserve registers
+	db BANK(\1)
+	dw \2
+	dw \1
+ENDM
 
-	dwb $dbf6, BANK(Func_1c002)
-	dw $dbfe, Func_1c002
+JobFunctionsAndStack:
+	job_func AudioJob,      wAudioJobStackBottom
+	job_func DecompressJob, wDecompressJobStackBottom
+	job_func Func_172c,     wJob4StackBottom
 
-	dwb $daf6, BANK(Func_172c)
-	dw $dafe, Func_172c
-; 0x15dd
-
-SECTION "Home@15e9", ROM0[$15e9]
+JobTimerConfigurations:
+	db 240, TAC_4KHZ   | TAC_STOP, TAC_4KHZ   | TAC_START ; JOB_MAIN
+	db 100, TAC_4KHZ   | TAC_STOP, TAC_4KHZ   | TAC_START ; JOB_AUDIO
+	db 225, TAC_4KHZ   | TAC_STOP, TAC_4KHZ   | TAC_START ; JOB_DECOMPRESS
+	db 240, TAC_262KHZ | TAC_STOP, TAC_262KHZ | TAC_START ; JOB_4
 
 Func_15e9:
 	push af
 	push bc
 	push hl
-	ld c, LOW(hffe0)
-	ld hl, $15c4
-	ld b, $04
-.asm_15f3
+	ld c, LOW(hJobStates)
+	ld hl, InitialJobStates
+	ld b, NUM_JOBS
+.loop
 	ld a, [hli]
 	ld [$ff00+c], a
 	inc c
 	dec b
-	jr nz, .asm_15f3
-	ld a, LOW(hffe0)
-	ldh [hffdf], a
+	jr nz, .loop
+	ld a, JOB_MAIN
+	ldh [hCurJob], a
 	pop hl
 	pop bc
 	pop af
@@ -1664,30 +1675,30 @@ Timer:
 	push af
 	push bc
 	push de
-	ldh a, [hffdf]
+	ldh a, [hCurJob]
 	ld c, a
-	sub $e0
+	sub LOW(hJobStates)
 	ld b, a
 	rlca
 	add b ; *3
 	ld e, a
-	ld a, $01
+	ld a, JOBSTATE_ACTIVE
 	ld [$ff00+c], a
 .asm_162f
 	inc c
 	ld a, c
-	cp $e4
-	jr nz, .asm_1637
-	ld c, $e0
-.asm_1637
+	cp JOB_4 + 1
+	jr nz, .got_job
+	ld c, JOB_MAIN
+.got_job
 	ld a, [$ff00+c]
-	cp $01
+	cp JOBSTATE_ACTIVE
 	jr nz, .asm_162f
 	ld a, c
-	ldh [hffdf], a
-	ld a, $02
+	ldh [hCurJob], a
+	ld a, JOBSTATE_RUNNING
 	ld [$ff00+c], a
-	ld a, $e8
+	ld a, LOW(hJobStackPointers)
 	add e
 	ld c, a
 	ld hl, sp+$00
@@ -1699,13 +1710,13 @@ Timer:
 	inc c
 	ld a, [rRAMB]
 	ld [$ff00+c], a
-	ldh a, [hffdf]
-	sub $e0
+	ldh a, [hCurJob]
+	sub LOW(hJobStates)
 	ld b, a
 	rlca
 	add b ; *3
 	ld e, a
-	add $e8
+	add LOW(hJobStackPointers)
 	ld c, a
 	ld a, [$ff00+c]
 	ld l, a
@@ -1721,7 +1732,7 @@ Timer:
 	ld [rRAMB + $1000], a
 
 	ld d, $00
-	ld hl, $15dd
+	ld hl, JobTimerConfigurations
 	add hl, de
 	ld a, [hl]
 	ldh [rTIMA], a
@@ -1744,7 +1755,7 @@ Timer:
 
 SECTION "Home@168f", ROM0[$168f]
 
-Func_168f::
+YieldJob::
 	push hl
 	ld hl, rIE
 	res B_IE_TIMER, [hl]
@@ -1752,32 +1763,32 @@ Func_168f::
 	push bc
 	push de
 	di
-	ldh a, [hffdf]
+	ldh a, [hCurJob]
 	ld c, a
-	sub $e0
+	sub LOW(hJobStates)
 	ld b, a
 	rlca
 	add b ; *3
 	ld e, a
-	ld a, $00
+	ld a, JOBSTATE_INACTIVE
 	ld [$ff00+c], a
 .asm_16a5
 	inc c
 	ld a, c
-	cp $e4
-	jr nz, .asm_16ad
-	ld c, $e0
-.asm_16ad
+	cp JOB_4 + 1
+	jr nz, .got_job
+	ld c, JOB_MAIN
+.got_job
 	ld a, [$ff00+c]
-	cp $01
+	cp JOBSTATE_ACTIVE
 	jr nz, .asm_16a5
 	ld a, c
-	ldh [hffdf], a
-	ld a, $02
+	ldh [hCurJob], a
+	ld a, JOBSTATE_RUNNING
 	ld [$ff00+c], a
 
 	; save current stack pointer and bank
-	ld a, $e8
+	ld a, LOW(hJobStackPointers)
 	add e
 	ld c, a
 	ld hl, sp+$00
@@ -1790,13 +1801,13 @@ Func_168f::
 	ld a, [rRAMB]
 	ld [$ff00+c], a
 
-	ldh a, [hffdf]
-	sub $e0
+	ldh a, [hCurJob]
+	sub LOW(hJobStates)
 	ld b, a
 	rlca
 	add b ; *3
 	ld e, a
-	add $e8
+	add LOW(hJobStackPointers)
 	ld c, a
 	ld a, [$ff00+c]
 	ld l, a
@@ -1812,7 +1823,7 @@ Func_168f::
 	ld [rRAMB + $1000], a
 
 	ld d, $00
-	ld hl, $15dd
+	ld hl, JobTimerConfigurations
 	add hl, de
 	ld a, [hl]
 	ldh [rTIMA], a
@@ -1835,7 +1846,7 @@ Func_168f::
 
 SECTION "Home@1705", ROM0[$1705]
 
-Func_1705::
+ActivateJob::
 	push af
 	push bc
 	push de
@@ -1850,7 +1861,7 @@ Func_1705::
 	ld a, d
 	ld [hld], a
 	ld [hl], e
-	ld a, $01
+	ld a, JOBSTATE_ACTIVE
 	ld [$ff00+c], a
 	pop hl
 	pop de
@@ -1884,7 +1895,7 @@ SECTION "Home@172f", ROM0[$172f]
 Func_172f:
 	push af
 	push bc
-	ld c, LOW(hffe4)
+	ld c, LOW(hVBlankJobFlags)
 	xor a
 	ld b, $04
 .asm_1736
@@ -1896,7 +1907,7 @@ Func_172f:
 	pop af
 	ret
 
-Func_173e::
+SetJobFlag::
 	push af
 	push bc
 	push de
@@ -1925,7 +1936,7 @@ Func_173e::
 	pop af
 	ret
 
-Func_175a::
+TestJobFlag::
 	push bc
 	push de
 	push hl
@@ -1960,7 +1971,7 @@ Func_175a::
 
 SECTION "Home@177b", ROM0[$177b]
 
-Func_177b::
+ResetJobFlag::
 	push af
 	push bc
 	push de
@@ -2014,12 +2025,12 @@ Func_17ab::
 	ld a, [$cd00]
 	cp e
 	jr nz, .asm_17c9
-	call Func_173e
-	db $01, LOW(hffe6)
+	call SetJobFlag
+	db $01, LOW(hDecompressJobFlags)
 	call Func_171c
-	call Func_1705
-	db LOW(hffe2)
-	call Func_168f
+	call ActivateJob
+	db JOB_DECOMPRESS
+	call YieldJob
 	jr .asm_17b2
 .asm_17c9
 	ld d, HIGH(wc600)
@@ -2050,12 +2061,12 @@ Func_17db:
 	ld a, [$ccff]
 	cp c
 	jr nz, .asm_17fd
-	call Func_173e
-	db $04, LOW(hffe4)
+	call SetJobFlag
+	db $04, LOW(hVBlankJobFlags)
 	call Func_171c
-	call Func_1705
-	db LOW(hffe0)
-	call Func_168f
+	call ActivateJob
+	db JOB_MAIN
+	call YieldJob
 	jr .loop
 .asm_17fd
 	ld d, HIGH(wc600)
@@ -2082,12 +2093,12 @@ Func_180f::
 	ld a, [$cd0a]
 	cp e
 	jr nz, .asm_182c
-	call Func_173e
-	db $04, LOW(hffe4)
+	call SetJobFlag
+	db $04, LOW(hVBlankJobFlags)
 	call Func_171c
-	call Func_1705
-	db LOW(hffe0)
-	call Func_168f
+	call ActivateJob
+	db JOB_MAIN
+	call YieldJob
 	jr .loop
 
 .asm_182c
@@ -2127,12 +2138,12 @@ Func_1842::
 	ld a, [$cd09]
 	cp e
 	jr nz, .asm_1870
-	call Func_173e
-	db $01, LOW(hffe6)
+	call SetJobFlag
+	db $01, LOW(hDecompressJobFlags)
 	call Func_171c
-	call Func_1705
-	db LOW(hffe2)
-	call Func_168f
+	call ActivateJob
+	db JOB_DECOMPRESS
+	call YieldJob
 	jr .asm_1859
 .asm_1870
 	pop af
@@ -3418,8 +3429,8 @@ Func_2d2e:
 
 Func_2d57:
 	call Func_f6e5d
-	bankswitch BANK(Func_f811a)
-	call Func_f811a
+	bankswitch BANK(UpdateAudio)
+	call UpdateAudio
 	di
 	bankswitch $3d
 	ei

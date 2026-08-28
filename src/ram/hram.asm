@@ -7,21 +7,21 @@ hDecompressBufferSize:: db ; ff86
 
 	ds $58
 
-hffdf:: db ; ffdf
+hCurJob:: db ; ffdf
 
-hffe0:: db ; ffe0
-hffe1:: db ; ffe1
-hffe2:: db ; ffe2
-hffe3:: db ; ffe3
+hJobStates::
+hMainJobState::       db ; ffe0
+hAudioJobState::      db ; ffe1
+hDecompressJobState:: db ; ffe2
+hJob4State::          db ; ffe3
 
-hffe4:: db ; ffe4
-hffe5:: db ; ffe5
-hffe6:: db ; ffe6
+hVBlankJobFlags::     db ; ffe4
+hAudioJobFlags::      db ; ffe5
+hDecompressJobFlags:: db ; ffe6
+hUnkJobFlags::        db ; ffe7
 
-	ds $1
-
-hffe8:: ds $3 ; ffe8
-hffeb:: ds $3 ; ffeb
-hffee:: ds $3 ; ffee
-hfff1:: ds $3 ; fff1
-
+hJobStackPointers::
+hMainJobStackPointer::       ds $3 ; ffe8
+hAudioJobStackPointer::      ds $3 ; ffeb
+hDecompressJobStackPointer:: ds $3 ; ffee
+hJob4StackPointer::          ds $3 ; fff1

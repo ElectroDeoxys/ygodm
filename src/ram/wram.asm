@@ -59,3 +59,17 @@ wce9c:: db ; ce9c
 wce9d:: db ; ce9d
 wce9e:: db ; ce9e
 wce9f:: db ; ce9f
+
+	ds $d9fe - $cea0
+
+wJob4Stack:: ; d9fe
+	ds $100
+wJob4StackBottom:: ; dafe
+
+wDecompressJobStack:: ; dafe
+	ds $100
+wDecompressJobStackBottom:: ; dbfe
+
+wAudioJobStack:: ; dbfe
+	ds $100
+wAudioJobStackBottom:: ; dcfe

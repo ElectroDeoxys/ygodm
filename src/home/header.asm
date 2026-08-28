@@ -2,7 +2,7 @@
 
 SECTION "rst0", ROM0[$0000]
 	di
-	jp Func_168f
+	jp YieldJob
 
 SECTION "rst8", ROM0[$0008]
 Farcall::

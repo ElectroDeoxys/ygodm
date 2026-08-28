@@ -193,10 +193,10 @@ LoadCharacterGfx:
 	call Func_1842
 	xor a
 	call Func_1842
-	call Func_173e
-	db $01, LOW(hffe6)
-	call Func_1705
-	db LOW(hffe2)
+	call SetJobFlag
+	db $01, LOW(hDecompressJobFlags)
+	call ActivateJob
+	db JOB_DECOMPRESS
 
 	ld hl, vTiles2
 	ld b, $10
