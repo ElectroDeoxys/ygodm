@@ -26,9 +26,9 @@ _Start:
 	farcall Func_10020
 
 	call Func_1724
-	ld a, $16
-	call Func_de3
-	call Func_f2f
+	ld a, VBLANK_16
+	call SetPendingVBlankMode
+	call RequestVBlankMode
 	call Func_2d1f
 	debug_loop
 	ret
@@ -156,17 +156,77 @@ SECTION "Home@396", ROM0[$396]
 Func_396:
 	push af
 	ld a, $ff
-	ld [$caa5], a
+	ld [wJoypadDown], a
 	xor a
-	ld [$caa6], a
-	ld [$caa7], a
+	ld [wJoypadPressed], a
+	ld [wcaa7], a
 	ld a, $14
-	ld [$caa8], a
+	ld [wcaa8], a
 	pop af
 	ret
-; 0x3aa
 
-SECTION "Home@40c", ROM0[$40c]
+ReadJoypad:
+	push af
+	push bc
+	push de
+	; read d-pad
+	ld a, JOYP_GET_CTRL_PAD
+	ldh [rJOYP], a
+	REPT 2
+		ldh a, [rJOYP]
+	ENDR
+	cpl
+	and JOYP_INPUTS
+	swap a
+	ld b, a
+
+	; read buttons
+	ld a, JOYP_GET_BUTTONS
+	ldh [rJOYP], a
+	REPT 6
+		ldh a, [rJOYP]
+	ENDR
+	cpl
+	and JOYP_INPUTS
+	or b
+	ld c, a
+	; c holds all input of current frame
+
+	ld a, [wJoypadDown] ; keys that were already down
+	ld d, a
+	xor c
+	and c
+	ld [wJoypadPressed], a ; key that are pressed on this frame
+	ld a, c
+	ld [wJoypadDown], a ; update keys down
+
+	ld a, JOYP_GET_NONE
+	ldh [rJOYP], a
+
+	ld a, [wJoypadDown]
+	cp d
+	jr nz, .asm_400
+	ld a, $00
+	ld [wcaa7], a
+	ld a, [wcaa8]
+	dec a
+	ld [wcaa8], a
+	jr nz, .asm_3fe
+	ld a, $03
+	ld [wcaa8], a
+	ld a, d
+	ld [wcaa7], a
+.asm_3fe
+	jr .done
+.asm_400
+	ld [wcaa7], a
+	ld a, $14
+	ld [wcaa8], a
+.done
+	pop de
+	pop bc
+	pop af
+	ret
 
 Func_40c:
 	push hl
@@ -185,7 +245,7 @@ VBlank:
 	push bc
 	push de
 	ld b, $00
-	ld a, [$caac]
+	ld a, [wVBlankMode]
 	ld c, a
 	ld hl, .Jumptable
 	add hl, bc
@@ -195,54 +255,538 @@ VBlank:
 	jp hl
 
 .Jumptable:
-	dw Func_444
-	dw $45d
-	dw $483
-	dw $4ac
-	dw $51f
-	dw $6ce
-	dw $826
-	dw $900
-	dw $a0a
-	dw $b62
-	dw $bf0
-	dw Func_2d57
+	dw Func_444  ; VBLANK_00
+	dw Func_45d  ; VBLANK_02
+	dw Func_483  ; VBLANK_04
+	dw Func_4ac  ; VBLANK_06
+	dw Func_51f  ; VBLANK_08
+	dw Func_6ce  ; VBLANK_0A
+	dw Func_826  ; VBLANK_0C
+	dw Func_900  ; VBLANK_0E
+	dw Func_a0a  ; VBLANK_10
+	dw Func_b62  ; VBLANK_12
+	dw Func_bf0  ; VBLANK_14
+	dw Func_2d57 ; VBLANK_16
 
 Func_444:
-	ld c, $e4
+	ld c, LOW(hffe4)
 	ld a, [$ff00+c]
 	or $80
 	ld [$ff00+c], a
-	ld c, $e5
+	ld c, LOW(hffe5)
 	ld a, [$ff00+c]
 	or $80
 	ld [$ff00+c], a
 	call Func_1705
-	db $e0
+	db LOW(hffe0)
 	call Func_1705
-	db $e1
+	db LOW(hffe1)
 	pop de
 	pop bc
 	pop hl
 	pop af
 	reti
-; 0x45d
 
-SECTION "Home@dd8", ROM0[$dd8]
+Func_45d:
+	ld a, VBLANK_00
+	ld [wVBlankMode], a
+	ld a, $01
+	ld [wcaa9], a
+	call ReadJoypad
+	ld c, LOW(hffe4)
+	ld a, [$ff00+c]
+	or $80
+	ld [$ff00+c], a
+	ld c, LOW(hffe5)
+	ld a, [$ff00+c]
+	or $80
+	ld [$ff00+c], a
+	call Func_1705
+	db LOW(hffe0)
+	call Func_1705
+	db LOW(hffe1)
+	pop de
+	pop bc
+	pop hl
+	pop af
+	reti
+
+Func_483:
+	call hTransferVirtualOAM
+	ld a, VBLANK_00
+	ld [wVBlankMode], a
+	ld a, $01
+	ld [wcaa9], a
+	call ReadJoypad
+	ld c, LOW(hffe4)
+	ld a, [$ff00+c]
+	or $80
+	ld [$ff00+c], a
+	ld c, LOW(hffe5)
+	ld a, [$ff00+c]
+	or $80
+	ld [$ff00+c], a
+	call Func_1705
+	db LOW(hffe0)
+	call Func_1705
+	db LOW(hffe1)
+	pop de
+	pop bc
+	pop hl
+	pop af
+	reti
+
+Func_4ac:
+	call hTransferVirtualOAM
+
+	ld bc, wc500
+	ld e, $04
+.asm_4b4
+	ld a, [bc]
+	ld l, a
+	inc c
+	ld a, [bc]
+	ld h, a
+	inc c
+	REPT 20
+		ld a, [bc]
+		ld [hli], a
+		inc c
+	ENDR
+	dec e
+	jr nz, .asm_4b4
+
+	ld a, VBLANK_00
+	ld [wVBlankMode], a
+	ld a, $01
+	ld [wcaa9], a
+	call ReadJoypad
+	ld c, LOW(hffe4)
+	ld a, [$ff00+c]
+	or $80
+	ld [$ff00+c], a
+	ld c, LOW(hffe5)
+	ld a, [$ff00+c]
+	or $80
+	ld [$ff00+c], a
+	call Func_1705
+	db LOW(hffe0)
+	call Func_1705
+	db LOW(hffe1)
+	pop de
+	pop bc
+	pop hl
+	pop af
+	reti
+
+Func_51f:
+	call hTransferVirtualOAM
+	ld bc, wc500
+	ld a, [bc]
+	ld l, a
+	inc c
+	ld a, [bc]
+	ld h, a
+	inc c
+	REPT $80
+		ld a, [bc]
+		ld [hli], a
+		inc c
+	ENDR
+	ld a, VBLANK_00
+	ld [wVBlankMode], a
+	ld a, $01
+	ld [wcaa9], a
+	ld c, LOW(hffe4)
+	ld a, [$ff00+c]
+	or $80
+	ld [$ff00+c], a
+	ld c, LOW(hffe5)
+	ld a, [$ff00+c]
+	or $80
+	ld [$ff00+c], a
+	call Func_1705
+	db LOW(hffe0)
+	call Func_1705
+	db LOW(hffe1)
+	pop de
+	pop bc
+	pop hl
+	pop af
+	reti
+
+Func_6ce:
+	call hTransferVirtualOAM
+
+	ld bc, wc500
+	REPT 10
+		ld a, [bc]
+		ld l, a
+		inc c
+		ld a, [bc]
+		ld h, a
+		inc c
+		REPT 8
+			ld a, [bc]
+			ld [hli], a
+			inc c
+		ENDR
+	ENDR
+
+	ld a, VBLANK_00
+	ld [wVBlankMode], a
+	ld a, $01
+	ld [wcaa9], a
+	call ReadJoypad
+	ld c, LOW(hffe4)
+	ld a, [$ff00+c]
+	or $80
+	ld [$ff00+c], a
+	ld c, LOW(hffe5)
+	ld a, [$ff00+c]
+	or $80
+	ld [$ff00+c], a
+	call Func_1705
+	db LOW(hffe0)
+	call Func_1705
+	db LOW(hffe1)
+	pop de
+	pop bc
+	pop hl
+	pop af
+	reti
+
+Func_826:
+	call hTransferVirtualOAM
+
+	ld bc, wc500
+	ld a, [bc]
+	ld l, a
+	inc c
+	ld a, [bc]
+	ld h, a
+	inc c
+	REPT 18
+		ld a, [bc]
+		ld [hli], a
+		inc c
+	ENDR
+
+	ld a, [bc]
+	ld l, a
+	inc c
+	ld a, [bc]
+	ld h, a
+	inc c
+	REPT 18
+		ld a, [bc]
+		ld [hli], a
+		inc c
+	ENDR
+
+	ld a, [bc]
+	ld l, a
+	inc c
+	ld a, [bc]
+	ld h, a
+	inc c
+	REPT 16
+		ld a, [bc]
+		ld [hli], a
+		inc c
+	ENDR
+
+	ld a, VBLANK_00
+	ld [wVBlankMode], a
+	ld a, $01
+	ld [wcaa9], a
+	call ReadJoypad
+	ld c, LOW(hffe4)
+	ld a, [$ff00+c]
+	or $80
+	ld [$ff00+c], a
+	ld c, LOW(hffe5)
+	ld a, [$ff00+c]
+	or $80
+	ld [$ff00+c], a
+	call Func_1705
+	db LOW(hffe0)
+	call Func_1705
+	db LOW(hffe1)
+	pop de
+	pop bc
+	pop hl
+	pop af
+	reti
+
+Func_900:
+	call hTransferVirtualOAM
+
+	ld bc, wc500
+	ld a, [bc]
+	ld l, a
+	inc c
+	ld a, [bc]
+	ld h, a
+	inc c
+	REPT 8
+		ld a, [bc]
+		ld [hli], a
+		inc c
+	ENDR
+
+	ld a, [bc]
+	ld l, a
+	inc c
+	ld a, [bc]
+	ld h, a
+	inc c
+	REPT 8
+		ld a, [bc]
+		ld [hli], a
+		inc c
+	ENDR
+
+	REPT 4
+		ld a, [bc]
+		ld l, a
+		inc c
+		ld a, [bc]
+		ld h, a
+		inc c
+		REPT 4
+			ld a, [bc]
+			ld [hli], a
+			inc c
+		ENDR
+	ENDR
+
+	ld a, [bc]
+	ld l, a
+	inc c
+	ld a, [bc]
+	ld h, a
+	inc c
+	REPT 8
+		ld a, [bc]
+		ld [hli], a
+		inc c
+	ENDR
+
+	ld a, [bc]
+	ld l, a
+	inc c
+	ld a, [bc]
+	ld h, a
+	inc c
+	REPT 8
+		ld a, [bc]
+		ld [hli], a
+		inc c
+	ENDR
+
+	ld a, [bc]
+	ld l, a
+	inc c
+	ld a, [bc]
+	ld h, a
+	inc c
+	REPT 8
+		ld a, [bc]
+		ld [hli], a
+		inc c
+	ENDR
+
+	ld a, VBLANK_00
+	ld [wVBlankMode], a
+	ld a, $01
+	ld [wcaa9], a
+	call ReadJoypad
+	ld c, LOW(hffe4)
+	ld a, [$ff00+c]
+	or $80
+	ld [$ff00+c], a
+	ld c, LOW(hffe5)
+	ld a, [$ff00+c]
+	or $80
+	ld [$ff00+c], a
+	call Func_1705
+	db LOW(hffe0)
+	call Func_1705
+	db LOW(hffe1)
+	pop de
+	pop bc
+	pop hl
+	pop af
+	reti
+
+Func_a0a:
+	call hTransferVirtualOAM
+	ld bc, wc500
+
+	REPT 5
+		ld a, [bc]
+		ld l, a
+		inc c
+		ld a, [bc]
+		ld h, a
+		inc c
+		REPT 18
+			ld a, [bc]
+			ld [hli], a
+			inc c
+		ENDR
+	ENDR
+
+	ld a, VBLANK_00
+	ld [wVBlankMode], a
+	ld a, $01
+	ld [wcaa9], a
+	call ReadJoypad
+	ld c, LOW(hffe4)
+	ld a, [$ff00+c]
+	or $80
+	ld [$ff00+c], a
+	ld c, LOW(hffe5)
+	ld a, [$ff00+c]
+	or $80
+	ld [$ff00+c], a
+	call Func_1705
+	db LOW(hffe0)
+	call Func_1705
+	db LOW(hffe1)
+	pop de
+	pop bc
+	pop hl
+	pop af
+	reti
+
+Func_b62:
+	call hTransferVirtualOAM
+
+	ld bc, wc500
+	ld de, $20
+	REPT 5
+		ld a, [bc]
+		ld l, a
+		inc c
+		ld a, [bc]
+		ld h, a
+		inc c
+		ld a, [bc]
+		ld [hli], a
+		inc c
+		ld a, [bc]
+		ld [hld], a
+		inc c
+		add hl, de
+		ld a, [bc]
+		ld [hli], a
+		inc c
+		ld a, [bc]
+		ld [hld], a
+		inc c
+	ENDR
+
+	ld a, VBLANK_00
+	ld [wVBlankMode], a
+	ld a, $01
+	ld [wcaa9], a
+	call ReadJoypad
+	ld c, LOW(hffe4)
+	ld a, [$ff00+c]
+	or $80
+	ld [$ff00+c], a
+	ld c, LOW(hffe5)
+	ld a, [$ff00+c]
+	or $80
+	ld [$ff00+c], a
+	call Func_1705
+	db LOW(hffe0)
+	call Func_1705
+	db LOW(hffe1)
+	pop de
+	pop bc
+	pop hl
+	pop af
+	reti
+
+Func_bf0:
+	ld bc, wc500
+
+	ld a, [bc]
+	ld l, a
+	inc c
+	ld a, [bc]
+	ld h, a
+	inc c
+	REPT 8
+		ld a, [bc]
+		ld [hli], a
+		inc c
+	ENDR
+
+	ld a, [bc]
+	ld l, a
+	inc c
+	ld a, [bc]
+	ld h, a
+	inc c
+	REPT $80
+		ld a, [bc]
+		ld [hli], a
+		inc c
+	ENDR
+
+	ld a, [bc]
+	ld l, a
+	inc c
+	ld a, [bc]
+	ld h, a
+	inc c
+	REPT 8
+		ld a, [bc]
+		ld [hli], a
+		inc c
+	ENDR
+
+	ld a, VBLANK_00
+	ld [wVBlankMode], a
+	ld a, $01
+	ld [wcaa9], a
+	ld c, LOW(hffe4)
+	ld a, [$ff00+c]
+	or $80
+	ld [$ff00+c], a
+	ld c, LOW(hffe5)
+	ld a, [$ff00+c]
+	or $80
+	ld [$ff00+c], a
+	call Func_1705
+	db LOW(hffe0)
+	call Func_1705
+	db LOW(hffe1)
+	pop de
+	pop bc
+	pop hl
+	pop af
+	reti
 
 Func_dd8:
 	push af
-	ld a, $00
-	ld [$caab], a
-	ld [$caac], a
+	ld a, VBLANK_00
+	ld [wPendingVBlankMode], a
+	ld [wVBlankMode], a
 	pop af
 	ret
 
-Func_de3::
+; input:
+; - a = VBLANK_* constant
+SetPendingVBlankMode::
 	push af
 	push bc
 	push hl
-	ld [$caab], a
+	ld [wPendingVBlankMode], a
 	ld c, a
 	ld b, $00
 	ld hl, .Jumptable
@@ -255,25 +799,25 @@ Func_de3::
 	jp hl
 .ret
 	ld a, $00
-	ld [$caaa], a
+	ld [wcaaa], a
 	pop hl
 	pop bc
 	pop af
 	ret
 
 .Jumptable:
-	dw .Func_e19
-	dw .Func_e19
-	dw .Func_e19
-	dw .Func_e1a
-	dw .Func_e3f
-	dw .Func_e40
-	dw .Func_e4d
-	dw .Func_e6a
-	dw .Func_eb7
-	dw .Func_ee4
-	dw .Func_f11
-	dw .Func_f2e
+	dw .Func_e19 ; VBLANK_00
+	dw .Func_e19 ; VBLANK_02
+	dw .Func_e19 ; VBLANK_04
+	dw .Func_e1a ; VBLANK_06
+	dw .Func_e3f ; VBLANK_08
+	dw .Func_e40 ; VBLANK_0A
+	dw .Func_e4d ; VBLANK_0C
+	dw .Func_e6a ; VBLANK_0E
+	dw .Func_eb7 ; VBLANK_10
+	dw .Func_ee4 ; VBLANK_12
+	dw .Func_f11 ; VBLANK_14
+	dw .Func_f2e ; VBLANK_16
 
 .Func_e19:
 	ret
@@ -281,7 +825,7 @@ Func_de3::
 .Func_e1a:
 	push af
 	push hl
-	ld hl, $c500
+	ld hl, wc500
 	ld a, $02
 	ld [hli], a
 	ld [hl], $c5
@@ -307,7 +851,7 @@ Func_de3::
 .Func_e40:
 	push af
 	push hl
-	ld hl, $c500
+	ld hl, wc500
 	ld a, $02
 	ld [hli], a
 	ld [hl], $c5
@@ -318,7 +862,7 @@ Func_de3::
 .Func_e4d:
 	push af
 	push hl
-	ld hl, $c500
+	ld hl, wc500
 	ld a, $02
 	ld [hli], a
 	ld [hl], $c5
@@ -337,7 +881,7 @@ Func_de3::
 .Func_e6a:
 	push af
 	push hl
-	ld hl, $c500
+	ld hl, wc500
 	ld a, $02
 	ld [hli], a
 	ld [hl], $c5
@@ -380,7 +924,7 @@ Func_de3::
 .Func_eb7:
 	push af
 	push hl
-	ld hl, $c500
+	ld hl, wc500
 	ld a, $02
 	ld [hli], a
 	ld [hl], $c5
@@ -407,7 +951,7 @@ Func_de3::
 .Func_ee4:
 	push af
 	push hl
-	ld hl, $c500
+	ld hl, wc500
 	ld a, $de
 	ld [hli], a
 	ld [hl], $c5
@@ -434,7 +978,7 @@ Func_de3::
 .Func_f11:
 	push af
 	push hl
-	ld hl, $c500
+	ld hl, wc500
 	ld a, $02
 	ld [hli], a
 	ld [hl], $c5
@@ -453,27 +997,27 @@ Func_de3::
 .Func_f2e:
 	ret
 
-Func_f2f::
+RequestVBlankMode::
 	push af
-	ld a, [$caab]
-	ld [$caac], a
-	ld a, $00
-	ld [$caab], a
+	ld a, [wPendingVBlankMode]
+	ld [wVBlankMode], a
+	ld a, VBLANK_00
+	ld [wPendingVBlankMode], a
 	pop af
 	ret
 
 Func_f3d::
 	push af
 	push hl
-	ld h, $c5
-	ld a, [$caaa]
+	ld h, HIGH(wc500)
+	ld a, [wcaaa]
 	ld l, a
 	ld a, c
 	ld [hli], a
 	ld a, b
 	ld [hli], a
 	ld a, l
-	ld [$caaa], a
+	ld [wcaaa], a
 	pop hl
 	pop af
 	ret
@@ -482,13 +1026,13 @@ Func_f50::
 	push af
 	push hl
 	push af
-	ld h, $c5
-	ld a, [$caaa]
+	ld h, HIGH(wc500)
+	ld a, [wcaaa]
 	ld l, a
 	pop af
 	ld [hli], a
 	ld a, l
-	ld [$caaa], a
+	ld [wcaaa], a
 	pop hl
 	pop af
 	ret
@@ -499,17 +1043,49 @@ SECTION "Home@f74", ROM0[$f74]
 Func_f74::
 	push af
 	call Func_177b
-	db $80, $e4
+	db $80, LOW(hffe4)
 .asm_f7a
 	call Func_168f
 	call Func_175a
-	db $80, $e4
+	db $80, LOW(hffe4)
 	jr z, .asm_f7a
 	pop af
 	ret
 ; 0xf86
 
-SECTION "Home@100e", ROM0[$100e]
+SECTION "Home@fce", ROM0[$fce]
+
+Func_fce:
+.loop
+	ld a, [rRAMB]
+	push af
+	ld a, BANK(Func_f811a)
+	call Bankswitch1
+	call Func_f811a
+	pop af
+	call Bankswitch1
+	call Func_177b
+	db $80, LOW(hffe5)
+.asm_fe3
+	call Func_168f
+	call Func_175a
+	db $80, LOW(hffe5)
+	jr z, .asm_fe3
+	jr .loop
+; 0xfef
+
+SECTION "Home@fff", ROM0[$fff]
+
+Func_fff:
+	push af
+	ld a, $1b
+	ldh [rBGP], a
+	ld a, $e4
+	ldh [rOBP0], a
+	ld a, $1b
+	ldh [rOBP1], a
+	pop af
+	ret
 
 Func_100e::
 	push af
@@ -642,9 +1218,28 @@ Func_1090:
 	pop hl
 	pop af
 	ret
-; 0x109f
 
-SECTION "Home@10bb", ROM0[$10bb]
+Bankswitch1:
+	push af
+	di
+	ld [rROMB + $1000], a
+	rra
+	swap a
+	ld [rRAMB + $1000], a
+	ei
+	pop af
+	ret
+
+Bankswitch2:
+	push af
+	di
+	ld [rROMB + $1000], a
+	rra
+	swap a
+	ld [rRAMB + $1000], a
+	ei
+	pop af
+	ret
 
 DisableLCD::
 	push af
@@ -797,48 +1392,55 @@ Func_1144::
 
 SECTION "Home@120a", ROM0[$120a]
 
-Func_120a::
+ClearOAM::
 	push af
 	push bc
 	push hl
-	ld hl, $ca00
-	ld c, $28
-.asm_1212
-	ld a, $ff
-	ld [hli], a
-	ld a, $ff
-	ld [hli], a
+	ld hl, wVirtualOAM
+	ld c, OAM_COUNT
+.loop
+	ld a, -1
+	ld [hli], a ; y
+	ld a, -1
+	ld [hli], a ; x
 	ld a, $00
-	ld [hli], a
+	ld [hli], a ; tile ID
 	ld a, $00
-	ld [hli], a
+	ld [hli], a ; attributes
 	dec c
-	jr nz, .asm_1212
+	jr nz, .loop
 	pop hl
 	pop bc
 	pop af
 	ret
 
+; copy wVirtualOAM directly to OAM
+; this must be done during V-Blank or H-Blank
 Func_1225::
 	push af
 	push bc
 	push de
 	push hl
-	ld hl, $ca00
-	ld de, $fe00
-	ld c, $a0
-.asm_1231
+	ld hl, wVirtualOAM
+	ld de, $fe00 ; OAM
+	ld c, OAM_SIZE
+.loop
 	ld a, [hli]
 	ld [de], a
 	inc e
 	dec c
-	jr nz, .asm_1231
+	jr nz, .loop
 	pop hl
 	pop de
 	pop bc
 	pop af
 	ret
 
+; input:
+; - c = OAM index
+; - a = y
+; - d = x
+; - b = tile ID
 Func_123c::
 	push af
 	push bc
@@ -847,40 +1449,51 @@ Func_123c::
 	sla c
 	sla c
 	ld b, $00
-	ld hl, $ca00
+	ld hl, wVirtualOAM
 	add hl, bc
 	pop bc
-	ld [hli], a
+	ld [hli], a ; y
 	ld a, d
-	ld [hli], a
+	ld [hli], a ; x
 	ld a, b
-	ld [hli], a
-	ld [hl], $00
+	ld [hli], a ; tile ID
+	ld [hl], $00 ; attributes
 	pop hl
 	pop bc
 	pop af
 	ret
 ; 0x1256
 
+SECTION "Bank 0@12d2", ROM0[$12d2]
+
+Func_12d2:
+	call ClearOAM
+	call Func_1225
+	ret
+; 0x12d9
+
 SECTION "Home@1347", ROM0[$1347]
 
-Func_1347:
+; output:
+; - d = d / b
+; - e = d % b
+DDividedByB:
 	push af
 	push bc
 	ld e, $00
-	ld c, $08
-.asm_134d
+	ld c, $8 ; bits
+.loop
 	sla d
 	rl e
 	ld a, e
 	cp b
-	jr c, .asm_1358
+	jr c, .skip_sub
 	sub b
 	ld e, a
 	inc d
-.asm_1358
+.skip_sub
 	dec c
-	jr nz, .asm_134d
+	jr nz, .loop
 	pop bc
 	pop af
 	ret
@@ -888,22 +1501,23 @@ Func_1347:
 
 SECTION "Bank 0@1391", ROM0[$1391]
 
-Func_1391::
+; outputs hl = d * e
+BTimesE::
 	push af
 	push bc
 	push de
 	ld d, $00
-	ld hl, $0
-	ld c, $08
-.asm_139b
+	ld hl, 0
+	ld c, $8 ; bits
+.loop
 	srl b
-	jr nc, .asm_13a0
+	jr nc, .no_carry
 	add hl, de
-.asm_13a0
+.no_carry
 	sla e
 	rl d
 	dec c
-	jr nz, .asm_139b
+	jr nz, .loop
 	pop de
 	pop bc
 	pop af
@@ -933,7 +1547,7 @@ InitTransferVirtualOAM:
 TransferVirtualOAM:
 LOAD "DMA Transfer", HRAM
 hTransferVirtualOAM::
-	ld a, $ca ; HIGH(wVirtualOAM)
+	ld a, HIGH(wVirtualOAM)
 	ldh [rDMA], a ; start DMA transfer (starts right after instruction)
 	ld a, 160 / (1 + 3) ; delay for a total of 160 cycles
 .loop
@@ -976,9 +1590,9 @@ Func_15a2:
 	push af
 	push bc
 	push hl
-	ld hl, $15c8
-	lb bc, $3, $eb
-.asm_15ab
+	ld hl, Data_15c8
+	lb bc, $3, LOW(hffeb)
+.loop
 	ld a, [hli]
 	ld [$ff00+c], a
 	inc c
@@ -998,12 +1612,25 @@ Func_15a2:
 	ld a, [hli]
 	ld [de], a
 	dec b
-	jr nz, .asm_15ab
+	jr nz, .loop
 	pop hl
 	pop bc
 	pop af
 	ret
 ; 0x15c4
+
+SECTION "Home@15c8", ROM0[$15c8]
+
+Data_15c8:
+	dwb $dcf6, BANK(Func_fce)
+	dw $dcfe, Func_fce
+
+	dwb $dbf6, BANK(Func_1c002)
+	dw $dbfe, Func_1c002
+
+	dwb $daf6, BANK(Func_172c)
+	dw $dafe, Func_172c
+; 0x15dd
 
 SECTION "Home@15e9", ROM0[$15e9]
 
@@ -1011,7 +1638,7 @@ Func_15e9:
 	push af
 	push bc
 	push hl
-	ld c, $e0
+	ld c, LOW(hffe0)
 	ld hl, $15c4
 	ld b, $04
 .asm_15f3
@@ -1020,8 +1647,8 @@ Func_15e9:
 	inc c
 	dec b
 	jr nz, .asm_15f3
-	ld a, $e0
-	ldh [$ffdf], a
+	ld a, LOW(hffe0)
+	ldh [hffdf], a
 	pop hl
 	pop bc
 	pop af
@@ -1037,12 +1664,12 @@ Timer:
 	push af
 	push bc
 	push de
-	ldh a, [$ffdf]
+	ldh a, [hffdf]
 	ld c, a
 	sub $e0
 	ld b, a
 	rlca
-	add b
+	add b ; *3
 	ld e, a
 	ld a, $01
 	ld [$ff00+c], a
@@ -1057,7 +1684,7 @@ Timer:
 	cp $01
 	jr nz, .asm_162f
 	ld a, c
-	ldh [$ffdf], a
+	ldh [hffdf], a
 	ld a, $02
 	ld [$ff00+c], a
 	ld a, $e8
@@ -1070,13 +1697,13 @@ Timer:
 	ld a, h
 	ld [$ff00+c], a
 	inc c
-	ld a, [$4000]
+	ld a, [rRAMB]
 	ld [$ff00+c], a
-	ldh a, [$ffdf]
+	ldh a, [hffdf]
 	sub $e0
 	ld b, a
 	rlca
-	add b
+	add b ; *3
 	ld e, a
 	add $e8
 	ld c, a
@@ -1088,10 +1715,11 @@ Timer:
 	ld sp, hl
 	inc c
 	ld a, [$ff00+c]
-	ld [$3000], a
+	ld [rROMB + $1000], a
 	rra
 	swap a
-	ld [$5000], a
+	ld [rRAMB + $1000], a
+
 	ld d, $00
 	ld hl, $15dd
 	add hl, de
@@ -1116,7 +1744,7 @@ Timer:
 
 SECTION "Home@168f", ROM0[$168f]
 
-Func_168f:
+Func_168f::
 	push hl
 	ld hl, rIE
 	res B_IE_TIMER, [hl]
@@ -1124,12 +1752,12 @@ Func_168f:
 	push bc
 	push de
 	di
-	ldh a, [$ffdf]
+	ldh a, [hffdf]
 	ld c, a
 	sub $e0
 	ld b, a
 	rlca
-	add b
+	add b ; *3
 	ld e, a
 	ld a, $00
 	ld [$ff00+c], a
@@ -1144,9 +1772,11 @@ Func_168f:
 	cp $01
 	jr nz, .asm_16a5
 	ld a, c
-	ldh [$ffdf], a
+	ldh [hffdf], a
 	ld a, $02
 	ld [$ff00+c], a
+
+	; save current stack pointer and bank
 	ld a, $e8
 	add e
 	ld c, a
@@ -1159,11 +1789,12 @@ Func_168f:
 	inc c
 	ld a, [rRAMB]
 	ld [$ff00+c], a
-	ldh a, [$ffdf]
+
+	ldh a, [hffdf]
 	sub $e0
 	ld b, a
 	rlca
-	add b
+	add b ; *3
 	ld e, a
 	add $e8
 	ld c, a
@@ -1179,6 +1810,7 @@ Func_168f:
 	rra
 	swap a
 	ld [rRAMB + $1000], a
+
 	ld d, $00
 	ld hl, $15dd
 	add hl, de
@@ -1203,7 +1835,7 @@ Func_168f:
 
 SECTION "Home@1705", ROM0[$1705]
 
-Func_1705:
+Func_1705::
 	push af
 	push bc
 	push de
@@ -1225,9 +1857,13 @@ Func_1705:
 	pop bc
 	pop af
 	ret
-; 0x171c
 
-SECTION "Home@1724", ROM0[$1724]
+Func_171c:
+	push hl
+	ld hl, rTAC
+	res B_TAC_START, [hl]
+	pop hl
+	ret
 
 Func_1724:
 	di
@@ -1236,12 +1872,19 @@ Func_1724:
 	reti
 ; 0x172b
 
+SECTION "Home@172c", ROM0[$172c]
+
+Func_172c:
+.loop
+	jr .loop
+; 0x172e
+
 SECTION "Home@172f", ROM0[$172f]
 
 Func_172f:
 	push af
 	push bc
-	ld c, $e4
+	ld c, LOW(hffe4)
 	xor a
 	ld b, $04
 .asm_1736
@@ -1252,11 +1895,37 @@ Func_172f:
 	pop bc
 	pop af
 	ret
-; 0x173e
 
-SECTION "Home@175a", ROM0[$175a]
+Func_173e::
+	push af
+	push bc
+	push de
+	push hl
+	ld hl, sp+$08
+	ld a, [hli]
+	ld e, a
+	ld d, [hl]
+	ld a, [de]
+	ld b, a
+	inc de
+	ld a, [de]
+	ld c, a
+	inc de
+	ld a, d
+	ld [hld], a
+	ld [hl], e
+	di
+	ld a, [$ff00+c]
+	or b
+	ld [$ff00+c], a
+	ei
+	pop hl
+	pop de
+	pop bc
+	pop af
+	ret
 
-Func_175a:
+Func_175a::
 	push bc
 	push de
 	push hl
@@ -1291,7 +1960,7 @@ Func_175a:
 
 SECTION "Home@177b", ROM0[$177b]
 
-Func_177b:
+Func_177b::
 	push af
 	push bc
 	push de
@@ -1334,7 +2003,554 @@ Func_179b:
 	ld [$cd0a], a
 	pop af
 	ret
-; 0x17ab
+
+Func_17ab::
+	push af
+	push bc
+	push de
+	ld a, [$ccff]
+	ld e, a
+.asm_17b2
+	ld a, [$cd00]
+	cp e
+	jr nz, .asm_17c9
+	call Func_173e
+	db $01, LOW(hffe6)
+	call Func_171c
+	call Func_1705
+	db LOW(hffe2)
+	call Func_168f
+	jr .asm_17b2
+.asm_17c9
+	ld d, HIGH(wc600)
+	ld c, $8 tiles
+.asm_17cd
+	ld a, [de]
+	ld [hli], a
+	inc e
+	dec c
+	jr nz, .asm_17cd
+	ld a, e
+	ld [$ccff], a
+	pop de
+	pop bc
+	pop af
+	ret
+
+Func_17db:
+	push af
+	push bc
+	push de
+	ld a, [$cd00]
+	ld e, a
+	ld a, $80
+	add e
+	ld c, a
+.loop
+	ld a, [$ccff]
+	cp c
+	jr nz, .asm_17fd
+	call Func_173e
+	db $04, LOW(hffe4)
+	call Func_171c
+	call Func_1705
+	db LOW(hffe0)
+	call Func_168f
+	jr .loop
+.asm_17fd
+	ld d, HIGH(wc600)
+	ld c, $8 tiles
+.asm_1801
+	ld a, [hli]
+	ld [de], a
+	inc e
+	dec c
+	jr nz, .asm_1801
+	ld a, e
+	ld [$cd00], a
+	pop de
+	pop bc
+	pop af
+	ret
+
+Func_180f::
+	push de
+	push hl
+	ld a, [$cd09]
+	ld e, a
+.loop
+	ld a, [$cd0a]
+	cp e
+	jr nz, .asm_182c
+	call Func_173e
+	db $04, LOW(hffe4)
+	call Func_171c
+	call Func_1705
+	db LOW(hffe0)
+	call Func_168f
+	jr .loop
+
+.asm_182c
+	ld d, $00
+	ld hl, $cd01
+	add hl, de
+	inc e
+	ld a, e
+	cp $08
+	jr nz, .asm_183a
+	ld e, $00
+.asm_183a
+	ld a, e
+	ld [$cd09], a
+	ld a, [hli]
+	pop hl
+	pop de
+	ret
+
+Func_1842::
+	push af
+	push bc
+	push de
+	push hl
+	push af
+	ld d, $00
+	ld a, [$cd0a]
+	ld e, a
+	ld hl, $cd01
+	add hl, de
+	inc e
+	ld a, e
+	cp $08
+	jr nz, .asm_1859
+	ld e, $00
+.asm_1859
+	ld a, [$cd09]
+	cp e
+	jr nz, .asm_1870
+	call Func_173e
+	db $01, LOW(hffe6)
+	call Func_171c
+	call Func_1705
+	db LOW(hffe2)
+	call Func_168f
+	jr .asm_1859
+.asm_1870
+	pop af
+	ld [hli], a
+	ld a, e
+	ld [$cd0a], a
+	pop hl
+	pop de
+	pop bc
+	pop af
+	ret
+
+Func_187b::
+	push af
+	ld a, d
+	ld [$cd0b], a
+	ld a, c
+	ld [$cd0c], a
+	ld a, b
+	ld [$cd0d], a
+	pop af
+	ret
+
+Func_188a::
+	push af
+	push bc
+	push hl
+	ld a, [rRAMB]
+	push af
+	ld b, $00
+	ld a, [$cd0b]
+	ld c, a
+	sla c
+	ld hl, .Jumptable
+	add hl, bc
+	ld a, [hli]
+	ld h, [hl]
+	ld l, a
+	ld bc, .ret
+	push bc
+	jp hl
+.ret
+	pop af
+	call Bankswitch2
+	pop hl
+	pop bc
+	pop af
+	ret
+
+.Jumptable:
+	dw Func_18b1
+	dw Func_1a5e
+
+Func_18b1:
+	call Func_18b8
+	call Func_1afd
+	ret
+
+Func_18b8:
+	push af
+	push bc
+	push de
+	push hl
+	call Func_1aaf
+	ld a, BANK(Func_40002)
+	call Bankswitch1
+	ld a, [$cd0c]
+	ld c, a
+	ld a, [$cd0d]
+	ld b, a
+	ld a, [$cd0b]
+	ld d, a
+	push bc
+	call Func_40002
+	call SetDecompressSource
+	ld a, $01
+	call Func_1af9
+	ld bc, $50 tiles
+	call SetDecompressLength
+	pop bc
+	ld hl, CardGraphicsBanks
+	add hl, bc
+	ld a, [hl]
+	call Bankswitch1
+	pop hl
+	pop de
+	pop bc
+	pop af
+	ret
+
+CardGraphicsBanks:
+	db $10, $10, $10, $10, $10, $10, $10, $10, $10, $10, $10, $10, $10, $11, $11, $11
+	db $11, $11, $11, $11, $11, $11, $11, $11, $11, $11, $11, $12, $12, $12, $12, $12
+	db $12, $12, $12, $12, $12, $12, $12, $12, $13, $13, $13, $13, $13, $13, $13, $13
+	db $13, $13, $13, $13, $13, $14, $14, $14, $14, $14, $14, $14, $14, $14, $14, $14
+	db $14, $14, $15, $15, $15, $15, $15, $15, $15, $15, $15, $15, $15, $15, $15, $16
+	db $16, $16, $16, $16, $16, $16, $16, $16, $16, $16, $16, $16, $17, $17, $17, $17
+	db $17, $17, $17, $17, $17, $17, $17, $17, $17, $18, $18, $18, $18, $18, $18, $18
+	db $18, $18, $18, $18, $18, $18, $19, $19, $19, $19, $19, $19, $19, $19, $19, $19
+	db $19, $19, $19, $1a, $1a, $1a, $1a, $1a, $1a, $1a, $1a, $1a, $1a, $1a, $1a, $1a
+	db $1b, $1b, $1b, $1b, $1b, $1b, $1b, $1b, $1b, $1b, $1b, $1b, $1b, $1c, $1c, $1c
+	db $1c, $1c, $1c, $1c, $1c, $1c, $1c, $1c, $1c, $1c, $1d, $1d, $1d, $1d, $1d, $1d
+	db $1d, $1d, $1d, $1d, $1d, $1d, $1d, $1e, $1e, $1e, $1e, $1e, $1e, $1e, $1e, $1e
+	db $1e, $1e, $1e, $1f, $1f, $1f, $1e, $1f, $1f, $1f, $1f, $1f, $1f, $1f, $1f, $1f
+	db $1f, $21, $21, $21, $21, $21, $21, $21, $21, $21, $21, $21, $21, $21, $22, $22
+	db $22, $22, $22, $22, $22, $22, $22, $22, $22, $22, $22, $23, $23, $23, $23, $23
+	db $23, $23, $23, $23, $23, $23, $23, $23, $24, $24, $24, $24, $24, $24, $24, $24
+	db $24, $24, $24, $24, $24, $25, $25, $25, $25, $25, $25, $25, $25, $25, $25, $25
+	db $25, $25, $26, $26, $26, $26, $26, $26, $26, $26, $26, $26, $26, $26, $26, $27
+	db $27, $27, $27, $27, $27, $27, $27, $27, $27, $27, $27, $27, $28, $28, $28, $28
+	db $28, $28, $28, $28, $28, $28, $28, $28, $28, $29, $29, $29, $29, $29, $29, $29
+	db $29, $29, $29, $29, $29, $29, $2a, $2a, $2a, $2a, $2a, $2a, $2a, $2a, $2a, $2a
+	db $2a, $2a, $2a, $2b, $2b, $2b, $2b, $2b, $2b, $2b, $2b, $2b, $2b, $2b, $2b, $2b
+	db $2c, $2c, $2c, $2c, $2c, $2c, $2c, $2c, $2c, $2c, $2c, $2c, $2c, $2c
+
+Func_1a5e:
+	call Func_1a65
+	call Func_1afd
+	ret
+
+Func_1a65:
+	push af
+	push bc
+	push de
+	push hl
+	call Func_1aaf
+	ld a, BANK(Func_40002)
+	call Bankswitch1
+	ld a, [$cd0c]
+	ld c, a
+	ld a, [$cd0d]
+	ld b, a
+	ld a, [$cd0b]
+	ld d, a
+	push bc
+	call Func_40002
+	call SetDecompressSource
+	ld a, $01
+	call Func_1af9
+	ld bc, $c0 tiles
+	call SetDecompressLength
+	pop bc
+	ld hl, $1a9d
+	add hl, bc
+	ld a, [hl]
+	call Bankswitch1
+	pop hl
+	pop de
+	pop bc
+	pop af
+	ret
+
+	db $2e, $2e, $2e, $2e, $2e, $2e, $2f, $2f, $2f, $2f, $2f, $2f, $30, $30, $30, $30, $30, $30
+
+Func_1aaf:
+	push af
+	push bc
+	push de
+	push hl
+
+	; prepares lookback buffer
+	ld hl, wDecompressLookbackBuffer
+	ld de, wDecompressLookbackBuffer + 1
+	ld [hl], $20
+	ld bc, $3dd
+.asm_1abe
+	ld a, [hli]
+	ld [de], a
+	inc de
+	dec c
+	jr nz, .asm_1abe
+.asm_1ac4
+	ld c, $00
+.asm_1ac6
+	ld a, [hli]
+	ld [de], a
+	inc de
+	dec c
+	jr nz, .asm_1ac6
+	dec b
+	jr nz, .asm_1ac4
+
+	ld a, $80
+	ldh [hDecompressBufferSize], a
+
+	ld bc, wDecompressBuffer
+	call SetDecompressDestination
+	pop hl
+	pop de
+	pop bc
+	pop af
+	ret
+
+; input:
+; - bc = pointer to compressed data to decompress
+SetDecompressSource:
+	push af
+	ld a, c
+	ldh [hDecompressSource + 0], a
+	ld a, b
+	ldh [hDecompressSource + 1], a
+	pop af
+	ret
+
+; input:
+; - bc = pointer to address where decompressed data
+;        should be output
+SetDecompressDestination:
+	push af
+	ld a, c
+	ldh [hDecompressDest + 0], a
+	ld a, b
+	ldh [hDecompressDest + 1], a
+	pop af
+	ret
+
+; input:
+; - bc = length of decompressed data
+SetDecompressLength:
+	push af
+	ld a, c
+	ldh [hDecompressLen + 0], a
+	ld a, b
+	ldh [hDecompressLen + 1], a
+	pop af
+	ret
+
+Func_1af9:
+	ld [$cd0e], a
+	ret
+
+Func_1afd:
+	push af
+	ld a, [$cd0e]
+	dec a
+	jr nz, .asm_1b09
+	call Decompress
+	jr .asm_1b0c
+.asm_1b09
+	call Func_1b0e
+.asm_1b0c
+	pop af
+	ret
+
+Func_1b0e:
+	push af
+	push bc
+	push hl
+	ldh a, [hDecompressSource + 0]
+	ld l, a
+	ldh a, [hDecompressSource + 1]
+	ld h, a
+	ld c, $0a
+.asm_1b19
+	call Func_17db
+	dec c
+	jr nz, .asm_1b19
+	pop hl
+	pop bc
+	pop af
+	ret
+
+; compressed data has a simple lookback mechanism
+; first a command byte is read, and each bit is iterated
+; from least significant to most significant, if the bit:
+; - is set, then copy the next byte;
+; - is unset, then next 2 bytes encode the lookback address
+;   and its length (%ZZZZZZZZ %YYY_XXXXX, where %XXXXX + 3 is the length
+;   and %YYYZZZZZZZZ is the offset in wDecompressLookbackBuffer);
+Decompress:
+	push af
+	push bc
+	push de
+	push hl
+	ld de, wDecompressLookbackBuffer + $3de
+	ld c, $80
+.next_cmd
+	call .ReadByte
+	ld c, a
+	ld b, 8 ; bits
+.read_cmd_bit
+	rr c
+	jr nc, .lookback
+; literal copy
+	call .ReadByte
+	call .WriteByte
+	jr c, .done
+	ld [de], a
+	inc e
+	jr nz, .done_literal_copy
+	inc d
+	ld a, d
+	cp HIGH(wDecompressLookbackBufferEnd)
+	jr nz, .done_literal_copy
+	; wrap back to beginning
+	ld d, HIGH(wDecompressLookbackBuffer)
+.done_literal_copy
+	jr .next_cmd_bit
+
+.lookback
+	push bc
+	call .ReadByte
+	ld l, a
+	call .ReadByte
+	ld h, a
+	and $1f
+	add 3
+	ld c, a ; length
+	ld a, h
+	swap a
+	rrca
+	and $03
+	add HIGH(wDecompressLookbackBuffer)
+	ld h, a
+.loop_lookback
+	ld a, [hl]
+	call .WriteByte
+	jr nc, .asm_1b6d
+	; discard push bc
+	add sp, $02
+	jr .done
+.asm_1b6d
+	ld [de], a
+	inc l
+	jr nz, .asm_1b79
+	inc h
+	ld a, h
+	cp HIGH(wDecompressLookbackBufferEnd)
+	jr nz, .asm_1b79
+	ld h, HIGH(wDecompressLookbackBuffer)
+.asm_1b79
+	inc e
+	jr nz, .asm_1b84
+	inc d
+	ld a, d
+	cp HIGH(wDecompressLookbackBufferEnd)
+	jr nz, .asm_1b84
+	ld d, HIGH(wDecompressLookbackBuffer)
+.asm_1b84
+	dec c
+	jr nz, .loop_lookback
+	pop bc
+.next_cmd_bit
+	dec b
+	jr nz, .read_cmd_bit
+	jr .next_cmd
+
+.done
+	pop hl
+	pop de
+	pop bc
+	pop af
+	ret
+
+.ReadByte:
+	push hl
+	ldh a, [hDecompressSource + 0]
+	add LOW($1)
+	ldh [hDecompressSource + 0], a
+	ld l, a
+	ldh a, [hDecompressSource + 1]
+	adc HIGH($1)
+	ldh [hDecompressSource + 1], a
+	ld h, a
+	dec hl
+	ld a, [hl]
+	pop hl
+	ret
+
+.WriteByte:
+	push bc
+	push de
+	push hl
+
+	; write byte to output
+	ld d, a
+	ldh a, [hDecompressDest + 0]
+	add LOW($1)
+	ldh [hDecompressDest + 0], a
+	ld l, a
+	ldh a, [hDecompressDest + 1]
+	adc HIGH($1)
+	ldh [hDecompressDest + 1], a
+	ld h, a
+	dec hl
+	ld a, d
+	ld [hl], a
+
+	ld hl, hDecompressBufferSize
+	dec [hl]
+	jr nz, .asm_1bcd
+	ld [hl], $80
+	ld hl, wDecompressBuffer
+	ld b, h
+	ld c, l
+	call Func_17db
+	call SetDecompressDestination
+.asm_1bcd
+	ldh a, [hDecompressLen + 0]
+	ld l, a
+	ldh a, [hDecompressLen + 1]
+	ld h, a
+	dec hl
+	ld a, l
+	ldh [hDecompressLen + 0], a
+	ld a, h
+	ldh [hDecompressLen + 1], a
+	ld a, h
+	or l
+	jr nz, .asm_1bdf
+	scf
+.asm_1bdf
+	ld a, d
+	pop hl
+	pop de
+	pop bc
+	ret
+; 0x1be4
 
 SECTION "Home@1c4f", ROM0[$1c4f]
 
@@ -1346,7 +2562,16 @@ Func_1c4f:
 	ld [$cdf1], a
 	pop af
 	ret
-; 0x1c5a
+
+Func_1c5a:
+	push af
+	ld a, [$cdf0]
+	ld b, a
+	ld a, [$cdf1]
+	ld c, a
+	pop af
+	ret
+; 0x1c65
 
 SECTION "Bank 0@1c7a", ROM0[$1c7a]
 
@@ -1420,7 +2645,22 @@ Func_1cb5:
 	ret
 ; 0x1cdd
 
-SECTION "Bank 0@1d00", ROM0[$1d00]
+SECTION "Bank 0@1cef", ROM0[$1cef]
+
+Func_1cef::
+	push de
+	ld e, $00
+	ld a, b
+	cp $01
+	jr nz, .asm_1cfd
+	ld a, c
+	cp $6d
+	jr nz, .asm_1cfd
+	inc e
+.asm_1cfd
+	ld a, e
+	pop de
+	ret
 
 Func_1d00:
 	push hl
@@ -1438,6 +2678,76 @@ Func_1d00:
 	ret
 ; 0x1d0f
 
+SECTION "Bank 0@1d67", ROM0[$1d67]
+
+Func_1d67:
+	push bc
+	push de
+	push hl
+	ld e, $d0
+	ld a, [$cdf2]
+	ld c, a
+	ld a, [$cdf3]
+	ld b, a
+	call Func_1cef
+	cp $01
+	jr nz, .asm_1d7f
+	ld e, $d0
+	jr .asm_1da2
+.asm_1d7f
+	call Func_2203
+	cp $00
+	jr nz, .asm_1d97
+	call Func_1daf
+	cp $00
+	jr nz, .asm_1d92
+	ld hl, $1da7
+	jr .asm_1d95
+.asm_1d92
+	ld hl, $1dab
+.asm_1d95
+	jr .asm_1d9a
+.asm_1d97
+	ld hl, $1dab
+.asm_1d9a
+	call Func_21f3
+	ld b, $00
+	ld c, a
+	add hl, bc
+	ld e, [hl]
+.asm_1da2
+	ld a, e
+	pop hl
+	pop de
+	pop bc
+	ret
+; 0x1da7
+
+SECTION "Bank 0@1daf", ROM0[$1daf]
+
+Func_1daf:
+	push bc
+	push de
+	push hl
+	ld b, $00
+	ld a, [$cd5c]
+	ld c, a
+	sla c
+	ld hl, $1dcc
+	add hl, bc
+	ld a, [hli]
+	ld h, [hl]
+	ld l, a
+	call Func_1c5a
+	ld b, $00
+	add hl, bc
+	ld a, [hl]
+	pop hl
+	pop de
+	pop bc
+	ret
+; 0x1dcc
+
 SECTION "Home@1e65", ROM0[$1e65]
 
 Func_1e65:
@@ -1448,6 +2758,37 @@ Func_1e65:
 	pop af
 	ret
 ; 0x1e70
+
+SECTION "Home@1fa8", ROM0[$1fa8]
+
+Func_1fa8::
+	push af
+	ld a, $01
+	ld [$ce00], a
+	pop af
+	ret
+
+Func_1fb0::
+	push af
+	ld a, $02
+	ld [$ce00], a
+	pop af
+	ret
+
+Func_1fb8::
+	push af
+	ld a, $03
+	ld [$ce00], a
+	pop af
+	ret
+
+Func_1fc0::
+	push af
+	ld a, $04
+	ld [$ce00], a
+	pop af
+	ret
+; 0x1fc8
 
 SECTION "Home@1fe6", ROM0[$1fe6]
 
@@ -1589,7 +2930,7 @@ Func_2112:
 	cp c
 	jr nz, .asm_2124
 	ld [wce9f], a
-	jr .asm_2136
+	jr .done
 .asm_2124
 	sub c
 	ld b, a
@@ -1597,16 +2938,35 @@ Func_2112:
 	call AdvanceRNG
 	ld a, [wce9f]
 	ld d, a
-	call Func_1347
+	call DDividedByB
 	ld a, e
 	add c
 	ld [wce9f], a
-.asm_2136
+.done
 	pop de
 	pop bc
 	pop af
 	ret
 ; 0x213a
+
+SECTION "Bank 0@21f3", ROM0[$21f3]
+
+Func_21f3:
+	ld a, [$cdf4]
+	and $07
+	ret
+; 0x21f9
+
+SECTION "Bank 0@2203", ROM0[$2203]
+
+Func_2203:
+	ld a, [$cdf4]
+	and $08
+	jr z, .asm_220c
+	ld a, $01
+.asm_220c
+	ret
+; 0x220d
 
 SECTION "Home@2473", ROM0[$2473]
 
@@ -1718,6 +3078,87 @@ DMGFadeOut:
 	ret
 ; 0x2536
 
+SECTION "Home@2564", ROM0[$2564]
+
+Func_2564::
+	push af
+	ld a, [wNPCCharacter]
+	cp EXODIA
+	jr z, .fade_in
+	ld a, $1b
+	ldh [rBGP], a
+	ld a, $e4
+	ldh [rOBP0], a
+	ld a, $1b
+	ldh [rOBP1], a
+	jr .done
+.fade_in
+	call Func_257f
+.done
+	pop af
+	ret
+
+Func_257f:
+	push af
+	push bc
+
+	ld a, $ff
+	ldh [rBGP], a
+	ld a, $ff
+	ldh [rOBP0], a
+	ld a, $ff
+	ldh [rOBP1], a
+	; wait 50 frames
+	ld c, 50
+.wait_1
+	call DoFrame
+	dec c
+	jr nz, .wait_1
+
+	ld a, $ab
+	ldh [rBGP], a
+	ld a, $ea
+	ldh [rOBP0], a
+	ld a, $ab
+	ldh [rOBP1], a
+	; wait 50 frames
+	ld c, 50
+.wait_2
+	call DoFrame
+	dec c
+	jr nz, .wait_2
+
+	ld a, $5b
+	ldh [rBGP], a
+	ld a, $e5
+	ldh [rOBP0], a
+	ld a, $5b
+	ldh [rOBP1], a
+	; wait 100 frames
+	ld c, 100
+.wait_3
+	call DoFrame
+	dec c
+	jr nz, .wait_3
+
+	ld a, $1b
+	ldh [rBGP], a
+	ld a, $e4
+	ldh [rOBP0], a
+	ld a, $1b
+	ldh [rOBP1], a
+	; wait 100 frames
+	ld c, 100
+.wait_4
+	call DoFrame
+	dec c
+	jr nz, .wait_4
+
+	pop bc
+	pop af
+	ret
+; 0x25d4
+
 SECTION "Home@2666", ROM0[$2666]
 
 Func_2666::
@@ -1750,10 +3191,10 @@ Func_2670:
 	ld b, [hl]
 	ld c, a
 	ld a, e
-	farcall $61, $03
-	farcall $63, $03
-	farcall $11, $01
-	farcall $43, $01
+	farcall Func_c5e8
+	farcall Func_c5ec
+	farcall Func_5af2
+	farcall Func_5b52
 	inc e
 	ld a, e
 	cp $21
@@ -1779,14 +3220,14 @@ Func_2774:
 	cp $28
 	jr nc, .asm_2796
 	ld a, e
-	farcall $61, $03
+	farcall Func_c5e8
 	ld a, [hli]
 	ld c, a
 	ld a, [hli]
 	ld b, a
-	farcall $63, $03
-	farcall $11, $01
-	farcall $43, $01
+	farcall Func_c5ec
+	farcall Func_5af2
+	farcall Func_5b52
 	inc e
 	jr .asm_277d
 .asm_2796
@@ -1820,22 +3261,22 @@ Func_27a9:
 	ld d, a
 	ld a, d
 	cp $01
-	jr nz, .asm_27f2
+	jr nz, .done
 	ld a, e
 	cp $03
 	jr nz, .asm_27e4
 	ld bc, $25
-	farcall $11, $01
-	farcall $41, $01
-	jr .asm_27f2
+	farcall Func_5af2
+	farcall Func_5b04
+	jr .done
 .asm_27e4
 	ld a, e
 	cp $0e
-	jr nz, .asm_27f2
+	jr nz, .done
 	ld bc, $22
-	farcall $11, $01
-	farcall $41, $01
-.asm_27f2
+	farcall Func_5af2
+	farcall Func_5b04
+.done
 	pop hl
 	pop de
 	pop bc
@@ -1930,6 +3371,28 @@ Func_2aef:
 	pop af
 	ret
 ; 0x2afa
+
+SECTION "Home@2b26", ROM0[$2b26]
+
+Func_2b26::
+	push af
+	ld a, $9d
+	call Func_29f1
+	call Func_f74
+	pop af
+	ret
+; 0x2b31
+
+SECTION "Bank 0@2b7e", ROM0[$2b7e]
+
+Func_2b7e::
+	push af
+	ld a, $a1
+	call Func_29f1
+	call Func_f74
+	pop af
+	ret
+; 0x2b89
 
 SECTION "Home@2d1f", ROM0[$2d1f]
 

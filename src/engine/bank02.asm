@@ -1,12 +1,12 @@
 	dw BANK(@)
 
 	farcall_table_start
-	farfunc $403e ; $03
+	farfunc Func_803e ; $03
 	farfunc $4059 ; $05
 	farfunc Func_883d ; $07
 	farfunc $484a ; $09
-	farfunc $4c60 ; $0b
-	farfunc $4bfe ; $0d
+	farfunc LoadCharacterOAMGfx ; $0b
+	farfunc Func_8bfe ; $0d
 	farfunc $4074 ; $0f
 	farfunc $40b4 ; $11
 	farfunc $752c ; $13
@@ -32,7 +32,85 @@
 	farfunc $78fd ; $3b
 	farfunc $7916 ; $3d
 
-SECTION "Bank 2@40b4", ROMX[$40b4], BANK[$2]
+Func_803e:
+	push af
+	push bc
+	push de
+	push hl
+	ld hl, vTiles2
+	ld de, TILE_SIZE
+	ld a, $00
+	ld b, $80 ; tiles
+.loop
+	call LoadCharacterTile
+	add hl, de
+	inc a
+	dec b
+	jr nz, .loop
+	pop hl
+	pop de
+	pop bc
+	pop af
+	ret
+; 0x8059
+
+SECTION "Bank 2@4074", ROMX[$4074], BANK[$2]
+
+LoadCharacterTile:
+	push af
+	push bc
+	push de
+	push hl
+	cp $7d
+	jr nc, .char_2bpp
+	push hl
+	ld l, a
+	ld h, $00
+	add hl, hl
+	add hl, hl
+	add hl, hl ; *8
+	ld de, Gfx_80d9
+	add hl, de
+	ld d, h
+	ld e, l
+	pop hl
+	ld c, TILE_1BPP_SIZE
+.loop_copy_1bpp
+	ld a, [de]
+	ld [hli], a
+	ld a, [de]
+	ld [hli], a
+	inc de
+	dec c
+	jr nz, .loop_copy_1bpp
+	jr .done
+.char_2bpp
+	push hl
+	sub $7d
+	ld l, a
+	ld h, $00
+	add hl, hl
+	add hl, hl
+	add hl, hl
+	add hl, hl
+	ld de, $44c1
+	add hl, de
+	ld d, h
+	ld e, l
+	pop hl
+	ld c, TILE_SIZE
+.loop_copy_2bpp
+	ld a, [de]
+	ld [hli], a
+	inc de
+	dec c
+	jr nz, .loop_copy_2bpp
+.done
+	pop hl
+	pop de
+	pop bc
+	pop af
+	ret
 
 Func_80b4:
 	push af
@@ -45,7 +123,7 @@ Func_80b4:
 	add hl, hl
 	add hl, hl
 	add hl, hl
-	ld de, $40d9
+	ld de, Gfx_80d9
 	add hl, de
 	ld d, h
 	ld e, l
@@ -64,7 +142,8 @@ Func_80b4:
 	pop bc
 	pop af
 	ret
-; 0x80d9
+
+Gfx_80d9: INCBIN "gfx/gfx_80d9.1bpp"
 
 SECTION "Bank 2@44e1", ROMX[$44e1], BANK[$2]
 
@@ -406,8 +485,8 @@ Func_8752:
 	push de
 	push hl
 	ld d, $00
-	ld a, [$caa6]
-	and $03
+	ld a, [wJoypadPressed]
+	and PAD_A | PAD_B
 	jr z, .asm_876c
 	ld c, $08
 .asm_8761
@@ -504,8 +583,8 @@ SECTION "Bank 02@483d", ROMX[$483d], BANK[$02]
 
 Func_883d:
 	push af
-	ld a, $00
-	ld [$cd50], a
+	ld a, WEEVIL
+	ld [wNPCCharacter], a
 	ld a, $00
 	ld [$cd51], a
 	pop af
@@ -529,8 +608,8 @@ Func_884a:
 	call Func_84e1
 .asm_886d
 	call AdvanceRNG
-	ld a, $0c
-	call Func_de3
+	ld a, VBLANK_0C
+	call SetPendingVBlankMode
 	call Func_8752
 	call Func_889f
 	call Func_8945
@@ -542,7 +621,7 @@ Func_884a:
 .asm_888a
 	call Func_87aa
 .asm_888d
-	call Func_f2f
+	call RequestVBlankMode
 	call Func_f74
 	ld a, [$cd52]
 	cp $05
@@ -725,16 +804,16 @@ Func_8a1d:
 	ld c, a
 	sla c
 	push bc
-	ld hl, $4a5d
+	ld hl, .PtrTable
 	add hl, bc
 	ld a, [hli]
 	ld d, [hl]
 	ld e, a
 	push de
-	ld a, [$cd50]
+	ld a, [wNPCCharacter]
 	ld b, a
-	ld e, $06
-	call Func_1391
+	ld e, $6
+	call BTimesE
 	pop de
 	add hl, de
 	pop bc
@@ -759,9 +838,71 @@ Func_8a1d:
 	pop bc
 	pop af
 	ret
-; 0x8a5d
 
-SECTION "Bank 2@4ba7", ROMX[$4ba7], BANK[$2]
+.PtrTable:
+	dw .Data_8a63
+	dw .Data_8acf
+	dw .Data_8b3b
+
+.Data_8a63:
+	db $4f, $3d, $4f, $3d, $4f, $3d ; WEEVIL
+	db $46, $2b, $46, $2b, $46, $2b ; MAI
+	db $38, $38, $38, $38, $38, $38 ; REX
+	db $49, $26, $49, $26, $49, $26 ; MAKO
+	db $40, $33, $40, $33, $40, $33 ; YAMI_YUGI
+	db $4e, $3d, $4e, $3d, $4e, $3d ; YUGI
+	db $42, $31, $42, $31, $42, $31 ; TEA
+	db $4f, $2d, $4f, $2d, $4f, $2d ; JOEY
+	db $40, $28, $40, $28, $40, $28 ; SETO
+	db $44, $3f, $44, $3f, $44, $3f ; MOKUBA
+	db $46, $31, $46, $31, $46, $31 ; TRISTAN
+	db $3b, $39, $3b, $39, $3b, $39 ; BAKURA
+	db $44, $35, $44, $35, $44, $35 ; PUPPETEER
+	db $4a, $20, $4a, $20, $4a, $20 ; PANIK
+	db $48, $30, $48, $30, $48, $30 ; BANDIT
+	db $40, $30, $40, $30, $40, $30 ; MAXIMILLION
+	db $48, $40, $48, $40, $48, $40 ; SIMON
+	db $c8, $d0, $c8, $d0, $c8, $d0 ; EXODIA
+
+.Data_8acf:
+	db $5f, $3d, $5f, $3d, $5f, $3d ; WEEVIL
+	db $5c, $2c, $5c, $2c, $5c, $2c ; MAI
+	db $50, $35, $50, $35, $50, $35 ; REX
+	db $5f, $26, $5f, $26, $5f, $26 ; MAKO
+	db $58, $33, $58, $33, $58, $33 ; YAMI_YUGI
+	db $5e, $3f, $5e, $3f, $5e, $3f ; YUGI
+	db $5a, $31, $5a, $31, $5a, $31 ; TEA
+	db $5f, $2d, $5f, $2d, $5f, $2d ; JOEY
+	db $50, $20, $50, $20, $50, $20 ; SETO
+	db $5c, $3f, $5c, $3f, $5c, $3f ; MOKUBA
+	db $5e, $31, $5e, $31, $5e, $31 ; TRISTAN
+	db $53, $39, $53, $39, $53, $39 ; BAKURA
+	db $5b, $35, $5b, $35, $5b, $35 ; PUPPETEER
+	db $5a, $20, $5a, $20, $5a, $20 ; PANIK
+	db $58, $30, $58, $30, $58, $30 ; BANDIT
+	db $50, $30, $50, $30, $50, $30 ; MAXIMILLION
+	db $58, $40, $58, $40, $58, $40 ; SIMON
+	db $c8, $d0, $c8, $d0, $c8, $d0 ; EXODIA
+
+.Data_8b3b:
+	db $4f, $4d, $4f, $4d, $4f, $4d ; WEEVIL
+	db $51, $3b, $51, $3b, $51, $3b ; MAI
+	db $48, $4a, $48, $4a, $48, $4a ; REX
+	db $54, $36, $54, $36, $54, $36 ; MAKO
+	db $50, $43, $50, $43, $50, $43 ; YAMI_YUGI
+	db $56, $4d, $56, $4d, $56, $4d ; YUGI
+	db $52, $41, $52, $41, $52, $41 ; TEA
+	db $5f, $3d, $5f, $3d, $5f, $3d ; JOEY
+	db $48, $30, $48, $30, $48, $30 ; SETO
+	db $54, $4f, $54, $4f, $54, $4f ; MOKUBA
+	db $58, $40, $58, $40, $58, $40 ; TRISTAN
+	db $4a, $49, $4a, $49, $4a, $49 ; BAKURA
+	db $2b, $59, $2b, $59, $2b, $59 ; PUPPETEER
+	db $52, $28, $52, $28, $52, $28 ; PANIK
+	db $52, $41, $52, $41, $52, $41 ; BANDIT
+	db $48, $40, $48, $40, $48, $40 ; MAXIMILLION
+	db $50, $48, $50, $48, $50, $48 ; SIMON
+	db $c8, $d0, $c8, $d0, $c8, $d0 ; EXODIA
 
 Func_8ba7:
 	push af
@@ -796,9 +937,15 @@ SECTION "Bank 2@4bd6", ROMX[$4bd6], BANK[$2]
 Func_8bd6:
 	ld [$cd59], a
 	ret
-; 0x8bda
 
-SECTION "Bank 2@4be7", ROMX[$4be7], BANK[$2]
+Func_8bda:
+	push af
+	ld a, $00
+	ld [$cd5a], a
+	ld a, $00
+	ld [$cd5b], a
+	pop af
+	ret
 
 Func_8be7:
 	push af
@@ -817,7 +964,23 @@ Func_8be7:
 	pop bc
 	pop af
 	ret
-; 0x8bfe
+
+Func_8bfe:
+	push af
+	push bc
+	push hl
+	call Func_8bda
+	ld a, $00
+	call Func_8c1e
+	ld a, $01
+	call Func_8c1e
+	ld a, $02
+	call Func_8c1e
+	pop hl
+	pop bc
+	pop af
+	ret
+; 0x8c17
 
 SECTION "Bank 2@4c1e", ROMX[$4c1e], BANK[$2]
 
@@ -838,30 +1001,103 @@ Func_8c2b:
 	rlca
 	rlca
 	ld c, a
-	ld hl, $ca00
+	ld hl, wVirtualOAM
 	add hl, bc
 	ld a, [$cd56]
-	ld [hli], a
+	ld [hli], a ; y
 	ld a, [$cd55]
-	ld [hli], a
+	ld [hli], a ; x
 	ld a, [$cd57]
-	ld [hli], a
+	ld [hli], a ; tile ID
 	ld a, $00
-	ld [hli], a
+	ld [hli], a ; attributes
 	ld a, [$cd56]
-	ld [hli], a
+	ld [hli], a ; y
 	ld a, [$cd55]
 	add $08
-	ld [hli], a
+	ld [hli], a ; x
 	ld a, [$cd57]
 	add $02
-	ld [hli], a
-	ld [hl], $00
+	ld [hli], a ; tile ID
+	ld [hl], $00 ; attributes
 	pop hl
 	pop bc
 	pop af
 	ret
-; 0x8c60
+
+; loads OAM graphics that correspond
+; to character in wNPCCharacter
+LoadCharacterOAMGfx:
+	push af
+	push bc
+	push de
+	push hl
+	ld b, $00
+	ld a, [wNPCCharacter]
+	ld c, a
+	sla c
+	ld hl, .GfxTable
+	add hl, bc
+	ld a, [hli]
+	ld d, [hl]
+	ld e, a
+	ld hl, vTiles0
+	ld b, $80 ; tiles
+.loop_tiles
+	ld c, TILE_SIZE
+.loop_copy_tile
+	ld a, [de]
+	ld [hli], a
+	inc de
+	dec c
+	jr nz, .loop_copy_tile
+	dec b
+	jr nz, .loop_tiles
+	pop hl
+	pop de
+	pop bc
+	pop af
+	ret
+
+.GfxTable:
+	dw WeevilOAMGfx      ; WEEVIL
+	dw MaiOAMGfx         ; MAI
+	dw RexOAMGfx         ; REX
+	dw MakoOAMGfx        ; MAKO
+	dw YamiYugiOAMGfx    ; YAMI_YUGI
+	dw YugiOAMGfx        ; YUGI
+	dw TeaOAMGfx         ; TEA
+	dw JoeyOAMGfx        ; JOEY
+	dw SetoOAMGfx        ; SETO
+	dw MokubaOAMGfx      ; MOKUBA
+	dw TristanOAMGfx     ; TRISTAN
+	dw BakuraOAMGfx      ; BAKURA
+	dw PuppeteerOAMGfx   ; PUPPETEER
+	dw PanikOAMGfx       ; PANIK
+	dw BanditOAMGfx      ; BANDIT
+	dw MaximillionOAMGfx ; MAXIMILLION
+	dw SimonOAMGfx       ; SIMON
+	dw ExodiaOAMGfx      ; EXODIA
+
+WeevilOAMGfx:      INCBIN "gfx/characters/weevil_oam.2bpp"
+MaiOAMGfx:         INCBIN "gfx/characters/mai_oam.2bpp"
+RexOAMGfx:         INCBIN "gfx/characters/rex_oam.2bpp"
+MakoOAMGfx:        INCBIN "gfx/characters/mako_oam.2bpp"
+YamiYugiOAMGfx:    INCBIN "gfx/characters/yami_yugi_oam.2bpp"
+YugiOAMGfx:        INCBIN "gfx/characters/yugi_oam.2bpp"
+TeaOAMGfx:         INCBIN "gfx/characters/tea_oam.2bpp"
+JoeyOAMGfx:        INCBIN "gfx/characters/joey_oam.2bpp"
+SetoOAMGfx:        INCBIN "gfx/characters/seto_oam.2bpp"
+MokubaOAMGfx:      INCBIN "gfx/characters/mokuba_oam.2bpp"
+TristanOAMGfx:     INCBIN "gfx/characters/tristan_oam.2bpp"
+BakuraOAMGfx:      INCBIN "gfx/characters/bakura_oam.2bpp"
+PuppeteerOAMGfx:   INCBIN "gfx/characters/puppeteer_oam.2bpp"
+PanikOAMGfx:       INCBIN "gfx/characters/panik_oam.2bpp"
+BanditOAMGfx:      INCBIN "gfx/characters/bandit_oam.2bpp"
+MaximillionOAMGfx: INCBIN "gfx/characters/maximillion_oam.2bpp"
+SimonOAMGfx:       INCBIN "gfx/characters/simon_oam.2bpp"
+ExodiaOAMGfx:      INCBIN "gfx/characters/exodia_oam.2bpp"
+; 0xb52c
 
 SECTION "Bank 02@7823", ROMX[$7823], BANK[$02]
 
@@ -870,11 +1106,11 @@ Func_b823:
 	push bc
 	push de
 	call Func_29fd
-	ld a, $04
-	ld [$cd50], a
+	ld a, YAMI_YUGI
+	ld [wNPCCharacter], a
 	ld a, $53
 	ld [$cd51], a
-	farcall $03, $06
+	farcall Func_18008
 	call Func_2a3f
 	call Func_884a
 	pop de

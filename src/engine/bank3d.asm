@@ -58,7 +58,7 @@ Func_f4002::
 .asm_f406a
 	ld de, $40
 
-	call ReadJoypad
+	call ReadJoypad_Credits
 
 	ld a, [$cff1]
 	ld b, a
@@ -190,7 +190,7 @@ Func_f6e5d::
 	ld [$cfee], a
 	ret
 
-ReadJoypad:
+ReadJoypad_Credits:
 	; read d-pad
 	ld a, JOYP_GET_CTRL_PAD
 	ldh [rJOYP], a

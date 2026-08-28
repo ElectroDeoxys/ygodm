@@ -372,7 +372,7 @@ def read_symfile(path='ygodm.sym'):
 	symbols = []
 	for line in open(path):
 		line = line.strip().split(';')[0]
-		if line:
+		if line and ":" in line:
 			bank_address, label = line.split(' ')[:2]
 			bank, address = bank_address.split(':')
 			symbols += [{

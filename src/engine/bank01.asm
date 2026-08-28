@@ -3,12 +3,12 @@
 	farcall_table_start
 	farfunc $4068 ; $03
 	farfunc $551f ; $05
-	farfunc $5acb ; $07
+	farfunc Func_5acb ; $07
 	farfunc $5c48 ; $09
 	farfunc $5b92 ; $0b
 	farfunc $56e0 ; $0d
 	farfunc $5c86 ; $0f
-	farfunc $5af2 ; $11
+	farfunc Func_5af2 ; $11
 	farfunc $5b80 ; $13
 	farfunc $5bb8 ; $15
 	farfunc $5bd1 ; $17
@@ -23,7 +23,7 @@
 	farfunc $6008 ; $29
 	farfunc $6015 ; $2b
 	farfunc $5ff2 ; $2d
-	farfunc $5fbb ; $2f
+	farfunc LoadCharacterGfx ; $2f
 	farfunc $5ef5 ; $31
 	farfunc $5ffb ; $33
 	farfunc $6022 ; $35
@@ -32,8 +32,8 @@
 	farfunc $603d ; $3b
 	farfunc $6046 ; $3d
 	farfunc $6101 ; $3f
-	farfunc $5b04 ; $41
-	farfunc $5b52 ; $43
+	farfunc Func_5b04 ; $41
+	farfunc Func_5b52 ; $43
 	farfunc $62c2 ; $45
 	farfunc $63d6 ; $47
 	farfunc Func_6595 ; $49
@@ -52,6 +52,170 @@
 	farfunc $6c90 ; $63
 	farfunc $6da7 ; $65
 	farfunc $64b5 ; $67
+
+SECTION "Bank 01@5acb", ROMX[$5acb], BANK[$01]
+
+Func_5acb:
+	push af
+	push bc
+	push hl
+	ld hl, $cae4
+	ld a, $ff
+	ld b, $01
+.asm_5ad5
+	ld c, $00
+.asm_5ad7
+	ld [hli], a
+	dec c
+	jr nz, .asm_5ad7
+	dec b
+	jr nz, .asm_5ad5
+	ld c, $6d
+.asm_5ae0
+	ld [hli], a
+	dec c
+	jr nz, .asm_5ae0
+	ld a, $00
+	ld [$cae2], a
+	ld a, $00
+	ld [$cae3], a
+	pop hl
+	pop bc
+	pop af
+	ret
+
+Func_5af2::
+	push af
+	call Func_1cef
+	cp $00
+	jr nz, .asm_5b02
+	ld a, c
+	ld [$cae2], a
+	ld a, b
+	ld [$cae3], a
+.asm_5b02
+	pop af
+	ret
+
+Func_5b04::
+	push af
+	push bc
+	push hl
+	call Func_5b80
+	cp $ff
+	jr nz, .asm_5b12
+	xor a
+	call Func_5b6c
+.asm_5b12
+	ld a, [$cae2]
+	ld c, a
+	ld a, [$cae3]
+	ld b, a
+	ld hl, $cae4
+	add hl, bc
+	ld a, [hl]
+	cp $63
+	jr z, .asm_5b25
+	inc a
+	ld [hl], a
+.asm_5b25
+	pop hl
+	pop bc
+	pop af
+	ret
+; 0x5b29
+
+SECTION "Bank 01@5b52", ROMX[$5b52], BANK[$01]
+
+Func_5b52::
+	push af
+	push bc
+	push hl
+	ld a, [$cae2]
+	ld c, a
+	ld a, [$cae3]
+	ld b, a
+	ld hl, $cae4
+	add hl, bc
+	ld a, [hl]
+	cp $ff
+	jr nz, .asm_5b68
+	ld [hl], $00
+.asm_5b68
+	pop hl
+	pop bc
+	pop af
+	ret
+
+Func_5b6c:
+	push bc
+	push hl
+	push af
+	ld a, [$cae2]
+	ld c, a
+	ld a, [$cae3]
+	ld b, a
+	ld hl, $cae4
+	add hl, bc
+	pop af
+	ld [hl], a
+	pop hl
+	pop bc
+	ret
+
+Func_5b80:
+	push bc
+	push hl
+	ld a, [$cae2]
+	ld c, a
+	ld a, [$cae3]
+	ld b, a
+	ld hl, $cae4
+	add hl, bc
+	ld a, [hl]
+	pop hl
+	pop bc
+	ret
+; 0x5b92
+
+SECTION "Bank 1@5fbb", ROMX[$5fbb], BANK[$1]
+
+; loads tiles that correspond to character in wNPCCharacter
+LoadCharacterGfx:
+	push af
+	push bc
+	push de
+	push hl
+
+	ld a, $01
+	call Func_1842
+	ld a, [wNPCCharacter]
+	call Func_1842
+	xor a
+	call Func_1842
+	call Func_173e
+	db $01, LOW(hffe6)
+	call Func_1705
+	db LOW(hffe2)
+
+	ld hl, vTiles2
+	ld b, $10
+.asm_5fdc
+	call Func_17ab
+	dec b
+	jr nz, .asm_5fdc
+	ld hl, vTiles1
+	ld b, $08
+.asm_5fe7
+	call Func_17ab
+	dec b
+	jr nz, .asm_5fe7
+	pop hl
+	pop de
+	pop bc
+	pop af
+	ret
+; 0x5ff2
 
 SECTION "Bank 01@6595", ROMX[$6595], BANK[$01]
 

@@ -50,3 +50,10 @@ def read_ram():
             ram_symbols[offs] = symString
 
     return ram_symbols
+
+if __name__ == "__main__":
+    offset = 0x80d9
+    length = 8 * 0x80
+    with open(f"gfx_{offset:0x}.1bpp", "wb") as file:
+        data = get_rom_bytes(offset, length)
+        file.write(data)

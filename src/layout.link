@@ -24,12 +24,26 @@ ROMX $01
 	"Bank 01"
 ROMX $02
 	"Bank 02"
+ROMX $03
+	"Bank 03"
 ROMX $04
 	"Bank 04"
 ROMX $06
 	"Bank 06"
+ROMX $07
+	"Bank 07"
+ROMX $0a
+	"Bank 0a"
 ROMX $0b
 	"Bank 0b"
+ROMX $0c
+	"Bank 0c"
+ROMX $0d
+	"Bank 0d"
+ROMX $0f
+	"Bank 0f"
+ROMX $10
+	"Bank 10"
 ROMX $3d
 	"Bank 3d"
 ROMX $3e
@@ -38,10 +52,14 @@ ROMX $3f
 	"Bank 3f"
 VRAM
 	"VRAM"
+SRAM $00
+	"SRAM"
 WRAM0
 	"WRAM 1"
 	org $c700
 	"WRAM Audio"
+	org $ca00
+	"WRAM Virtual OAM"
 	"WRAM 2"
 HRAM
 	"HRAM"

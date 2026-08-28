@@ -878,7 +878,7 @@ def convert_to_1bpp(filenames=[]):
             raise Exception("Don't know how to convert {} to 1bpp!".format(filename))
 
 def convert_to_png_from_rom(offset, tiles, w=0):
-    arguments = {"width": w}
+    arguments = {"width": w, "interleave": True}
     result = convert_2bpp_to_png(reader.get_rom_bytes(offset, tiles*0x10), **arguments)
     width, height, palette, greyscale, bitdepth, px_map = result
 

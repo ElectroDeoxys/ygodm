@@ -104,6 +104,10 @@ $(rom): $(ygodm_obj) src/layout.link
 	$(RGBLINK) $(RGBLINKFLAGS) -l src/layout.link -m $(rom:.gb=.map) -n $(rom:.gb=.sym) -O baserom.gb -o $@ $(filter %.o,$^)
 	$(RGBFIX) $(RGBFIXFLAGS) $@
 
+### Special sprite rules
+
+src/gfx/characters/%.2bpp: tools/gfx += --interleave --png=$<
+
 ### Catch-all graphics rules
 
 %.2bpp: %.png

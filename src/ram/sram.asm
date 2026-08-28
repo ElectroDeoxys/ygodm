@@ -1,0 +1,3 @@
+SECTION "SRAM", SRAM
+
+sa000:: ; a000

@@ -66,5 +66,5 @@ Func_2c00a:
 	pop af
 	ret
 
-Gfx_2c051:: INCBIN "gfx/gfx_2c051.2bpp"
-Gfx_2c851:: INCBIN "gfx/gfx_2c851.2bpp"
+Gfx_2c051: INCBIN "gfx/gfx_2c051.2bpp"
+Gfx_2c851: INCBIN "gfx/gfx_2c851.2bpp"
