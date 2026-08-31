@@ -10,11 +10,20 @@ INCLUDE "engine/bank03.asm"
 SECTION "Bank 04", ROMX
 INCLUDE "engine/bank04.asm"
 
+SECTION "Bank 05", ROMX
+INCLUDE "engine/bank05.asm"
+
 SECTION "Bank 06", ROMX
 INCLUDE "engine/bank06.asm"
 
 SECTION "Bank 07", ROMX
 INCLUDE "engine/bank07.asm"
+
+SECTION "Bank 08", ROMX
+INCLUDE "engine/bank08.asm"
+
+SECTION "Bank 09", ROMX
+INCLUDE "engine/bank09.asm"
 
 SECTION "Bank 0a", ROMX
 INCLUDE "engine/bank0a.asm"

@@ -47,7 +47,7 @@ Func_334bb:
 	pop hl
 	dec b
 	jr nz, .asm_334da
-	farcall $1b, $0a
+	farcall Func_2b9ed
 	pop hl
 	pop de
 	pop bc

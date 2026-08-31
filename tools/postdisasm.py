@@ -1,9 +1,19 @@
 import re
 
+def insert_first_section(matcher):
+	offset = int(matcher[1], 16)
+	bank = offset // 0x4000
+	rel_offset = offset % 0x4000 + (0x4000 if bank != 0 else 0)
+	if bank == 0:
+		return f'SECTION "Bank {bank:0x}@{rel_offset:0x}", ROM0[${rel_offset:0x}]\n\nFunc_{matcher[1]}:'
+	return f'SECTION "Bank {bank:0x}@{rel_offset:0x}", ROMX[${rel_offset:0x}], BANK[${bank:0x}]\n\nFunc_{matcher[1]}:'
+
 def insert_section(matcher):
 	offset = int(matcher[2], 16)
 	bank = offset // 0x4000
 	rel_offset = offset % 0x4000 + (0x4000 if bank != 0 else 0)
+	if bank == 0:
+		return f'{matcher[1]}\n\nSECTION "Bank {bank:0x}@{rel_offset:0x}", ROM0[${rel_offset:0x}]\n\nFunc_{matcher[2]}:'
 	return f'{matcher[1]}\n\nSECTION "Bank {bank:0x}@{rel_offset:0x}", ROMX[${rel_offset:0x}], BANK[${bank:0x}]\n\nFunc_{matcher[2]}:'
 
 substrings = [
@@ -20,6 +30,9 @@ substrings = [
 ]
 
 def process(body):
+	# first section
+	body = re.sub(r"Func_([a-f0-9]+):", insert_first_section, body, 1)
+
 	for pattern, repl in substrings:
 		body = re.sub(pattern, repl, body)
 	return body

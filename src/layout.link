@@ -28,10 +28,16 @@ ROMX $03
 	"Bank 03"
 ROMX $04
 	"Bank 04"
+ROMX $05
+	"Bank 05"
 ROMX $06
 	"Bank 06"
 ROMX $07
 	"Bank 07"
+ROMX $08
+	"Bank 08"
+ROMX $09
+	"Bank 09"
 ROMX $0a
 	"Bank 0a"
 ROMX $0b

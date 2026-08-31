@@ -9,17 +9,17 @@
 	farfunc Func_8bfe ; $0d
 	farfunc $4074 ; $0f
 	farfunc $40b4 ; $11
-	farfunc $752c ; $13
+	farfunc Func_b52c ; $13
 	farfunc $7547 ; $15
 	farfunc $7562 ; $17
-	farfunc $7724 ; $19
+	farfunc Func_b724 ; $19
 	farfunc $7711 ; $1b
 	farfunc $77ee ; $1d
-	farfunc $7807 ; $1f
+	farfunc Func_b807 ; $1f
 	farfunc Func_b823 ; $21
 	farfunc $7840 ; $23
 	farfunc $757d ; $25
-	farfunc $785d ; $27
+	farfunc Func_b85d ; $27
 	farfunc $787e ; $29
 	farfunc $7889 ; $2b
 	farfunc $7894 ; $2d
@@ -607,7 +607,7 @@ Func_884a:
 	ld [$cd52], a
 	call Func_84e1
 .asm_886d
-	call AdvanceRNG
+	call Random
 	ld a, VBLANK_0C
 	call SetPendingVBlankMode
 	call Func_8752
@@ -853,13 +853,13 @@ Func_8a1d:
 	db $4e, $3d, $4e, $3d, $4e, $3d ; YUGI
 	db $42, $31, $42, $31, $42, $31 ; TEA
 	db $4f, $2d, $4f, $2d, $4f, $2d ; JOEY
-	db $40, $28, $40, $28, $40, $28 ; SETO
+	db $40, $28, $40, $28, $40, $28 ; SETO_KAIBA
 	db $44, $3f, $44, $3f, $44, $3f ; MOKUBA
 	db $46, $31, $46, $31, $46, $31 ; TRISTAN
 	db $3b, $39, $3b, $39, $3b, $39 ; BAKURA
 	db $44, $35, $44, $35, $44, $35 ; PUPPETEER
 	db $4a, $20, $4a, $20, $4a, $20 ; PANIK
-	db $48, $30, $48, $30, $48, $30 ; BANDIT
+	db $48, $30, $48, $30, $48, $30 ; BANDIT_KEITH
 	db $40, $30, $40, $30, $40, $30 ; MAXIMILLION
 	db $48, $40, $48, $40, $48, $40 ; SIMON
 	db $c8, $d0, $c8, $d0, $c8, $d0 ; EXODIA
@@ -873,13 +873,13 @@ Func_8a1d:
 	db $5e, $3f, $5e, $3f, $5e, $3f ; YUGI
 	db $5a, $31, $5a, $31, $5a, $31 ; TEA
 	db $5f, $2d, $5f, $2d, $5f, $2d ; JOEY
-	db $50, $20, $50, $20, $50, $20 ; SETO
+	db $50, $20, $50, $20, $50, $20 ; SETO_KAIBA
 	db $5c, $3f, $5c, $3f, $5c, $3f ; MOKUBA
 	db $5e, $31, $5e, $31, $5e, $31 ; TRISTAN
 	db $53, $39, $53, $39, $53, $39 ; BAKURA
 	db $5b, $35, $5b, $35, $5b, $35 ; PUPPETEER
 	db $5a, $20, $5a, $20, $5a, $20 ; PANIK
-	db $58, $30, $58, $30, $58, $30 ; BANDIT
+	db $58, $30, $58, $30, $58, $30 ; BANDIT_KEITH
 	db $50, $30, $50, $30, $50, $30 ; MAXIMILLION
 	db $58, $40, $58, $40, $58, $40 ; SIMON
 	db $c8, $d0, $c8, $d0, $c8, $d0 ; EXODIA
@@ -893,13 +893,13 @@ Func_8a1d:
 	db $56, $4d, $56, $4d, $56, $4d ; YUGI
 	db $52, $41, $52, $41, $52, $41 ; TEA
 	db $5f, $3d, $5f, $3d, $5f, $3d ; JOEY
-	db $48, $30, $48, $30, $48, $30 ; SETO
+	db $48, $30, $48, $30, $48, $30 ; SETO_KAIBA
 	db $54, $4f, $54, $4f, $54, $4f ; MOKUBA
 	db $58, $40, $58, $40, $58, $40 ; TRISTAN
 	db $4a, $49, $4a, $49, $4a, $49 ; BAKURA
 	db $2b, $59, $2b, $59, $2b, $59 ; PUPPETEER
 	db $52, $28, $52, $28, $52, $28 ; PANIK
-	db $52, $41, $52, $41, $52, $41 ; BANDIT
+	db $52, $41, $52, $41, $52, $41 ; BANDIT_KEITH
 	db $48, $40, $48, $40, $48, $40 ; MAXIMILLION
 	db $50, $48, $50, $48, $50, $48 ; SIMON
 	db $c8, $d0, $c8, $d0, $c8, $d0 ; EXODIA
@@ -1068,13 +1068,13 @@ LoadCharacterOAMGfx:
 	dw YugiOAMGfx        ; YUGI
 	dw TeaOAMGfx         ; TEA
 	dw JoeyOAMGfx        ; JOEY
-	dw SetoOAMGfx        ; SETO
+	dw SetoOAMGfx        ; SETO_KAIBA
 	dw MokubaOAMGfx      ; MOKUBA
 	dw TristanOAMGfx     ; TRISTAN
 	dw BakuraOAMGfx      ; BAKURA
 	dw PuppeteerOAMGfx   ; PUPPETEER
 	dw PanikOAMGfx       ; PANIK
-	dw BanditOAMGfx      ; BANDIT
+	dw BanditOAMGfx      ; BANDIT_KEITH
 	dw MaximillionOAMGfx ; MAXIMILLION
 	dw SimonOAMGfx       ; SIMON
 	dw ExodiaOAMGfx      ; EXODIA
@@ -1097,9 +1097,94 @@ BanditOAMGfx:      INCBIN "gfx/characters/bandit_oam.2bpp"
 MaximillionOAMGfx: INCBIN "gfx/characters/maximillion_oam.2bpp"
 SimonOAMGfx:       INCBIN "gfx/characters/simon_oam.2bpp"
 ExodiaOAMGfx:      INCBIN "gfx/characters/exodia_oam.2bpp"
-; 0xb52c
 
-SECTION "Bank 02@7823", ROMX[$7823], BANK[$02]
+Func_b52c:
+	push af
+	call Func_29fd
+	call Func_b724
+	ld [wNPCCharacter], a
+	call Func_b744
+	ld [$cd51], a
+	farcall Func_18008
+	call Func_2abe
+	call Func_884a
+	pop af
+	ret
+; 0xb547
+
+SECTION "Bank 2@7724", ROMX[$7724], BANK[$2]
+
+Func_b724:
+	push bc
+	push hl
+	ld b, $00
+	ld a, [$ceef]
+	ld c, a
+	ld hl, .Characters
+	add hl, bc
+	ld a, [hl]
+	pop hl
+	pop bc
+	ret
+
+.Characters:
+	db WEEVIL
+	db MAI
+	db REX
+	db MAKO
+	db SETO_KAIBA
+	db MOKUBA
+	db PUPPETEER
+	db PANIK
+	db BANDIT_KEITH
+	db YUGI
+	db TRISTAN
+	db JOEY
+	db BAKURA
+	db SIMON
+	db MAXIMILLION
+	db YAMI_YUGI
+
+Func_b744:
+	push bc
+	push hl
+	ld b, $00
+	ld a, [$ceef]
+	call Func_28cd
+	ld hl, $7779
+	ld a, c
+	cp $00
+	jr nz, .asm_b75e
+	ld a, b
+	cp $00
+	jr nz, .asm_b75e
+	ld hl, $7769
+.asm_b75e
+	ld b, $00
+	ld a, [$ceef]
+	ld c, a
+	add hl, bc
+	ld a, [hl]
+	pop hl
+	pop bc
+	ret
+; 0xb769
+
+SECTION "Bank 2@7807", ROMX[$7807], BANK[$2]
+
+Func_b807:
+	push af
+	call Func_29fd
+	ld a, EXODIA
+	ld [wNPCCharacter], a
+	ld a, $52
+	ld [$cd51], a
+	call Func_2b89
+	farcall Func_18008
+	call Func_884a
+	call Func_25d4
+	pop af
+	ret
 
 Func_b823:
 	push af
@@ -1118,3 +1203,23 @@ Func_b823:
 	pop af
 	ret
 ; 0xb840
+
+SECTION "Bank 2@785d", ROMX[$785d], BANK[$2]
+
+Func_b85d:
+	push af
+	ld a, LOW(INVALID_CARD)
+	ld [$cf10], a
+	ld a, HIGH(INVALID_CARD)
+	ld [$cf11], a
+	ld a, LOW(INVALID_CARD)
+	ld [$cf12], a
+	ld a, HIGH(INVALID_CARD)
+	ld [$cf13], a
+	ld a, LOW(INVALID_CARD)
+	ld [$cf14], a
+	ld a, HIGH(INVALID_CARD)
+	ld [$cf15], a
+	pop af
+	ret
+; 0xb87e

@@ -43,11 +43,22 @@ wcaaa:: db ; caaa
 wPendingVBlankMode:: db ; caab
 wVBlankMode:: db ; caac
 
-	ds $cd50 - $caad
+	ds $ccab - $caad
+
+wOppDeckIndex:: db ; ccab
+wOppDeck:: ds DECK_SIZE ; ccac
+
+	ds $cd50 - $ccd4
 
 wNPCCharacter:: db ; cd50
 
-	ds $ce97 - $cd51
+	ds $cdf0 - $cd51
+
+wCardLocationIndex:: db ; cdf0
+wCardLocation:: db ; cdf1
+wTempCardID:: dw ; cdf2
+
+	ds $ce97 - $cdf4
 
 wce97:: db ; ce97
 wce98:: db ; ce98
@@ -56,9 +67,9 @@ wce99:: db ; ce99
 wce9a:: db ; ce9a
 wce9b:: db ; ce9b
 wce9c:: db ; ce9c
-wce9d:: db ; ce9d
-wce9e:: db ; ce9e
-wce9f:: db ; ce9f
+wRandRangeStart:: db ; ce9d
+wRandRangeEnd:: db ; ce9e
+wRandNum:: db ; ce9f
 
 	ds $d9fe - $cea0
 
