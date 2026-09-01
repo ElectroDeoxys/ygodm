@@ -2,8 +2,8 @@
 
 	farcall_table_start
 	farfunc Func_2801e ; $03
-	farfunc $4392 ; $05
-	farfunc $4776 ; $07
+	farfunc Func_28392 ; $05
+	farfunc Func_28776 ; $07
 	farfunc $49b8 ; $09
 	farfunc Func_28b5a ; $0b
 	farfunc Func_28e0c ; $0d
@@ -61,6 +61,100 @@ Func_2801e:
 	pop af
 	ret
 ; 0x2805a
+
+SECTION "Bank a@4392", ROMX[$4392], BANK[$a]
+
+Func_28392:
+	push af
+	push bc
+	push de
+	push hl
+	ld de, vTiles1
+	ld hl, $43cc
+	ld b, $80
+.asm_2839e
+	ld c, $10
+.asm_283a0
+	ld a, [hli]
+	ld [de], a
+	inc de
+	dec c
+	jr nz, .asm_283a0
+	dec b
+	jr nz, .asm_2839e
+	ld de, vBGMap0
+	ld hl, $446c
+	ld b, $12
+.asm_283b1
+	ld c, $14
+.asm_283b3
+	ld a, [hli]
+	ld [de], a
+	inc de
+	dec c
+	jr nz, .asm_283b3
+	push hl
+	ld hl, $c
+	add hl, de
+	ld d, h
+	ld e, l
+	pop hl
+	dec b
+	jr nz, .asm_283b1
+	call Func_2ba73
+	pop hl
+	pop de
+	pop bc
+	pop af
+	ret
+; 0x283cc
+
+SECTION "Bank a@4776", ROMX[$4776], BANK[$a]
+
+Func_28776:
+	push af
+	push bc
+	push de
+	push hl
+	ld de, vTiles1
+	ld hl, $47b0
+	ld b, $80
+.asm_28782
+	ld c, $10
+.asm_28784
+	ld a, [hli]
+	ld [de], a
+	inc de
+	dec c
+	jr nz, .asm_28784
+	dec b
+	jr nz, .asm_28782
+	ld de, vBGMap0
+	ld hl, $4850
+	ld b, $12
+.asm_28795
+	ld c, $14
+.asm_28797
+	ld a, [hli]
+	ld [de], a
+	inc de
+	dec c
+	jr nz, .asm_28797
+	push hl
+	ld hl, $c
+	add hl, de
+	ld d, h
+	ld e, l
+	pop hl
+	dec b
+	jr nz, .asm_28795
+	call Func_2ba73
+	pop hl
+	pop de
+	pop bc
+	pop af
+	ret
+; 0x287b0
 
 SECTION "Bank a@4b5a", ROMX[$4b5a], BANK[$a]
 

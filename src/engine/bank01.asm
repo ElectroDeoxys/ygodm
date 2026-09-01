@@ -2,12 +2,12 @@
 
 	farcall_table_start
 	farfunc Func_4068 ; $03
-	farfunc $551f ; $05
+	farfunc Func_551f ; $05
 	farfunc InitCardCollection ; $07
-	farfunc Func_5c48 ; $09
+	farfunc GetTotalCardCount ; $09
 	farfunc $5b92 ; $0b
-	farfunc $56e0 ; $0d
-	farfunc $5c86 ; $0f
+	farfunc Func_56e0 ; $0d
+	farfunc Func_5c86 ; $0f
 	farfunc Func_5af2 ; $11
 	farfunc GetCardCountInCollection ; $13
 	farfunc $5bb8 ; $15
@@ -412,6 +412,374 @@ Func_5313:
 	ret
 ; 0x5324
 
+SECTION "Bank 1@551f", ROMX[$551f], BANK[$1]
+
+Func_551f:
+	push af
+	push hl
+	call Func_101d
+	call DisableLCD
+	ld hl, $554b
+	call Func_10d9
+	farcall Func_803e
+	farcall Func_28392
+	call Func_5555
+	call Func_558a
+	call Func_55de
+	call EnableLCD
+	call Func_fff
+	call WaitForVBlank
+	call Func_2ae4
+	pop hl
+	pop af
+	ret
+; 0x554b
+
+SECTION "Bank 1@5555", ROMX[$5555], BANK[$1]
+
+Func_5555:
+	call ClearOAM
+	call Func_581f
+	call Func_5562
+	call Func_1225
+	ret
+
+Func_5562:
+	push af
+	push bc
+	push de
+	push hl
+	ld de, $557a
+	ld hl, vTiles0
+	ld c, $10
+.asm_556e
+	ld a, [de]
+	ld [hli], a
+	ld [hli], a
+	inc de
+	dec c
+	jr nz, .asm_556e
+	pop hl
+	pop de
+	pop bc
+	pop af
+	ret
+; 0x557a
+
+SECTION "Bank 1@558a", ROMX[$558a], BANK[$1]
+
+Func_558a:
+	push af
+	push bc
+	push hl
+	hlbgcoord 12, 1
+	ld a, $00
+	call Func_42d0
+	ld a, [$cad8]
+	add $01
+	ld [$cadc], a
+	ld a, $00
+	ld [$cadd], a
+	call Func_142c
+	call Func_42c5
+	call Func_42ec
+	ld a, [$caba]
+	ld [hli], a
+	ld a, [$cabb]
+	ld [hli], a
+	ld a, [$cabc]
+	ld [hli], a
+	inc hl
+	ld a, [$cad9]
+	add $01
+	ld [$cadc], a
+	ld a, $00
+	ld [$cadd], a
+	call Func_142c
+	call Func_42c5
+	call Func_42ec
+	ld a, [$caba]
+	ld [hli], a
+	ld a, [$cabb]
+	ld [hli], a
+	ld a, [$cabc]
+	ld [hli], a
+	pop hl
+	pop bc
+	pop af
+	ret
+
+Func_55de:
+	push af
+	push bc
+	push de
+	push hl
+	call Func_58a3
+	ld a, [$cada]
+	ld [$cad2], a
+	ld a, [$cadb]
+	ld [$cad3], a
+	ld d, $05
+	ld a, [$cad8]
+	ld c, a
+	ld a, [$cad9]
+	cp c
+	jr nz, .asm_5602
+	ld a, [$cad7]
+	ld d, a
+	inc d
+.asm_5602
+	ld e, $00
+.asm_5604
+	ld a, e
+	cp d
+	jr nc, .asm_5625
+	ld a, l
+	call Func_562a
+	call Func_566b
+	call Func_56b6
+	inc e
+	ld a, [$cad2]
+	add $01
+	ld [$cad2], a
+	ld a, [$cad3]
+	adc $00
+	ld [$cad3], a
+	jr .asm_5604
+.asm_5625
+	pop hl
+	pop de
+	pop bc
+	pop af
+	ret
+
+Func_562a:
+	push af
+	push bc
+	push de
+	push hl
+	ld d, $00
+	swap e
+	sla e
+	sla e
+	rl d
+	hlbgcoord 2, 3
+	add hl, de
+	ld a, $00
+	call Func_42d0
+	ld a, [$cad2]
+	add $01
+	ld [$cadc], a
+	ld a, [$cad3]
+	adc $00
+	ld [$cadd], a
+	call Func_142c
+	call Func_42c5
+	call Func_42ec
+	ld a, [$caba]
+	ld [hli], a
+	ld a, [$cabb]
+	ld [hli], a
+	ld a, [$cabc]
+	ld [hli], a
+	pop hl
+	pop de
+	pop bc
+	pop af
+	ret
+
+Func_566b:
+	push af
+	push bc
+	push de
+	push hl
+	ld d, $00
+	swap e
+	sla e
+	sla e
+	rl d
+	hlbgcoord 6, 2
+	add hl, de
+	ld a, [$cad2]
+	ld c, a
+	ld a, [$cad3]
+	ld b, a
+	call Func_1508
+	call Func_111c
+	ld de, $cab9
+	ld c, $08
+.asm_5690
+	ld a, [de]
+	inc de
+	call Func_1144
+	ld a, [$cacf]
+	ld [hli], a
+	dec c
+	jr nz, .asm_5690
+	ld de, $18
+	add hl, de
+	ld de, $cab9
+	ld c, $08
+.asm_56a5
+	ld a, [de]
+	inc de
+	call Func_1144
+	ld a, [$cad0]
+	ld [hli], a
+	dec c
+	jr nz, .asm_56a5
+	pop hl
+	pop de
+	pop bc
+	pop af
+	ret
+
+Func_56b6:
+	push af
+	push bc
+	push de
+	push hl
+	ld d, $00
+	swap e
+	sla e
+	sla e
+	rl d
+	hlbgcoord 15, 3
+	add hl, de
+	ld a, [$cad2]
+	ld c, a
+	ld a, [$cad3]
+	ld b, a
+	call Func_1542
+	ld a, [$cabb]
+	ld [hli], a
+	ld a, [$cabc]
+	ld [hli], a
+	pop hl
+	pop de
+	pop bc
+	pop af
+	ret
+
+Func_56e0:
+	push af
+	ld a, $00
+	ld [$cad4], a
+	ld a, $00
+	ld [$cad5], a
+	ld a, $00
+	ld [$cad6], a
+	ld a, $04
+	ld [$cad7], a
+	ld a, $00
+	ld [$cad8], a
+	call Func_5c29
+	cp $00
+	jr nz, .asm_5708
+	ld a, $48
+	ld [$cad9], a
+	jr .asm_570d
+.asm_5708
+	ld a, $45
+	ld [$cad9], a
+.asm_570d
+	pop af
+	ret
+; 0x570f
+
+SECTION "Bank 1@581f", ROMX[$581f], BANK[$1]
+
+Func_581f:
+	push af
+	push bc
+	push de
+	push hl
+	ld a, [$cad4]
+	cp $00
+	jr nz, .asm_584a
+	ld c, $00
+	ld a, $ff
+	ld d, $10
+	call Func_123c
+	ld c, $01
+	ld a, $ff
+	ld d, $10
+	call Func_123c
+	ld bc, $2
+	ld a, [$cad5]
+	call Func_588d
+	ld d, $10
+	call Func_123c
+.asm_584a
+	ld a, [$cad4]
+	cp $01
+	jr nz, .asm_5888
+	ld c, $00
+	ld a, $ff
+	ld d, $10
+	call Func_123c
+	ld bc, $1
+	ld a, [$cad6]
+	cp $02
+	jr z, .asm_5870
+	add $05
+	call Func_588d
+	ld d, $10
+	call Func_123c
+	jr .asm_587a
+.asm_5870
+	ld a, $05
+	call Func_588d
+	ld d, $65
+	call Func_123c
+.asm_587a
+	ld bc, $102
+	ld a, [$cad5]
+	call Func_588d
+	ld d, $10
+	call Func_123c
+.asm_5888
+	pop hl
+	pop de
+	pop bc
+	pop af
+	ret
+
+Func_588d:
+	push bc
+	push hl
+	ld b, $00
+	ld c, a
+	ld hl, $589a
+	add hl, bc
+	ld a, [hl]
+	pop hl
+	pop bc
+	ret
+; 0x589a
+
+SECTION "Bank 1@58a3", ROMX[$58a3], BANK[$1]
+
+Func_58a3:
+	push af
+	push bc
+	push de
+	push hl
+	ld a, [$cad8]
+	ld e, a
+	ld b, $05
+	call BTimesE
+	ld a, l
+	ld [$cada], a
+	ld a, h
+	ld [$cadb], a
+	pop hl
+	pop de
+	pop bc
+	pop af
+	ret
+; 0x58bd
+
 SECTION "Bank 01@5acb", ROMX[$5acb], BANK[$01]
 
 ; initialises all wCardCollection cards with NOT_OWNED
@@ -540,46 +908,73 @@ GetCardCountInCollection::
 	ret
 ; 0x5b92
 
-SECTION "Bank 1@5c48", ROMX[$5c48], BANK[$1]
+SECTION "Bank 1@5c29", ROMX[$5c29], BANK[$1]
 
-Func_5c48:
+Func_5c29:
+	push bc
+	push de
+	push hl
+	ld d, $01
+	ld bc, SECRET_CARDS
+	ld e, NUM_SECRET_CARDS
+.loop_secret_cards
+	call Func_5af2
+	call GetCardCountInCollection
+	cp NOT_OWNED
+	jr z, .next_card
+	ld d, $00
+.next_card
+	inc bc
+	dec e
+	jr nz, .loop_secret_cards
+	ld a, d
+	pop hl
+	pop de
+	pop bc
+	ret
+
+; outputs in bc the total number
+; of cards in card collection
+GetTotalCardCount:
 	push af
 	push de
 	push hl
 	ld hl, NULL
-	ld bc, NULL
-	ld e, $c8
-.asm_5c53
+	ld bc, 0
+	ld e, 200
+.loop_cards_1
 	call Func_5af2
 	call GetCardCountInCollection
-	cp $ff
-	jr nz, .asm_5c5e
+	cp NOT_OWNED
+	jr nz, .got_count_1
+	; not owned count as 0
 	xor a
-.asm_5c5e
+.got_count_1
 	add l
 	ld l, a
-	ld a, $00
+	ld a, 0
 	adc h
 	ld h, a
 	inc bc
 	dec e
-	jr nz, .asm_5c53
-	ld e, $a5
-.asm_5c6a
+	jr nz, .loop_cards_1
+	ld e, NUM_CARDS - 200
+.loop_cards_2
 	call Func_5af2
 	call GetCardCountInCollection
-	cp $ff
-	jr nz, .asm_5c75
+	cp NOT_OWNED
+	jr nz, .got_count_2
+	; not owned count as 0
 	xor a
-.asm_5c75
+.got_count_2
 	add l
 	ld l, a
-	ld a, $00
+	ld a, 0
 	adc h
 	ld h, a
 	inc bc
 	dec e
-	jr nz, .asm_5c6a
+	jr nz, .loop_cards_2
 	ld b, h
 	ld c, l
 	pop hl
@@ -587,6 +982,64 @@ Func_5c48:
 	pop af
 	ret
 ; 0x5c85
+
+SECTION "Bank 1@5c86", ROMX[$5c86], BANK[$1]
+
+Func_5c86:
+	push af
+	push bc
+	push de
+	push hl
+	call Func_5cb3
+	ld b, $00
+	ld c, a
+	ld hl, $5ca5
+	add hl, bc
+	ld a, [hli]
+	ld h, [hl]
+	ld l, a
+	call_hl
+; 0x5c9c
+
+SECTION "Bank 1@5cb3", ROMX[$5cb3], BANK[$1]
+
+Func_5cb3:
+	push bc
+	push de
+	push hl
+	ld d, $00
+	ld a, [wJoypadPressed]
+	and $ff
+	jr z, .asm_5ccc
+	ld c, $08
+.asm_5cc1
+	dec c
+	rlca
+	jr nc, .asm_5cc1
+	ld b, $00
+	ld hl, $5ce5
+	add hl, bc
+	ld d, [hl]
+.asm_5ccc
+	ld a, [wcaa7]
+	and $f0
+	jr z, .asm_5ce0
+	ld c, $08
+.asm_5cd5
+	dec c
+	rlca
+	jr nc, .asm_5cd5
+	ld b, $00
+	ld hl, $5ce5
+	add hl, bc
+	ld d, [hl]
+.asm_5ce0
+	ld a, d
+	pop hl
+	pop de
+	pop bc
+	ret
+; 0x5ce5
 
 SECTION "Bank 1@5eb3", ROMX[$5eb3], BANK[$1]
 

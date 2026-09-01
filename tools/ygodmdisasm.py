@@ -601,11 +601,27 @@ class Disassembler(object):
 
 		return output
 
-	def output_bank_opcodes(self, start_offset, stop_offset, hard_stop=False, parse_data=False, recursive=False):
-		self.ptrs_to_disasm = set([start_offset])
-
-		if not recursive:
+	def output_bank_opcodes(self, start_offset, stop_offset, hard_stop=False, parse_data=False, recursive=False, ptr_table=False):
+		if not recursive and not ptr_table:
 			return self._output_bank_opcodes(start_offset, stop_offset, hard_stop, parse_data)[0]
+
+		if ptr_table:
+			# read all offsets in table
+			self.ptrs_to_disasm = set()
+			pos = start_offset
+
+			while True:
+				raw_ptr = self.rom[pos + 0] + (self.rom[pos + 1] << 8)
+				pos += 2
+				if raw_ptr >= 0x8000:
+					break
+				elif raw_ptr < 0x4000:
+					self.ptrs_to_disasm.add(raw_ptr)
+				else:
+					cur_bank = start_offset // 0x4000
+					self.ptrs_to_disasm.add((cur_bank - 1) * 0x4000 + raw_ptr)
+		else:
+			self.ptrs_to_disasm = set([start_offset])
 
 		routines = {}
 
@@ -984,6 +1000,7 @@ if __name__ == "__main__":
 	ap.add_argument("-d", "--dry-run", dest="dry_run", action="store_true")
 	ap.add_argument("-pd", "--parse_data", dest="parse_data", action="store_true")
 	ap.add_argument("-rec", "--recursive", dest="recursive", action="store_true")
+	ap.add_argument("-pt", "--ptr-table", dest="ptr_table", action="store_true")
 	ap.add_argument('offset')
 	ap.add_argument('end', nargs='?')
 
@@ -999,7 +1016,7 @@ if __name__ == "__main__":
 	stop_addr = get_raw_addr(args.end)
 
 	# run the disassembler and return the output
-	output = disasm.output_bank_opcodes(start_addr,stop_addr,hard_stop=args.dry_run,parse_data=args.parse_data,recursive=args.recursive)
+	output = disasm.output_bank_opcodes(start_addr,stop_addr,hard_stop=args.dry_run,parse_data=args.parse_data,recursive=args.recursive,ptr_table=args.ptr_table)
 	output = post.process(output)
 
 	# suppress output if quiet flag is set

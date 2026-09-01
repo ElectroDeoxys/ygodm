@@ -1,29 +1,29 @@
 	dw BANK(@)
 	
 	farcall_table_start
-	farfunc Func_3400c
+	farfunc GiveVictoryAwardCard
 	farfunc ChoosePlayerAnteCard
 	farfunc Func_36e34
 	farfunc Func_3708e
 	farfunc $70e6
 
-Func_3400c:
+GiveVictoryAwardCard:
 	push af
 	push bc
 	call Func_23f7
 	cp $00
-	jr z, .asm_34024
-	call Func_34027
+	jr z, .skip
+	call .GenerateCard
 	farcall Func_5af2
 	farcall GiveCard
 	farcall Func_b87e
-	call Func_36e8e
-.asm_34024
+	call GiveVictoryBonusCard
+.skip
 	pop bc
 	pop af
 	ret
 
-Func_34027:
+.GenerateCard:
 	push af
 	push de
 	push hl
@@ -778,7 +778,7 @@ ChoosePlayerAnteCard:
 	pop af
 	ret
 
-Func_36e8e:
+GiveVictoryBonusCard:
 	push af
 	push bc
 	push de
@@ -786,12 +786,12 @@ Func_36e8e:
 	call Func_36ebd
 	ld a, b
 	cp $01
-	jr z, .asm_36eb8
+	jr z, .skip
 	ld d, $00
 	farcall Func_b724
 	ld e, a
 	sla e
-	ld hl, $6f18
+	ld hl, VictoryBonusCards
 	add hl, de
 	ld a, [hli]
 	ld h, [hl]
@@ -804,7 +804,7 @@ Func_36e8e:
 	farcall Func_5af2
 	farcall GiveCard
 	farcall Func_b889
-.asm_36eb8
+.skip
 	pop hl
 	pop de
 	pop bc
@@ -824,24 +824,26 @@ Func_36ebd:
 	ld a, [hli]
 	ld d, [hl]
 	ld e, a
-	ld hl, $6f02
+	ld hl, .VictoryMilestones
 	ld c, $00
-.asm_36ed4
+.loop_list
+	; is it end of list?
 	push bc
 	push de
 	ld a, [hli]
 	ld c, a
 	ld a, [hld]
 	ld b, a
-	ld de, rIE
+	ld de, -1
 	call CompareBCAndDE
 	pop de
 	pop bc
 	cp $00
-	jr nz, .asm_36eea
+	jr nz, .not_end_of_list
+	; end of list reached
 	ld b, $01
-	jr .asm_36efe
-.asm_36eea
+	jr .done
+.not_end_of_list
 	push bc
 	ld a, [hli]
 	ld c, a
@@ -850,20 +852,253 @@ Func_36ebd:
 	call CompareBCAndDE
 	pop bc
 	cp $00
-	jr nz, .asm_36efb
+	jr nz, .next
 	ld b, $00
-	jr .asm_36efe
-.asm_36efb
+	jr .done
+.next
 	inc c
-	jr .asm_36ed4
-.asm_36efe
+	jr .loop_list
+.done
 	pop hl
 	pop de
 	pop af
 	ret
-; 0x36f02
 
-SECTION "Bank 0d@708e", ROMX[$708e], BANK[$0d]
+.VictoryMilestones:
+	dw  $10
+	dw  $20
+	dw  $30
+	dw  $40
+	dw  $50
+	dw  $60
+	dw  $70
+	dw  $80
+	dw  $90
+	dw $100
+	dw -1 ; end
+
+VictoryBonusCards:
+	dw .Weevil      ; WEEVIL
+	dw .Mai         ; MAI
+	dw .Rex         ; REX
+	dw .Mako        ; MAKO
+	dw .YamiYugi    ; YAMI_YUGI
+	dw .Yugi        ; YUGI
+	dw .Tea         ; TEA
+	dw .Joey        ; JOEY
+	dw .SetoKaiba   ; SETO_KAIBA
+	dw .Mokuba      ; MOKUBA
+	dw .Tristan     ; TRISTAN
+	dw .Bakura      ; BAKURA
+	dw .Puppeteer   ; PUPPETEER
+	dw .PaniK       ; PANIK
+	dw .BanditKeith ; BANDIT_KEITH
+	dw .Maximillion ; MAXIMILLION
+	dw .Simon       ; SIMON
+
+.Weevil:
+	dw FOREST
+	dw BASIC_INSECT
+	dw LAZER_CANNON_ARMOR
+	dw KILLER_NEEDLE
+	dw INSECT_ARMOR_LASER
+	dw GOKIBORE
+	dw BIG_INSECT
+	dw GIANT_FLEA
+	dw HERCULES_BEETLE
+	dw PETIT_MOTH
+
+.Mai:
+	dw MOUNTAIN
+	dw FOLLOW_WIND
+	dw HARPIE_LADY
+	dw ELEGANT_EGOTIST
+	dw MAVELUS
+	dw ELECTRO_WHIP
+	dw SPIRIT_OF_THE_BOOK
+	dw FAITH_BIRD
+	dw CYBER_SHIELD
+	dw HARPIE_LADY_SISTER
+
+.Rex:
+	dw WASTELAND
+	dw RAISE_BODY_HEAT
+	dw URABY
+	dw CRAWLING_DRAGON_2
+	dw SWORD_ARM_DRAGON
+	dw URABY
+	dw CRAWLING_DRAGON_2
+	dw SWORD_ARM_DRAGON
+	dw MEGAZOWLER
+	dw TWO_HEADED_KING_REX
+
+.Mako:
+	dw UMI
+	dw POWER_OF_KAISHIN
+	dw STEEL_SHELL
+	dw FIEND_KRAKEN
+	dw JELLYFISH
+	dw KAIRYU_SHIN
+	dw FIEND_KRAKEN
+	dw JELLYFISH
+	dw KAIRYU_SHIN
+	dw RAIGEKI
+
+.YamiYugi:
+	dw FERAL_IMP
+	dw WINGED_DRAGON_1
+	dw CELTIC_GUARDIAN
+	dw MYSTICAL_MOON
+	dw BLACKLAND_DRAGON
+	dw SWORDS_REVEALING
+	dw KOUMORI_DRAGON
+	dw GREAT_WHITE
+	dw FINAL_FLAME
+	dw EXODIA_FORBIDDEN
+
+.Yugi:
+	dw HORN_OF_UNICORN
+	dw DARK_PIERCE_LIGHT
+	dw PENGUIN_KNIGHT
+	dw M_WARRIOR_2
+	dw WHITE_MAGICAL_HAT
+	dw WETHA
+	dw SUPPORTER_SHADOWS
+	dw RAY_AND_TEMPERATURE
+	dw CURSE_OF_DRAGON
+	dw GAIA_FIERCE_KNIGHT
+
+.Tea:
+	dw MYSTICAL_ELF
+	dw HITOTSU_ME_GIANT
+	dw BABY_DRAGON
+	dw RYU_KISHIN
+	dw FERAL_IMP
+	dw WINGED_DRAGON_1
+	dw MUSHROOM_MAN
+	dw SHADOW_SPECTER
+	dw BLACKLAND_DRAGON
+	dw SWORD_ARM_DRAGON
+
+.Joey:
+	dw SOGEN
+	dw LEGENDARY_SWORD
+	dw TIGER_AXE
+	dw KARBONALA_WARRIOR
+	dw AXE_RAIDER
+	dw BATTLE_STEER
+	dw SWAMP_BATTLEGUARD
+	dw GAROOZIS
+	dw TIME_WIZARD
+	dw RED_EYES_B_DRAGON
+
+.SetoKaiba:
+	dw SWORD_OF_DARK
+	dw MALEVOLENT_NUZZLER
+	dw RYU_KISHIN
+	dw GRAPPLER
+	dw MYSTIC_HORSEMAN
+	dw WICKED_WORM_BEAST
+	dw BATTLE_OX
+	dw JUDGE_MAN
+	dw GYAKUTENNO_MEGAMI
+	dw B_EYE_WHITE_DRAGON
+
+.Mokuba:
+	dw DARK_HOLE
+	dw HORN_OF_LIGHT
+	dw INVIGORATION
+	dw MAN_EATING_PLANT
+	dw MASK_OF_DARKNESS
+	dw KROKODILUS
+	dw ARMORED_LIZARD
+	dw KOJIKOCY
+	dw BEAUTIFUL_HEADHUNT
+	dw R_LEG_OF_FORBIDDEN
+
+.Tristan:
+	dw VILE_GERMS
+	dw SILVER_BOW_AND_ARROW
+	dw YASHINOKI
+	dw KURAMA
+	dw LARVAS
+	dw ARLOWNAY
+	dw STONE_ARMADILLER
+	dw HURRICAIL
+	dw NEKOGAL_1
+	dw L_LEG_OF_FORBIDDEN
+
+.Bakura:
+	dw YAMI
+	dw GUARDIAN_LABYRINTH
+	dw MOOYAN_CURRY
+	dw DRAGONESS_WICKED
+	dw RED_MEDICINE
+	dw DD_WARRIOR
+	dw GOBLINS_REMEDY
+	dw FIEND_SWORD
+	dw SOUL_OF_THE_PURE
+	dw DIAN_KETO_THE_CURE
+
+.Puppeteer:
+	dw STOP_DEFENSE
+	dw TRIAL_OF_NIGHTMARE
+	dw DARK_TITAN_TERROR
+	dw LISARK
+	dw THE_JUDGEMENT_HAND
+	dw CYBER_SOLDIER_DARK
+	dw WITTY_PHANTOM
+	dw GROUND_ATTACKER
+	dw GATEKEEPER
+	dw R_ARM_OF_FORBIDDEN
+
+.PaniK:
+	dw YAMI
+	dw DARK_ENERGY
+	dw CASTLE_OF_DARK
+	dw METAL_GUARDIAN
+	dw BAROX
+	dw REAPER_OF_THE_CARD
+	dw MYSTIC_CLOWN
+	dw DARK_CHIMERA
+	dw ANSATSU
+	dw KING_OF_YAMIMAKAI
+
+.BanditKeith:
+	dw MACHINE_CONVERSION
+	dw VIOLET_CRYSTAL
+	dw CRASS_CLOWN
+	dw THE_SNAKE_HAIR
+	dw ZANKI
+	dw GATEKEEPER
+	dw CRAWLING_DRAGON
+	dw ANCIENT_TOOL
+	dw PUMPKING_THE_KING
+	dw L_ARM_OF_FORBIDDEN
+
+.Maximillion:
+	dw TAO_THE_CHANTER
+	dw D_ASSAILANT
+	dw DRAGON_PIPER
+	dw OGRE_OF_THE_BLACK
+	dw WATTKID
+	dw DRAGON_CAPTURE_JAR
+	dw FIREYAROU
+	dw LORD_OF_THE_LAMP
+	dw ROGUE_DOLL
+	dw DRAGON_TREASURE
+
+.Simon:
+	dw BOOK_OF_SECRET_ART
+	dw BLACK_PENDANT
+	dw AXE_OF_DESPAIR
+	dw ELFS_LIGHT
+	dw BEAST_FANGS
+	dw AQUA_MADOOR
+	dw BEWITCHING_PHANTOM
+	dw SPIRIT_OF_THE_WIND
+	dw SUMMONED_SKULL
+	dw ILLUSION_FACELESS
 
 Func_3708e:
 	push af

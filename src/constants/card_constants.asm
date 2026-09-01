@@ -349,6 +349,8 @@
 	const SWORDS_REVEALING     ; $15b
 	const SPELLBIND_CIRCLE     ; $15c
 	const DARK_PIERCE_LIGHT    ; $15d
+
+DEF SECRET_CARDS EQU const_value
 	const YARANZO              ; $15e
 	const KANAN_THE_SWORD      ; $15f
 	const TAKRIMINOS           ; $160
@@ -364,6 +366,8 @@
 	const FAIRYS_GIFT          ; $16a
 	const B_LUSTER_SOLDIER     ; $16b
 	const FIENDS_MIRROR        ; $16c
+DEF NUM_SECRET_CARDS EQU const_value - SECRET_CARDS
+
 DEF NUM_CARDS EQU const_value
 
 	const INVALID_CARD         ; $16d

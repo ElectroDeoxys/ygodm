@@ -6,7 +6,7 @@
 	farfunc $425e ; $07
 	farfunc $452e ; $09
 	farfunc ClearPlayerDeck ; $0b
-	farfunc Func_c68a ; $0d
+	farfunc GetPlayerDeckCardCount ; $0d
 	farfunc $4786 ; $0f
 	farfunc Func_cbe9 ; $11
 	farfunc Func_cb87 ; $13
@@ -265,9 +265,348 @@ Func_c24d:
 	call WaitForVBlank
 	pop af
 	ret
-; 0xc25e
 
-SECTION "Bank 03@45cc", ROMX[$45cc], BANK[$03]
+Func_c25e:
+	push af
+	push hl
+	call Func_101d
+	call DisableLCD
+	ld hl, $428a
+	call Func_10d9
+	farcall Func_803e
+	farcall Func_28776
+	call Func_c294
+	call Func_c2c9
+	call Func_c316
+	call EnableLCD
+	call Func_fff
+	call WaitForVBlank
+	call Func_2ae4
+	pop hl
+	pop af
+	ret
+; 0xc28a
+
+SECTION "Bank 3@4294", ROMX[$4294], BANK[$3]
+
+Func_c294:
+	call ClearOAM
+	call Func_c52e
+	call Func_c2a1
+	call Func_1225
+	ret
+
+Func_c2a1:
+	push af
+	push bc
+	push de
+	push hl
+	ld de, $42b9
+	ld hl, vTiles0
+	ld c, $10
+.asm_c2ad
+	ld a, [de]
+	ld [hli], a
+	ld [hli], a
+	inc de
+	dec c
+	jr nz, .asm_c2ad
+	pop hl
+	pop de
+	pop bc
+	pop af
+	ret
+; 0xc2b9
+
+SECTION "Bank 3@42c9", ROMX[$42c9], BANK[$3]
+
+Func_c2c9:
+	push af
+	push bc
+	push hl
+	hlbgcoord 12, 1
+	ld a, $00
+	farcall Func_42d0
+	ld a, [$cc56]
+	add $01
+	ld [$cadc], a
+	ld a, $00
+	ld [$cadd], a
+	call Func_142c
+	farcall Func_42c5
+	farcall Func_42ec
+	ld a, [$caba]
+	ld [hli], a
+	ld a, [$cabb]
+	ld [hli], a
+	ld a, [$cabc]
+	ld [hli], a
+	inc hl
+	ld a, [$cc57]
+	add $01
+	ld [$cadc], a
+	ld a, $00
+	ld [$cadd], a
+	call Func_142c
+	farcall Func_42c5
+	farcall Func_42ec
+	inc hl
+	ld a, [$cabc]
+	ld [hli], a
+	pop hl
+	pop bc
+	pop af
+	ret
+
+Func_c316:
+	push af
+	push bc
+	push de
+	push hl
+	call Func_c5b2
+	ld a, [$cc58]
+	ld [$cc51], a
+	ld d, $05
+	ld a, [$cc56]
+	ld c, a
+	ld a, [$cc57]
+	cp c
+	jr nz, .asm_c334
+	ld a, [$cc55]
+	ld d, a
+	inc d
+.asm_c334
+	ld e, $00
+.asm_c336
+	ld a, e
+	cp d
+	jr nc, .asm_c34c
+	ld a, l
+	call Func_c351
+	call Func_c397
+	inc e
+	ld a, [$cc51]
+	add $01
+	ld [$cc51], a
+	jr .asm_c336
+.asm_c34c
+	pop hl
+	pop de
+	pop bc
+	pop af
+	ret
+
+Func_c351:
+	push af
+	push bc
+	push de
+	push hl
+	ld d, $00
+	swap e
+	sla e
+	sla e
+	rl d
+	hlbgcoord 2, 3
+	add hl, de
+	ld a, $00
+	farcall Func_42d0
+	ld a, [$cc51]
+	call SetPlayerDeckIndex
+	call GetPlayerDeckCard
+	ld a, c
+	add $01
+	ld [$cadc], a
+	ld a, b
+	adc $00
+	ld [$cadd], a
+	call Func_142c
+	farcall Func_42c5
+	farcall Func_42ec
+	ld a, [$caba]
+	ld [hli], a
+	ld a, [$cabb]
+	ld [hli], a
+	ld a, [$cabc]
+	ld [hli], a
+	pop hl
+	pop de
+	pop bc
+	pop af
+	ret
+
+Func_c397:
+	push af
+	push bc
+	push de
+	push hl
+	ld d, $00
+	swap e
+	sla e
+	sla e
+	rl d
+	hlbgcoord 6, 2
+	add hl, de
+	ld a, [$cc51]
+	call SetPlayerDeckIndex
+	call GetPlayerDeckCard
+	call Func_1508
+	call Func_111c
+	ld de, $cab9
+	ld c, $08
+.asm_c3bd
+	ld a, [de]
+	inc de
+	call Func_1144
+	ld a, [$cacf]
+	ld [hli], a
+	dec c
+	jr nz, .asm_c3bd
+	ld de, $18
+	add hl, de
+	ld de, $cab9
+	ld c, $08
+.asm_c3d2
+	ld a, [de]
+	inc de
+	call Func_1144
+	ld a, [$cad0]
+	ld [hli], a
+	dec c
+	jr nz, .asm_c3d2
+	pop hl
+	pop de
+	pop bc
+	pop af
+	ret
+
+Func_c3e3:
+	push af
+	ld a, $00
+	ld [$cc52], a
+	ld a, $00
+	ld [$cc53], a
+	ld a, $00
+	ld [$cc54], a
+	ld a, $04
+	ld [$cc55], a
+	ld a, $00
+	ld [$cc56], a
+	ld a, $00
+	ld [$cc57], a
+	call Func_c407
+	pop af
+	ret
+
+Func_c407:
+	push af
+	push bc
+	push de
+	call GetPlayerDeckCardCount
+	dec a
+	ld d, a
+	ld b, $05
+	call DDividedByB
+	ld a, d
+	ld [$cc57], a
+	ld a, e
+	ld [$cc55], a
+	pop de
+	pop bc
+	pop af
+	ret
+; 0xc420
+
+SECTION "Bank 3@452e", ROMX[$452e], BANK[$3]
+
+Func_c52e:
+	push af
+	push bc
+	push de
+	push hl
+	ld a, [$cc52]
+	cp $00
+	jr nz, .asm_c559
+	ld c, $00
+	ld a, $ff
+	ld d, $10
+	call Func_123c
+	ld c, $01
+	ld a, $ff
+	ld d, $10
+	call Func_123c
+	ld bc, $2
+	ld a, [$cc53]
+	call Func_c59c
+	ld d, $10
+	call Func_123c
+.asm_c559
+	ld a, [$cc52]
+	cp $01
+	jr nz, .asm_c597
+	ld c, $00
+	ld a, $ff
+	ld d, $10
+	call Func_123c
+	ld bc, $1
+	ld a, [$cc54]
+	cp $02
+	jr z, .asm_c57f
+	add $05
+	call Func_c59c
+	ld d, $10
+	call Func_123c
+	jr .asm_c589
+.asm_c57f
+	ld a, $05
+	call Func_c59c
+	ld d, $65
+	call Func_123c
+.asm_c589
+	ld bc, $102
+	ld a, [$cc53]
+	call Func_c59c
+	ld d, $10
+	call Func_123c
+.asm_c597
+	pop hl
+	pop de
+	pop bc
+	pop af
+	ret
+
+Func_c59c:
+	push bc
+	push hl
+	ld b, $00
+	ld c, a
+	ld hl, $45a9
+	add hl, bc
+	ld a, [hl]
+	pop hl
+	pop bc
+	ret
+; 0xc5a9
+
+SECTION "Bank 3@45b2", ROMX[$45b2], BANK[$3]
+
+Func_c5b2:
+	push af
+	push bc
+	push de
+	push hl
+	ld a, [$cc56]
+	ld e, a
+	ld b, $05
+	call BTimesE
+	ld a, l
+	ld [$cc58], a
+	ld a, h
+	ld [$cc59], a
+	pop hl
+	pop de
+	pop bc
+	pop af
+	ret
 
 ClearPlayerDeck:
 	push af
@@ -372,32 +711,45 @@ Func_c630:
 
 SECTION "Bank 3@468a", ROMX[$468a], BANK[$3]
 
-Func_c68a:
+; outputs in a the total number of
+; cards in wPlayerDeck
+GetPlayerDeckCardCount:
 	push bc
 	push hl
 	ld hl, wPlayerDeck
-	ld c, $00
-.asm_c691
+	ld c, 0
+.loop_cards
 	ld a, [hli]
-	cp $6d
-	jr nz, .asm_c69d
+	cp LOW(INVALID_CARD)
+	jr nz, .valid
 	ld a, [hli]
-	cp $01
-	jr z, .asm_c6a4
-	jr .asm_c69e
-.asm_c69d
+	cp HIGH(INVALID_CARD)
+	jr z, .done
+	jr .next
+.valid
 	inc hl
-.asm_c69e
+.next
 	inc c
 	ld a, c
-	cp $28
-	jr c, .asm_c691
-.asm_c6a4
+	cp DECK_SIZE
+	jr c, .loop_cards
+.done
 	ld a, c
 	pop hl
 	pop bc
 	ret
-; 0xc6a8
+
+Func_c6a8:
+	call GetPlayerDeckCardCount
+	cp $28
+	jr nz, .asm_c6b2
+	xor a
+	jr .asm_c6b4
+.asm_c6b2
+	ld a, $01
+.asm_c6b4
+	ret
+; 0xc6b5
 
 SECTION "Bank 3@46cf", ROMX[$46cf], BANK[$3]
 
@@ -537,6 +889,66 @@ Func_c772:
 	ret
 ; 0xc783
 
+SECTION "Bank 3@4786", ROMX[$4786], BANK[$3]
+
+Func_c786:
+	push af
+	push bc
+	push de
+	push hl
+	call Func_c7b3
+	ld b, $00
+	ld c, a
+	ld hl, $47a5
+	add hl, bc
+	ld a, [hli]
+	ld h, [hl]
+	ld l, a
+	ld bc, $479c
+	push bc
+	jp hl
+; 0xc79c
+
+SECTION "Bank 3@47b3", ROMX[$47b3], BANK[$3]
+
+Func_c7b3:
+	push bc
+	push de
+	push hl
+	ld d, $00
+	ld a, [wJoypadPressed]
+	and $ff
+	jr z, .asm_c7cc
+	ld c, $08
+.asm_c7c1
+	dec c
+	rlca
+	jr nc, .asm_c7c1
+	ld b, $00
+	ld hl, $47e5
+	add hl, bc
+	ld d, [hl]
+.asm_c7cc
+	ld a, [wcaa7]
+	and $f0
+	jr z, .asm_c7e0
+	ld c, $08
+.asm_c7d5
+	dec c
+	rlca
+	jr nc, .asm_c7d5
+	ld b, $00
+	ld hl, $47e5
+	add hl, bc
+	ld d, [hl]
+.asm_c7e0
+	ld a, d
+	pop hl
+	pop de
+	pop bc
+	ret
+; 0xc7e5
+
 SECTION "Bank 03@4b87", ROMX[$4b87], BANK[$03]
 
 Func_cb87:
@@ -596,9 +1008,38 @@ Func_cbe9:
 	ld [$ccfd], a
 	pop af
 	ret
-; 0xcbf1
 
-SECTION "Bank 3@4c1e", ROMX[$4c1e], BANK[$3]
+Func_cbf1:
+	ret
+; 0xcbf2
+
+SECTION "Bank 3@4bf6", ROMX[$4bf6], BANK[$3]
+
+Func_cbf6:
+	push af
+	ld a, [$ccfd]
+	cp $02
+	jr z, .asm_cc08
+	ld a, [$ccfd]
+	inc a
+	ld [$ccfd], a
+	call Func_2aef
+.asm_cc08
+	pop af
+	ret
+
+Func_cc0a:
+	push af
+	ld a, [$ccfd]
+	cp $00
+	jr z, .asm_cc1c
+	ld a, [$ccfd]
+	dec a
+	ld [$ccfd], a
+	call Func_2aef
+.asm_cc1c
+	pop af
+	ret
 
 Func_cc1e:
 	push af
@@ -640,7 +1081,7 @@ Func_cc4c:
 	call Func_cc76
 	ld b, $00
 	ld c, a
-	ld hl, $4c6c
+	ld hl, .Jumptable
 	add hl, bc
 	ld a, [hli]
 	ld h, [hl]
@@ -653,9 +1094,13 @@ Func_cc4c:
 	pop de
 	pop bc
 	ret
-; 0xcc6c
 
-SECTION "Bank 3@4c76", ROMX[$4c76], BANK[$3]
+.Jumptable:
+	dw Func_ccb0
+	dw Func_ccbd
+	dw Func_cd2a
+	dw Func_cd2f
+	dw Func_cd42
 
 Func_cc76:
 	push bc
@@ -695,7 +1140,94 @@ Func_cc76:
 	ret
 ; 0xcca8
 
-SECTION "Bank 3@4d55", ROMX[$4d55], BANK[$3]
+SECTION "Bank 3@4cb0", ROMX[$4cb0], BANK[$3]
+
+Func_ccb0:
+	ld a, $02
+	call SetPendingVBlankMode
+	call RequestVBlankMode
+	call WaitForVBlank
+	xor a
+	ret
+
+Func_ccbd:
+	push bc
+	ld a, $04
+	call SetPendingVBlankMode
+	call Func_cbf1
+	call Func_cc1e
+	call RequestVBlankMode
+	call WaitForVBlank
+	ld a, [$ccfd]
+	cp $00
+	jr nz, .asm_cce8
+	farcall Func_56e0
+	farcall Func_551f
+	farcall Func_5c86
+	farcall Func_104f5
+	call Func_cb87
+	xor a
+	jr .asm_cd28
+.asm_cce8
+	cp $01
+	jr nz, .asm_ccfe
+	call Func_c3e3
+	call Func_c25e
+	call Func_c786
+	farcall Func_104f5
+	call Func_cb87
+	xor a
+	jr .asm_cd28
+.asm_ccfe
+	ld c, $01
+	call Func_c6a8
+	cp $00
+	jr nz, .asm_cd1f
+	ld a, [$ce00]
+	cp $02
+	jr nz, .asm_cd1d
+	call Func_24f
+	cp $00
+	jr z, .asm_cd1d
+	call Func_2afa
+	farcall Func_150ad
+	ld c, $00
+.asm_cd1d
+	jr .asm_cd27
+.asm_cd1f
+	call Func_2afa
+	farcall Func_150bd
+	ld c, $00
+.asm_cd27
+	ld a, c
+.asm_cd28
+	pop bc
+	ret
+
+Func_cd2a:
+	ld e, $01
+	ld a, $01
+	ret
+
+Func_cd2f:
+	ld a, $04
+	call SetPendingVBlankMode
+	call Func_cc0a
+	call Func_cc1e
+	call RequestVBlankMode
+	call WaitForVBlank
+	xor a
+	ret
+
+Func_cd42:
+	ld a, $04
+	call SetPendingVBlankMode
+	call Func_cbf6
+	call Func_cc1e
+	call RequestVBlankMode
+	call WaitForVBlank
+	xor a
+	ret
 
 Func_cd55:
 	push af
@@ -2210,9 +2742,9 @@ Func_d974:
 	push bc
 	call SetCardLocationAndIndex
 	call Func_1c92
-	ld a, [wTempCardID]
+	ld a, [wTempCardID + 0]
 	ld c, a
-	ld a, [$cdf3]
+	ld a, [wTempCardID + 1]
 	ld b, a
 	call IsCardInvalid
 	cp $00
@@ -2268,9 +2800,9 @@ Func_d9ce:
 	call Func_1c92
 	farcall Func_24024
 	pop bc
-	ld a, [wLoadedCardAtk]
+	ld a, [wLoadedCardAtk + 0]
 	ld e, a
-	ld a, [$cd14]
+	ld a, [wLoadedCardAtk + 1]
 	ld d, a
 	call Func_1d0f
 	pop de
@@ -2303,15 +2835,15 @@ Func_da29:
 	call Func_21f3
 	cp $02
 	jr nz, .asm_da3f
-	ld a, [wLoadedCardAtk]
+	ld a, [wLoadedCardAtk + 0]
 	ld c, a
-	ld a, [$cd14]
+	ld a, [wLoadedCardAtk + 1]
 	ld b, a
 	jr .asm_da47
 .asm_da3f
-	ld a, [wLoadedCardDef]
+	ld a, [wLoadedCardDef + 0]
 	ld c, a
-	ld a, [$cd16]
+	ld a, [wLoadedCardDef + 1]
 	ld b, a
 .asm_da47
 	pop hl
@@ -2681,13 +3213,13 @@ Func_dcb0:
 
 Func_dcdc:
 	push af
-	ld a, [wPlayerLP]
+	ld a, [wPlayerLP + 0]
 	call Func_200e
-	ld a, [$cab1]
+	ld a, [wPlayerLP + 1]
 	call Func_200e
-	ld a, [wOppLP]
+	ld a, [wOppLP + 0]
 	call Func_200e
-	ld a, [$cab4]
+	ld a, [wOppLP + 1]
 	call Func_200e
 	ld a, [$cad1]
 	call Func_200e
@@ -2707,13 +3239,13 @@ Func_dcdc:
 Func_dd1b:
 	push af
 	call Func_2051
-	ld [wOppLP], a
+	ld [wOppLP + 0], a
 	call Func_2051
-	ld [$cab4], a
+	ld [wOppLP + 1], a
 	call Func_2051
-	ld [wPlayerLP], a
+	ld [wPlayerLP + 0], a
 	call Func_2051
-	ld [$cab1], a
+	ld [wPlayerLP + 1], a
 	call Func_2051
 	ld [$cad1], a
 	call Func_2051
@@ -2850,10 +3382,10 @@ Func_e08a:
 
 Func_e08e:
 	push af
-	ld a, [wPlayerLP]
+	ld a, [wPlayerLP + 0]
 	ld [$ce06], a
 	ld [$ced4], a
-	ld a, [$cab1]
+	ld a, [wPlayerLP + 1]
 	ld [$ce07], a
 	ld [$ced5], a
 	pop af
@@ -2861,10 +3393,10 @@ Func_e08e:
 
 Func_e0a3:
 	push af
-	ld a, [wOppLP]
+	ld a, [wOppLP + 0]
 	ld [$ce08], a
 	ld [$cedf], a
-	ld a, [$cab4]
+	ld a, [wOppLP + 1]
 	ld [$ce09], a
 	ld [$cee0], a
 	pop af
@@ -2874,13 +3406,13 @@ Func_e0b8:
 	push af
 	push bc
 	farcall Func_24024
-	ld a, [wLoadedCardAtk]
+	ld a, [wLoadedCardAtk + 0]
 	ld [$ce0a], a
-	ld a, [$cd14]
+	ld a, [wLoadedCardAtk + 1]
 	ld [$ce0b], a
-	ld a, [wLoadedCardDef]
+	ld a, [wLoadedCardDef + 0]
 	ld [$ce0c], a
-	ld a, [$cd16]
+	ld a, [wLoadedCardDef + 1]
 	ld [$ce0d], a
 	pop bc
 	pop af
@@ -2890,13 +3422,13 @@ Func_e0d8:
 	push af
 	push bc
 	farcall Func_24024
-	ld a, [wLoadedCardAtk]
+	ld a, [wLoadedCardAtk + 0]
 	ld [$ce0e], a
-	ld a, [$cd14]
+	ld a, [wLoadedCardAtk + 1]
 	ld [$ce0f], a
-	ld a, [wLoadedCardDef]
+	ld a, [wLoadedCardDef + 0]
 	ld [$ce10], a
-	ld a, [$cd16]
+	ld a, [wLoadedCardDef + 1]
 	ld [$ce11], a
 	pop bc
 	pop af
@@ -3003,9 +3535,9 @@ Func_e285:
 	call Func_1c92
 	call Func_da4a
 	call Func_1c7a
-	ld a, [wTempCardID]
+	ld a, [wTempCardID + 0]
 	ld [$ce04], a
-	ld a, [$cdf3]
+	ld a, [wTempCardID + 1]
 	ld [$ce05], a
 	call Func_e0d8
 	ld a, $06
@@ -3022,9 +3554,9 @@ Func_e2b2:
 	ld [$ce14], a
 	call SetCardLocationAndIndex
 	call Func_1c92
-	ld a, [wTempCardID]
+	ld a, [wTempCardID + 0]
 	ld [$ce02], a
-	ld a, [$cdf3]
+	ld a, [wTempCardID + 1]
 	ld [$ce03], a
 	call Func_e0b8
 	call Func_21f3
@@ -3838,9 +4370,9 @@ Func_ef1d:
 	ld c, $01
 	call SetCardLocationAndIndex
 	ld a, [$cee7]
-	ld [wTempCardID], a
+	ld [wTempCardID + 0], a
 	ld a, [$cee8]
-	ld [$cdf3], a
+	ld [wTempCardID + 1], a
 	call Func_21d9
 	call Func_1caa
 	ld a, [$ceed]
@@ -4084,9 +4616,9 @@ Func_fa96:
 	call SetCardLocationAndIndex
 	call Func_1c92
 	push bc
-	ld a, [wTempCardID]
+	ld a, [wTempCardID + 0]
 	ld c, a
-	ld a, [$cdf3]
+	ld a, [wTempCardID + 1]
 	ld b, a
 	call Func_fadb
 	ld a, b
@@ -4102,9 +4634,9 @@ Func_fa96:
 	ld b, [hl]
 	ld c, a
 	ld a, c
-	ld [wTempCardID], a
+	ld [wTempCardID + 0], a
 	ld a, b
-	ld [$cdf3], a
+	ld [wTempCardID + 1], a
 	call Func_1c7a
 .asm_fad3
 	pop bc

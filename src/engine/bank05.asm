@@ -12,7 +12,7 @@
 	farfunc $508a ; $13
 	farfunc Func_1509a ; $15
 	farfunc Func_150ad ; $17
-	farfunc $50bd ; $19
+	farfunc Func_150bd ; $19
 	farfunc Func_150dd ; $1b
 	farfunc Func_1512c ; $1d
 	farfunc $5148 ; $1f
@@ -1119,7 +1119,17 @@ Func_150ad:
 	call Func_145cd
 	pop af
 	ret
-; 0x150bd
+
+Func_150bd:
+	push af
+	ld a, $01
+	ld [$cf18], a
+	ld a, $06
+	ld [$cf47], a
+	call Func_145cd
+	pop af
+	ret
+; 0x150cd
 
 SECTION "Bank 5@50dd", ROMX[$50dd], BANK[$5]
 

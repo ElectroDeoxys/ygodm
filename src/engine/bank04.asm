@@ -108,13 +108,13 @@ Func_100b1:
 	cp $00
 	jr nz, .asm_100d4
 	call Func_2b68
-	call Func_100d7
+	call DoDuel
 .asm_100d4
 	pop bc
 	pop af
 	ret
 
-Func_100d7:
+DoDuel:
 	push af
 	push bc
 	call Func_1f57
@@ -139,7 +139,7 @@ Func_100d7:
 	jr .asm_100eb
 .asm_1010d
 	call Func_2948
-	farcall Func_3400c
+	farcall GiveVictoryAwardCard
 	call Func_104f5
 	ld c, $64
 .asm_10118
@@ -197,8 +197,8 @@ Func_1016d:
 	push bc
 	push de
 	ld e, $00
-	farcall Func_5c48
-	farcall Func_c68a
+	farcall GetTotalCardCount
+	farcall GetPlayerDeckCardCount
 	add c
 	ld c, a
 	ld a, $00
@@ -263,8 +263,8 @@ Func_101d8:
 	push bc
 	push de
 	ld e, $00
-	farcall Func_5c48
-	farcall Func_c68a
+	farcall GetTotalCardCount
+	farcall GetPlayerDeckCardCount
 	add c
 	ld c, a
 	ld a, $00
@@ -1747,10 +1747,10 @@ Func_111c9:
 	ld a, c
 	call Func_111ee
 	ld d, c
-	ld b, $0a
+	ld b, 10
 	call DDividedByB
 	ld a, e
-	cp $09
+	cp 9
 	jr nz, .asm_111ea
 	ld a, d
 	call Func_11292
@@ -1892,7 +1892,7 @@ Func_11292:
 	ld b, $00
 	ld c, a
 	sla c
-	ld hl, $52a3
+	ld hl, .CardIDs
 	add hl, bc
 	ld a, [hli]
 	ld b, [hl]
@@ -1900,9 +1900,28 @@ Func_11292:
 	pop hl
 	pop af
 	ret
-; 0x112a3
 
-SECTION "Bank 4@52cb", ROMX[$52cb], BANK[$4]
+.CardIDs:
+	dw CHANGE_SLIME
+	dw FLAME_SWORDSMAN
+	dw BATTLE_OX
+	dw DRAGON_CAPTURE_JAR
+	dw BABY_DRAGON
+	dw ARMORED_LIZARD
+	dw GOBLINS_REMEDY
+	dw ELECTRO_WHIP
+	dw SWORD_ARM_DRAGON
+	dw SPELLBIND_CIRCLE
+	dw TIME_WIZARD
+	dw GYAKUTENNO_MEGAMI
+	dw KOJIKOCY
+	dw HERCULES_BEETLE
+	dw OOKAZI
+	dw CYBER_SHIELD
+	dw MEGAZOWLER
+	dw KAIRYU_SHIN
+	dw SUMMONED_SKULL
+	dw TREMENDOUS_FIRE
 
 Func_112cb:
 	push af
