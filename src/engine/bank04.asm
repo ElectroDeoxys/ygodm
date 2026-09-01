@@ -1,7 +1,7 @@
 	dw BANK(@)
 
 	farcall_table_start
-	farfunc Func_10020 ; $03
+	farfunc GameLoop ; $03
 	farfunc Func_10477 ; $05
 	farfunc $4484 ; $07
 	farfunc Func_104f5 ; $09
@@ -17,23 +17,26 @@
 	farfunc $52cb ; $1d
 	farfunc $4a1b ; $1f
 
-Func_10020::
+GameLoop::
 	call Func_1576
 	farcall Func_883d
 	call Func_10484
 	call Func_10505
+
+	; condition to break from loop
 	ld a, $00
-	ld [$ccfe], a
+	ld [wBeatGame], a
+
 .loop
-	ld a, [$ccfe]
+	ld a, [wBeatGame]
 	cp $01
-	jr z, .asm_10046
+	jr z, .break
 	farcall Func_e6be
 	farcall Func_e49c
 	call Func_2a08
 	farcall Func_e4fb
 	jr .loop
-.asm_10046
+.break
 	ret
 
 Func_10047:
@@ -123,25 +126,25 @@ DoDuel:
 	farcall AIOppDrawInitialHand
 	farcall Func_4068
 	call Func_2a97
-.asm_100eb
+.loop
 	farcall Func_d014
-	call Func_23b0
-	cp $01
-	jr z, .asm_1010d
+	call IsDuelOngoing
+	cp FALSE
+	jr z, .duel_finished
 	farcall Func_1501f
 	call Func_2391
 	call Func_101f8
 	call Func_10302
-	call Func_23b0
-	cp $01
-	jr z, .asm_1010d
+	call IsDuelOngoing
+	cp FALSE
+	jr z, .duel_finished
 	farcall Func_c142
-	jr .asm_100eb
-.asm_1010d
-	call Func_2948
+	jr .loop
+.duel_finished
+	call IncrementDuelistDuelAndWinCounts
 	farcall GiveVictoryAwardCard
 	call Func_104f5
-	ld c, $64
+	ld c, 100
 .asm_10118
 	call WaitForVBlank
 	dec c
@@ -311,7 +314,7 @@ Func_1020e:
 	ld [$ceed], a
 	ld a, $00
 	ld [$ceee], a
-	farcall Func_ec02b
+	farcall ClearFusionCards
 	pop af
 	ret
 
@@ -408,7 +411,7 @@ Func_102c0:
 	ld c, a
 	ld a, [wTempCardID + 1]
 	ld b, a
-	farcall Func_ec04c
+	farcall SetMaterial1Card
 	ld a, [$cee9]
 	ld b, a
 	ld c, CARD_LOCATION_OPP_HAND
@@ -418,8 +421,8 @@ Func_102c0:
 	ld c, a
 	ld a, [wTempCardID + 1]
 	ld b, a
-	farcall Func_ec05e
-	farcall Func_ec091
+	farcall SetMaterial2Card
+	farcall AttemptFusionSummon
 	cp $00
 	jr nz, .asm_102fc
 	farcall Func_ef1d
@@ -451,8 +454,8 @@ Func_10302:
 	ld a, [$cef7]
 	add $01
 	ld [$cef7], a
-	call Func_23b0
-	cp $01
+	call IsDuelOngoing
+	cp FALSE
 	jr z, .asm_10334
 	jr .asm_1030c
 .asm_10334
@@ -710,7 +713,7 @@ Func_104e2:
 	call Func_1116c
 	farcall InitTrunk
 	farcall ClearPlayerDeck
-	call Func_27f7
+	call SetInitialWinAndDuelCounts
 	call GenerateStartingDeck
 	farcall Func_3708e
 	ret
@@ -1095,8 +1098,8 @@ SRAMToWRAMMap:
 	dwb wPlayerDeck, DECK_SIZE * $2
 	dwb wTrunk, $ff
 	dwb wTrunk + $ff, LOW(NUM_CARDS - $ff)
-	dwb $cf4e, $22
-	dwb $cf70, $22
+	dwb wDuelistDuelCounts, NUM_DUELISTS * $2
+	dwb wDuelistWinCounts, NUM_DUELISTS * $2
 	dwb $cf99, $08
 	dwb $b800, $c8
 	dwb $b8c8, $c8

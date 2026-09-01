@@ -33,7 +33,7 @@
 	farfunc Func_6046 ; $3d
 	farfunc $6101 ; $3f
 	farfunc GiveCard ; $41
-	farfunc Func_5b52 ; $43
+	farfunc SetCardAsSeen ; $43
 	farfunc Func_62c2 ; $45
 	farfunc Func_63d6 ; $47
 	farfunc Func_6595 ; $49
@@ -673,13 +673,13 @@ Func_56e0:
 	ld [$cad7], a
 	ld a, $00
 	ld [$cad8], a
-	call Func_5c29
-	cp $00
-	jr nz, .asm_5708
+	call PlayerOwnsAnySecretCard
+	cp TRUE
+	jr nz, .no_secret_cards
 	ld a, $48
 	ld [$cad9], a
 	jr .asm_570d
-.asm_5708
+.no_secret_cards
 	ld a, $45
 	ld [$cad9], a
 .asm_570d
@@ -833,10 +833,11 @@ GiveCard::
 	push hl
 	call GetCardCountInTrunk
 	cp NOT_OWNED
-	jr nz, .asm_5b12
+	jr nz, .owned
+	; set its count to 0
 	xor a
-	call Func_5b6c
-.asm_5b12
+	call SetCardCountInTrunk
+.owned
 	ld a, [wCardID_cae2 + 0]
 	ld c, a
 	ld a, [wCardID_cae2 + 1]
@@ -857,7 +858,9 @@ GiveCard::
 
 SECTION "Bank 01@5b52", ROMX[$5b52], BANK[$01]
 
-Func_5b52::
+; sets card in wCardID_cae2 as seen,
+; that is, set its card count to 0 in wTrunk
+SetCardAsSeen::
 	push af
 	push bc
 	push hl
@@ -878,7 +881,7 @@ Func_5b52::
 	pop af
 	ret
 
-Func_5b6c:
+SetCardCountInTrunk:
 	push bc
 	push hl
 	push af
@@ -911,11 +914,12 @@ GetCardCountInTrunk::
 
 SECTION "Bank 1@5c29", ROMX[$5c29], BANK[$1]
 
-Func_5c29:
+; returns TRUE if player owns any of the Secret cards
+PlayerOwnsAnySecretCard:
 	push bc
 	push de
 	push hl
-	ld d, $01
+	ld d, FALSE
 	ld bc, SECRET_CARDS
 	ld e, NUM_SECRET_CARDS
 .loop_secret_cards
@@ -923,7 +927,7 @@ Func_5c29:
 	call GetCardCountInTrunk
 	cp NOT_OWNED
 	jr z, .next_card
-	ld d, $00
+	ld d, TRUE
 .next_card
 	inc bc
 	dec e

@@ -111,7 +111,7 @@ Func_fc04e:
 	ld b, $00
 	sla e
 	ld c, $00
-	ldh a, [$ffdd]
+	ldh a, [hBootUpA]
 	cp BOOTUP_A_SGB2
 	jr nz, .asm_fc0be
 	ld c, $01

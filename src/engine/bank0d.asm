@@ -10,15 +10,15 @@
 GiveVictoryAwardCard:
 	push af
 	push bc
-	call Func_23f7
-	cp $00
-	jr z, .skip
+	call PlayerLostDuel
+	cp TRUE
+	jr z, .lost
 	call .GenerateCard
 	farcall Func_5af2
 	farcall GiveCard
 	farcall Func_b87e
 	call GiveVictoryBonusCard
-.skip
+.lost
 	pop bc
 	pop af
 	ret
@@ -43,7 +43,7 @@ GiveVictoryAwardCard:
 	ld d, a
 	; de = random number between [$0, $7ff]
 	ld b, $00
-	farcall Func_b724
+	farcall ConvertNPCDuelistToCharacter
 	ld c, a
 	sla c
 	ld hl, .PtrTable
@@ -730,8 +730,8 @@ GiveVictoryAwardCard:
 Func_36e34:
 	push af
 	push bc
-	call Func_23f7
-	cp $00
+	call PlayerLostDuel
+	cp TRUE
 	jr nz, .asm_36e4e
 	ld a, [$cfb8]
 	farcall SetPlayerDeckIndex
@@ -788,7 +788,7 @@ GiveVictoryBonusCard:
 	cp $01
 	jr z, .skip
 	ld d, $00
-	farcall Func_b724
+	farcall ConvertNPCDuelistToCharacter
 	ld e, a
 	sla e
 	ld hl, VictoryBonusCards
@@ -816,10 +816,10 @@ Func_36ebd:
 	push de
 	push hl
 	ld b, $00
-	ld a, [$ceef]
+	ld a, [wNPCDuelist]
 	ld c, a
 	sla c
-	ld hl, $cf70
+	ld hl, wDuelistWinCounts
 	add hl, bc
 	ld a, [hli]
 	ld d, [hl]

@@ -23,7 +23,7 @@
 	farfunc Func_15059 ; $29
 	farfunc $50cd ; $2b
 	farfunc HandleExodiaWinCondition ; $2d
-	farfunc Func_15233 ; $2f
+	farfunc HandleEmptyHandWinCondition ; $2f
 	farfunc $52a3 ; $31
 	farfunc Func_14216 ; $33
 	farfunc Func_14238 ; $35
@@ -1196,23 +1196,27 @@ Func_1512c::
 
 SECTION "Bank 5@5233", ROMX[$5233], BANK[$5]
 
-Func_15233:
+HandleEmptyHandWinCondition:
 	push af
-	farcall Func_d853
-	cp $01
-	jr nz, .asm_1524a
-	call Func_1524c
-	cp $00
-	jr nz, .asm_15247
+	; does player have any hand cards?
+	farcall PlayerHasAnyHandCards
+	cp FALSE
+	jr nz, .done
+	; no, which duelist has less LP?
+	call PlayerHasSameOrMoreLPThanOpponent
+	cp TRUE
+	jr nz, .player_has_less_lp
+	; player LP >= opp LP
 	call Func_23a8
-	jr .asm_1524a
-.asm_15247
+	jr .done
+.player_has_less_lp
+	; player LP < opp LP
 	call Func_23a0
-.asm_1524a
+.done
 	pop af
 	ret
 
-Func_1524c:
+PlayerHasSameOrMoreLPThanOpponent:
 	push bc
 	push de
 	ld a, [wPlayerLP + 0]

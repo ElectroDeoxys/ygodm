@@ -5,7 +5,11 @@ hDecompressDest::       dw ; ff82
 hDecompressLen::        dw ; ff84
 hDecompressBufferSize:: db ; ff86
 
-	ds $58
+	ds $56
+
+hBootUpA:: db ; ffdd
+
+	ds $1
 
 hCurJob:: db ; ffdf
 

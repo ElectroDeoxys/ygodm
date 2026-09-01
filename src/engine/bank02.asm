@@ -12,7 +12,7 @@
 	farfunc Func_b52c ; $13
 	farfunc Func_b547 ; $15
 	farfunc Func_b562 ; $17
-	farfunc Func_b724 ; $19
+	farfunc ConvertNPCDuelistToCharacter ; $19
 	farfunc $7711 ; $1b
 	farfunc Func_b7ee ; $1d
 	farfunc Func_b807 ; $1f
@@ -1117,7 +1117,7 @@ ExodiaOAMGfx:      INCBIN "gfx/characters/exodia_oam.2bpp"
 Func_b52c:
 	push af
 	call Func_29fd
-	call Func_b724
+	call ConvertNPCDuelistToCharacter
 	ld [wNPCCharacter], a
 	call Func_b744
 	ld [$cd51], a
@@ -1130,7 +1130,7 @@ Func_b52c:
 Func_b547:
 	push af
 	call Func_29fd
-	call Func_b724
+	call ConvertNPCDuelistToCharacter
 	ld [wNPCCharacter], a
 	call Func_b789
 	ld [$cd51], a
@@ -1143,7 +1143,7 @@ Func_b547:
 Func_b562:
 	push af
 	call Func_29fd
-	call Func_b724
+	call ConvertNPCDuelistToCharacter
 	ld [wNPCCharacter], a
 	call Func_b7ce
 	ld [$cd51], a
@@ -1155,8 +1155,8 @@ Func_b562:
 
 Func_b57d:
 	push af
-	call Func_23f7
-	cp $00
+	call PlayerLostDuel
+	cp TRUE
 	jr z, .asm_b58d
 	call Func_b595
 	call Func_b6c5
@@ -1356,11 +1356,13 @@ Func_b6c5:
 
 SECTION "Bank 2@7724", ROMX[$7724], BANK[$2]
 
-Func_b724:
+; converts wNPCDuelist DUELIST_* constant
+; to corresponding character constant
+ConvertNPCDuelistToCharacter:
 	push bc
 	push hl
 	ld b, $00
-	ld a, [$ceef]
+	ld a, [wNPCDuelist]
 	ld c, a
 	ld hl, .Characters
 	add hl, bc
@@ -1370,28 +1372,28 @@ Func_b724:
 	ret
 
 .Characters:
-	db WEEVIL
-	db MAI
-	db REX
-	db MAKO
-	db SETO_KAIBA
-	db MOKUBA
-	db PUPPETEER
-	db PANIK
-	db BANDIT_KEITH
-	db YUGI
-	db TRISTAN
-	db JOEY
-	db BAKURA
-	db SIMON
-	db MAXIMILLION
-	db YAMI_YUGI
+	db WEEVIL       ; DUELIST_WEEVIL
+	db MAI          ; DUELIST_MAI
+	db REX          ; DUELIST_REX
+	db MAKO         ; DUELIST_MAKO
+	db SETO_KAIBA   ; DUELIST_SETO_KAIBA
+	db MOKUBA       ; DUELIST_MOKUBA
+	db PUPPETEER    ; DUELIST_PUPPETEER
+	db PANIK        ; DUELIST_PANIK
+	db BANDIT_KEITH ; DUELIST_BANDIT_KEITH
+	db YUGI         ; DUELIST_YUGI
+	db TRISTAN      ; DUELIST_TRISTAN
+	db JOEY         ; DUELIST_JOEY
+	db BAKURA       ; DUELIST_BAKURA
+	db SIMON        ; DUELIST_SIMON
+	db MAXIMILLION  ; DUELIST_MAXIMILLION
+	db YAMI_YUGI    ; DUELIST_YAMI_YUGI
 
 Func_b744:
 	push bc
 	push hl
 	ld b, $00
-	ld a, [$ceef]
+	ld a, [wNPCDuelist]
 	call Func_28cd
 	ld hl, $7779
 	ld a, c
@@ -1403,7 +1405,7 @@ Func_b744:
 	ld hl, $7769
 .asm_b75e
 	ld b, $00
-	ld a, [$ceef]
+	ld a, [wNPCDuelist]
 	ld c, a
 	add hl, bc
 	ld a, [hl]
@@ -1418,7 +1420,7 @@ Func_b789:
 	push bc
 	push hl
 	ld b, $00
-	ld a, [$ceef]
+	ld a, [wNPCDuelist]
 	call Func_28cd
 	ld hl, $77be
 	ld a, c
@@ -1430,7 +1432,7 @@ Func_b789:
 	ld hl, $77ae
 .asm_b7a3
 	ld b, $00
-	ld a, [$ceef]
+	ld a, [wNPCDuelist]
 	ld c, a
 	add hl, bc
 	ld a, [hl]
@@ -1445,7 +1447,7 @@ Func_b7ce:
 	push bc
 	push hl
 	ld b, $00
-	ld a, [$ceef]
+	ld a, [wNPCDuelist]
 	ld c, a
 	ld hl, $77de
 	add hl, bc

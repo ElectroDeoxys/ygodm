@@ -37,7 +37,7 @@
 	farfunc $5e81 ; $45
 	farfunc Func_e285 ; $47
 	farfunc Func_d974 ; $49
-	farfunc Func_d853 ; $4b
+	farfunc PlayerHasAnyHandCards ; $4b
 	farfunc Func_e2b2 ; $4d
 	farfunc Func_eebf ; $4f
 	farfunc Func_ef1d ; $51
@@ -1005,7 +1005,7 @@ SECTION "Bank 03@4be9", ROMX[$4be9], BANK[$03]
 Func_cbe9:
 	push af
 	ld a, $00
-	ld [$ccfd], a
+	ld [wccfd], a
 	pop af
 	ret
 
@@ -1017,12 +1017,12 @@ SECTION "Bank 3@4bf6", ROMX[$4bf6], BANK[$3]
 
 Func_cbf6:
 	push af
-	ld a, [$ccfd]
+	ld a, [wccfd]
 	cp $02
 	jr z, .asm_cc08
-	ld a, [$ccfd]
+	ld a, [wccfd]
 	inc a
-	ld [$ccfd], a
+	ld [wccfd], a
 	call Func_2aef
 .asm_cc08
 	pop af
@@ -1030,12 +1030,12 @@ Func_cbf6:
 
 Func_cc0a:
 	push af
-	ld a, [$ccfd]
+	ld a, [wccfd]
 	cp $00
 	jr z, .asm_cc1c
-	ld a, [$ccfd]
+	ld a, [wccfd]
 	dec a
-	ld [$ccfd], a
+	ld [wccfd], a
 	call Func_2aef
 .asm_cc1c
 	pop af
@@ -1047,7 +1047,7 @@ Func_cc1e:
 	push de
 	push hl
 	ld bc, $2
-	ld a, [$ccfd]
+	ld a, [wccfd]
 	call Func_cc35
 	ld d, $20
 	call Func_123c
@@ -1143,7 +1143,7 @@ Func_cc76:
 SECTION "Bank 3@4cb0", ROMX[$4cb0], BANK[$3]
 
 Func_ccb0:
-	ld a, $02
+	ld a, VBLANK_02
 	call SetPendingVBlankMode
 	call RequestVBlankMode
 	call WaitForVBlank
@@ -1158,7 +1158,7 @@ Func_ccbd:
 	call Func_cc1e
 	call RequestVBlankMode
 	call WaitForVBlank
-	ld a, [$ccfd]
+	ld a, [wccfd]
 	cp $00
 	jr nz, .asm_cce8
 	farcall Func_56e0
@@ -1289,9 +1289,100 @@ Func_cd9a:
 	pop bc
 	pop af
 	ret
-; 0xcdb3
 
-SECTION "Bank 3@4e47", ROMX[$4e47], BANK[$3]
+SECTION "Bank 3@4db3", ROMX[$4db3], BANK[$3]
+
+Func_cdb3:
+	push bc
+	ld b, $01
+	ld a, [$cd5c]
+	cp $03
+	jr nz, .asm_cdc2
+	call Func_cff6
+	jr .asm_cdd5
+.asm_cdc2
+	ld a, [wcd5e]
+	cp $04
+	jr z, .asm_cdd2
+	inc a
+	ld [wcd5e], a
+	ld b, $00
+	call Func_2b47
+.asm_cdd2
+	call Func_cd9a
+.asm_cdd5
+	ld a, b
+	pop bc
+	ret
+
+Func_cdd8:
+	push bc
+	ld b, $01
+	ld a, [$cd5c]
+	cp $03
+	jr nz, .asm_cde7
+	call Func_cff6
+	jr .asm_cdfa
+.asm_cde7
+	ld a, [wcd5e]
+	cp $00
+	jr z, .asm_cdf7
+	dec a
+	ld [wcd5e], a
+	ld b, $00
+	call Func_2b47
+.asm_cdf7
+	call Func_cd9a
+.asm_cdfa
+	ld a, b
+	pop bc
+	ret
+
+Func_cdfd:
+	push bc
+	ld b, $01
+	ld a, [$cd5c]
+	cp $03
+	jr nz, .asm_ce0c
+	call Func_cff6
+	jr .asm_ce1f
+.asm_ce0c
+	ld a, [wcd5f]
+	cp $03
+	jr z, .asm_ce1c
+	inc a
+	ld [wcd5f], a
+	ld b, $00
+	call Func_2b47
+.asm_ce1c
+	call Func_cd9a
+.asm_ce1f
+	ld a, b
+	pop bc
+	ret
+
+Func_ce22:
+	push bc
+	ld b, $01
+	ld a, [$cd5c]
+	cp $03
+	jr nz, .asm_ce31
+	call Func_cff6
+	jr .asm_ce44
+.asm_ce31
+	ld a, [wcd5f]
+	cp $00
+	jr z, .asm_ce41
+	dec a
+	ld [wcd5f], a
+	ld b, $00
+	call Func_2b47
+.asm_ce41
+	call Func_cd9a
+.asm_ce44
+	ld a, b
+	pop bc
+	ret
 
 Func_ce47:
 	push af
@@ -1360,9 +1451,27 @@ Func_ce47:
 	pop bc
 	pop af
 	ret
-; 0xced3
 
-SECTION "Bank 3@4efb", ROMX[$4efb], BANK[$3]
+Func_ced3:
+	push af
+	ld a, [$cd5c]
+	cp $01
+	jr nz, .asm_cee9
+	ld a, [$cd60]
+	ld [wcd5e], a
+	ld a, [$cd61]
+	ld [wcd5f], a
+	jr .asm_cef9
+.asm_cee9
+	cp $04
+	jr nz, .asm_cef9
+	ld a, [$cd60]
+	ld [wcd5e], a
+	ld a, [$cd61]
+	ld [wcd5f], a
+.asm_cef9
+	pop af
+	ret
 
 Func_cefb:
 	push af
@@ -1524,9 +1633,23 @@ Func_cfe1:
 .asm_cff4
 	pop af
 	ret
-; 0xcff6
 
-SECTION "Bank 3@5014", ROMX[$5014], BANK[$3]
+Func_cff6:
+	push af
+	call Func_2bca
+	cp $00
+	jr nz, .asm_d00f
+	call Func_2b3c
+	call Func_d900
+	call Func_cefb
+	call Func_c187
+	call Func_f86
+	jr .asm_d012
+.asm_d00f
+	call Func_2afa
+.asm_d012
+	pop af
+	ret
 
 Func_d014:
 	push af
@@ -1535,14 +1658,17 @@ Func_d014:
 	push hl
 	xor a
 	ld [$cd62], a
+
 	farcall HandleExodiaWinCondition
-	call Func_23b0
-	cp $01
+	call IsDuelOngoing
+	cp FALSE
 	jr z, .asm_d059
-	farcall Func_15233
-	call Func_23b0
-	cp $01
+
+	farcall HandleEmptyHandWinCondition
+	call IsDuelOngoing
+	cp FALSE
 	jr z, .asm_d059
+
 	farcall Func_1500c
 	call Func_d06c
 .asm_d036
@@ -1555,8 +1681,8 @@ Func_d014:
 	ld h, [hl]
 	ld l, a
 	call_hl
-	call Func_23b0
-	cp $01
+	call IsDuelOngoing
+	cp FALSE
 	jr z, .asm_d056
 	ld a, [$cd62]
 	cp $01
@@ -1573,11 +1699,11 @@ Func_d014:
 .Jumptable:
 	dw Func_d0cf
 	dw Func_d0dc
-	dw $50f0
-	dw $5100
-	dw $5110
-	dw $5120
-	dw $5130
+	dw Func_d0f0
+	dw Func_d100
+	dw Func_d110
+	dw Func_d120
+	dw Func_d130
 
 Func_d06c:
 	call HandlePlayerPetitMothEvolution
@@ -1658,9 +1784,51 @@ Func_d0dc:
 	pop hl
 	pop bc
 	ret
-; 0xd0f0
 
-SECTION "Bank 3@5140", ROMX[$5140], BANK[$3]
+Func_d0f0:
+	call Func_d2e9
+	ld a, VBLANK_02
+	call SetPendingVBlankMode
+	call RequestVBlankMode
+	call WaitForVBlank
+	xor a
+	ret
+
+Func_d100:
+	call Func_d3bf
+	ld a, VBLANK_02
+	call SetPendingVBlankMode
+	call RequestVBlankMode
+	call WaitForVBlank
+	xor a
+	ret
+
+Func_d110:
+	call Func_d3b0
+	ld a, VBLANK_02
+	call SetPendingVBlankMode
+	call RequestVBlankMode
+	call WaitForVBlank
+	xor a
+	ret
+
+Func_d120:
+	call Func_d3ce
+	ld a, VBLANK_02
+	call SetPendingVBlankMode
+	call RequestVBlankMode
+	call WaitForVBlank
+	xor a
+	ret
+
+Func_d130:
+	call Func_d3dd
+	ld a, VBLANK_02
+	call SetPendingVBlankMode
+	call RequestVBlankMode
+	call WaitForVBlank
+	xor a
+	ret
 
 ClearPlayerDuelDeck:
 	push af
@@ -1858,8 +2026,8 @@ Func_d267:
 	cp $01
 	jr nz, .asm_d290
 	call Func_d014
-	call Func_23b0
-	cp $01
+	call IsDuelOngoing
+	cp FALSE
 	jr nz, .asm_d28b
 	call Func_2391
 	call Func_db63
@@ -1874,8 +2042,8 @@ Func_d267:
 .asm_d293
 	call Func_2391
 	call Func_db63
-	call Func_23b0
-	cp $01
+	call IsDuelOngoing
+	cp FALSE
 	jr z, .asm_d2a8
 	call Func_1f81
 	call Func_c142
@@ -1917,9 +2085,160 @@ Func_d2b8:
 .asm_d2e7
 	pop af
 	ret
-; 0xd2e9
 
-SECTION "Bank 3@53ec", ROMX[$53ec], BANK[$3]
+Func_d2e9:
+	push af
+	ld a, [$cd5c]
+	cp $00
+	jr nz, .asm_d309
+	call Func_d366
+	cp $00
+	jr nz, .asm_d307
+	farcall $03, $05
+	farcall $05, $05
+	farcall $03, $01
+	call Func_d3ec
+	call EnableObjects
+.asm_d307
+	jr .asm_d364
+.asm_d309
+	cp $01
+	jr nz, .asm_d318
+	call Func_2b31
+	call Func_ced3
+	call Func_f0f7
+	jr .asm_d364
+.asm_d318
+	cp $02
+	jr nz, .asm_d342
+	call Func_cd9a
+	ld a, [wLoadedCardID]
+	ld c, a
+	ld a, [$cd10]
+	ld b, a
+	call IsValidCard
+	call Func_d366
+	cp $00
+	jr nz, .asm_d340
+	farcall $03, $05
+	farcall $05, $05
+	farcall $03, $01
+	call Func_d3ec
+	call EnableObjects
+.asm_d340
+	jr .asm_d364
+.asm_d342
+	cp $03
+	jr nz, .asm_d354
+	call Func_2b31
+	call Func_ced3
+	call Func_f104
+	farcall $15, $04
+	jr .asm_d364
+.asm_d354
+	cp $04
+	jr nz, .asm_d364
+	call Func_2b31
+	call Func_ced3
+	call Func_f10b
+	farcall $15, $04
+.asm_d364
+	pop af
+	ret
+
+Func_d366:
+	push bc
+	push de
+	call Func_cd9a
+	ld a, [wLoadedCardID]
+	ld c, a
+	ld a, [$cd10]
+	ld b, a
+	call IsValidCard
+	cp $00
+	jr z, .asm_d37e
+	ld a, $01
+	jr .asm_d3ad
+.asm_d37e
+	ld e, $01
+	ld a, [$cd12]
+	ld c, a
+	ld a, [$cd11]
+	ld b, a
+	call SetCardLocationAndIndex
+	call Func_1c92
+	ld a, c
+	cp $01
+	jr nz, .asm_d39e
+	call Func_21f9
+	cp $01
+	jr nz, .asm_d39c
+	ld e, $00
+.asm_d39c
+	jr .asm_d3ac
+.asm_d39e
+	cp $02
+	jr nz, .asm_d3a6
+	ld e, $00
+	jr .asm_d3ac
+.asm_d3a6
+	cp $03
+	jr nz, .asm_d3ac
+	ld e, $00
+.asm_d3ac
+	ld a, e
+.asm_d3ad
+	pop de
+	pop bc
+	ret
+
+Func_d3b0:
+	push af
+	push bc
+	call Func_cdb3
+	cp $00
+	jr nz, .asm_d3bc
+	call Func_d3ec
+.asm_d3bc
+	pop bc
+	pop af
+	ret
+
+Func_d3bf:
+	push af
+	push bc
+	call Func_cdd8
+	cp $00
+	jr nz, .asm_d3cb
+	call Func_d3ec
+.asm_d3cb
+	pop bc
+	pop af
+	ret
+
+Func_d3ce:
+	push af
+	push bc
+	call Func_ce22
+	cp $00
+	jr nz, .asm_d3da
+	call Func_d3ec
+.asm_d3da
+	pop bc
+	pop af
+	ret
+
+Func_d3dd:
+	push af
+	push bc
+	call Func_cdfd
+	cp $00
+	jr nz, .asm_d3e9
+	call Func_d3ec
+.asm_d3e9
+	pop bc
+	pop af
+	ret
 
 Func_d3ec:
 	push af
@@ -2311,7 +2630,7 @@ Func_d6ae:
 	call Func_d64f
 	cp $00
 	jr nz, .asm_d6bf
-	farcall Func_ec02b
+	farcall ClearFusionCards
 	call Func_ef49
 	call Func_f118
 .asm_d6bf
@@ -2342,7 +2661,7 @@ Func_d6d4:
 	ld c, a
 	ld a, [wTempCardID + 1]
 	ld b, a
-	farcall Func_ec04c
+	farcall SetMaterial1Card
 	ld a, [$cd60]
 	ld b, a
 	ld c, CARD_LOCATION_PLAYER_HAND
@@ -2352,7 +2671,7 @@ Func_d6d4:
 	ld c, a
 	ld a, [wTempCardID + 1]
 	ld b, a
-	farcall Func_ec05e
+	farcall SetMaterial2Card
 	pop bc
 	pop af
 	ret
@@ -2536,15 +2855,16 @@ Func_d833:
 	pop bc
 	ret
 
-Func_d853:
+; returns TRUE if player has any cards in hand
+PlayerHasAnyHandCards:
 	push bc
 	push de
 	ld b, 0
-	ld e, $01
-.asm_d859
+	ld e, FALSE
+.loop_hand
 	ld a, b
 	cp HAND_SIZE
-	jr nc, .asm_d87c
+	jr nc, .done
 	ld c, CARD_LOCATION_PLAYER_HAND
 	call SetCardLocationAndIndex
 	call Func_1c92
@@ -2556,12 +2876,12 @@ Func_d853:
 	call IsValidCard
 	pop bc
 	cp TRUE
-	jr nz, .asm_d879
-	ld e, $00
-.asm_d879
+	jr nz, .false
+	ld e, TRUE
+.false
 	inc b
-	jr .asm_d859
-.asm_d87c
+	jr .loop_hand
+.done
 	ld a, e
 	pop de
 	pop bc
@@ -2653,9 +2973,26 @@ Func_d8ee:
 	call Func_21f3
 	pop bc
 	ret
-; 0xd900
 
-SECTION "Bank 3@5921", ROMX[$5921], BANK[$3]
+Func_d900:
+	push af
+	push bc
+	ld a, [$cd5c]
+	cp $03
+	jr nz, .asm_d91e
+	call Func_d8ee
+	cp $02
+	jr nz, .asm_d918
+	call Func_21e6
+	call Func_1c7a
+	jr .asm_d91e
+.asm_d918
+	call Func_21d9
+	call Func_1c7a
+.asm_d91e
+	pop bc
+	pop af
+	ret
 
 Func_d921:
 	push bc
@@ -2858,7 +3195,7 @@ Func_da4a:
 	ld a, [wTempCardID + 1]
 	ld b, a
 	farcall Func_5af2
-	farcall Func_5b52
+	farcall SetCardAsSeen
 	call Func_2193
 	pop bc
 	pop af
@@ -2884,7 +3221,7 @@ Func_da60:
 	ld a, [wTempCardID + 1]
 	ld b, a
 	farcall Func_5af2
-	farcall Func_5b52
+	farcall SetCardAsSeen
 	pop bc
 .next
 	inc b
@@ -4470,7 +4807,7 @@ Func_f05f:
 	call CompareBCAndDE
 	cp $02
 	jr nz, .asm_f083
-	farcall Func_ec091
+	farcall AttemptFusionSummon
 	cp $00
 	jr nz, .asm_f07f
 	ld a, $01
@@ -4492,7 +4829,26 @@ Func_f05f:
 	ret
 ; 0xf08e
 
-SECTION "Bank 3@7118", ROMX[$7118], BANK[$3]
+SECTION "Bank 3@70f7", ROMX[$70f7], BANK[$3]
+
+Func_f0f7:
+	call Func_cd72
+	call Func_c142
+	call Func_cd9a
+	call Func_d3ec
+	ret
+
+Func_f104:
+	call Func_cd82
+	call Func_c142
+	ret
+
+Func_f10b:
+	call Func_cd82
+	call Func_c142
+	call Func_cd9a
+	call Func_d3ec
+	ret
 
 Func_f118:
 	call Func_ce47
@@ -4593,7 +4949,7 @@ HandlePlayerPetitMothEvolution:
 	ld [wTempCardID + 1], a
 	call Func_1c7a
 	farcall Func_5af2
-	farcall Func_5b52
+	farcall SetCardAsSeen
 .asm_fa8f
 	pop bc
 	inc b

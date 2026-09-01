@@ -158,13 +158,13 @@ Func_191fd:
 	ld a, [$ced3]
 	ld b, a
 	farcall Func_5af2
-	farcall Func_5b52
+	farcall SetCardAsSeen
 	ld a, [$cedd]
 	ld c, a
 	ld a, [$cede]
 	ld b, a
 	farcall Func_5af2
-	farcall Func_5b52
+	farcall SetCardAsSeen
 	pop bc
 	pop af
 	ret
@@ -701,7 +701,7 @@ Func_195a4:
 	ld a, $00
 	ld [$cdfa], a
 	call Func_1d2a
-	cp $01
+	cp FALSE
 	jr z, .asm_1962a
 	call Func_2b52
 	ld a, [$ced4]
@@ -717,7 +717,7 @@ Func_195a4:
 	ld a, b
 	ld [$cdf6], a
 	call Func_1d2a
-	cp $00
+	cp TRUE
 	jr z, .asm_195f1
 	ld d, $01
 .asm_195f1
@@ -834,7 +834,7 @@ Func_19678:
 	ld a, b
 	ld [$cdf6], a
 	call Func_1d2a
-	cp $00
+	cp TRUE
 	jr z, .asm_196c5
 	ld d, $01
 .asm_196c5

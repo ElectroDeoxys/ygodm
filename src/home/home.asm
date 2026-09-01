@@ -1,7 +1,10 @@
 _Start:
-	ldh [$ffdd], a
-	ld hl, $e000
+	ldh [hBootUpA], a
+
+	; set stack
+	ld hl, wStackBottom
 	ld sp, hl
+
 	call Func_1090
 	farcall Func_10477
 	ld a, $00
@@ -23,8 +26,10 @@ _Start:
 	call Func_40c
 	farcall Func_65f3
 
-	farcall Func_10020
+	; enter main game loop
+	farcall GameLoop
 
+	; breaking from GameLoop means we just beat the game
 	call Func_1724
 	ld a, VBLANK_16
 	call SetPendingVBlankMode
@@ -193,11 +198,11 @@ Func_296:
 	ld [hl], $01
 	set 7, [hl]
 	call WaitForVBlank
-	ld l, $01
+	ld l, FALSE
 	ld a, [$caa2]
 	cp $20
 	jr nz, .asm_2b2
-	ld l, $00
+	ld l, TRUE
 .asm_2b2
 	ld a, l
 	pop hl
@@ -3452,7 +3457,7 @@ Func_1cb5:
 	dw 3 * $3 ; $3
 	dw 4 * $3 ; $4
 
-; returns TRUE if card ID in bc is invalid
+; returns TRUE if card ID in bc is valid
 IsValidCard::
 	push de
 	ld e, TRUE
@@ -3537,12 +3542,12 @@ Func_1d2a::
 	ld a, e
 	cp $01
 	jr nz, .asm_1d5c
-	ld l, $01
+	ld l, FALSE
 .asm_1d5c
 	ld a, e
 	cp $00
 	jr nz, .asm_1d63
-	ld l, $00
+	ld l, TRUE
 .asm_1d63
 	ld a, l
 	pop hl
@@ -4335,7 +4340,7 @@ SECTION "Bank 0@2344", ROM0[$2344]
 Func_2344::
 	push af
 	add $09
-	ld [$ceef], a
+	ld [wNPCDuelist], a
 	pop af
 	ret
 ; 0x234c
@@ -4346,7 +4351,7 @@ Func_2364:
 	push bc
 	push hl
 	ld b, $00
-	ld a, [$ceef]
+	ld a, [wNPCDuelist]
 	ld c, a
 	ld hl, $2374
 	add hl, bc
@@ -4392,86 +4397,88 @@ Func_23a8::
 	pop af
 	ret
 
-Func_23b0::
+; returns TRUE if duel is still ongoing
+; FALSE if a win condition has been reached
+IsDuelOngoing::
 	push bc
 	ld a, [$ce00]
 	cp $01
 	jr nz, .asm_23ce
-	ld c, $00
+	ld c, TRUE
 	ld a, [$cf02]
 	cp $02
 	jr nz, .asm_23c3
-	ld c, $01
+	ld c, FALSE
 .asm_23c3
 	ld a, [$cf02]
 	cp $03
 	jr nz, .asm_23cc
-	ld c, $01
+	ld c, FALSE
 .asm_23cc
 	jr .asm_23f4
 .asm_23ce
-	ld c, $00
+	ld c, TRUE
 	ld a, [$cf02]
 	cp $02
 	jr nz, .asm_23d9
-	ld c, $01
+	ld c, FALSE
 .asm_23d9
 	ld a, [$cf02]
 	cp $03
 	jr nz, .asm_23e2
-	ld c, $01
+	ld c, FALSE
 .asm_23e2
 	ld a, [$cf03]
 	cp $02
 	jr nz, .asm_23eb
-	ld c, $01
+	ld c, FALSE
 .asm_23eb
 	ld a, [$cf03]
 	cp $03
 	jr nz, .asm_23f4
-	ld c, $01
+	ld c, FALSE
 .asm_23f4
 	ld a, c
 	pop bc
 	ret
 
-Func_23f7::
+PlayerLostDuel::
 	ld a, [$ce00]
 	cp $01
 	jr nz, .asm_240c
 	ld a, [$cf02]
 	cp $02
 	jr nz, .asm_2408
-	xor a
+	xor a ; TRUE
 	jr .asm_240a
 .asm_2408
-	ld a, $01
+	ld a, FALSE
 .asm_240a
-	jr .asm_2434
+	jr .ok
 .asm_240c
 	ld a, [$cf02]
 	cp $03
 	jr nz, .asm_2417
-	ld a, $01
-	jr .asm_2434
+	ld a, FALSE
+	jr .ok
 .asm_2417
 	ld a, [$cf02]
 	cp $02
 	jr nz, .asm_2421
-	xor a
-	jr .asm_2434
+	xor a ; TRUE
+	jr .ok
 .asm_2421
 	ld a, [$cf03]
 	cp $03
 	jr nz, .asm_242b
-	xor a
-	jr .asm_2434
+	xor a ; TRUE
+	jr .ok
 .asm_242b
 	ld a, [$cf03]
 	cp $03
-	jr nz, .asm_2434
-	ld a, $01
-.asm_2434
+	jr nz, .ok
+	ld a, FALSE
+.ok
 	ret
 ; 0x2435
 
@@ -4780,7 +4787,7 @@ GenerateStartingDeckMonsterCards:
 	farcall SetPlayerDeckIndex
 	farcall AddCardToPlayerDeck
 	farcall Func_5af2
-	farcall Func_5b52
+	farcall SetCardAsSeen
 	inc e
 	ld a, e
 	cp $21
@@ -4912,7 +4919,7 @@ GenerateStartingDeckMagicCards:
 	ld b, a
 	farcall AddCardToPlayerDeck
 	farcall Func_5af2
-	farcall Func_5b52
+	farcall SetCardAsSeen
 	inc e
 	jr .asm_277d
 .asm_2796
@@ -4980,16 +4987,18 @@ RandomlyGiveGaiaFierceKnightOrDarkMagician:
 	pop af
 	ret
 
-Func_27f7::
+SetInitialWinAndDuelCounts::
 	push af
 	push bc
 	push de
 	push hl
+
+	; total duels
 	xor a
-	ld hl, $cf4e
-	ld de, $2823
-	ld c, $11
-.asm_2804
+	ld hl, wDuelistDuelCounts
+	ld de, .InitialDuelCounts
+	ld c, NUM_DUELISTS
+.loop_1
 	ld a, [de]
 	ld [hli], a
 	inc de
@@ -4997,11 +5006,13 @@ Func_27f7::
 	ld [hli], a
 	inc de
 	dec c
-	jr nz, .asm_2804
-	ld hl, $cf70
-	ld de, $2845
-	ld c, $11
-.asm_2815
+	jr nz, .loop_1
+
+	; wins
+	ld hl, wDuelistWinCounts
+	ld de, .InitialWinCounts
+	ld c, NUM_DUELISTS
+.loop_2
 	ld a, [de]
 	ld [hli], a
 	inc de
@@ -5009,34 +5020,70 @@ Func_27f7::
 	ld [hli], a
 	inc de
 	dec c
-	jr nz, .asm_2815
+	jr nz, .loop_2
+
 	pop hl
 	pop de
 	pop bc
 	pop af
 	ret
-; 0x2823
 
-SECTION "Bank 0@2867", ROM0[$2867]
+.InitialDuelCounts:
+	dw $0 ; DUELIST_WEEVIL
+	dw $0 ; DUELIST_MAI
+	dw $0 ; DUELIST_REX
+	dw $0 ; DUELIST_MAKO
+	dw $0 ; DUELIST_SETO_KAIBA
+	dw $0 ; DUELIST_MOKUBA
+	dw $0 ; DUELIST_PUPPETEER
+	dw $0 ; DUELIST_PANIK
+	dw $0 ; DUELIST_BANDIT_KEITH
+	dw $0 ; DUELIST_YUGI
+	dw $0 ; DUELIST_TRISTAN
+	dw $0 ; DUELIST_JOEY
+	dw $0 ; DUELIST_BAKURA
+	dw $0 ; DUELIST_SIMON
+	dw $0 ; DUELIST_MAXIMILLION
+	dw $0 ; DUELIST_YAMI_YUGI
+	dw $0 ; DUELIST_UNUSED_10
 
-Func_2867:
+.InitialWinCounts:
+	dw $0 ; DUELIST_WEEVIL
+	dw $0 ; DUELIST_MAI
+	dw $0 ; DUELIST_REX
+	dw $0 ; DUELIST_MAKO
+	dw $0 ; DUELIST_SETO_KAIBA
+	dw $0 ; DUELIST_MOKUBA
+	dw $0 ; DUELIST_PUPPETEER
+	dw $0 ; DUELIST_PANIK
+	dw $0 ; DUELIST_BANDIT_KEITH
+	dw $0 ; DUELIST_YUGI
+	dw $0 ; DUELIST_TRISTAN
+	dw $0 ; DUELIST_JOEY
+	dw $0 ; DUELIST_BAKURA
+	dw $0 ; DUELIST_SIMON
+	dw $0 ; DUELIST_MAXIMILLION
+	dw $0 ; DUELIST_YAMI_YUGI
+	dw $0 ; DUELIST_UNUSED_10
+
+IncrementBCWithMaximum9999:
 	push af
 	ld a, c
-	cp $99
-	jr nz, .asm_2872
+	cp LOW($9999)
+	jr nz, .not_maxed
 	ld a, b
-	cp $99
-	jr z, .asm_287c
-.asm_2872
+	cp HIGH($9999)
+	jr z, .maxed
+.not_maxed
 	ld a, c
-	add $01
+	add LOW($1)
 	daa
 	ld c, a
 	ld a, b
-	adc $00
+	adc HIGH($1)
 	daa
 	ld b, a
-.asm_287c
+.maxed
 	pop af
 	ret
 
@@ -5048,7 +5095,7 @@ Func_287e:
 	ld b, $00
 	ld c, a
 	sla c
-	ld hl, $cf70
+	ld hl, wDuelistWinCounts
 	add hl, bc
 	ld a, [hli]
 	cp $05
@@ -5071,7 +5118,7 @@ Func_289d:
 	ld c, a
 	ld a, [$cf6f]
 	ld b, a
-	call Func_2867
+	call IncrementBCWithMaximum9999
 	ld a, c
 	ld [$cf6e], a
 	ld a, b
@@ -5087,7 +5134,7 @@ Func_28b5:
 	ld c, a
 	ld a, [$cf91]
 	ld b, a
-	call Func_2867
+	call IncrementBCWithMaximum9999
 	ld a, c
 	ld [$cf90], a
 	ld a, b
@@ -5102,7 +5149,7 @@ Func_28cd::
 	ld b, $00
 	ld c, a
 	sla c
-	ld hl, $cf70
+	ld hl, wDuelistWinCounts
 	add hl, bc
 	ld a, [hli]
 	ld b, [hl]
@@ -5111,21 +5158,21 @@ Func_28cd::
 	pop af
 	ret
 
-Func_28de:
+IncrementDuelistDuelCount:
 	push af
 	push bc
 	push hl
 	ld b, $00
-	ld a, [$ceef]
+	ld a, [wNPCDuelist]
 	ld c, a
 	sla c
-	ld hl, $cf4e
+	ld hl, wDuelistDuelCounts
 	add hl, bc
 	ld a, [hli]
 	ld c, a
 	ld a, [hld]
 	ld b, a
-	call Func_2867
+	call IncrementBCWithMaximum9999
 	ld a, c
 	ld [hli], a
 	ld [hl], b
@@ -5134,17 +5181,17 @@ Func_28de:
 	pop af
 	ret
 
-Func_28fb:
+IncrementDuelistWinCount:
 	push af
 	push bc
 	push de
 	push hl
 	ld b, $00
-	ld a, [$ceef]
+	ld a, [wNPCDuelist]
 	ld c, a
 	push af
 	sla c
-	ld hl, $cf70
+	ld hl, wDuelistWinCounts
 	add hl, bc
 	ld a, [hli]
 	ld c, a
@@ -5152,26 +5199,30 @@ Func_28fb:
 	ld b, a
 	ld d, b
 	ld e, c
-	call Func_2867
+	call IncrementBCWithMaximum9999
 	ld a, c
 	ld [hli], a
 	ld [hl], b
 	pop af
-	cp $0e
+
+	; did we just beat Maximillion?
+	cp DUELIST_MAXIMILLION
 	jr nz, .asm_2933
+	; yes, is the win count at least 5?
 	ld a, b
-	cp $00
+	cp HIGH($5)
 	jr nz, .asm_292e
 	ld a, c
-	cp $05
-	jr c, .asm_292c
+	cp LOW($5)
+	jr c, .less_than_5
+	; 5 or more, show credits
 	ld a, $01
-	ld [$ccfe], a
-.asm_292c
+	ld [wBeatGame], a
+.less_than_5
 	jr .asm_2933
 .asm_292e
 	ld a, $01
-	ld [$ccfe], a
+	ld [wBeatGame], a
 .asm_2933
 	pop hl
 	pop de
@@ -5182,22 +5233,22 @@ Func_28fb:
 Func_2938::
 	push af
 	call Func_289d
-	call Func_23f7
-	cp $00
+	call PlayerLostDuel
+	cp TRUE
 	jr z, .asm_2946
 	call Func_28b5
 .asm_2946
 	pop af
 	ret
 
-Func_2948::
+IncrementDuelistDuelAndWinCounts::
 	push af
-	call Func_28de
-	call Func_23f7
-	cp $00
-	jr z, .asm_2956
-	call Func_28fb
-.asm_2956
+	call IncrementDuelistDuelCount
+	call PlayerLostDuel
+	cp TRUE
+	jr z, .lost
+	call IncrementDuelistWinCount
+.lost
 	pop af
 	ret
 
@@ -5513,9 +5564,30 @@ Func_2b26::
 	call WaitForVBlank
 	pop af
 	ret
-; 0x2b31
 
-SECTION "Bank 0@2b52", ROM0[$2b52]
+Func_2b31::
+	push af
+	ld a, $93
+	call Func_29f1
+	call WaitForVBlank
+	pop af
+	ret
+
+Func_2b3c::
+	push af
+	ld a, $9f
+	call Func_29f1
+	call WaitForVBlank
+	pop af
+	ret
+
+Func_2b47::
+	push af
+	ld a, $98
+	call Func_29f1
+	call WaitForVBlank
+	pop af
+	ret
 
 Func_2b52::
 	push af
@@ -5592,9 +5664,14 @@ Func_2bbf::
 	ld [$cfbf], a
 	pop af
 	ret
-; 0x2bca
 
-SECTION "Bank 0@2bd4", ROM0[$2bd4]
+Func_2bca::
+	ld a, [$cfbe]
+	and $01
+	jr z, .asm_2bd3
+	ld a, $01
+.asm_2bd3
+	ret
 
 Func_2bd4::
 	ld a, [$cfbf]

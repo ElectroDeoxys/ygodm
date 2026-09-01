@@ -48,7 +48,7 @@ GenerateAIOpponentDeck:
 	ld d, a
 	; de = random number between [$0, $7ff]
 	ld b, $00
-	farcall Func_b724
+	farcall ConvertNPCDuelistToCharacter
 	ld c, a
 	sla c
 	ld hl, .PtrTable

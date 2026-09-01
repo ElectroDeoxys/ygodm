@@ -66,7 +66,12 @@ wPlayerDeck:: ds DECK_SIZE * $2 ; cc5b
 wOppDuelDeckIndex:: db ; ccab
 wOppDuelDeck:: ds DECK_SIZE * $2 ; ccac
 
-	ds $cd0f - $ccfc
+	ds $1
+
+wccfd:: db ; ccfd
+wBeatGame:: db ; ccfe
+
+	ds $cd0f - $ccff
 
 wLoadedCardID::   dw ; cd0f
 	ds $2
@@ -110,7 +115,25 @@ wRandRangeStart:: db ; ce9d
 wRandRangeEnd:: db ; ce9e
 wRandNum:: db ; ce9f
 
-	ds $d9fe - $cea0
+	ds $cecb - $cea0
+
+wMaterial1CardID:: dw ; cecb
+wMaterial2CardID:: dw ; cecd
+wFusionCardID::    dw ; cecf
+
+	ds $ceef - $ced1
+
+wNPCDuelist:: db ; ceef
+
+	ds $cf4e - $cef0
+
+; duel and win counts against each of the NPC duelists
+wDuelistDuelCounts:: ; cf4e
+	ds NUM_DUELISTS * 2
+wDuelistWinCounts:: ; cf70
+	ds NUM_DUELISTS * 2
+
+	ds $d9fe - $cf92
 
 wJob4Stack:: ; d9fe
 	ds $100
@@ -123,3 +146,7 @@ wDecompressJobStackBottom:: ; dbfe
 wAudioJobStack:: ; dbfe
 	ds $100
 wAudioJobStackBottom:: ; dcfe
+
+wStack::
+	ds $302
+wStackBottom:: ; e000
