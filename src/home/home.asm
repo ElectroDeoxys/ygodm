@@ -2208,8 +2208,8 @@ Func_1508::
 	dec c
 	jr nz, .asm_1512
 	pop bc
-	call IsCardInvalid
-	cp $00
+	call IsValidCard
+	cp TRUE
 	jr nz, .asm_153e
 	ld a, $04
 	farcall Func_42d0
@@ -3453,50 +3453,47 @@ Func_1cb5:
 	dw 4 * $3 ; $4
 
 ; returns TRUE if card ID in bc is invalid
-IsCardInvalid::
+IsValidCard::
 	push de
-	ld e, FALSE
+	ld e, TRUE
 	ld a, b
 	cp HIGH(INVALID_CARD)
-	jr nz, .false
+	jr nz, .true
 	ld a, c
 	cp LOW(INVALID_CARD)
-	jr nz, .false
-; true
+	jr nz, .true
+; false
 	inc e
-.false
+.true
 	ld a, e
 	pop de
 	ret
 
-; returns TRUE if bc and de are different
-; FALSE if they are equal
-CompareBCAndDE::
+; returns a = (bc == de)
+IsBCEqualToDE::
 	push hl
-	ld l, TRUE
+	ld l, FALSE
 	ld a, b
 	cp d
 	jr nz, .not_equal
 	ld a, c
 	cp e
 	jr nz, .not_equal
-	dec l
+	dec l ; TRUE
 .not_equal
 	ld a, l
 	pop hl
 	ret
 
-; input:
-; - bc = ?
-; - de = ?
 ; output:
 ; - a = $00 if de  < bc
 ; -     $01 if de == bc
 ; -     $02 if de >= bc
-Func_1d0f::
+CompareBCAndDE::
 	push bc
 	push de
 	push hl
+
 	ld l, $02
 	call Func_13bb
 
@@ -3514,6 +3511,7 @@ Func_1d0f::
 	ld l, $00
 .asm_1d25
 	ld a, l
+
 	pop hl
 	pop de
 	pop bc
@@ -3560,8 +3558,8 @@ Func_1d67::
 	ld c, a
 	ld a, [wTempCardID + 1]
 	ld b, a
-	call IsCardInvalid
-	cp $01
+	call IsValidCard
+	cp FALSE
 	jr nz, .asm_1d7f
 	ld e, $d0
 	jr .asm_1da2

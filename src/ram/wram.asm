@@ -51,7 +51,9 @@ wPlayerLP:: dw ; cab0
 wOppLP:: dw ; cab3
 	ds $1
 
-	ds $cae4 - $cab6
+	ds $cae2 - $cab6
+
+wCardID_cae2:: dw ; cae2
 
 wCardCollection:: ; cae4
 	ds NUM_CARDS

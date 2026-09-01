@@ -1535,7 +1535,7 @@ Func_d014:
 	push hl
 	xor a
 	ld [$cd62], a
-	farcall Func_1454b
+	farcall HandleExodiaWinCondition
 	call Func_23b0
 	cp $01
 	jr z, .asm_d059
@@ -2205,8 +2205,8 @@ Func_d5db:
 	ld c, a
 	ld a, [wLoadedCardID + 1]
 	ld b, a
-	call IsCardInvalid
-	cp $00
+	call IsValidCard
+	cp TRUE
 	jr nz, .asm_d60e
 	call Func_218b
 	ld b, $00
@@ -2506,9 +2506,9 @@ Func_d813:
 	ld c, a
 	ld a, [wTempCardID + 1]
 	ld b, a
-	call IsCardInvalid
+	call IsValidCard
 	ld c, $01
-	cp $00
+	cp TRUE
 	jr nz, .asm_d830
 	ld c, $00
 .asm_d830
@@ -2526,9 +2526,9 @@ Func_d833:
 	ld c, a
 	ld a, [wTempCardID + 1]
 	ld b, a
-	call IsCardInvalid
+	call IsValidCard
 	ld c, $01
-	cp $00
+	cp TRUE
 	jr nz, .asm_d850
 	ld c, $00
 .asm_d850
@@ -2553,9 +2553,9 @@ Func_d853:
 	ld c, a
 	ld a, [wTempCardID + 1]
 	ld b, a
-	call IsCardInvalid
+	call IsValidCard
 	pop bc
-	cp $00
+	cp TRUE
 	jr nz, .asm_d879
 	ld e, $00
 .asm_d879
@@ -2633,8 +2633,8 @@ Func_d8cf:
 	ld c, a
 	ld a, [wTempCardID + 1]
 	ld b, a
-	call IsCardInvalid
-	cp $00
+	call IsValidCard
+	cp TRUE
 	jr nz, .asm_d8ea
 	ld e, $00
 .asm_d8ea
@@ -2671,8 +2671,8 @@ Func_d921:
 	ld c, a
 	ld a, [wTempCardID + 1]
 	ld b, a
-	call IsCardInvalid
-	cp $00
+	call IsValidCard
+	cp TRUE
 	jr nz, .asm_d948
 	call Func_2203
 	cp $00
@@ -2746,8 +2746,8 @@ Func_d974:
 	ld c, a
 	ld a, [wTempCardID + 1]
 	ld b, a
-	call IsCardInvalid
-	cp $00
+	call IsValidCard
+	cp TRUE
 	jr nz, .asm_d9bd
 	ld hl, sp+$02
 	ld d, h
@@ -2779,7 +2779,7 @@ Func_d9ce:
 	ld a, [hli]
 	ld d, [hl]
 	ld e, a
-	call Func_1d0f
+	call CompareBCAndDE
 	pop de
 	cp $02
 	jr z, .asm_da25
@@ -2804,7 +2804,7 @@ Func_d9ce:
 	ld e, a
 	ld a, [wLoadedCardAtk + 1]
 	ld d, a
-	call Func_1d0f
+	call CompareBCAndDE
 	pop de
 	cp $02
 	jr nz, .asm_da25
@@ -2907,9 +2907,9 @@ Func_da8f:
 	ld c, a
 	ld a, [wTempCardID + 1]
 	ld b, a
-	call IsCardInvalid
+	call IsValidCard
 	pop bc
-	cp $00
+	cp TRUE
 	jr nz, .asm_dab1
 	inc b
 	ld a, b
@@ -2938,9 +2938,9 @@ Func_dabc:
 	ld c, a
 	ld a, [wTempCardID + 1]
 	ld b, a
-	call IsCardInvalid
+	call IsValidCard
 	pop bc
-	cp $00
+	cp TRUE
 	jr nz, .asm_dadf
 	call Func_2203
 	cp $00
@@ -2976,9 +2976,9 @@ Func_daf3:
 	ld c, a
 	ld a, [wTempCardID + 1]
 	ld b, a
-	call IsCardInvalid
+	call IsValidCard
 	pop bc
-	cp $00
+	cp TRUE
 	jr z, .asm_db16
 	dec b
 	ld a, b
@@ -3784,8 +3784,8 @@ CreatePlayerDuelDeck:
 	ld a, e
 	call SetPlayerDuelDeckIndex
 	call GetPlayerDuelDeckCard
-	call IsCardInvalid
-	cp TRUE
+	call IsValidCard
+	cp FALSE
 	jr z, .got_slot
 	inc e
 	ld a, e
@@ -4438,7 +4438,7 @@ Func_efee:
 	ld a, [wTempCardID + 1]
 	ld b, a
 	ld de, $12c
-	call Func_1d0f
+	call CompareBCAndDE
 	cp $02
 	jr nz, .asm_f013
 	ld a, $2f
@@ -4467,7 +4467,7 @@ Func_f05f:
 	ld a, [$cece]
 	ld b, a
 	ld de, $12c
-	call Func_1d0f
+	call CompareBCAndDE
 	cp $02
 	jr nz, .asm_f083
 	farcall Func_ec091
@@ -4668,10 +4668,10 @@ Func_fadb:
 	ld a, [hli]
 	ld b, a
 	ld de, -1
-	call CompareBCAndDE
+	call IsBCEqualToDE
 	pop de
 	pop bc
-	cp $00
+	cp TRUE
 	jr nz, .compare_ids
 	ld b, $00
 	jr .done
@@ -4684,9 +4684,9 @@ Func_fadb:
 	ld c, a
 	ld a, [hli]
 	ld b, a
-	call CompareBCAndDE
+	call IsBCEqualToDE
 	pop bc
-	cp $00
+	cp TRUE
 	jr nz, .asm_fb19
 	ld b, $01
 	jr .done

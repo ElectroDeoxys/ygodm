@@ -1,5 +1,6 @@
-DEF FALSE EQU 0
-DEF TRUE  EQU 1
+; yes, these values are correct
+DEF TRUE  EQU 0
+DEF FALSE EQU 1
 
 DEF NONE EQU 0
 

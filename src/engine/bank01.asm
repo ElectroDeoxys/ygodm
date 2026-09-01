@@ -805,9 +805,9 @@ InitCardCollection:
 	jr nz, .loop_lo
 
 	ld a, LOW(B_EYE_WHITE_DRAGON)
-	ld [$cae2], a
+	ld [wCardID_cae2 + 0], a
 	ld a, HIGH(B_EYE_WHITE_DRAGON)
-	ld [$cae3], a
+	ld [wCardID_cae2 + 1], a
 	pop hl
 	pop bc
 	pop af
@@ -815,14 +815,14 @@ InitCardCollection:
 
 Func_5af2::
 	push af
-	call IsCardInvalid
-	cp $00
-	jr nz, .asm_5b02
+	call IsValidCard
+	cp TRUE
+	jr nz, .invalid
 	ld a, c
-	ld [$cae2], a
+	ld [wCardID_cae2 + 0], a
 	ld a, b
-	ld [$cae3], a
-.asm_5b02
+	ld [wCardID_cae2 + 1], a
+.invalid
 	pop af
 	ret
 
@@ -837,18 +837,18 @@ GiveCard::
 	xor a
 	call Func_5b6c
 .asm_5b12
-	ld a, [$cae2]
+	ld a, [wCardID_cae2 + 0]
 	ld c, a
-	ld a, [$cae3]
+	ld a, [wCardID_cae2 + 1]
 	ld b, a
 	ld hl, wCardCollection
 	add hl, bc
 	ld a, [hl]
 	cp MAX_CARD_COUNT
-	jr z, .asm_5b25
+	jr z, .maxed
 	inc a
 	ld [hl], a
-.asm_5b25
+.maxed
 	pop hl
 	pop bc
 	pop af
@@ -861,17 +861,18 @@ Func_5b52::
 	push af
 	push bc
 	push hl
-	ld a, [$cae2]
+	ld a, [wCardID_cae2 + 0]
 	ld c, a
-	ld a, [$cae3]
+	ld a, [wCardID_cae2 + 1]
 	ld b, a
 	ld hl, wCardCollection
 	add hl, bc
 	ld a, [hl]
 	cp NOT_OWNED
-	jr nz, .asm_5b68
+	jr nz, .owns_card
+	; doesn't own, mark with count of 0
 	ld [hl], 0
-.asm_5b68
+.owns_card
 	pop hl
 	pop bc
 	pop af
@@ -881,9 +882,9 @@ Func_5b6c:
 	push bc
 	push hl
 	push af
-	ld a, [$cae2]
+	ld a, [wCardID_cae2 + 0]
 	ld c, a
-	ld a, [$cae3]
+	ld a, [wCardID_cae2 + 1]
 	ld b, a
 	ld hl, wCardCollection
 	add hl, bc
@@ -896,9 +897,9 @@ Func_5b6c:
 GetCardCountInCollection::
 	push bc
 	push hl
-	ld a, [$cae2]
+	ld a, [wCardID_cae2 + 0]
 	ld c, a
-	ld a, [$cae3]
+	ld a, [wCardID_cae2 + 1]
 	ld b, a
 	ld hl, wCardCollection
 	add hl, bc

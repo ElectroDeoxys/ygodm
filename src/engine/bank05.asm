@@ -22,7 +22,7 @@
 	farfunc $5049 ; $27
 	farfunc Func_15059 ; $29
 	farfunc $50cd ; $2b
-	farfunc Func_1454b ; $2d
+	farfunc HandleExodiaWinCondition ; $2d
 	farfunc Func_15233 ; $2f
 	farfunc $52a3 ; $31
 	farfunc Func_14216 ; $33
@@ -75,8 +75,8 @@ Func_14216:
 	ld c, a
 	ld a, [hli]
 	ld b, a
-	call IsCardInvalid
-	cp $00
+	call IsValidCard
+	cp TRUE
 	jr nz, .asm_14230
 	farcall Func_5af2
 	farcall GiveCard
@@ -101,8 +101,8 @@ Func_14238:
 	ld c, a
 	ld a, [hli]
 	ld b, a
-	call IsCardInvalid
-	cp $00
+	call IsValidCard
+	cp TRUE
 	jr nz, .asm_14252
 	farcall Func_5af2
 	farcall GiveCard
@@ -280,20 +280,21 @@ Func_1432f:
 
 SECTION "Bank 5@454b", ROMX[$454b], BANK[$5]
 
-Func_1454b:
+HandleExodiaWinCondition:
 	push af
 	push bc
-	call .Func_1455d
-	cp FALSE
-	jr nz, .asm_1455a
+	call .CheckAllExodiaPieces
+	cp TRUE
+	jr nz, .skip
 	farcall Func_b807
 	call Func_23a8
-.asm_1455a
+.skip
 	pop bc
 	pop af
 	ret
 
-.Func_1455d:
+; returns TRUE if player has all Exodia pieces
+.CheckAllExodiaPieces:
 	push bc
 	push de
 	ld b, 0
@@ -317,15 +318,15 @@ Func_1454b:
 	inc b
 	jr .loop_hand
 .check_exodia_flags
-	; if has all pieces, then return FALSE
+	; if has all pieces, then return TRUE
 	ld a, e
 	cp HAS_R_LEG_OF_FORBIDDEN | HAS_L_LEG_OF_FORBIDDEN | HAS_R_ARM_OF_FORBIDDEN | HAS_L_ARM_OF_FORBIDDEN | HAS_EXODIA_FORBIDDEN
-	jr nz, .true
-	xor a ; FALSE
-	jr .false
-.true
-	ld a, TRUE
+	jr nz, .false
+	xor a ; TRUE
+	jr .true
 .false
+	ld a, FALSE
+.true
 	pop de
 	pop bc
 	ret
@@ -348,9 +349,9 @@ Func_1454b:
 	ld e, a
 	ld a, [hli]
 	ld d, a
-	call CompareBCAndDE
+	call IsBCEqualToDE
 	pop de
-	cp FALSE
+	cp TRUE
 	jr nz, .next_exodia_card
 	push hl
 	ld hl, .ExodiaPieceFlags
@@ -1081,8 +1082,8 @@ Func_15059:
 	call Func_145cd
 	call Func_2c4a
 	call Func_14201
-	call IsCardInvalid
-	cp $00
+	call IsValidCard
+	cp TRUE
 	jr nz, .asm_15087
 	ld e, $04
 	call Func_2cf2
@@ -1223,11 +1224,11 @@ Func_1524c:
 	ld a, [wOppLP + 1]
 	ld b, a
 	call Func_13bb
-	ld d, $01
+	ld d, FALSE
 	ld a, e
 	cp $00
 	jr z, .asm_1526a
-	ld d, $00
+	ld d, TRUE
 .asm_1526a
 	ld a, d
 	pop de

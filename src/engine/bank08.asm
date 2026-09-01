@@ -66,7 +66,7 @@ GenerateAIOpponentDeck:
 	ld c, a
 	ld a, [hli]
 	ld b, a
-	call Func_1d0f
+	call CompareBCAndDE
 	pop bc
 	; larger?
 	cp $00

@@ -27,8 +27,8 @@ Func_ec02b:
 
 Func_ec04c:
 	push af
-	call IsCardInvalid
-	cp $00
+	call IsValidCard
+	cp TRUE
 	jr nz, .asm_ec05c
 	ld a, c
 	ld [$cecb], a
@@ -40,8 +40,8 @@ Func_ec04c:
 
 Func_ec05e:
 	push af
-	call IsCardInvalid
-	cp $00
+	call IsValidCard
+	cp TRUE
 	jr nz, .asm_ec06e
 	ld a, c
 	ld [$cecd], a
@@ -80,14 +80,14 @@ Func_ec091:
 	ld a, [$cecc]
 	ld b, a
 	ld de, INVALID_CARD
-	call CompareBCAndDE
+	call IsBCEqualToDE
 	and a
 	jr z, .asm_ec0d5
 	ld a, [$cecd]
 	ld c, a
 	ld a, [$cece]
 	ld b, a
-	call CompareBCAndDE
+	call IsBCEqualToDE
 	and a
 	jr z, .asm_ec0d5
 	call Func_ec0e2
@@ -131,7 +131,7 @@ Func_ec0e2:
 	ld e, a
 	ld a, [hli]
 	ld d, a
-	call CompareBCAndDE
+	call IsBCEqualToDE
 	pop de
 	and a
 	jr nz, .asm_ec104
@@ -184,7 +184,7 @@ Func_ec11f:
 	ld a, [hli]
 	ld d, [hl]
 	ld e, a
-	call CompareBCAndDE
+	call IsBCEqualToDE
 	pop hl
 	pop de
 	pop bc

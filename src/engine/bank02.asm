@@ -1192,8 +1192,8 @@ Func_b595:
 	ld a, [$cf15]
 	ld b, a
 	call Func_2d01
-	call IsCardInvalid
-	cp $00
+	call IsValidCard
+	cp TRUE
 	jr nz, .asm_b5dd
 	call Func_29fd
 	farcall Func_18008
@@ -1229,8 +1229,8 @@ Func_b5e1:
 	ld a, [$cf15]
 	ld b, a
 	call Func_2d01
-	call IsCardInvalid
-	cp $00
+	call IsValidCard
+	cp TRUE
 	jr nz, .asm_b629
 	call Func_29fd
 	farcall Func_18008
@@ -1266,8 +1266,8 @@ Func_b62d:
 	ld a, [$cf11]
 	ld b, a
 	call Func_2d01
-	call IsCardInvalid
-	cp $00
+	call IsValidCard
+	cp TRUE
 	jr nz, .asm_b675
 	call Func_29fd
 	farcall Func_18008
@@ -1303,8 +1303,8 @@ Func_b679:
 	ld a, [$cf13]
 	ld b, a
 	call Func_2d01
-	call IsCardInvalid
-	cp $00
+	call IsValidCard
+	cp TRUE
 	jr nz, .asm_b6c1
 	call Func_29fd
 	farcall Func_18008
@@ -1340,8 +1340,8 @@ Func_b6c5:
 	ld a, [$cf13]
 	ld b, a
 	call Func_2d01
-	call IsCardInvalid
-	cp $00
+	call IsValidCard
+	cp TRUE
 	jr nz, .asm_b70d
 	call Func_29fd
 	farcall Func_18008

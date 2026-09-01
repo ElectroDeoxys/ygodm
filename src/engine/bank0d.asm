@@ -61,7 +61,7 @@ GiveVictoryAwardCard:
 	ld c, a
 	ld a, [hli]
 	ld b, a
-	call Func_1d0f
+	call CompareBCAndDE
 	pop bc
 	; larger?
 	cp $00
@@ -835,10 +835,10 @@ Func_36ebd:
 	ld a, [hld]
 	ld b, a
 	ld de, -1
-	call CompareBCAndDE
+	call IsBCEqualToDE
 	pop de
 	pop bc
-	cp $00
+	cp TRUE
 	jr nz, .not_end_of_list
 	; end of list reached
 	ld b, $01
@@ -849,9 +849,9 @@ Func_36ebd:
 	ld c, a
 	ld a, [hli]
 	ld b, a
-	call CompareBCAndDE
+	call IsBCEqualToDE
 	pop bc
-	cp $00
+	cp TRUE
 	jr nz, .next
 	ld b, $00
 	jr .done

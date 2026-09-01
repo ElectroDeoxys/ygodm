@@ -329,9 +329,9 @@ Func_1023c:
 	ld c, a
 	ld a, [wTempCardID + 1]
 	ld b, a
-	call IsCardInvalid
+	call IsValidCard
 	pop bc
-	cp $00
+	cp TRUE
 	jr z, .asm_10260
 	inc b
 	ld a, b
@@ -369,9 +369,9 @@ Func_1027d:
 	ld c, a
 	ld a, [wTempCardID + 1]
 	ld b, a
-	call IsCardInvalid
+	call IsValidCard
 	pop bc
-	cp $00
+	cp TRUE
 	jr nz, .asm_102a1
 	inc b
 	ld a, b
@@ -501,9 +501,9 @@ Func_10370:
 	ld c, a
 	ld a, [wTempCardID + 1]
 	ld b, a
-	call IsCardInvalid
+	call IsValidCard
 	pop bc
-	cp $00
+	cp TRUE
 	jr nz, .asm_10397
 	call Func_10433
 	ld e, $00
@@ -655,7 +655,7 @@ Func_10484:
 	ld a, $00
 	ld [$cf17], a
 	call CheckSaveDataMagic
-	cp TRUE
+	cp FALSE
 	jr nz, .valid_save_data
 ; invalid save data
 	call Func_109f2
@@ -664,7 +664,7 @@ Func_10484:
 	ld [$cf17], a
 .valid_save_data
 	call Func_105bc
-	cp TRUE
+	cp FALSE
 	jr nz, .asm_104ae
 	call Func_109f2
 	call Func_104b3
@@ -889,7 +889,7 @@ Func_105bc:
 	ld a, $01
 	jr .done
 .asm_105ca
-	ld b, FALSE
+	ld b, TRUE
 	ld a, [$b7f0]
 	ld c, a
 	ld hl, $45fb
@@ -897,7 +897,7 @@ Func_105bc:
 	ld a, [hl]
 	ld [$cf16], a
 	call Func_10586
-	ld b, FALSE
+	ld b, TRUE
 	ld a, [$cf16]
 	ld c, a
 	sla c
@@ -909,12 +909,12 @@ Func_105bc:
 	ld a, [hli]
 	cp e
 	jr z, .asm_105f0
-	ld b, TRUE
+	ld b, FALSE
 .asm_105f0
 	ld a, [hl]
 	cp d
 	jr z, .asm_105f6
-	ld b, TRUE
+	ld b, FALSE
 .asm_105f6
 	ld a, b
 .done
@@ -984,7 +984,7 @@ CheckSaveDataMagic:
 	push bc
 	push de
 	push hl
-	ld b, FALSE
+	ld b, TRUE
 	ld hl, $b7f1
 	ld de, SaveDataMagic
 	ld c, SaveDataMagic.end - SaveDataMagic
@@ -992,7 +992,7 @@ CheckSaveDataMagic:
 	ld a, [de]
 	cp [hl]
 	jr z, .next
-	ld b, TRUE
+	ld b, FALSE
 .next
 	inc hl
 	inc de
