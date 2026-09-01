@@ -17,3 +17,12 @@ DEF NONE EQU 0
 	const VBLANK_12 ; $12
 	const VBLANK_14 ; $14
 	const VBLANK_16 ; $16
+
+; card collection constants
+
+; if a card in collection is not owned yet,
+; then it is initialised with this value
+DEF NOT_OWNED EQU $ff
+
+; how many of a single card the player can own
+DEF MAX_CARD_COUNT EQU 99

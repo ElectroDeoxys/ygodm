@@ -137,7 +137,63 @@ Func_21a:
 	ret
 ; 0x24f
 
-SECTION "Home@376", ROM0[$376]
+SECTION "Bank 0@301", ROM0[$301]
+
+Func_301:
+	ld [$caa1], a
+	ret
+
+Func_305::
+	push af
+	push hl
+	ld a, $10
+	ld [$caa4], a
+	ld a, $02
+	call Func_301
+	ld a, $01
+	ldh [rSC], a
+	pop hl
+	pop af
+	ret
+
+Func_318::
+	push af
+	ld a, $20
+	ld [$caa4], a
+	ld a, $04
+	call Func_301
+	ld a, $00
+	ldh [rSC], a
+	pop af
+	ret
+; 0x329
+
+SECTION "Bank 0@357", ROM0[$357]
+
+Func_357:
+	push af
+	push hl
+	di
+	ld hl, rSC
+	call Func_36a
+	ld [hl], $01
+	ldh [rSB], a
+	set 7, [hl]
+	ei
+	pop hl
+	pop af
+	ret
+
+Func_36a:
+	push af
+	push hl
+	ld hl, rSC
+.asm_36f
+	bit 7, [hl]
+	jr nz, .asm_36f
+	pop hl
+	pop af
+	ret
 
 Func_376:
 	push af
@@ -149,9 +205,24 @@ Func_376:
 	jr nz, .asm_378
 	pop af
 	ret
-; 0x37f
 
-SECTION "Home@396", ROM0[$396]
+Func_37f:
+	push af
+	push hl
+	push af
+	di
+	xor a
+	ld [$caa0], a
+	ld a, $00
+	ldh [rSC], a
+	pop af
+	ldh [rSB], a
+	ld a, $80
+	ldh [rSC], a
+	ei
+	pop hl
+	pop af
+	ret
 
 Func_396:
 	push af
@@ -255,20 +326,20 @@ VBlank:
 	jp hl
 
 .Jumptable:
-	dw Func_444  ; VBLANK_00
-	dw Func_45d  ; VBLANK_02
-	dw Func_483  ; VBLANK_04
-	dw Func_4ac  ; VBLANK_06
-	dw Func_51f  ; VBLANK_08
-	dw Func_6ce  ; VBLANK_0A
-	dw Func_826  ; VBLANK_0C
-	dw Func_900  ; VBLANK_0E
-	dw Func_a0a  ; VBLANK_10
-	dw Func_b62  ; VBLANK_12
-	dw Func_bf0  ; VBLANK_14
-	dw Func_2d57 ; VBLANK_16
+	dw .VBlank00  ; VBLANK_00
+	dw .VBlank02  ; VBLANK_02
+	dw .VBlank04  ; VBLANK_04
+	dw .VBlank06  ; VBLANK_06
+	dw .VBlank08  ; VBLANK_08
+	dw .VBlank0A  ; VBLANK_0A
+	dw .VBlank0C  ; VBLANK_0C
+	dw .VBlank0E  ; VBLANK_0E
+	dw .VBlank10  ; VBLANK_10
+	dw .VBlank12  ; VBLANK_12
+	dw .VBlank14  ; VBLANK_14
+	dw VBlank16 ; VBLANK_16
 
-Func_444:
+.VBlank00:
 	ld c, LOW(hVBlankJobFlags)
 	ld a, [$ff00+c]
 	or $80
@@ -287,7 +358,7 @@ Func_444:
 	pop af
 	reti
 
-Func_45d:
+.VBlank02:
 	ld a, VBLANK_00
 	ld [wVBlankMode], a
 	ld a, $01
@@ -311,7 +382,7 @@ Func_45d:
 	pop af
 	reti
 
-Func_483:
+.VBlank04:
 	call hTransferVirtualOAM
 	ld a, VBLANK_00
 	ld [wVBlankMode], a
@@ -336,10 +407,10 @@ Func_483:
 	pop af
 	reti
 
-Func_4ac:
+.VBlank06:
 	call hTransferVirtualOAM
 
-	ld bc, wc500
+	ld bc, wVBlankStruct
 	ld e, $04
 .asm_4b4
 	ld a, [bc]
@@ -379,9 +450,9 @@ Func_4ac:
 	pop af
 	reti
 
-Func_51f:
+.VBlank08:
 	call hTransferVirtualOAM
-	ld bc, wc500
+	ld bc, wVBlankStruct
 	ld a, [bc]
 	ld l, a
 	inc c
@@ -415,10 +486,10 @@ Func_51f:
 	pop af
 	reti
 
-Func_6ce:
+.VBlank0A:
 	call hTransferVirtualOAM
 
-	ld bc, wc500
+	ld bc, wVBlankStruct
 	REPT 10
 		ld a, [bc]
 		ld l, a
@@ -456,10 +527,10 @@ Func_6ce:
 	pop af
 	reti
 
-Func_826:
+.VBlank0C:
 	call hTransferVirtualOAM
 
-	ld bc, wc500
+	ld bc, wVBlankStruct
 	ld a, [bc]
 	ld l, a
 	inc c
@@ -519,10 +590,10 @@ Func_826:
 	pop af
 	reti
 
-Func_900:
+.VBlank0E:
 	call hTransferVirtualOAM
 
-	ld bc, wc500
+	ld bc, wVBlankStruct
 	ld a, [bc]
 	ld l, a
 	inc c
@@ -620,9 +691,9 @@ Func_900:
 	pop af
 	reti
 
-Func_a0a:
+.VBlank10:
 	call hTransferVirtualOAM
-	ld bc, wc500
+	ld bc, wVBlankStruct
 
 	REPT 5
 		ld a, [bc]
@@ -661,10 +732,10 @@ Func_a0a:
 	pop af
 	reti
 
-Func_b62:
+.VBlank12:
 	call hTransferVirtualOAM
 
-	ld bc, wc500
+	ld bc, wVBlankStruct
 	ld de, $20
 	REPT 5
 		ld a, [bc]
@@ -711,8 +782,8 @@ Func_b62:
 	pop af
 	reti
 
-Func_bf0:
-	ld bc, wc500
+.VBlank14:
+	ld bc, wVBlankStruct
 
 	ld a, [bc]
 	ld l, a
@@ -794,45 +865,47 @@ SetPendingVBlankMode::
 	ld a, [hli]
 	ld h, [hl]
 	ld l, a
-	ld bc, .ret
-	push bc
-	jp hl
-.ret
+	call_hl
 	ld a, $00
-	ld [wcaaa], a
+	ld [wVBlankStructSize], a
 	pop hl
 	pop bc
 	pop af
 	ret
 
 .Jumptable:
-	dw .Func_e19 ; VBLANK_00
-	dw .Func_e19 ; VBLANK_02
-	dw .Func_e19 ; VBLANK_04
-	dw .Func_e1a ; VBLANK_06
-	dw .Func_e3f ; VBLANK_08
-	dw .Func_e40 ; VBLANK_0A
-	dw .Func_e4d ; VBLANK_0C
-	dw .Func_e6a ; VBLANK_0E
-	dw .Func_eb7 ; VBLANK_10
-	dw .Func_ee4 ; VBLANK_12
-	dw .Func_f11 ; VBLANK_14
-	dw .Func_f2e ; VBLANK_16
+	dw .VBlank00 ; VBLANK_00
+	dw .VBlank02 ; VBLANK_02
+	dw .VBlank04 ; VBLANK_04
+	dw .VBlank06 ; VBLANK_06
+	dw .VBlank08 ; VBLANK_08
+	dw .VBlank0A ; VBLANK_0A
+	dw .VBlank0C ; VBLANK_0C
+	dw .VBlank0E ; VBLANK_0E
+	dw .VBlank10 ; VBLANK_10
+	dw .VBlank12 ; VBLANK_12
+	dw .VBlank14 ; VBLANK_14
+	dw .VBlank16 ; VBLANK_16
 
-.Func_e19:
+.VBlank00:
+.VBlank02:
+.VBlank04:
 	ret
 
-.Func_e1a:
+.VBlank06:
 	push af
 	push hl
-	ld hl, wc500
+	ld hl, wVBlankStruct
 	ld a, $02
 	ld [hli], a
 	ld [hl], $c5
+
+	; bug, should be ld hl instead
 	ld bc, $c516
 	ld a, $18
 	ld [hli], a
 	ld [hl], $c5
+
 	ld hl, $c52c
 	ld a, $2e
 	ld [hli], a
@@ -845,13 +918,13 @@ SetPendingVBlankMode::
 	pop af
 	ret
 
-.Func_e3f:
+.VBlank08:
 	ret
 
-.Func_e40:
+.VBlank0A:
 	push af
 	push hl
-	ld hl, wc500
+	ld hl, wVBlankStruct
 	ld a, $02
 	ld [hli], a
 	ld [hl], $c5
@@ -859,10 +932,10 @@ SetPendingVBlankMode::
 	pop af
 	ret
 
-.Func_e4d:
+.VBlank0C:
 	push af
 	push hl
-	ld hl, wc500
+	ld hl, wVBlankStruct
 	ld a, $02
 	ld [hli], a
 	ld [hl], $c5
@@ -878,10 +951,10 @@ SetPendingVBlankMode::
 	pop af
 	ret
 
-.Func_e6a:
+.VBlank0E:
 	push af
 	push hl
-	ld hl, wc500
+	ld hl, wVBlankStruct
 	ld a, $02
 	ld [hli], a
 	ld [hl], $c5
@@ -921,10 +994,10 @@ SetPendingVBlankMode::
 	pop af
 	ret
 
-.Func_eb7:
+.VBlank10:
 	push af
 	push hl
-	ld hl, wc500
+	ld hl, wVBlankStruct
 	ld a, $02
 	ld [hli], a
 	ld [hl], $c5
@@ -948,10 +1021,10 @@ SetPendingVBlankMode::
 	pop af
 	ret
 
-.Func_ee4:
+.VBlank12:
 	push af
 	push hl
-	ld hl, wc500
+	ld hl, wVBlankStruct
 	ld a, $de
 	ld [hli], a
 	ld [hl], $c5
@@ -975,10 +1048,10 @@ SetPendingVBlankMode::
 	pop af
 	ret
 
-.Func_f11:
+.VBlank14:
 	push af
 	push hl
-	ld hl, wc500
+	ld hl, wVBlankStruct
 	ld a, $02
 	ld [hli], a
 	ld [hl], $c5
@@ -994,7 +1067,7 @@ SetPendingVBlankMode::
 	pop af
 	ret
 
-.Func_f2e:
+.VBlank16:
 	ret
 
 RequestVBlankMode::
@@ -1006,41 +1079,51 @@ RequestVBlankMode::
 	pop af
 	ret
 
-Func_f3d::
+AddWordToVBlankStruct::
 	push af
 	push hl
-	ld h, HIGH(wc500)
-	ld a, [wcaaa]
+	ld h, HIGH(wVBlankStruct)
+	ld a, [wVBlankStructSize]
 	ld l, a
 	ld a, c
 	ld [hli], a
 	ld a, b
 	ld [hli], a
 	ld a, l
-	ld [wcaaa], a
+	ld [wVBlankStructSize], a
 	pop hl
 	pop af
 	ret
 
-Func_f50::
+AddByteToVBlankStruct::
 	push af
 	push hl
 	push af
-	ld h, HIGH(wc500)
-	ld a, [wcaaa]
+	ld h, HIGH(wVBlankStruct)
+	ld a, [wVBlankStructSize]
 	ld l, a
 	pop af
 	ld [hli], a
 	ld a, l
-	ld [wcaaa], a
+	ld [wVBlankStructSize], a
 	pop hl
 	pop af
 	ret
-; 0xf62
 
-SECTION "Home@f74", ROM0[$f74]
+Func_f62::
+	push af
+	push hl
+	ld h, HIGH(wVBlankStruct)
+	ld a, [wVBlankStructSize]
+	ld l, a
+	call Func_17ab
+	ld a, l
+	ld [wVBlankStructSize], a
+	pop hl
+	pop af
+	ret
 
-Func_f74::
+WaitForVBlank::
 	push af
 	call ResetJobFlag
 	db $80, LOW(hVBlankJobFlags)
@@ -1051,9 +1134,54 @@ Func_f74::
 	jr z, .asm_f7a
 	pop af
 	ret
-; 0xf86
 
-SECTION "Home@fce", ROM0[$fce]
+Func_f86::
+	push bc
+	ld c, $0a
+.asm_f89
+	call WaitForVBlank
+	dec c
+	jr nz, .asm_f89
+	pop bc
+	ret
+
+Func_f91:
+	push af
+	push hl
+	xor a
+	ld [$caad], a
+	ld [$caae], a
+	ld [$caaf], a
+.asm_f9d
+	call Func_fb1
+	cp $01
+	jr z, .asm_faa
+	ld a, [$caa0]
+	or a
+	jr z, .asm_f9d
+.asm_faa
+	xor a
+	ld [$caa0], a
+	pop hl
+	pop af
+	ret
+
+Func_fb1:
+	ld a, [$caad]
+	add $01
+	ld [$caad], a
+	ld a, [$caae]
+	adc $00
+	ld [$caae], a
+	cp $ff
+	jr nz, .asm_fcc
+	call Func_1e65
+	ld a, $01
+	jr .asm_fcd
+.asm_fcc
+	xor a
+.asm_fcd
+	ret
 
 AudioJob:
 .loop
@@ -1074,7 +1202,18 @@ AudioJob:
 	jr .loop
 ; 0xfef
 
-SECTION "Home@fff", ROM0[$fff]
+SECTION "Bank 0@ff0", ROM0[$ff0]
+
+Func_ff0::
+	push af
+	ld a, $1b
+	ldh [rBGP], a
+	ld a, $1b
+	ldh [rOBP0], a
+	ld a, $1b
+	ldh [rOBP1], a
+	pop af
+	ret
 
 Func_fff::
 	push af
@@ -1108,9 +1247,13 @@ Func_101d::
 	ldh [rOBP1], a
 	pop af
 	ret
-; 0x102c
 
-SECTION "Home@1033", ROM0[$1033]
+Func_102c::
+	push af
+	ld a, $e0
+	ldh [rOBP0], a
+	pop af
+	ret
 
 _Farcall:
 	push af
@@ -1314,7 +1457,7 @@ DoFrame::
 	pop af
 	ret
 
-Func_1104::
+EnableObjects::
 	push hl
 	ld hl, rLCDC
 	set B_LCDC_OBJS, [hl]
@@ -1330,9 +1473,13 @@ Func_1114::
 	ld [$cace], a
 	pop af
 	ret
-; 0x111c
 
-SECTION "Bank 0@1124", ROM0[$1124]
+Func_111c::
+	push af
+	ld a, $00
+	ld [$cace], a
+	pop af
+	ret
 
 Func_1124::
 	push af
@@ -1347,9 +1494,20 @@ Func_112c::
 	ld [$cace], a
 	pop af
 	ret
-; 0x1134
 
-SECTION "Home@1144", ROM0[$1144]
+Func_1134::
+	push af
+	ld a, $05
+	ld [$cace], a
+	pop af
+	ret
+
+Func_113c::
+	push af
+	ld a, $04
+	ld [$cace], a
+	pop af
+	ret
 
 Func_1144::
 	push af
@@ -1469,9 +1627,92 @@ Func_123c::
 	pop bc
 	pop af
 	ret
-; 0x1256
 
-SECTION "Bank 0@12d2", ROM0[$12d2]
+Func_1256::
+	push af
+	push bc
+	push de
+	push hl
+	ld a, $b0
+	ld [$cd1c], a
+	ld a, $b0
+	ld [$cd1b], a
+	ld hl, $ca02
+	ld a, $00
+	ld de, $3
+	ld bc, $228
+.asm_126f
+	ld [hli], a
+	add b
+	ld [hl], $00
+	add hl, de
+	dec c
+	jr nz, .asm_126f
+	call Func_12a4
+	call Func_1225
+	pop hl
+	pop de
+	pop bc
+	pop af
+	ret
+
+Func_1282::
+	call Func_1289
+	call Func_12a4
+	ret
+
+Func_1289:
+	push af
+	push bc
+	ld a, [$cd1d]
+	ld b, a
+	ld a, [$cd1b]
+	add b
+	ld [$cd1b], a
+	ld a, [$cd1e]
+	ld b, a
+	ld a, [$cd1c]
+	add b
+	ld [$cd1c], a
+	pop bc
+	pop af
+	ret
+
+Func_12a4:
+	push af
+	push bc
+	push de
+	push hl
+	ld hl, wVirtualOAM
+	ld d, $00
+	ld b, $05
+.asm_12af
+	ld e, $00
+	ld c, $08
+.asm_12b3
+	ld a, [$cd1b]
+	add d
+	ld [hli], a
+	ld a, [$cd1c]
+	add e
+	ld [hli], a
+	inc hl
+	inc hl
+	ld a, $08
+	add e
+	ld e, a
+	dec c
+	jr nz, .asm_12b3
+	ld a, $10
+	add d
+	ld d, a
+	dec b
+	jr nz, .asm_12af
+	pop hl
+	pop de
+	pop bc
+	pop af
+	ret
 
 Func_12d2::
 	call ClearOAM
@@ -1509,9 +1750,11 @@ Func_12d9::
 	pop hl
 	pop af
 	ret
-; 0x12fb
 
-SECTION "Home@1302", ROM0[$1302]
+Func_12fb::
+	call ClearOAM
+	call Func_1225
+	ret
 
 Add4x4OAM::
 	push af
@@ -1546,14 +1789,38 @@ Add4x4OAM::
 	pop hl
 	pop af
 	ret
-; 0x1328
 
-SECTION "Home@1347", ROM0[$1347]
+Func_1328::
+	call ClearOAM
+	ret
+
+Func_132c::
+	push af
+	push hl
+	push de
+	ld d, $00
+	dec e
+	sla e
+	sla e
+	ld hl, wVirtualOAM
+	add hl, de
+	pop de
+	ld a, c
+	ld [hli], a
+	ld a, b
+	ld [hli], a
+	ld a, d
+	ld [hli], a
+	ld a, $00
+	ld [hli], a
+	pop hl
+	pop af
+	ret
 
 ; output:
 ; - d = d / b
 ; - e = d % b
-DDividedByB:
+DDividedByB::
 	push af
 	push bc
 	ld e, $00
@@ -1610,7 +1877,7 @@ SECTION "Bank 0@13bb", ROM0[$13bb]
 ; - e = $00 if de  < bc
 ; -     $01 if de == bc
 ; -     $02 if de >= bc
-Func_13bb:
+Func_13bb::
 	push af
 
 	; compare de and bc
@@ -1647,7 +1914,117 @@ Func_13bb:
 .done
 	pop af
 	ret
-; 0x13db
+
+Func_13db::
+	push af
+	push bc
+	push hl
+	ld a, [$cadc]
+	ld b, a
+	ld a, [$cadd]
+	ld c, a
+	ld a, [$cade]
+	ld d, a
+	ld a, [$cadf]
+	cp b
+	jr nz, .asm_140a
+	ld a, [$cae0]
+	cp c
+	jr nz, .asm_140a
+	ld a, [$cae1]
+	cp d
+	jr nz, .asm_140a
+	xor a
+	ld [$cadc], a
+	ld [$cadd], a
+	ld [$cade], a
+	ld e, $01
+	jr .asm_1428
+.asm_140a
+	ld a, [$cadf]
+	sub b
+	daa
+	ld [$cadc], a
+	ld a, [$cae0]
+	sbc c
+	daa
+	ld [$cadd], a
+	ld a, [$cae1]
+	sbc d
+	daa
+	ld [$cade], a
+	ld e, $02
+	jr nc, .asm_1428
+	ld e, $00
+.asm_1428
+	pop hl
+	pop bc
+	pop af
+	ret
+
+Func_142c::
+	push af
+	push de
+	push hl
+	ld b, $00
+	ld a, [$cadc]
+	and $0f
+	ld c, a
+	sla c
+	ld hl, $1484
+	add hl, bc
+	ld a, [hli]
+	ld d, [hl]
+	ld e, a
+	ld a, [$cadc]
+	and $f0
+	ld c, a
+	swap c
+	sla c
+	ld hl, $14a4
+	add hl, bc
+	ld a, [hli]
+	add e
+	daa
+	ld e, a
+	ld a, [hl]
+	adc d
+	daa
+	ld d, a
+	ld a, [$cadd]
+	and $0f
+	ld c, a
+	sla c
+	ld hl, $14c4
+	add hl, bc
+	ld a, [hli]
+	add e
+	daa
+	ld e, a
+	ld a, [hl]
+	adc d
+	daa
+	ld d, a
+	ld a, [$cadd]
+	and $f0
+	ld c, a
+	swap c
+	sla c
+	ld hl, $14e4
+	add hl, bc
+	ld a, [hli]
+	add e
+	daa
+	ld c, a
+	ld a, [hl]
+	adc d
+	daa
+	ld b, a
+	pop hl
+	pop de
+	pop af
+	ret
+; 0x1484
 
 SECTION "Home@14ea", ROM0[$14ea]
 
@@ -1698,11 +2075,11 @@ Func_1508::
 	cp $00
 	jr nz, .asm_153e
 	ld a, $04
-	farcall $1d, $01
-	farcall $1b, $01
-	farcall $1f, $01
-	farcall $11, $01
-	farcall $13, $01
+	farcall Func_42d0
+	farcall Func_42c5
+	farcall Func_42ec
+	farcall Func_5af2
+	farcall GetCardCountInCollection
 	cp $ff
 	jr nz, .asm_153e
 	ld hl, $cab9
@@ -2344,10 +2721,7 @@ Func_188a::
 	ld a, [hli]
 	ld h, [hl]
 	ld l, a
-	ld bc, .ret
-	push bc
-	jp hl
-.ret
+	call_hl
 	pop af
 	call Bankswitch2
 	pop hl
@@ -2758,12 +3132,13 @@ Func_1c28::
 	push hl
 	ld a, $00
 	ld [wCardLocationIndex], a
-	ld a, CARD_LOCATION_0
+	ld a, CARD_LOCATION_OPP_HAND
 	ld [wCardLocation], a
-	ld hl, $cdb4
+	ld hl, wOppHand
 	ld b, $04
 .asm_1c3a
-	ld c, $05
+	ASSERT HAND_SIZE == FIELD_SIZE
+	ld c, HAND_SIZE ; aka FIELD_SIZE
 .asm_1c3c
 	ld a, LOW(INVALID_CARD)
 	ld [hli], a
@@ -2783,7 +3158,7 @@ Func_1c28::
 ; input:
 ; - b = card location index
 ; - c = CARD_LOCATION_* constant
-Func_1c4f::
+SetCardLocationAndIndex::
 	push af
 	ld a, b
 	ld [wCardLocationIndex], a
@@ -2795,7 +3170,7 @@ Func_1c4f::
 ; output:
 ; - b = card location index
 ; - c = CARD_LOCATION_* constant
-Func_1c5a::
+GetCardLocationAndIndex::
 	push af
 	ld a, [wCardLocationIndex]
 	ld b, a
@@ -2803,9 +3178,24 @@ Func_1c5a::
 	ld c, a
 	pop af
 	ret
-; 0x1c65
 
-SECTION "Bank 0@1c7a", ROM0[$1c7a]
+Func_1c65::
+	push af
+	push bc
+	push hl
+	call Func_1cb5
+	ld h, b
+	ld l, c
+	ld a, $6d
+	ld [hli], a
+	ld a, $01
+	ld [hli], a
+	ld a, $10
+	ld [hli], a
+	pop hl
+	pop bc
+	pop af
+	ret
 
 Func_1c7a::
 	push af
@@ -2885,17 +3275,17 @@ Func_1cb5:
 	ret
 
 .CardLocationAddresses:
-	dw $cdb4 ; CARD_LOCATION_0
-	dw $cdc3 ; CARD_LOCATION_1
-	dw $cdd2 ; CARD_LOCATION_2
-	dw $cde1 ; CARD_LOCATION_HAND
+	dw wOppHand     ; CARD_LOCATION_OPP_HAND
+	dw wOppField    ; CARD_LOCATION_OPP_FIELD
+	dw wPlayerField ; CARD_LOCATION_PLAYER_FIELD
+	dw wPlayerHand  ; CARD_LOCATION_PLAYER_HAND
 
 .CardLocationIndices:
-	dw $0 ; $0
-	dw $3 ; $1
-	dw $6 ; $2
-	dw $9 ; $3
-	dw $c ; $4
+	dw 0 * $3 ; $0
+	dw 1 * $3 ; $1
+	dw 2 * $3 ; $2
+	dw 3 * $3 ; $3
+	dw 4 * $3 ; $4
 
 ; returns TRUE if card ID in bc is invalid
 IsCardInvalid::
@@ -2963,9 +3353,38 @@ Func_1d0f::
 	pop de
 	pop bc
 	ret
-; 0x1d2a
 
-SECTION "Bank 0@1d67", ROM0[$1d67]
+Func_1d2a::
+	push de
+	push hl
+	ld l, $02
+	ld a, [$cdf5]
+	ld [$cadc], a
+	ld a, [$cdf6]
+	ld [$cadd], a
+	ld a, [$cdf7]
+	ld [$cade], a
+	ld a, [$cdf8]
+	ld [$cadf], a
+	ld a, [$cdf9]
+	ld [$cae0], a
+	ld a, [$cdfa]
+	ld [$cae1], a
+	call Func_13db
+	ld a, e
+	cp $01
+	jr nz, .asm_1d5c
+	ld l, $01
+.asm_1d5c
+	ld a, e
+	cp $00
+	jr nz, .asm_1d63
+	ld l, $00
+.asm_1d63
+	ld a, l
+	pop hl
+	pop de
+	ret
 
 Func_1d67::
 	push bc
@@ -3025,7 +3444,7 @@ Func_1daf:
 	ld a, [hli]
 	ld h, [hl]
 	ld l, a
-	call Func_1c5a
+	call GetCardLocationAndIndex
 	ld b, $00
 	add hl, bc
 	ld a, [hl]
@@ -3070,9 +3489,82 @@ Func_1daf:
 	db $00
 	db $01
 	db $01
-; 0x1dea
 
-SECTION "Home@1e65", ROM0[$1e65]
+Func_1dea:
+	push af
+	push bc
+	push de
+	push hl
+	ld a, $00
+	ld [$caa2], a
+	ld a, $00
+	ld [$cdfb], a
+	call Func_207c
+	ld de, $fefe
+.asm_1dfe
+	ld a, [$caa4]
+	cp $10
+	jr nz, .asm_1e22
+	ld a, $30
+	call Func_357
+	call WaitForVBlank
+	ld a, [$caa2]
+	and $f0
+	cp $40
+	jr nz, .asm_1e20
+	call Func_1e48
+	ld a, $01
+	ld [$cdfb], a
+	jr .asm_1e43
+.asm_1e20
+	jr .asm_1e31
+.asm_1e22
+	ld a, $40
+	call Func_37f
+	ld a, $01
+	ld [$cdfb], a
+	call Func_f91
+	jr .asm_1e43
+.asm_1e31
+	dec e
+	jr nz, .asm_1e41
+	dec d
+	ld a, d
+	cp $ff
+	jr nz, .asm_1e41
+	ld a, $02
+	ld [$cdfb], a
+	jr .asm_1e43
+.asm_1e41
+	jr .asm_1dfe
+.asm_1e43
+	pop hl
+	pop de
+	pop bc
+	pop af
+	ret
+
+Func_1e48:
+	push af
+	push bc
+	ld c, $03
+.asm_1e4c
+	call WaitForVBlank
+	dec c
+	jr nz, .asm_1e4c
+	pop bc
+	pop af
+	ret
+
+Func_1e55:
+	push af
+	xor a
+	ld [$caad], a
+	ld [$caae], a
+	ld [$caaf], a
+	ld [$cdfc], a
+	pop af
+	ret
 
 Func_1e65:
 	push af
@@ -3081,7 +3573,136 @@ Func_1e65:
 	ld [$cdfc], a
 	pop af
 	ret
-; 0x1e70
+
+Func_1e70::
+	push af
+	call Func_1fc8
+	ld a, [$caa4]
+	cp $10
+	jr nz, .asm_1e80
+	call Func_1e88
+	jr .asm_1e83
+.asm_1e80
+	call Func_1ed5
+.asm_1e83
+	call Func_1fd7
+	pop af
+	ret
+
+Func_1e88:
+	push af
+	push bc
+.asm_1e8a
+	xor a
+	ld [$cdfc], a
+	call Func_1dea
+	ld a, [$cdfb]
+	cp $02
+	jr z, .asm_1e8a
+	call Func_207c
+	call Func_1e55
+	ld c, $7f
+.asm_1ea0
+	call Func_2062
+	call Func_357
+	call WaitForVBlank
+	call Func_1f1b
+	ld a, [$cdfc]
+	and $02
+	jr nz, .asm_1eb6
+	dec c
+	jr nz, .asm_1ea0
+.asm_1eb6
+	ld a, [$cdfc]
+	and $02
+	jr nz, .asm_1e8a
+	call Func_1e48
+	ld a, $50
+	call Func_357
+	call Func_1e48
+	call Func_1f43
+	ld a, [$cdfc]
+	and $02
+	jr nz, .asm_1e8a
+	pop bc
+	pop af
+	ret
+
+Func_1ed5:
+	push af
+	push bc
+.asm_1ed7
+	xor a
+	ld [$cdfc], a
+	call Func_1dea
+	ld a, [$cdfb]
+	cp $02
+	jr z, .asm_1ed7
+	call Func_207c
+	call Func_1e55
+	ld a, $90
+	ld [$caa3], a
+	ld c, $7f
+.asm_1ef2
+	ld a, [$cdfc]
+	cp $00
+	jr nz, .asm_1eff
+	call Func_f91
+	dec c
+	jr nz, .asm_1ef2
+.asm_1eff
+	ld a, [$cdfc]
+	and $02
+	jr nz, .asm_1ed7
+	ld a, $60
+	call Func_37f
+	call Func_f91
+	call Func_1f2a
+	ld a, [$cdfc]
+	and $04
+	jr z, .asm_1ed7
+	pop bc
+	pop af
+	ret
+
+Func_1f1b:
+	push af
+	ld a, [$caa2]
+	and $f0
+	cp $90
+	jr z, .asm_1f28
+	call Func_1e65
+.asm_1f28
+	pop af
+	ret
+
+Func_1f2a:
+	push af
+	ld a, [$caa2]
+	and $f0
+	cp $50
+	jr z, .asm_1f39
+	call Func_1e65
+	jr .asm_1f41
+.asm_1f39
+	ld a, [$cdfc]
+	or $04
+	ld [$cdfc], a
+.asm_1f41
+	pop af
+	ret
+
+Func_1f43:
+	push af
+	ld a, [$caa2]
+	and $f0
+	cp $60
+	jr z, .asm_1f50
+	call Func_1e65
+.asm_1f50
+	pop af
+	ret
+; 0x1f52
 
 SECTION "Home@1f57", ROM0[$1f57]
 
@@ -3091,7 +3712,52 @@ Func_1f57::
 	ld [$cdff], a
 	pop af
 	ret
-; 0x1f5f
+
+Func_1f5f::
+	push af
+	ld a, [$caa4]
+	cp $10
+	jr nz, .asm_1f6c
+	call Func_1f71
+	jr .asm_1f6f
+.asm_1f6c
+	call Func_1f79
+.asm_1f6f
+	pop af
+	ret
+
+Func_1f71:
+	push af
+	ld a, $01
+	ld [$cdff], a
+	pop af
+	ret
+
+Func_1f79:
+	push af
+	ld a, $02
+	ld [$cdff], a
+	pop af
+	ret
+
+Func_1f81::
+	push af
+	ld a, [$cdff]
+	cp $01
+	jr nz, .asm_1f93
+	ld a, $02
+	ld [$cdff], a
+	call Func_318
+	jr .asm_1f9e
+.asm_1f93
+	ld a, $01
+	ld [$cdff], a
+	call Func_305
+	call Func_1e48
+.asm_1f9e
+	pop af
+	ret
+; 0x1fa0
 
 SECTION "Home@1fa8", ROM0[$1fa8]
 
@@ -3122,11 +3788,33 @@ Func_1fc0::
 	ld [$ce00], a
 	pop af
 	ret
-; 0x1fc8
+
+Func_1fc8:
+	push hl
+	di
+	ld hl, rIF
+	res B_IF_SERIAL, [hl]
+	ld hl, rIE
+	set B_IF_SERIAL, [hl]
+	ei
+	pop hl
+	ret
+
+Func_1fd7:
+	push hl
+	di
+	ld hl, rIF
+	res B_IF_SERIAL, [hl]
+	ld hl, rIE
+	res B_IF_SERIAL, [hl]
+	ei
+	pop hl
+	ret
+; 0x1fe6
 
 SECTION "Home@1fe6", ROM0[$1fe6]
 
-Func_1fe6:
+Func_1fe6::
 	push af
 	push bc
 	push hl
@@ -3146,7 +3834,23 @@ Func_1fe6:
 	ret
 ; 0x1fff
 
-SECTION "Home@2025", ROM0[$2025]
+SECTION "Bank 0@200e", ROM0[$200e]
+
+Func_200e::
+	push af
+	push bc
+	ld c, a
+	swap a
+	and $0f
+	or $80
+	call Func_2025
+	ld a, c
+	and $0f
+	or $80
+	call Func_2025
+	pop bc
+	pop af
+	ret
 
 Func_2025:
 	push bc
@@ -3171,7 +3875,47 @@ Func_2025:
 	ret
 ; 0x2041
 
-SECTION "Home@2086", ROM0[$2086]
+SECTION "Bank 0@2051", ROM0[$2051]
+
+Func_2051::
+	push bc
+	call Func_2062
+	and $0f
+	ld c, a
+	swap c
+	call Func_2062
+	and $0f
+	or c
+	pop bc
+	ret
+
+Func_2062:
+	push bc
+	push hl
+	ld a, $00
+	ld b, a
+	ld a, [wce97]
+	ld c, a
+	inc a
+	cp $80
+	jr nz, .asm_2071
+	xor a
+.asm_2071
+	ld [wce97], a
+	ld hl, $ce17
+	add hl, bc
+	ld a, [hl]
+	pop hl
+	pop bc
+	ret
+
+Func_207c::
+	push af
+	xor a
+	ld [wce97], a
+	ld [wce98], a
+	pop af
+	ret
 
 SeedRNG::
 	push af
@@ -3307,9 +4051,30 @@ Func_218b::
 	and $30
 	swap a
 	ret
-; 0x2193
 
-SECTION "Bank 0@21b4", ROM0[$21b4]
+Func_2193::
+	push af
+	ld a, [$cdf4]
+	or $40
+	ld [$cdf4], a
+	pop af
+	ret
+
+Func_219e::
+	push af
+	ld a, [$cdf4]
+	and $bf
+	ld [$cdf4], a
+	pop af
+	ret
+
+Func_21a9::
+	push af
+	ld a, [$cdf4]
+	or $08
+	ld [$cdf4], a
+	pop af
+	ret
 
 Func_21b4::
 	push af
@@ -3362,7 +4127,7 @@ Func_21f9::
 .asm_2202
 	ret
 
-Func_2203:
+Func_2203::
 	ld a, [$cdf4]
 	and $08
 	jr z, .asm_220c
@@ -3449,9 +4214,13 @@ Func_2391::
 .asm_239e
 	pop af
 	ret
-; 0x23a0
 
-SECTION "Bank 0@23a8", ROM0[$23a8]
+Func_23a0::
+	push af
+	ld a, $02
+	ld [$cf02], a
+	pop af
+	ret
 
 Func_23a8::
 	push af
@@ -3651,9 +4420,32 @@ DMGFadeOut:
 	ldh [rOBP1], a
 	pop af
 	ret
-; 0x2536
 
-SECTION "Home@2564", ROM0[$2564]
+Func_2536::
+	push af
+	ld a, $90
+	ldh [rOBP0], a
+	call DoFrame
+	call DoFrame
+	call DoFrame
+	ld a, $40
+	ldh [rOBP0], a
+	call DoFrame
+	call DoFrame
+	call DoFrame
+	ld a, $00
+	ldh [rOBP0], a
+	call DoFrame
+	pop af
+	ret
+
+Func_255a::
+	push af
+	ld a, $e0
+	ldh [rOBP0], a
+	call DoFrame
+	pop af
+	ret
 
 Func_2564::
 	push af
@@ -3792,20 +4584,20 @@ Func_2639::
 
 SECTION "Home@2666", ROM0[$2666]
 
-Func_2666::
-	call Func_2670
-	call Func_2774
+GenerateStartingDeck::
+	call GenerateStartingDeckMonsterCards
+	call GenerateStartingDeckMagicCards
 	call Func_27a9
 	ret
 
-Func_2670:
+GenerateStartingDeckMonsterCards:
 	push af
 	push bc
 	push de
 	push hl
-	ld a, $00
+	ld a, 0
 	ld [wRandRangeStart], a
-	ld a, $63
+	ld a, 99
 	ld [wRandRangeEnd], a
 	ld e, $00
 .asm_2680
@@ -3815,15 +4607,15 @@ Func_2670:
 	ld a, [wRandNum]
 	ld e, a
 	sla e
-	ld hl, $26ac
+	ld hl, StartingDeckMonsterCards
 	add hl, de
 	pop de
 	ld a, [hli]
 	ld b, [hl]
 	ld c, a
 	ld a, e
-	farcall Func_c5e8
-	farcall Func_c5ec
+	farcall SetPlayerDeckIndex
+	farcall AddCardToPlayerDeck
 	farcall Func_5af2
 	farcall Func_5b52
 	inc e
@@ -3835,28 +4627,127 @@ Func_2670:
 	pop bc
 	pop af
 	ret
-; 0x26ac
 
-SECTION "Home@2774", ROM0[$2774]
+StartingDeckMonsterCards:
+	dw RYU_KISHIN
+	dw MUSHROOM_MAN
+	dw SHADOW_SPECTER
+	dw SKULL_SERVANT
+	dw MOUNTAIN_WARRIOR
+	dw WATTKID
+	dw SANGAN
+	dw KURIBOH
+	dw MAN_EATING_PLANT
+	dw WINGS_OF_FLAME
+	dw MASK_OF_DARKNESS
+	dw TOMOZAURUS
+	dw KAGENINGEN
+	dw DARK_PLANT
+	dw NEMURIKO
+	dw WEATHER_CONTROL
+	dw MYSTICAL_CAPTURE
+	dw B_EYED_SIL_ZOMBIE
+	dw TOAD_MASTER
+	dw FLAME_MANIPULATOR
+	dw NECROLANCER
+	dw DJINN_THE_WATCHER
+	dw BEWITCHING_PHANTOM
+	dw MONSTER_EGG
+	dw SHADOW_WHO_CONTROL
+	dw MELTING_RED_SHADOW
+	dw FIRE_REAPER
+	dw LARVAS
+	dw FIREGRASS
+	dw MAN_EATER
+	dw DIG_BEAK
+	dw M_WARRIOR_1
+	dw M_WARRIOR_2
+	dw ANCIENT_JAR
+	dw DARK_PRISONER
+	dw HURRICAIL
+	dw FIRE_EYE
+	dw MONSTURTLE
+	dw PHANTOM_DEWAN
+	dw ARLOWNAY
+	dw DARK_SHADE
+	dw MASKED_CLOWN
+	dw LUCKY_TRINKET
+	dw GENIN
+	dw EYEARMOR
+	dw GATE_DEEG
+	dw SYNCHAR
+	dw FUSIONIST
+	dw AKAKIEISU
+	dw LALA_LI_OON
+	dw KEY_MACE
+	dw TURTLE_TIGER
+	dw TERRA_THE_TERRIBLE
+	dw DORON
+	dw ARMA_KNIGHT
+	dw MECH_MOLE_ZOMBIE
+	dw HAPPY_LOVER
+	dw PENGUIN_KNIGHT
+	dw PETIT_DRAGON
+	dw ARCHFIEND_MARMOT
+	dw PHANTOM_GHOST
+	dw DOROVER
+	dw TWIN_LONG_RODS_1
+	dw DROLL_BIRD
+	dw PETIT_ANGEL
+	dw WINGED_CLEAVER
+	dw HINOTAMA_SOUL
+	dw THUNDER_KID
+	dw MEOTOKO
+	dw KAGEMUSHA_BLUE
+	dw FLAME_GHOST
+	dw TWO_MOUTH_DARKRULER
+	dw MIDNIGHT_FIEND
+	dw SKULL_STALKER
+	dw HITODENCHAK
+	dw WOOD_REMAINS
+	dw HOURGLASS_OF_LIFE
+	dw MADJINN_GUNN
+	dw HANIWA
+	dw YASHINOKI
+	dw VISHWAR_RANDI
+	dw THE_DRDEK
+	dw CANDLE_OF_FATE
+	dw WATER_ELEMENT
+	dw DISSOLVEROCK
+	dw MEDA_BAT
+	dw ROOT_WATER
+	dw ANGELWITCH
+	dw EMBRYONIC_BEAST
+	dw ARCHFIEND_MIRROR
+	dw SECTARIAN_SECRET
+	dw MEGIRUS_LIGHT
+	dw RAY_AND_TEMPERATURE
+	dw KING_FOG
+	dw MYSTICAL_SHEEP_2
+	dw SERPENT_MARAUDER
+	dw CHANGE_SLIME
+	dw PSYCHIC_KAPPA
+	dw DRAGON_ERSATZ_HEAD
+	dw KURAMA
 
-Func_2774:
+GenerateStartingDeckMagicCards:
 	push af
 	push bc
 	push de
 	push hl
 	ld e, $21
-	ld hl, $279b
+	ld hl, StartingDeckMagicCards
 .asm_277d
 	ld a, e
-	cp $28
+	cp DECK_SIZE
 	jr nc, .asm_2796
 	ld a, e
-	farcall Func_c5e8
+	farcall SetPlayerDeckIndex
 	ld a, [hli]
 	ld c, a
 	ld a, [hli]
 	ld b, a
-	farcall Func_c5ec
+	farcall AddCardToPlayerDeck
 	farcall Func_5af2
 	farcall Func_5b52
 	inc e
@@ -3867,9 +4758,15 @@ Func_2774:
 	pop bc
 	pop af
 	ret
-; 0x279b
 
-SECTION "Home@27a9", ROM0[$27a9]
+StartingDeckMagicCards:
+	dw RAIGEKI
+	dw SPARKS
+	dw SPARKS
+	dw HINOTAMA
+	dw MOOYAN_CURRY
+	dw RED_MEDICINE
+	dw DARK_PIERCE_LIGHT
 
 Func_27a9:
 	push af
@@ -3890,23 +4787,29 @@ Func_27a9:
 	call RandomRange
 	ld a, [wRandNum]
 	ld d, a
+
+	; if de == $103, give Gaia Fierce Knight
 	ld a, d
 	cp $01
 	jr nz, .done
 	ld a, e
 	cp $03
-	jr nz, .asm_27e4
-	ld bc, $25
+	jr nz, .dark_magician_check
+	; give a Gaia Fierce Knight card
+	ld bc, GAIA_FIERCE_KNIGHT
 	farcall Func_5af2
-	farcall Func_5b04
+	farcall GiveCard
 	jr .done
-.asm_27e4
+
+.dark_magician_check
+	; if de == $10e, give Dark Magician
 	ld a, e
 	cp $0e
 	jr nz, .done
-	ld bc, $22
+	; give a Dark Magician card
+	ld bc, DARK_MAGICIAN
 	farcall Func_5af2
-	farcall Func_5b04
+	farcall GiveCard
 .done
 	pop hl
 	pop de
@@ -3997,9 +4900,38 @@ Func_287e:
 	pop de
 	pop bc
 	ret
-; 0x289d
 
-SECTION "Bank 0@28cd", ROM0[$28cd]
+Func_289d:
+	push af
+	push bc
+	ld a, [$cf6e]
+	ld c, a
+	ld a, [$cf6f]
+	ld b, a
+	call Func_2867
+	ld a, c
+	ld [$cf6e], a
+	ld a, b
+	ld [$cf6f], a
+	pop bc
+	pop af
+	ret
+
+Func_28b5:
+	push af
+	push bc
+	ld a, [$cf90]
+	ld c, a
+	ld a, [$cf91]
+	ld b, a
+	call Func_2867
+	ld a, c
+	ld [$cf90], a
+	ld a, b
+	ld [$cf91], a
+	pop bc
+	pop af
+	ret
 
 Func_28cd::
 	push af
@@ -4083,9 +5015,17 @@ Func_28fb:
 	pop bc
 	pop af
 	ret
-; 0x2938
 
-SECTION "Bank 0@2948", ROM0[$2948]
+Func_2938::
+	push af
+	call Func_289d
+	call Func_23f7
+	cp $00
+	jr z, .asm_2946
+	call Func_28b5
+.asm_2946
+	pop af
+	ret
 
 Func_2948::
 	push af
@@ -4222,7 +5162,7 @@ Func_29fd::
 	push af
 	ld a, $00
 	call Func_29f1
-	call Func_f74
+	call WaitForVBlank
 	pop af
 	ret
 
@@ -4230,15 +5170,15 @@ Func_2a08::
 	push af
 	ld a, $01
 	call Func_29f1
-	call Func_f74
+	call WaitForVBlank
 	pop af
 	ret
 
-Func_2a13:
+Func_2a13::
 	push af
 	ld a, $02
 	call Func_29f1
-	call Func_f74
+	call WaitForVBlank
 	pop af
 	ret
 
@@ -4246,7 +5186,7 @@ Func_2a1e:
 	push af
 	ld a, $04
 	call Func_29f1
-	call Func_f74
+	call WaitForVBlank
 	pop af
 	ret
 
@@ -4254,7 +5194,7 @@ Func_2a29:
 	push af
 	ld a, $05
 	call Func_29f1
-	call Func_f74
+	call WaitForVBlank
 	pop af
 	ret
 
@@ -4262,7 +5202,7 @@ Func_2a34:
 	push af
 	ld a, $03
 	call Func_29f1
-	call Func_f74
+	call WaitForVBlank
 	pop af
 	ret
 
@@ -4270,7 +5210,7 @@ Func_2a3f::
 	push af
 	ld a, $07
 	call Func_29f1
-	call Func_f74
+	call WaitForVBlank
 	pop af
 	ret
 
@@ -4278,7 +5218,7 @@ Func_2a4a:
 	push af
 	ld a, $10
 	call Func_29f1
-	call Func_f74
+	call WaitForVBlank
 	pop af
 	ret
 
@@ -4286,7 +5226,7 @@ Func_2a55::
 	push af
 	ld a, $06
 	call Func_29f1
-	call Func_f74
+	call WaitForVBlank
 	pop af
 	ret
 
@@ -4294,12 +5234,41 @@ Func_2a60::
 	push af
 	ld a, $09
 	call Func_29f1
-	call Func_f74
+	call WaitForVBlank
 	pop af
 	ret
-; 0x2a6b
 
-SECTION "Bank 0@2a97", ROM0[$2a97]
+Func_2a6b::
+	push af
+	ld a, $0a
+	call Func_29f1
+	call WaitForVBlank
+	pop af
+	ret
+
+Func_2a76::
+	push af
+	ld a, $0c
+	call Func_29f1
+	call WaitForVBlank
+	pop af
+	ret
+
+Func_2a81::
+	push af
+	ld a, $0d
+	call Func_29f1
+	call WaitForVBlank
+	pop af
+	ret
+
+Func_2a8c::
+	push af
+	ld a, $0b
+	call Func_29f1
+	call WaitForVBlank
+	pop af
+	ret
 
 Func_2a97::
 	push af
@@ -4351,7 +5320,7 @@ Func_2aef:
 	push af
 	ld a, $98
 	call Func_29f1
-	call Func_f74
+	call WaitForVBlank
 	pop af
 	ret
 ; 0x2afa
@@ -4362,10 +5331,21 @@ Func_2b26::
 	push af
 	ld a, $9d
 	call Func_29f1
-	call Func_f74
+	call WaitForVBlank
 	pop af
 	ret
 ; 0x2b31
+
+SECTION "Bank 0@2b52", ROM0[$2b52]
+
+Func_2b52::
+	push af
+	ld a, $a2
+	call Func_29f1
+	call WaitForVBlank
+	pop af
+	ret
+; 0x2b5d
 
 SECTION "Bank 0@2b68", ROM0[$2b68]
 
@@ -4373,18 +5353,23 @@ Func_2b68::
 	push af
 	ld a, $94
 	call Func_29f1
-	call Func_f74
+	call WaitForVBlank
 	pop af
 	ret
-; 0x2b73
 
-SECTION "Bank 0@2b7e", ROM0[$2b7e]
+Func_2b73::
+	push af
+	ld a, $92
+	call Func_29f1
+	call WaitForVBlank
+	pop af
+	ret
 
 Func_2b7e::
 	push af
 	ld a, $a1
 	call Func_29f1
-	call Func_f74
+	call WaitForVBlank
 	pop af
 	ret
 
@@ -4392,7 +5377,7 @@ Func_2b89::
 	push af
 	ld a, $0f
 	call Func_29f1
-	call Func_f74
+	call WaitForVBlank
 	pop af
 	ret
 ; 0x2b94
@@ -4473,21 +5458,34 @@ Func_2bfe::
 	pop af
 	ret
 
-Func_2c0c:
+Func_2c0c::
 	push bc
 	push hl
 	ld b, $00
 	ld a, [$cfc0]
 	ld c, a
-	ld hl, $2c2c
+	ld hl, Data_2c2c
 	add hl, bc
 	ld a, [hl]
 	pop hl
 	pop bc
 	ret
-; 0x2c1c
 
-SECTION "Bank 0@2c31", ROM0[$2c31]
+Func_2c1c::
+	push bc
+	push hl
+	ld b, $00
+	ld a, [$cfc1]
+	ld c, a
+	ld hl, Data_2c2c
+	add hl, bc
+	ld a, [hl]
+	pop hl
+	pop bc
+	ret
+
+Data_2c2c:
+	db $02, $01, $00, $00, $00
 
 Func_2c31::
 	push af
@@ -4495,17 +5493,148 @@ Func_2c31::
 	cp $00
 	jr nz, .asm_2c3f
 	xor a
-	farcall $1d, $05
+	farcall Func_1512c
 	jr .asm_2c48
 .asm_2c3f
 	cp $01
 	jr nz, .asm_2c48
 	ld a, $01
-	farcall $1d, $05
+	farcall Func_1512c
 .asm_2c48
 	pop af
 	ret
-; 0x2c4a
+
+Func_2c4a::
+	push af
+	push bc
+	push de
+	push hl
+	xor a
+	ld [$cfc2], a
+	ld [$cfd6], a
+	ld [$cfd7], a
+	ld [$cfd8], a
+	ld [$cfd9], a
+	ld [$cfda], a
+	ld [$cfdb], a
+	ld [$cfdc], a
+	ld [$cfdd], a
+	ld [$cfde], a
+	ld hl, $cfc4
+	ld a, $ff
+	ld c, $12
+.asm_2c74
+	ld [hli], a
+	dec c
+	jr nz, .asm_2c74
+	pop hl
+	pop de
+	pop bc
+	pop af
+	ret
+
+Func_2c7d::
+	push de
+	push hl
+	ld b, $00
+	ld a, [$cfc3]
+	ld c, a
+	sla c
+	ld hl, $2cbd
+	add hl, bc
+	ld a, [hli]
+	ld h, [hl]
+	ld l, a
+	ld a, [$cfc2]
+	cp $00
+	jr nz, .asm_2c9d
+	ld a, [hli]
+	ld c, a
+	ld a, [hli]
+	ld b, a
+	ld d, [hl]
+	call Func_2cc3
+.asm_2c9d
+	ld b, $00
+	ld a, [$cfc2]
+	ld c, a
+	inc a
+	ld [$cfc2], a
+	ld hl, $cfc4
+	add hl, bc
+	ld a, [hli]
+	ld c, a
+	ld a, [$cfc2]
+	ld e, a
+	ld a, [$cacd]
+	cp e
+	jr nz, .asm_2cb9
+	ld b, $01
+.asm_2cb9
+	ld a, c
+	pop hl
+	pop de
+	ret
+; 0x2cbd
+
+SECTION "Bank 0@2cc3", ROM0[$2cc3]
+
+Func_2cc3:
+	push af
+	push bc
+	push de
+	push hl
+	ld a, d
+	farcall Func_42d0
+	farcall Func_42c5
+	farcall Func_42ec
+	ld hl, $cfc4
+	ld de, $cab9
+	ld c, $12
+.asm_2cd9
+	ld a, [de]
+	ld [hli], a
+	inc de
+	dec c
+	jr nz, .asm_2cd9
+	xor a
+	ld [$cfc2], a
+	pop hl
+	pop de
+	pop bc
+	pop af
+	ret
+
+Func_2ce8::
+	push af
+	ld [$cfc3], a
+	xor a
+	ld [$cfc2], a
+	pop af
+	ret
+
+Func_2cf2::
+	push af
+	ld a, c
+	ld [$cfd6], a
+	ld a, b
+	ld [$cfd7], a
+	ld a, e
+	ld [$cfd8], a
+	pop af
+	ret
+
+Func_2d01::
+	push af
+	ld a, c
+	ld [$cfd9], a
+	ld a, b
+	ld [$cfda], a
+	ld a, e
+	ld [$cfdb], a
+	pop af
+	ret
+; 0x2d10
 
 SECTION "Home@2d1f", ROM0[$2d1f]
 
@@ -4529,7 +5658,7 @@ Func_2d2e:
 	ei
 	ret
 
-Func_2d57:
+VBlank16:
 	call Func_f6e5d
 	bankswitch BANK(UpdateAudio)
 	call UpdateAudio

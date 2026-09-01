@@ -14,7 +14,7 @@ GenerateAIOpponentDeck:
 	cp DECK_SIZE
 	jr nc, .done
 	ld a, e
-	farcall SetOppDeckIndex
+	farcall SetOppDuelDeckIndex
 	call .GenerateCard
 	farcall AddCardToOpponentDeck
 	inc e

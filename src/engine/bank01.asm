@@ -3,55 +3,55 @@
 	farcall_table_start
 	farfunc Func_4068 ; $03
 	farfunc $551f ; $05
-	farfunc Func_5acb ; $07
-	farfunc $5c48 ; $09
+	farfunc InitCardCollection ; $07
+	farfunc Func_5c48 ; $09
 	farfunc $5b92 ; $0b
 	farfunc $56e0 ; $0d
 	farfunc $5c86 ; $0f
 	farfunc Func_5af2 ; $11
-	farfunc $5b80 ; $13
+	farfunc GetCardCountInCollection ; $13
 	farfunc $5bb8 ; $15
 	farfunc $5bd1 ; $17
 	farfunc $5c10 ; $19
-	farfunc $42c5 ; $1b
-	farfunc $42d0 ; $1d
-	farfunc $42ec ; $1f
-	farfunc $5313 ; $21
-	farfunc $5eb3 ; $23
-	farfunc $5f37 ; $25
-	farfunc $5f79 ; $27
-	farfunc $6008 ; $29
-	farfunc $6015 ; $2b
+	farfunc Func_42c5 ; $1b
+	farfunc Func_42d0 ; $1d
+	farfunc Func_42ec ; $1f
+	farfunc Func_5313 ; $21
+	farfunc Func_5eb3 ; $23
+	farfunc Func_5f37 ; $25
+	farfunc Func_5f79 ; $27
+	farfunc Func_6008 ; $29
+	farfunc Func_6015 ; $2b
 	farfunc $5ff2 ; $2d
 	farfunc LoadCharacterGfx ; $2f
-	farfunc $5ef5 ; $31
-	farfunc $5ffb ; $33
-	farfunc $6022 ; $35
-	farfunc $602b ; $37
-	farfunc $6034 ; $39
-	farfunc $603d ; $3b
-	farfunc $6046 ; $3d
+	farfunc LoadCardGfx ; $31
+	farfunc Func_5ffb ; $33
+	farfunc Func_6022 ; $35
+	farfunc Func_602b ; $37
+	farfunc Func_6034 ; $39
+	farfunc Func_603d ; $3b
+	farfunc Func_6046 ; $3d
 	farfunc $6101 ; $3f
-	farfunc Func_5b04 ; $41
+	farfunc GiveCard ; $41
 	farfunc Func_5b52 ; $43
-	farfunc $62c2 ; $45
-	farfunc $63d6 ; $47
+	farfunc Func_62c2 ; $45
+	farfunc Func_63d6 ; $47
 	farfunc Func_6595 ; $49
 	farfunc Func_65c4 ; $4b
 	farfunc Func_65f3 ; $4d
 	farfunc Func_6804 ; $4f
 	farfunc Func_6622 ; $51
 	farfunc Func_6736 ; $53
-	farfunc $6a6e ; $55
-	farfunc $689e ; $57
-	farfunc $69b5 ; $59
-	farfunc $6c67 ; $5b
-	farfunc $6a97 ; $5d
-	farfunc $6bae ; $5f
-	farfunc $6e41 ; $61
-	farfunc $6c90 ; $63
-	farfunc $6da7 ; $65
-	farfunc $64b5 ; $67
+	farfunc Func_6a6e ; $55
+	farfunc Func_689e ; $57
+	farfunc Func_69b5 ; $59
+	farfunc Func_6c67 ; $5b
+	farfunc Func_6a97 ; $5d
+	farfunc Func_6bae ; $5f
+	farfunc Func_6e41 ; $61
+	farfunc Func_6c90 ; $63
+	farfunc Func_6da7 ; $65
+	farfunc Func_64b5 ; $67
 
 Func_4068:
 	push af
@@ -74,7 +74,7 @@ Func_4068:
 	call Func_42ae
 	call EnableLCD
 	call Func_fff
-	call Func_f74
+	call WaitForVBlank
 	pop hl
 	pop af
 	ret
@@ -92,8 +92,8 @@ Func_40b0:
 	ld e, $05
 .asm_40bb
 	ld b, d
-	ld c, CARD_LOCATION_HAND
-	call Func_1c4f
+	ld c, CARD_LOCATION_PLAYER_HAND
+	call SetCardLocationAndIndex
 	call Func_1c92
 	call Func_1d67
 	call Func_40f1
@@ -107,8 +107,8 @@ Func_40b0:
 	ld e, $05
 .asm_40d7
 	ld b, d
-	ld c, CARD_LOCATION_0
-	call Func_1c4f
+	ld c, CARD_LOCATION_OPP_HAND
+	call SetCardLocationAndIndex
 	call Func_1c92
 	call Func_1d67
 	call Func_40f1
@@ -160,9 +160,9 @@ Func_4110:
 	push hl
 	ld a, $00
 	call Func_42d0
-	ld a, [$cab0]
+	ld a, [wPlayerLP + 0]
 	ld c, a
-	ld a, [$cab1]
+	ld a, [wPlayerLP + 1]
 	ld b, a
 	call Func_42c5
 	call Func_42ec
@@ -188,9 +188,9 @@ Func_413a:
 	push hl
 	ld a, $00
 	call Func_42d0
-	ld a, [$cab3]
+	ld a, [wOppLP + 0]
 	ld c, a
-	ld a, [$cab4]
+	ld a, [wOppLP + 1]
 	ld b, a
 	call Func_42c5
 	call Func_42ec
@@ -257,8 +257,8 @@ Func_41a1:
 	ld e, $05
 .asm_41ac
 	ld b, d
-	ld c, CARD_LOCATION_2
-	call Func_1c4f
+	ld c, CARD_LOCATION_PLAYER_FIELD
+	call SetCardLocationAndIndex
 	call Func_1c92
 	call Func_1d67
 	call Func_40f1
@@ -283,8 +283,8 @@ Func_41c6:
 	ld e, $05
 .asm_41d1
 	ld b, d
-	ld c, CARD_LOCATION_1
-	call Func_1c4f
+	ld c, CARD_LOCATION_OPP_FIELD
+	call SetCardLocationAndIndex
 	call Func_1c92
 	call Func_1d67
 	call Func_40f1
@@ -346,7 +346,7 @@ Func_42ae:
 	pop af
 	ret
 
-Func_42c5:
+Func_42c5::
 	push af
 	ld a, c
 	ld [$cab6], a
@@ -355,55 +355,90 @@ Func_42c5:
 	pop af
 	ret
 
-Func_42d0:
+Func_42d0::
 	ld [$cab8], a
 	ret
 ; 0x42d4
 
 SECTION "Bank 1@42ec", ROMX[$42ec], BANK[$1]
 
-Func_42ec:
+Func_42ec::
 	push af
 	push bc
 	push hl
 	ld b, $00
 	ld a, [$cab8]
 	ld c, a
-	ld hl, $4305
+	ld hl, .Jumptable
 	add hl, bc
 	ld a, [hli]
 	ld h, [hl]
 	ld l, a
-	ld bc, $4301
-	push bc
-	jp hl
-; 0x4301
+	call_hl
+	pop hl
+	pop bc
+	pop af
+	ret
 
-SECTION "Bank 01@5acb", ROMX[$5acb], BANK[$01]
+.Jumptable:
+	dw $4319
+	dw $437b
+	dw $43d4
+	dw $52a5
+	dw $52d8
+	dw $435c
+	dw $5324
+	dw $536d
+	dw $5436
+	dw $54ef
+; 0x4319
 
-Func_5acb:
+SECTION "Bank 1@5313", ROMX[$5313], BANK[$1]
+
+Func_5313:
 	push af
 	push bc
 	push hl
-	ld hl, $cae4
-	ld a, $ff
-	ld b, $01
-.asm_5ad5
+	ld hl, $cab9
+	xor a
+	ld c, $08
+.asm_531c
+	ld [hli], a
+	dec c
+	jr nz, .asm_531c
+	pop hl
+	pop bc
+	pop af
+	ret
+; 0x5324
+
+SECTION "Bank 01@5acb", ROMX[$5acb], BANK[$01]
+
+; initialises all wCardCollection cards with NOT_OWNED
+InitCardCollection:
+	push af
+	push bc
+	push hl
+	ld hl, wCardCollection
+	ld a, NOT_OWNED
+	ld b, HIGH(NUM_CARDS)
+.loop_hi
 	ld c, $00
-.asm_5ad7
+.loop_write
 	ld [hli], a
 	dec c
-	jr nz, .asm_5ad7
+	jr nz, .loop_write
 	dec b
-	jr nz, .asm_5ad5
-	ld c, $6d
-.asm_5ae0
+	jr nz, .loop_hi
+	ld c, LOW(NUM_CARDS)
+.loop_lo
 	ld [hli], a
 	dec c
-	jr nz, .asm_5ae0
-	ld a, $00
+	jr nz, .loop_lo
+
+	ld a, LOW(B_EYE_WHITE_DRAGON)
 	ld [$cae2], a
-	ld a, $00
+	ld a, HIGH(B_EYE_WHITE_DRAGON)
 	ld [$cae3], a
 	pop hl
 	pop bc
@@ -423,12 +458,13 @@ Func_5af2::
 	pop af
 	ret
 
-Func_5b04::
+; gives card to player
+GiveCard::
 	push af
 	push bc
 	push hl
-	call Func_5b80
-	cp $ff
+	call GetCardCountInCollection
+	cp NOT_OWNED
 	jr nz, .asm_5b12
 	xor a
 	call Func_5b6c
@@ -437,10 +473,10 @@ Func_5b04::
 	ld c, a
 	ld a, [$cae3]
 	ld b, a
-	ld hl, $cae4
+	ld hl, wCardCollection
 	add hl, bc
 	ld a, [hl]
-	cp $63
+	cp MAX_CARD_COUNT
 	jr z, .asm_5b25
 	inc a
 	ld [hl], a
@@ -461,12 +497,12 @@ Func_5b52::
 	ld c, a
 	ld a, [$cae3]
 	ld b, a
-	ld hl, $cae4
+	ld hl, wCardCollection
 	add hl, bc
 	ld a, [hl]
-	cp $ff
+	cp NOT_OWNED
 	jr nz, .asm_5b68
-	ld [hl], $00
+	ld [hl], 0
 .asm_5b68
 	pop hl
 	pop bc
@@ -481,7 +517,7 @@ Func_5b6c:
 	ld c, a
 	ld a, [$cae3]
 	ld b, a
-	ld hl, $cae4
+	ld hl, wCardCollection
 	add hl, bc
 	pop af
 	ld [hl], a
@@ -489,14 +525,14 @@ Func_5b6c:
 	pop bc
 	ret
 
-Func_5b80:
+GetCardCountInCollection::
 	push bc
 	push hl
 	ld a, [$cae2]
 	ld c, a
 	ld a, [$cae3]
 	ld b, a
-	ld hl, $cae4
+	ld hl, wCardCollection
 	add hl, bc
 	ld a, [hl]
 	pop hl
@@ -504,7 +540,203 @@ Func_5b80:
 	ret
 ; 0x5b92
 
-SECTION "Bank 1@5fbb", ROMX[$5fbb], BANK[$1]
+SECTION "Bank 1@5c48", ROMX[$5c48], BANK[$1]
+
+Func_5c48:
+	push af
+	push de
+	push hl
+	ld hl, NULL
+	ld bc, NULL
+	ld e, $c8
+.asm_5c53
+	call Func_5af2
+	call GetCardCountInCollection
+	cp $ff
+	jr nz, .asm_5c5e
+	xor a
+.asm_5c5e
+	add l
+	ld l, a
+	ld a, $00
+	adc h
+	ld h, a
+	inc bc
+	dec e
+	jr nz, .asm_5c53
+	ld e, $a5
+.asm_5c6a
+	call Func_5af2
+	call GetCardCountInCollection
+	cp $ff
+	jr nz, .asm_5c75
+	xor a
+.asm_5c75
+	add l
+	ld l, a
+	ld a, $00
+	adc h
+	ld h, a
+	inc bc
+	dec e
+	jr nz, .asm_5c6a
+	ld b, h
+	ld c, l
+	pop hl
+	pop de
+	pop af
+	ret
+; 0x5c85
+
+SECTION "Bank 1@5eb3", ROMX[$5eb3], BANK[$1]
+
+Func_5eb3:
+	push af
+	push bc
+	push de
+	push hl
+	ld a, $00
+	call Func_1842
+	ld a, [wLoadedCardID]
+	call Func_1842
+	ld a, [$cd10]
+	call Func_1842
+	call SetJobFlag
+	ld bc, $cde6
+	dec b
+	rla
+	ld [$ff00+c], a
+	ld bc, vTiles0
+	ld e, $0a
+.asm_5ed6
+	ld a, $08
+	call SetPendingVBlankMode
+	call AddWordToVBlankStruct
+	ld hl, $80
+	add hl, bc
+	ld b, h
+	ld c, l
+	call Func_f62
+	call RequestVBlankMode
+	call WaitForVBlank
+	dec e
+	jr nz, .asm_5ed6
+	pop hl
+	pop de
+	pop bc
+	pop af
+	ret
+
+LoadCardGfx:
+	push af
+	push bc
+	push de
+	push hl
+	ld a, $00
+	call Func_1842
+	ld a, [wLoadedCardID + 0]
+	call Func_1842
+	ld a, [wLoadedCardID + 1]
+	call Func_1842
+	call SetJobFlag
+	db $01, LOW(hDecompressJobFlags)
+	call ActivateJob
+	db JOB_DECOMPRESS
+
+	ld bc, vTiles1
+	ld e, $0a
+.asm_5f18
+	ld a, VBLANK_08
+	call SetPendingVBlankMode
+	call AddWordToVBlankStruct
+	ld hl, $8 tiles
+	add hl, bc
+	ld b, h
+	ld c, l
+	call Func_f62
+	call RequestVBlankMode
+	call WaitForVBlank
+	dec e
+	jr nz, .asm_5f18
+	pop hl
+	pop de
+	pop bc
+	pop af
+	ret
+
+Func_5f37:
+	push af
+	push bc
+	push de
+	push hl
+	ld a, $00
+	call Func_1842
+	ld a, [wLoadedCardID]
+	call Func_1842
+	ld a, [$cd10]
+	call Func_1842
+	call SetJobFlag
+	ld bc, $cde6
+	dec b
+	rla
+	ld [$ff00+c], a
+	ld bc, vTiles1 tile $60
+	ld e, $0a
+.asm_5f5a
+	ld a, $08
+	call SetPendingVBlankMode
+	call AddWordToVBlankStruct
+	ld hl, $80
+	add hl, bc
+	ld b, h
+	ld c, l
+	call Func_f62
+	call RequestVBlankMode
+	call WaitForVBlank
+	dec e
+	jr nz, .asm_5f5a
+	pop hl
+	pop de
+	pop bc
+	pop af
+	ret
+
+Func_5f79:
+	push af
+	push bc
+	push de
+	push hl
+	ld a, $00
+	call Func_1842
+	ld a, [wLoadedCardID]
+	call Func_1842
+	ld a, [$cd10]
+	call Func_1842
+	call SetJobFlag
+	ld bc, $cde6
+	dec b
+	rla
+	ld [$ff00+c], a
+	ld bc, vTiles2 tile $30
+	ld e, $0a
+.asm_5f9c
+	ld a, $08
+	call SetPendingVBlankMode
+	call AddWordToVBlankStruct
+	ld hl, $80
+	add hl, bc
+	ld b, h
+	ld c, l
+	call Func_f62
+	call RequestVBlankMode
+	call WaitForVBlank
+	dec e
+	jr nz, .asm_5f9c
+	pop hl
+	pop de
+	pop bc
+	pop af
+	ret
 
 ; loads tiles that correspond to character in wNPCCharacter
 LoadCharacterGfx:
@@ -542,6 +774,383 @@ LoadCharacterGfx:
 	pop af
 	ret
 ; 0x5ff2
+
+SECTION "Bank 1@5ffb", ROMX[$5ffb], BANK[$1]
+
+Func_5ffb:
+	push af
+	push bc
+	ld a, $80
+	bcbgcoord 11, 4
+	call Func_60be
+	pop bc
+	pop af
+	ret
+
+Func_6008:
+	push af
+	push bc
+	ld a, $e0
+	bcbgcoord 1, 5
+	call Func_60be
+	pop bc
+	pop af
+	ret
+
+Func_6015:
+	push af
+	push bc
+	ld a, $30
+	bcbgcoord 11, 5
+	call Func_60be
+	pop bc
+	pop af
+	ret
+
+Func_6022:
+	push bc
+	bcbgcoord 11, 4
+	call Func_6074
+	pop bc
+	ret
+
+Func_602b:
+	push bc
+	bcbgcoord 1, 5
+	call Func_6099
+	pop bc
+	ret
+
+Func_6034:
+	push bc
+	bcbgcoord 11, 5
+	call Func_6099
+	pop bc
+	ret
+
+Func_603d:
+	push bc
+	bcbgcoord 1, 5
+	call Func_604f
+	pop bc
+	ret
+
+Func_6046:
+	push bc
+	bcbgcoord 11, 5
+	call Func_604f
+	pop bc
+	ret
+
+Func_604f:
+	push af
+	push bc
+	push de
+	push hl
+	ld a, $81
+	ld d, $0a
+.asm_6057
+	call AddWordToVBlankStruct
+	ld e, $08
+.asm_605c
+	call AddByteToVBlankStruct
+	dec e
+	jr nz, .asm_605c
+	push de
+	ld de, $20
+	ld h, b
+	ld l, c
+	add hl, de
+	ld b, h
+	ld c, l
+	pop de
+	dec d
+	jr nz, .asm_6057
+	pop hl
+	pop de
+	pop bc
+	pop af
+	ret
+
+Func_6074:
+	push af
+	push bc
+	push de
+	push hl
+	ld a, $00
+	ld d, $0a
+.asm_607c
+	call AddWordToVBlankStruct
+	ld e, $08
+.asm_6081
+	call AddByteToVBlankStruct
+	dec e
+	jr nz, .asm_6081
+	push de
+	ld de, $20
+	ld h, b
+	ld l, c
+	add hl, de
+	ld b, h
+	ld c, l
+	pop de
+	dec d
+	jr nz, .asm_607c
+	pop hl
+	pop de
+	pop bc
+	pop af
+	ret
+
+Func_6099:
+	push af
+	push bc
+	push de
+	push hl
+	ld a, $80
+	ld d, $0a
+.asm_60a1
+	call AddWordToVBlankStruct
+	ld e, $08
+.asm_60a6
+	call AddByteToVBlankStruct
+	dec e
+	jr nz, .asm_60a6
+	push de
+	ld de, $20
+	ld h, b
+	ld l, c
+	add hl, de
+	ld b, h
+	ld c, l
+	pop de
+	dec d
+	jr nz, .asm_60a1
+	pop hl
+	pop de
+	pop bc
+	pop af
+	ret
+
+Func_60be:
+	push af
+	push bc
+	push de
+	push hl
+	ld d, $05
+.asm_60c4
+	call AddWordToVBlankStruct
+	push af
+	ld e, $08
+.asm_60ca
+	call AddByteToVBlankStruct
+	inc a
+	inc a
+	dec e
+	jr nz, .asm_60ca
+	push de
+	ld de, $20
+	ld h, b
+	ld l, c
+	add hl, de
+	ld b, h
+	ld c, l
+	pop de
+	pop af
+	inc a
+	push af
+	call AddWordToVBlankStruct
+	ld e, $08
+.asm_60e4
+	call AddByteToVBlankStruct
+	inc a
+	inc a
+	dec e
+	jr nz, .asm_60e4
+	push de
+	ld de, $20
+	ld h, b
+	ld l, c
+	add hl, de
+	ld b, h
+	ld c, l
+	pop de
+	pop af
+	add $0f
+	dec d
+	jr nz, .asm_60c4
+	pop hl
+	pop de
+	pop bc
+	pop af
+	ret
+; 0x6101
+
+SECTION "Bank 1@62c2", ROMX[$62c2], BANK[$1]
+
+Func_62c2:
+	push af
+	push hl
+	call Func_101d
+	call DisableLCD
+	ld hl, $62e5
+	call Func_10d9
+	farcall Func_2a813
+	call Func_62ef
+	call Func_63cb
+	call EnableLCD
+	call Func_100e
+	call WaitForVBlank
+	pop hl
+	pop af
+	ret
+; 0x62e5
+
+SECTION "Bank 1@62ef", ROMX[$62ef], BANK[$1]
+
+Func_62ef:
+	push af
+	push bc
+	push de
+	push hl
+	ld hl, vTiles0
+	ld de, $630b
+	ld b, $0c
+.asm_62fb
+	ld c, $10
+.asm_62fd
+	ld a, [de]
+	ld [hli], a
+	inc de
+	dec c
+	jr nz, .asm_62fd
+	dec b
+	jr nz, .asm_62fb
+	pop hl
+	pop de
+	pop bc
+	pop af
+	ret
+; 0x630b
+
+SECTION "Bank 1@63cb", ROMX[$63cb], BANK[$1]
+
+Func_63cb:
+	call Func_12fb
+	call Func_64ca
+	call Func_1225
+	ret
+; 0x63d5
+
+SECTION "Bank 1@63d6", ROMX[$63d6], BANK[$1]
+
+Func_63d6:
+	push af
+	push bc
+	push de
+	push hl
+	call Func_6403
+	ld b, $00
+	ld c, a
+	ld hl, $63f5
+	add hl, bc
+	ld a, [hli]
+	ld h, [hl]
+	ld l, a
+	call_hl
+; 0x63ec
+
+SECTION "Bank 1@6403", ROMX[$6403], BANK[$1]
+
+Func_6403:
+	push bc
+	push de
+	push hl
+	ld d, $00
+	ld a, [wJoypadPressed]
+	and $f3
+	jr z, .asm_641c
+	ld c, $08
+.asm_6411
+	dec c
+	rlca
+	jr nc, .asm_6411
+	ld b, $00
+	ld hl, $6421
+	add hl, bc
+	ld d, [hl]
+.asm_641c
+	ld a, d
+	pop hl
+	pop de
+	pop bc
+	ret
+; 0x6421
+
+SECTION "Bank 1@64b5", ROMX[$64b5], BANK[$1]
+
+Func_64b5:
+	push af
+	push bc
+	ld a, $00
+	ld [$cf04], a
+	call Func_653f
+	ld a, b
+	ld [$cf05], a
+	ld a, c
+	ld [$cf06], a
+	pop bc
+	pop af
+	ret
+
+Func_64ca:
+	push af
+	push bc
+	push de
+	ld a, [$cf05]
+	ld b, a
+	ld a, [$cf06]
+	ld c, a
+	ld d, $00
+	ld e, $00
+	call Add4x4OAM
+	ld c, $50
+	ld b, $08
+	ld d, $04
+	ld e, $02
+	call Add4x4OAM
+	call Func_2958
+	cp $02
+	jr c, .asm_64f9
+	ld c, $50
+	ld b, $98
+	ld d, $08
+	ld e, $04
+	call Add4x4OAM
+.asm_64f9
+	pop de
+	pop bc
+	pop af
+	ret
+; 0x64fd
+
+SECTION "Bank 1@653f", ROMX[$653f], BANK[$1]
+
+Func_653f:
+	push af
+	push hl
+	ld b, $00
+	ld c, a
+	sla c
+	ld hl, $6550
+	add hl, bc
+	ld a, [hli]
+	ld b, a
+	ld c, [hl]
+	pop hl
+	pop af
+	ret
+; 0x6550
 
 SECTION "Bank 01@6595", ROMX[$6595], BANK[$01]
 
@@ -587,7 +1196,7 @@ Func_65c4::
 	call DisableLCD
 	ld hl, $65e9
 	call Func_10d9
-	farcall $05, $0b
+	farcall Func_2c4c9
 	call EnableLCD
 	call DoFrame
 	call FadeIn
@@ -613,7 +1222,7 @@ Func_65f3::
 	call DisableLCD
 	ld hl, $6618
 	call Func_10d9
-	farcall $07, $0b
+	farcall Func_2cb88
 	call EnableLCD
 	call DoFrame
 	call FadeIn
@@ -644,7 +1253,7 @@ Func_6622:
 	call Func_664c
 	call EnableLCD
 	call Func_100e
-	call Func_f74
+	call WaitForVBlank
 	pop hl
 	pop af
 	ret
@@ -700,10 +1309,7 @@ Func_6736:
 	ld a, [hli]
 	ld h, [hl]
 	ld l, a
-	ld bc, .ret
-	push bc
-	jp hl
-.ret
+	call_hl
 	cp $01
 	jr nz, .loop
 	pop hl
@@ -748,10 +1354,10 @@ Func_6761:
 	db $02, $04, $00, $00, $0a, $00, $06, $08
 
 Func_6787:
-	ld a, $02
+	ld a, VBLANK_02
 	call SetPendingVBlankMode
 	call RequestVBlankMode
-	call Func_f74
+	call WaitForVBlank
 	xor a
 	ret
 
@@ -759,10 +1365,10 @@ Func_6794:
 	push bc
 	push hl
 	call Func_687c
-	ld a, $04
+	ld a, VBLANK_04
 	call SetPendingVBlankMode
 	call RequestVBlankMode
-	call Func_f74
+	call WaitForVBlank
 	ld a, $01
 	ld [$cea1], a
 	ld a, $01
@@ -838,3 +1444,381 @@ Func_6885:
 	pop af
 	ret
 ; 0x6896
+
+SECTION "Bank 1@689e", ROMX[$689e], BANK[$1]
+
+Func_689e:
+	push af
+	push hl
+	call Func_101d
+	call DisableLCD
+	ld hl, $68c1
+	call Func_10d9
+	farcall Func_803e
+	farcall Func_3000e
+	call Func_68cb
+	call EnableLCD
+	call Func_100e
+	call WaitForVBlank
+	pop hl
+	pop af
+	ret
+; 0x68c1
+
+SECTION "Bank 1@68cb", ROMX[$68cb], BANK[$1]
+
+Func_68cb:
+	call ClearOAM
+	call Func_68d8
+	call Func_6a73
+	call Func_1225
+	ret
+
+Func_68d8:
+	push af
+	push bc
+	push de
+	push hl
+	ld de, $68f4
+	ld hl, vTiles0
+	ld b, $0c
+.asm_68e4
+	ld c, $10
+.asm_68e6
+	ld a, [de]
+	ld [hli], a
+	inc de
+	dec c
+	jr nz, .asm_68e6
+	dec b
+	jr nz, .asm_68e4
+	pop hl
+	pop de
+	pop bc
+	pop af
+	ret
+; 0x68f4
+
+SECTION "Bank 1@69b5", ROMX[$69b5], BANK[$1]
+
+Func_69b5:
+	push af
+	push bc
+	push de
+	push hl
+	call Func_69de
+	ld b, $00
+	ld c, a
+	ld hl, $69d4
+	add hl, bc
+	ld a, [hli]
+	ld h, [hl]
+	ld l, a
+	call_hl
+; 0x69cb
+
+SECTION "Bank 1@69de", ROMX[$69de], BANK[$1]
+
+Func_69de:
+	push bc
+	push de
+	push hl
+	ld d, $00
+	ld a, [wJoypadPressed]
+	and $ff
+	jr z, .asm_69f7
+	ld c, $08
+.asm_69ec
+	dec c
+	rlca
+	jr nc, .asm_69ec
+	ld b, $00
+	ld hl, $69fc
+	add hl, bc
+	ld d, [hl]
+.asm_69f7
+	ld a, d
+	pop hl
+	pop de
+	pop bc
+	ret
+; 0x69fc
+
+SECTION "Bank 1@6a6e", ROMX[$6a6e], BANK[$1]
+
+Func_6a6e:
+	ret
+; 0x6a6f
+
+SECTION "Bank 1@6a73", ROMX[$6a73], BANK[$1]
+
+Func_6a73:
+	push af
+	push bc
+	push de
+	ld c, $50
+	ld b, $08
+	ld d, $04
+	ld e, $02
+	call Add4x4OAM
+	call Func_2958
+	cp $03
+	jr c, .asm_6a93
+	ld c, $50
+	ld b, $98
+	ld d, $08
+	ld e, $04
+	call Add4x4OAM
+.asm_6a93
+	pop de
+	pop bc
+	pop af
+	ret
+
+Func_6a97:
+	push af
+	push hl
+	call Func_101d
+	call DisableLCD
+	ld hl, $6aba
+	call Func_10d9
+	farcall Func_803e
+	farcall Func_3115d
+	call Func_6ac4
+	call EnableLCD
+	call Func_100e
+	call WaitForVBlank
+	pop hl
+	pop af
+	ret
+; 0x6aba
+
+SECTION "Bank 1@6ac4", ROMX[$6ac4], BANK[$1]
+
+Func_6ac4:
+	call ClearOAM
+	call Func_6ad1
+	call Func_6c6c
+	call Func_1225
+	ret
+
+Func_6ad1:
+	push af
+	push bc
+	push de
+	push hl
+	ld de, $6aed
+	ld hl, vTiles0
+	ld b, $0c
+.asm_6add
+	ld c, $10
+.asm_6adf
+	ld a, [de]
+	ld [hli], a
+	inc de
+	dec c
+	jr nz, .asm_6adf
+	dec b
+	jr nz, .asm_6add
+	pop hl
+	pop de
+	pop bc
+	pop af
+	ret
+; 0x6aed
+
+SECTION "Bank 1@6bae", ROMX[$6bae], BANK[$1]
+
+Func_6bae:
+	push af
+	push bc
+	push de
+	push hl
+	call Func_6bd7
+	ld b, $00
+	ld c, a
+	ld hl, $6bcd
+	add hl, bc
+	ld a, [hli]
+	ld h, [hl]
+	ld l, a
+	call_hl
+; 0x6bc4
+
+SECTION "Bank 1@6bd7", ROMX[$6bd7], BANK[$1]
+
+Func_6bd7:
+	push bc
+	push de
+	push hl
+	ld d, $00
+	ld a, [wJoypadPressed]
+	and $ff
+	jr z, .asm_6bf0
+	ld c, $08
+.asm_6be5
+	dec c
+	rlca
+	jr nc, .asm_6be5
+	ld b, $00
+	ld hl, $6bf5
+	add hl, bc
+	ld d, [hl]
+.asm_6bf0
+	ld a, d
+	pop hl
+	pop de
+	pop bc
+	ret
+; 0x6bf5
+
+SECTION "Bank 1@6c67", ROMX[$6c67], BANK[$1]
+
+Func_6c67:
+	ret
+; 0x6c68
+
+SECTION "Bank 1@6c6c", ROMX[$6c6c], BANK[$1]
+
+Func_6c6c:
+	push af
+	push bc
+	push de
+	ld c, $50
+	ld b, $08
+	ld d, $04
+	ld e, $02
+	call Add4x4OAM
+	call Func_2958
+	cp $04
+	jr c, .asm_6c8c
+	ld c, $50
+	ld b, $98
+	ld d, $08
+	ld e, $04
+	call Add4x4OAM
+.asm_6c8c
+	pop de
+	pop bc
+	pop af
+	ret
+
+Func_6c90:
+	push af
+	push hl
+	call Func_101d
+	call DisableLCD
+	ld hl, $6cb3
+	call Func_10d9
+	farcall Func_803e
+	farcall Func_3230c
+	call Func_6cbd
+	call EnableLCD
+	call Func_100e
+	call WaitForVBlank
+	pop hl
+	pop af
+	ret
+; 0x6cb3
+
+SECTION "Bank 1@6cbd", ROMX[$6cbd], BANK[$1]
+
+Func_6cbd:
+	call ClearOAM
+	call Func_6cca
+	call Func_6e46
+	call Func_1225
+	ret
+
+Func_6cca:
+	push af
+	push bc
+	push de
+	push hl
+	ld de, $6ce6
+	ld hl, vTiles0
+	ld b, $0c
+.asm_6cd6
+	ld c, $10
+.asm_6cd8
+	ld a, [de]
+	ld [hli], a
+	inc de
+	dec c
+	jr nz, .asm_6cd8
+	dec b
+	jr nz, .asm_6cd6
+	pop hl
+	pop de
+	pop bc
+	pop af
+	ret
+; 0x6ce6
+
+SECTION "Bank 1@6da7", ROMX[$6da7], BANK[$1]
+
+Func_6da7:
+	push af
+	push bc
+	push de
+	push hl
+	call Func_6dce
+	ld b, $00
+	ld c, a
+	ld hl, $6dc6
+	add hl, bc
+	ld a, [hli]
+	ld h, [hl]
+	ld l, a
+	call_hl
+; 0x6dbd
+
+SECTION "Bank 1@6dce", ROMX[$6dce], BANK[$1]
+
+Func_6dce:
+	push bc
+	push de
+	push hl
+	ld d, $00
+	ld a, [wJoypadPressed]
+	and $ff
+	jr z, .asm_6de7
+	ld c, $08
+.asm_6ddc
+	dec c
+	rlca
+	jr nc, .asm_6ddc
+	ld b, $00
+	ld hl, $6dec
+	add hl, bc
+	ld d, [hl]
+.asm_6de7
+	ld a, d
+	pop hl
+	pop de
+	pop bc
+	ret
+; 0x6dec
+
+SECTION "Bank 1@6e41", ROMX[$6e41], BANK[$1]
+
+Func_6e41:
+	ret
+; 0x6e42
+
+SECTION "Bank 1@6e46", ROMX[$6e46], BANK[$1]
+
+Func_6e46:
+	push af
+	push bc
+	push de
+	ld c, $50
+	ld b, $08
+	ld d, $04
+	ld e, $02
+	call Add4x4OAM
+	pop de
+	pop bc
+	pop af
+	ret
+; 0x6e58

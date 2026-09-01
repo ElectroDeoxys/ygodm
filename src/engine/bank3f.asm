@@ -34,10 +34,7 @@ Func_fc004::
 	ld a, [hli]
 	ld h, [hl]
 	ld l, a
-	ld bc, .ret
-	push bc
-	jp hl
-.ret
+	call_hl
 	pop de
 	ld hl, rLCDC
 	set B_LCDC_ENABLE, [hl]

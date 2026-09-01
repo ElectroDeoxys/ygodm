@@ -6,13 +6,13 @@
 	farfunc $4776 ; $07
 	farfunc $49b8 ; $09
 	farfunc Func_28b5a ; $0b
-	farfunc $4e0c ; $0d
-	farfunc $5163 ; $0f
+	farfunc Func_28e0c ; $0d
+	farfunc Func_29163 ; $0f
 	farfunc $4fae ; $11
 	farfunc $45d4 ; $13
 	farfunc DrawMainMenu ; $15
 	farfunc $65d4 ; $17
-	farfunc $6813 ; $19
+	farfunc Func_2a813 ; $19
 	farfunc Func_2b9ed ; $1b
 	farfunc $79c2 ; $1f
 
@@ -109,6 +109,110 @@ Func_28b5a:
 	ret
 ; 0x28b94
 
+SECTION "Bank a@4e0c", ROMX[$4e0c], BANK[$a]
+
+Func_28e0c:
+	push af
+	push bc
+	push de
+	push hl
+	ld de, vTiles1
+	ld hl, $4b94
+	ld b, $80
+.asm_28e18
+	ld c, $10
+.asm_28e1a
+	ld a, [hli]
+	ld [de], a
+	inc de
+	dec c
+	jr nz, .asm_28e1a
+	dec b
+	jr nz, .asm_28e18
+	ld de, vBGMap0
+	ld hl, $4e46
+	ld b, $12
+.asm_28e2b
+	ld c, $14
+.asm_28e2d
+	ld a, [hli]
+	ld [de], a
+	inc de
+	dec c
+	jr nz, .asm_28e2d
+	push hl
+	ld hl, $c
+	add hl, de
+	ld d, h
+	ld e, l
+	pop hl
+	dec b
+	jr nz, .asm_28e2b
+	call Func_2ba73
+	pop hl
+	pop de
+	pop bc
+	pop af
+	ret
+; 0x28e46
+
+SECTION "Bank a@5163", ROMX[$5163], BANK[$a]
+
+Func_29163:
+	push af
+	push bc
+	push de
+	push hl
+	ld de, vTiles1
+	ld hl, $51aa
+	ld b, $11
+.asm_2916f
+	ld c, $10
+.asm_29171
+	ld a, [hli]
+	ld [de], a
+	inc de
+	dec c
+	jr nz, .asm_29171
+	dec b
+	jr nz, .asm_2916f
+	ld hl, vTiles1 tile $50
+	ld a, $ff
+	ld b, $10
+.asm_29181
+	ld c, $10
+.asm_29183
+	ld [hli], a
+	dec c
+	jr nz, .asm_29183
+	dec b
+	jr nz, .asm_29181
+	ld de, vBGMap0
+	ld hl, $52ba
+	ld b, $12
+.asm_29192
+	ld c, $14
+.asm_29194
+	ld a, [hli]
+	ld [de], a
+	inc de
+	dec c
+	jr nz, .asm_29194
+	push hl
+	ld hl, $c
+	add hl, de
+	ld d, h
+	ld e, l
+	pop hl
+	dec b
+	jr nz, .asm_29192
+	pop hl
+	pop de
+	pop bc
+	pop af
+	ret
+; 0x291aa
+
 SECTION "Bank a@5422", ROMX[$5422], BANK[$a]
 
 DrawMainMenu:
@@ -169,6 +273,64 @@ DrawMainMenu:
 
 MainMenuGfx: INCBIN "gfx/gfx_2946c.2bpp"
 ; 0x2a46c
+
+SECTION "Bank a@6813", ROMX[$6813], BANK[$a]
+
+Func_2a813:
+	push af
+	push bc
+	push de
+	push hl
+	ld de, vTiles2
+	ld hl, $685a
+	ld b, $80
+.asm_2a81f
+	ld c, $10
+.asm_2a821
+	ld a, [hli]
+	ld [de], a
+	inc de
+	dec c
+	jr nz, .asm_2a821
+	dec b
+	jr nz, .asm_2a81f
+	ld de, vTiles1
+	ld b, $80
+.asm_2a82f
+	ld c, $10
+.asm_2a831
+	ld a, [hli]
+	ld [de], a
+	inc de
+	dec c
+	jr nz, .asm_2a831
+	dec b
+	jr nz, .asm_2a82f
+	ld de, vBGMap0
+	ld hl, $785a
+	ld b, $12
+.asm_2a842
+	ld c, $14
+.asm_2a844
+	ld a, [hli]
+	ld [de], a
+	inc de
+	dec c
+	jr nz, .asm_2a844
+	push hl
+	ld hl, $c
+	add hl, de
+	ld d, h
+	ld e, l
+	pop hl
+	dec b
+	jr nz, .asm_2a842
+	pop hl
+	pop de
+	pop bc
+	pop af
+	ret
+; 0x2a85a
 
 SECTION "Bank a@79ed", ROMX[$79ed], BANK[$a]
 

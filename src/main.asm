@@ -37,11 +37,17 @@ INCLUDE "engine/bank0c.asm"
 SECTION "Bank 0d", ROMX
 INCLUDE "engine/bank0d.asm"
 
+SECTION "Bank 0e", ROMX
+INCLUDE "engine/bank0e.asm"
+
 SECTION "Bank 0f", ROMX
 INCLUDE "engine/bank0f.asm"
 
 SECTION "Bank 10", ROMX
 INCLUDE "engine/bank10.asm"
+
+SECTION "Bank 3b", ROMX
+INCLUDE "engine/bank3b.asm"
 
 SECTION "Bank 3d", ROMX
 INCLUDE "engine/bank3d.asm"

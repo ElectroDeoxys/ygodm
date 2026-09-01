@@ -4,20 +4,18 @@
 	farfunc Func_10020 ; $03
 	farfunc Func_10477 ; $05
 	farfunc $4484 ; $07
-	farfunc $44f5 ; $09
+	farfunc Func_104f5 ; $09
 	farfunc $4505 ; $0b
 	farfunc Func_10047 ; $0d
-	farfunc $4140 ; $0f
-	farfunc $418d ; $11
-	farfunc $4741 ; $13
-	farfunc $48f0 ; $15
-	farfunc $4919 ; $17
-	farfunc $5196 ; $19
+	farfunc Func_10140 ; $0f
+	farfunc Func_1018d ; $11
+	farfunc Func_10741 ; $13
+	farfunc Func_108f0 ; $15
+	farfunc Func_10919 ; $17
+	farfunc Func_11196 ; $19
 	farfunc $51ad ; $1b
 	farfunc $52cb ; $1d
 	farfunc $4a1b ; $1f
-
-SECTION "Bank 04@4020", ROMX[$4020], BANK[$04]
 
 Func_10020::
 	call Func_1576
@@ -54,30 +52,30 @@ Func_10047:
 .asm_10062
 	cp $03
 	jr nz, .asm_10071
-	farcall $67, $01
-	farcall $45, $01
-	farcall $47, $01
+	farcall Func_64b5
+	farcall Func_62c2
+	farcall Func_63d6
 	jr .asm_100a6
 .asm_10071
 	cp $04
 	jr nz, .asm_10080
-	farcall $55, $01
-	farcall $57, $01
-	farcall $59, $01
+	farcall Func_6a6e
+	farcall Func_689e
+	farcall Func_69b5
 	jr .asm_100a6
 .asm_10080
 	cp $05
 	jr nz, .asm_1008f
-	farcall $5b, $01
-	farcall $5d, $01
-	farcall $5f, $01
+	farcall Func_6c67
+	farcall Func_6a97
+	farcall Func_6bae
 	jr .asm_100a6
 .asm_1008f
 	cp $06
 	jr nz, .asm_1009e
-	farcall $61, $01
-	farcall $63, $01
-	farcall $65, $01
+	farcall Func_6e41
+	farcall Func_6c90
+	farcall Func_6da7
 	jr .asm_100a6
 .asm_1009e
 	cp $00
@@ -104,7 +102,7 @@ Func_100b1:
 	farcall Func_cc4c
 	ld c, $0a
 .asm_100c4
-	call Func_f74
+	call WaitForVBlank
 	dec c
 	jr nz, .asm_100c4
 	cp $00
@@ -120,9 +118,9 @@ Func_100d7:
 	push af
 	push bc
 	call Func_1f57
-	farcall Func_d224
+	farcall SetupDuel
 	farcall GenerateAIOpponentDeck
-	farcall Func_c75e
+	farcall AIOppDrawInitialHand
 	farcall Func_4068
 	call Func_2a97
 .asm_100eb
@@ -130,22 +128,22 @@ Func_100d7:
 	call Func_23b0
 	cp $01
 	jr z, .asm_1010d
-	farcall $0f, $05
+	farcall Func_1501f
 	call Func_2391
 	call Func_101f8
 	call Func_10302
 	call Func_23b0
 	cp $01
 	jr z, .asm_1010d
-	farcall $5b, $03
+	farcall Func_c142
 	jr .asm_100eb
 .asm_1010d
 	call Func_2948
-	farcall $03, $0d
+	farcall Func_3400c
 	call Func_104f5
 	ld c, $64
 .asm_10118
-	call Func_f74
+	call WaitForVBlank
 	dec c
 	jr nz, .asm_10118
 	call Func_10124
@@ -158,29 +156,141 @@ Func_10124:
 	ld a, [$cf02]
 	cp $03
 	jr nz, .asm_10137
-	farcall $15, $02
-	farcall $2f, $02
-	farcall $31, $02
+	farcall Func_b547
+	farcall Func_b62d
+	farcall Func_b679
 	jr .asm_1013e
 .asm_10137
 	cp $02
 	jr nz, .asm_1013e
-	farcall $17, $02
+	farcall Func_b562
 .asm_1013e
 	pop af
 	ret
-; 0x10140
 
-SECTION "Bank 4@41f8", ROMX[$41f8], BANK[$4]
+Func_10140:
+	push af
+	ldh a, [$ffde]
+	cp $03
+	jr nz, .asm_1014c
+	farcall Func_b916
+	jr .asm_1016b
+.asm_1014c
+	call Func_1016d
+	cp $00
+	jr z, .asm_10158
+	farcall Func_b7ee
+	jr .asm_1016b
+.asm_10158
+	farcall Func_cbe9
+	farcall Func_cb87
+	call Func_2a60
+	farcall Func_cc4c
+	cp $00
+	jr nz, .asm_1016b
+	farcall Func_d249
+.asm_1016b
+	pop af
+	ret
+
+Func_1016d:
+	push bc
+	push de
+	ld e, $00
+	farcall Func_5c48
+	farcall Func_c68a
+	add c
+	ld c, a
+	ld a, $00
+	adc b
+	ld b, a
+	ld a, b
+	cp $00
+	jr nz, .asm_10189
+	ld a, c
+	cp $32
+	jr nc, .asm_10189
+	ld e, $01
+.asm_10189
+	ld a, e
+	pop de
+	pop bc
+	ret
+
+Func_1018d:
+	push af
+	ldh a, [$ffde]
+	cp $03
+	jr nz, .asm_10199
+	farcall Func_b916
+	jr .asm_101bb
+.asm_10199
+	call Func_101d8
+	cp $00
+	jr z, .asm_101a5
+	farcall Func_b7ee
+	jr .asm_101bb
+.asm_101a5
+	farcall Func_cbe9
+	farcall Func_e711
+	farcall Func_e7eb
+	call Func_2a60
+	farcall Func_e84e
+	cp $00
+	jr nz, .asm_101bb
+	call Func_101bd
+.asm_101bb
+	pop af
+	ret
+
+Func_101bd:
+	push af
+	farcall Func_ee30
+	cp $00
+	jr nz, .asm_101d0
+	farcall Func_14216
+	call Func_104f5
+	farcall Func_15059
+	jr .asm_101d6
+.asm_101d0
+	farcall Func_14238
+	farcall Func_150ad
+.asm_101d6
+	pop af
+	ret
+
+Func_101d8:
+	push bc
+	push de
+	ld e, $00
+	farcall Func_5c48
+	farcall Func_c68a
+	add c
+	ld c, a
+	ld a, $00
+	adc b
+	ld b, a
+	ld a, b
+	cp $00
+	jr nz, .asm_101f4
+	ld a, c
+	cp $32
+	jr nc, .asm_101f4
+	ld e, $01
+.asm_101f4
+	ld a, e
+	pop de
+	pop bc
+	ret
 
 Func_101f8:
 	call Func_1020e
-	farcall $67, $03
+	farcall Func_fa96
 	call Func_1023c
 	call Func_1027d
 	call Func_102c0
-	farcall $53, $03
-	farcall $55, $03
+	farcall Func_c1bc
+	farcall Func_c1f1
 	ret
 
 Func_1020e:
@@ -201,7 +311,7 @@ Func_1020e:
 	ld [$ceed], a
 	ld a, $00
 	ld [$ceee], a
-	farcall $09, $3b
+	farcall Func_ec02b
 	pop af
 	ret
 
@@ -211,8 +321,8 @@ Func_1023c:
 	push hl
 	ld b, $00
 .asm_10241
-	ld c, CARD_LOCATION_0
-	call Func_1c4f
+	ld c, CARD_LOCATION_OPP_HAND
+	call SetCardLocationAndIndex
 	call Func_1c92
 	push bc
 	ld a, [wTempCardID + 0]
@@ -251,8 +361,8 @@ Func_1027d:
 	push hl
 	ld b, $00
 .asm_10282
-	ld c, CARD_LOCATION_1
-	call Func_1c4f
+	ld c, CARD_LOCATION_OPP_FIELD
+	call SetCardLocationAndIndex
 	call Func_1c92
 	push bc
 	ld a, [wTempCardID + 0]
@@ -291,31 +401,31 @@ Func_102c0:
 	push bc
 	ld a, [$ceed]
 	ld b, a
-	ld c, CARD_LOCATION_1
-	call Func_1c4f
+	ld c, CARD_LOCATION_OPP_FIELD
+	call SetCardLocationAndIndex
 	call Func_1c92
 	ld a, [wTempCardID + 0]
 	ld c, a
 	ld a, [wTempCardID + 1]
 	ld b, a
-	farcall $03, $3b
+	farcall Func_ec04c
 	ld a, [$cee9]
 	ld b, a
-	ld c, CARD_LOCATION_0
-	call Func_1c4f
+	ld c, CARD_LOCATION_OPP_HAND
+	call SetCardLocationAndIndex
 	call Func_1c92
 	ld a, [wTempCardID + 0]
 	ld c, a
 	ld a, [wTempCardID + 1]
 	ld b, a
-	farcall $05, $3b
-	farcall $07, $3b
+	farcall Func_ec05e
+	farcall Func_ec091
 	cp $00
 	jr nz, .asm_102fc
-	farcall $51, $03
+	farcall Func_ef1d
 	jr .asm_102ff
 .asm_102fc
-	farcall $4f, $03
+	farcall Func_eebf
 .asm_102ff
 	pop bc
 	pop af
@@ -332,7 +442,7 @@ Func_10302:
 	cp $05
 	jr nc, .asm_10334
 	call Func_2217
-	farcall $43, $03
+	farcall Func_e1f2
 	call Func_10370
 	cp $00
 	jr nz, .asm_10323
@@ -348,7 +458,7 @@ Func_10302:
 .asm_10334
 	call Func_2bbf
 	call Func_2bfe
-	farcall $59, $03
+	farcall Func_c772
 	pop bc
 	pop af
 	ret
@@ -383,8 +493,8 @@ Func_10370:
 	ld e, $01
 	ld a, [$cef7]
 	ld b, a
-	ld c, CARD_LOCATION_1
-	call Func_1c4f
+	ld c, CARD_LOCATION_OPP_FIELD
+	call SetCardLocationAndIndex
 	call Func_1c92
 	push bc
 	ld a, [wTempCardID + 0]
@@ -410,7 +520,7 @@ Func_1039c:
 	call Func_2bd4
 	cp $00
 	jr nz, .asm_103c1
-	farcall $49, $03
+	farcall Func_d974
 	ld e, a
 	cp $02
 	jr nz, .asm_103b2
@@ -427,7 +537,7 @@ Func_1039c:
 .asm_103bf
 	jr .asm_103d1
 .asm_103c1
-	farcall $49, $03
+	farcall Func_d974
 	ld e, a
 	cp $02
 	jr nz, .asm_103ce
@@ -448,15 +558,15 @@ Func_103d4:
 	ld b, a
 	ld a, [$cef8]
 	ld c, a
-	farcall $47, $03
-	call Func_1c4f
+	farcall Func_e285
+	call SetCardLocationAndIndex
 	call Func_1c92
 	call Func_21d9
 	call Func_1c7a
 	pop bc
 	call Func_1045a
-	farcall $4d, $03
-	farcall $57, $03
+	farcall Func_e2b2
+	farcall Func_e407
 	pop bc
 	pop af
 	ret
@@ -468,7 +578,7 @@ Func_103fb:
 	ld b, a
 	ld a, [$cef8]
 	ld c, a
-	call Func_1c4f
+	call SetCardLocationAndIndex
 	call Func_1c92
 	call Func_21e6
 	call Func_1c7a
@@ -483,12 +593,12 @@ Func_10414:
 	ld b, a
 	ld a, [$cef8]
 	ld c, a
-	farcall $47, $03
-	call Func_1c4f
+	farcall Func_e285
+	call SetCardLocationAndIndex
 	call Func_1c92
 	call Func_21d9
 	call Func_1c7a
-	farcall $57, $03
+	farcall Func_e407
 	pop bc
 	pop af
 	ret
@@ -505,11 +615,11 @@ Func_10433:
 	ld [$cef7], a
 	ld a, c
 	ld [$cef8], a
-	farcall $33, $03
+	farcall Func_cfe1
 	ld a, b
-	ld [$cd5e], a
+	ld [wcd5e], a
 	ld a, c
-	ld [$cd5f], a
+	ld [wcd5f], a
 	pop af
 	ret
 
@@ -518,7 +628,7 @@ Func_10433:
 ; - c = CARD_LOCATION_* constant
 Func_1045a:
 	push af
-	call Func_1c4f
+	call SetCardLocationAndIndex
 	call Func_1c92
 	ld a, [wTempCardID + 0]
 	ld [$cef9], a
@@ -598,10 +708,10 @@ ClearSRAM:
 
 Func_104e2:
 	call Func_1116c
-	farcall Func_5acb
-	farcall Func_c5cc
+	farcall InitCardCollection
+	farcall ClearPlayerDeck
 	call Func_27f7
-	call Func_2666
+	call GenerateStartingDeck
 	farcall Func_3708e
 	ret
 
@@ -982,9 +1092,9 @@ SRAMToWRAMMap:
 	dwb $cfaf, $04
 	dwb $cfb7, $01
 	dwb $cfdf, $02
-	dwb $cc5b, $50
-	dwb $cae4, $ff
-	dwb $cbe3, $6e
+	dwb wPlayerDeck, DECK_SIZE * $2
+	dwb wCardCollection, $ff
+	dwb wCardCollection + $ff, LOW(NUM_CARDS - $ff)
 	dwb $cf4e, $22
 	dwb $cf70, $22
 	dwb $cf99, $08
@@ -993,6 +1103,168 @@ SRAMToWRAMMap:
 	dwb $b990, $c8
 	dwb $ba58, $c8
 	dw NULL
+
+SECTION "Bank 4@4709", ROMX[$4709], BANK[$4]
+
+Func_10709:
+	push af
+	push bc
+	push hl
+	ld b, $00
+	ld a, [$cf95]
+	ld c, a
+	ld hl, $471e
+	add hl, bc
+	ld a, [hl]
+	ld [$cf96], a
+	pop hl
+	pop bc
+	pop af
+	ret
+; 0x1071e
+
+SECTION "Bank 4@4741", ROMX[$4741], BANK[$4]
+
+Func_10741:
+	ld [$cf95], a
+	call Func_10709
+	call Func_1074e
+	call Func_108d1
+	ret
+
+Func_1074e:
+	push af
+	push bc
+	push hl
+	ld a, $10
+	call SetPendingVBlankMode
+	ld b, $00
+	ld a, [$cf95]
+	ld c, a
+	sla c
+	ld hl, $478e
+	add hl, bc
+	ld a, [hli]
+	ld h, [hl]
+	ld l, a
+	bcbgcoord 1, 0, vBGMap1
+	ld d, $05
+.asm_1076a
+	call AddWordToVBlankStruct
+	ld e, $12
+.asm_1076f
+	ld a, [hli]
+	call AddByteToVBlankStruct
+	dec e
+	jr nz, .asm_1076f
+	push hl
+	ld hl, $20
+	add hl, bc
+	ld b, h
+	ld c, l
+	pop hl
+	dec d
+	jr nz, .asm_1076a
+	call RequestVBlankMode
+	call WaitForVBlank
+	call Func_10901
+	pop hl
+	pop bc
+	pop af
+	ret
+; 0x1078e
+
+SECTION "Bank 4@4846", ROMX[$4846], BANK[$4]
+
+Func_10846:
+	push af
+	push bc
+	push hl
+	ld a, $10
+	call SetPendingVBlankMode
+	ld hl, $4877
+	bcbgcoord 1, 0, vBGMap1
+	ld d, $05
+.asm_10856
+	call AddWordToVBlankStruct
+	ld e, $12
+.asm_1085b
+	ld a, [hli]
+	call AddByteToVBlankStruct
+	dec e
+	jr nz, .asm_1085b
+	push hl
+	ld hl, $20
+	add hl, bc
+	ld b, h
+	ld c, l
+	pop hl
+	dec d
+	jr nz, .asm_10856
+	call RequestVBlankMode
+	call WaitForVBlank
+	pop hl
+	pop bc
+	pop af
+	ret
+; 0x10877
+
+SECTION "Bank 4@48d1", ROMX[$48d1], BANK[$4]
+
+Func_108d1:
+	push af
+	push bc
+	push hl
+	ld b, $00
+	ld a, [$cf95]
+	ld c, a
+	ld hl, $48ec
+	add hl, bc
+	ld a, [hl]
+	ldh [rWY], a
+	ld hl, $48ee
+	add hl, bc
+	ld a, [hl]
+	ldh [rWX], a
+	pop hl
+	pop bc
+	pop af
+	ret
+; 0x108ec
+
+SECTION "Bank 4@48f0", ROMX[$48f0], BANK[$4]
+
+Func_108f0:
+	push af
+	call Func_10901
+	ld a, $8f
+	ldh [rWY], a
+	ld a, $07
+	ldh [rWX], a
+	call Func_10846
+	pop af
+	ret
+
+Func_10901:
+	push af
+	ld a, [$cf95]
+	cp $01
+	jr z, .asm_10917
+	ld a, $04
+	call SetPendingVBlankMode
+	farcall Func_cefb
+	call RequestVBlankMode
+	call WaitForVBlank
+.asm_10917
+	pop af
+	ret
+
+Func_10919:
+	call Func_112cb
+	call Func_2a55
+	call Func_11554
+	ret
+; 0x10923
 
 SECTION "Bank 04@4942", ROMX[$4942], BANK[$04]
 
@@ -1133,13 +1405,13 @@ Func_10a3e:
 	farcall Func_334bb
 	jr .asm_10a5e
 .asm_10a5b
-	farcall $0b, $0c
+	farcall Func_3372d
 .asm_10a5e
 	call Func_10a7a
 	call Func_10af3
 	call EnableLCD
 	call Func_100e
-	call Func_f74
+	call WaitForVBlank
 	pop hl
 	pop af
 	ret
@@ -1325,10 +1597,7 @@ Func_11084:
 	ld a, [hli]
 	ld h, [hl]
 	ld l, a
-	ld bc, .ret
-	push bc
-	jp hl
-.ret
+	call_hl
 	cp $01
 	jr nz, .loop
 	pop hl
@@ -1390,7 +1659,7 @@ Func_110ee:
 	ld a, VBLANK_02
 	call SetPendingVBlankMode
 	call RequestVBlankMode
-	call Func_f74
+	call WaitForVBlank
 	xor a
 	ret
 ; 0x110fb
@@ -1429,4 +1698,559 @@ Func_1116c:
 	pop bc
 	pop af
 	ret
-; 0x11196
+
+Func_11196:
+	push af
+	push bc
+	push hl
+	call Func_111c9
+	cp $00
+	jr nz, .skip
+	farcall Func_5af2
+	farcall GiveCard
+	farcall Func_b889
+.skip
+	pop hl
+	pop bc
+	pop af
+	ret
+
+Func_111ad:
+	push bc
+	push hl
+	ld hl, $cfb3
+	xor a
+	ld c, $04
+.asm_111b5
+	ld [hli], a
+	dec c
+	jr nz, .asm_111b5
+	ld c, $c8
+	ld a, [$cfb7]
+	cp $00
+	jr nz, .asm_111c5
+	call Func_1123b
+.asm_111c5
+	ld a, c
+	pop hl
+	pop bc
+	ret
+
+Func_111c9:
+	push de
+	push hl
+	ld h, $01
+	call Func_11221
+	ld a, b
+	cp $00
+	jr nz, .asm_111ea
+	ld a, c
+	call Func_111ee
+	ld d, c
+	ld b, $0a
+	call DDividedByB
+	ld a, e
+	cp $09
+	jr nz, .asm_111ea
+	ld a, d
+	call Func_11292
+	ld h, $00
+.asm_111ea
+	ld a, h
+	pop hl
+	pop de
+	ret
+
+Func_111ee:
+	push af
+	push bc
+	push de
+	push hl
+	ld b, $00
+	push af
+	ld c, a
+	sla c
+	rl b
+	sla c
+	rl b
+	ld hl, $b800
+	add hl, bc
+	ld de, $cfb3
+	ld c, $04
+.asm_11207
+	ld a, [de]
+	ld [hli], a
+	inc de
+	dec c
+	jr nz, .asm_11207
+	pop af
+	cp $c7
+	jr nz, .asm_11215
+	ld hl, $b800
+.asm_11215
+	xor a
+	ld c, $04
+.asm_11218
+	ld [hli], a
+	dec c
+	jr nz, .asm_11218
+	pop hl
+	pop de
+	pop bc
+	pop af
+	ret
+
+Func_11221:
+	push af
+	push de
+	push hl
+	call Func_1123b
+	ld a, c
+	cp $c7
+	jr nz, .asm_11237
+	ld a, [$cfb7]
+	inc a
+	jr nz, .asm_11234
+	ld a, $ff
+.asm_11234
+	ld [$cfb7], a
+.asm_11237
+	pop hl
+	pop de
+	pop af
+	ret
+
+Func_1123b:
+	push af
+	push de
+	push hl
+	ld hl, $b800
+	ld c, $00
+.asm_11243
+	ld a, c
+	cp $c8
+	jr nc, .asm_11268
+	ld b, $00
+	ld de, $526c
+	call Func_11270
+	cp $00
+	jr z, .asm_11268
+	inc b
+	ld de, $cfb3
+	call Func_11270
+	cp $00
+	jr z, .asm_11268
+	push de
+	ld de, $4
+	add hl, de
+	pop de
+	inc c
+	jr .asm_11243
+.asm_11268
+	pop hl
+	pop de
+	pop af
+	ret
+; 0x1126c
+
+SECTION "Bank 4@5270", ROMX[$5270], BANK[$4]
+
+Func_11270:
+	push bc
+	push de
+	push hl
+	ld b, $01
+	ld a, [de]
+	cp [hl]
+	jr nz, .asm_1128d
+	inc de
+	inc hl
+	ld a, [de]
+	cp [hl]
+	jr nz, .asm_1128d
+	inc de
+	inc hl
+	ld a, [de]
+	cp [hl]
+	jr nz, .asm_1128d
+	inc de
+	inc hl
+	ld a, [de]
+	cp [hl]
+	jr nz, .asm_1128d
+	ld b, $00
+.asm_1128d
+	ld a, b
+	pop hl
+	pop de
+	pop bc
+	ret
+
+Func_11292:
+	push af
+	push hl
+	ld b, $00
+	ld c, a
+	sla c
+	ld hl, $52a3
+	add hl, bc
+	ld a, [hli]
+	ld b, [hl]
+	ld c, a
+	pop hl
+	pop af
+	ret
+; 0x112a3
+
+SECTION "Bank 4@52cb", ROMX[$52cb], BANK[$4]
+
+Func_112cb:
+	push af
+	push hl
+	call Func_1154c
+	call Func_101d
+	call DisableLCD
+	ld hl, $52f7
+	call Func_10d9
+	farcall Func_803e
+	farcall Func_338b9
+	call Func_11301
+	call Func_113e4
+	call Func_11449
+	call EnableLCD
+	call Func_100e
+	call WaitForVBlank
+	pop hl
+	pop af
+	ret
+; 0x112f7
+
+SECTION "Bank 4@5301", ROMX[$5301], BANK[$4]
+
+Func_11301:
+	push af
+	push bc
+	push de
+	push hl
+	ld hl, vTiles0
+	ld de, $531d
+	ld b, $0c
+.asm_1130d
+	ld c, $10
+.asm_1130f
+	ld a, [de]
+	ld [hli], a
+	inc de
+	dec c
+	jr nz, .asm_1130f
+	dec b
+	jr nz, .asm_1130d
+	pop hl
+	pop de
+	pop bc
+	pop af
+	ret
+; 0x1131d
+
+SECTION "Bank 4@53e4", ROMX[$53e4], BANK[$4]
+
+Func_113e4:
+	push af
+	push bc
+	push de
+	push hl
+	ld a, $10
+	farcall Func_42d0
+	xor a
+.asm_113ee
+	push af
+	ld b, $00
+	ld c, a
+	ld hl, $5444
+	add hl, bc
+	ld d, h
+	ld e, l
+	ld b, $00
+	ld c, a
+	call Func_118f0
+	ld h, b
+	ld l, c
+	ld b, $00
+	ld a, [de]
+	ld c, a
+	farcall Func_42c5
+	farcall Func_42ec
+	call Func_111c
+	ld de, $cab9
+	ld a, $00
+	ld [hli], a
+	ld c, $08
+.asm_11415
+	ld a, [de]
+	inc de
+	call Func_1144
+	ld a, [$cacf]
+	ld [hli], a
+	dec c
+	jr nz, .asm_11415
+	ld de, $17
+	add hl, de
+	ld de, $cab9
+	ld a, $00
+	ld [hli], a
+	ld c, $08
+.asm_1142d
+	ld a, [de]
+	inc de
+	call Func_1144
+	ld a, [$cad0]
+	ld [hli], a
+	dec c
+	jr nz, .asm_1142d
+	pop af
+	inc a
+	cp $03
+	jr c, .asm_113ee
+	pop hl
+	pop de
+	pop bc
+	pop af
+	ret
+; 0x11444
+
+SECTION "Bank 4@5449", ROMX[$5449], BANK[$4]
+
+Func_11449:
+	push af
+	push bc
+	push de
+	push hl
+	call Func_1145b
+	call Func_114aa
+	call Func_114e9
+	pop hl
+	pop de
+	pop bc
+	pop af
+	ret
+
+Func_1145b:
+	push af
+	push bc
+	push de
+	push hl
+	ld a, $12
+	farcall Func_42d0
+	farcall Func_42ec
+	ld b, $02
+	ld c, $00
+	call Func_118f0
+	push bc
+	ld hl, hMainJobState
+	add hl, bc
+	call Func_111c
+	ld de, $cab9
+	ld a, $00
+	ld [hli], a
+	ld a, [$cacd]
+	ld c, a
+.asm_11480
+	ld a, [de]
+	inc de
+	call Func_1144
+	ld a, [$cacf]
+	ld [hli], a
+	dec c
+	jr nz, .asm_11480
+	pop bc
+	ld h, b
+	ld l, c
+	ld de, $cab9
+	ld a, $00
+	ld [hli], a
+	ld a, [$cacd]
+	ld c, a
+.asm_11499
+	ld a, [de]
+	inc de
+	call Func_1144
+	ld a, [$cad0]
+	ld [hli], a
+	dec c
+	jr nz, .asm_11499
+	pop hl
+	pop de
+	pop bc
+	pop af
+	ret
+
+Func_114aa:
+	push af
+	push bc
+	push hl
+	ld a, $00
+	farcall Func_42d0
+	ld b, $02
+	ld c, $01
+	call Func_118f0
+	ld h, b
+	ld l, c
+	call Func_111ad
+	ld [$cadc], a
+	ld a, $00
+	ld [$cadd], a
+	call Func_142c
+	farcall Func_42c5
+	farcall Func_42ec
+	ld a, [$cab9]
+	ld [hli], a
+	ld a, [$caba]
+	ld [hli], a
+	ld a, [$cabb]
+	ld [hli], a
+	ld a, [$cabc]
+	ld [hli], a
+	ld a, $20
+	ld [hli], a
+	ld a, $38
+	ld [hli], a
+	pop hl
+	pop bc
+	pop af
+	ret
+
+Func_114e9:
+	push af
+	push bc
+	push de
+	push hl
+	ld a, $00
+	farcall Func_42d0
+	ld b, $02
+	ld c, $02
+	call Func_118f0
+	ld h, b
+	ld l, c
+	push hl
+	ld hl, $cf6e
+	ld a, [hli]
+	ld c, a
+	ld a, [hli]
+	ld b, a
+	farcall Func_42c5
+	farcall Func_42ec
+	pop hl
+	ld a, [$cab9]
+	ld [hli], a
+	ld a, [$caba]
+	ld [hli], a
+	ld a, [$cabb]
+	ld [hli], a
+	ld a, [$cabc]
+	ld [hli], a
+	ld a, $18
+	ld [hli], a
+	ld a, $38
+	ld [hli], a
+	push hl
+	ld hl, $cf90
+	ld a, [hli]
+	ld c, a
+	ld a, [hli]
+	ld b, a
+	farcall Func_42c5
+	farcall Func_42ec
+	pop hl
+	ld a, [$cab9]
+	ld [hli], a
+	ld a, [$caba]
+	ld [hli], a
+	ld a, [$cabb]
+	ld [hli], a
+	ld a, [$cabc]
+	ld [hli], a
+	ld a, $16
+	ld [hli], a
+	ld a, $3c
+	ld [hli], a
+	ld [hl], $0d
+	pop hl
+	pop de
+	pop bc
+	pop af
+	ret
+
+Func_1154c:
+	push af
+	ld a, $00
+	ld [$cfbd], a
+	pop af
+	ret
+
+Func_11554:
+	push af
+	push bc
+	push de
+	push hl
+	call Func_1157b
+	ld b, $00
+	ld c, a
+	ld hl, $5573
+	add hl, bc
+	ld a, [hli]
+	ld h, [hl]
+	ld l, a
+	call_hl
+; 0x1156a
+
+SECTION "Bank 4@557b", ROMX[$557b], BANK[$4]
+
+Func_1157b:
+	push bc
+	push de
+	push hl
+	ld d, $00
+	ld a, [wJoypadPressed]
+	and $ff
+	jr z, .asm_11594
+	ld c, $08
+.asm_11589
+	dec c
+	rlca
+	jr nc, .asm_11589
+	ld b, $00
+	ld hl, $5599
+	add hl, bc
+	ld d, [hl]
+.asm_11594
+	ld a, d
+	pop hl
+	pop de
+	pop bc
+	ret
+; 0x11599
+
+SECTION "Bank 4@58f0", ROMX[$58f0], BANK[$4]
+
+Func_118f0:
+	push af
+	push de
+	push hl
+	ld d, $00
+	ld e, b
+	ld hl, $5908
+	add hl, de
+	ld a, [hli]
+	ld h, [hl]
+	ld l, a
+	ld e, c
+	sla e
+	add hl, de
+	ld a, [hli]
+	ld b, [hl]
+	ld c, a
+	pop hl
+	pop de
+	pop af
+	ret
+; 0x11908

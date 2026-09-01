@@ -46,10 +46,14 @@ ROMX $0c
 	"Bank 0c"
 ROMX $0d
 	"Bank 0d"
+ROMX $0e
+	"Bank 0e"
 ROMX $0f
 	"Bank 0f"
 ROMX $10
 	"Bank 10"
+ROMX $3b
+	"Bank 3b"
 ROMX $3d
 	"Bank 3d"
 ROMX $3e

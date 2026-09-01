@@ -14,7 +14,7 @@ wDecompressBuffer:: ; c412
 
 	ds $6e
 
-wc500:: ; c500
+wVBlankStruct:: ; c500
 	ds $100
 
 wc600:: ; c600
@@ -39,20 +39,57 @@ wcaa7:: db ; caa7
 wcaa8:: db ; caa8
 wcaa9:: db ; caa9
 
-wcaaa:: db ; caaa
+; size of wVBlankStruct in bytes
+wVBlankStructSize:: db ; caaa
 wPendingVBlankMode:: db ; caab
 wVBlankMode:: db ; caac
 
-	ds $ccab - $caad
+	ds $3
 
-wOppDeckIndex:: db ; ccab
-wOppDeck:: ds DECK_SIZE ; ccac
+wPlayerLP:: dw ; cab0
+	ds $1
+wOppLP:: dw ; cab3
+	ds $1
 
-	ds $cd50 - $ccd4
+	ds $cae4 - $cab6
+
+wCardCollection:: ; cae4
+	ds NUM_CARDS
+
+	ds $9
+
+wPlayerDeckIndex:: db ; cc5a
+wPlayerDeck:: ds DECK_SIZE * $2 ; cc5b
+
+wOppDuelDeckIndex:: db ; ccab
+wOppDuelDeck:: ds DECK_SIZE * $2 ; ccac
+
+	ds $cd0f - $ccfc
+
+wLoadedCardID::   dw ; cd0f
+	ds $2
+wLoadedCardAtk::  dw ; cd13
+wLoadedCardDef::  dw ; cd15
+wLoadedCardType:: db ; cd17
+
+	ds $cd50 - $cd18
 
 wNPCCharacter:: db ; cd50
 
-	ds $cdf0 - $cd51
+	ds $cd5e - $cd51
+
+wcd5e:: db ; cd5e
+wcd5f:: db ; cd5f
+
+	ds $cd63 - $cd60
+
+wPlayerDuelDeckIndex:: db ; cd63
+wPlayerDuelDeck:: ds DECK_SIZE * $2 ; cd64
+
+wOppHand::     ds HAND_SIZE  * $3 ; cdb4
+wOppField::    ds FIELD_SIZE * $3 ; cdc3
+wPlayerField:: ds FIELD_SIZE * $3 ; cdd2
+wPlayerHand::  ds HAND_SIZE  * $3 ; cde1
 
 wCardLocationIndex:: db ; cdf0
 wCardLocation:: db ; cdf1

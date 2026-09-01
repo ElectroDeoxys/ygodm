@@ -41,3 +41,10 @@ MACRO? debug_loop
 :
 	jr :-
 ENDM
+
+MACRO? call_hl
+	ld bc, :+
+	push bc
+	jp hl
+:
+ENDM
