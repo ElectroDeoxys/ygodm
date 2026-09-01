@@ -19,9 +19,7 @@ DEF NONE EQU 0
 	const VBLANK_14 ; $14
 	const VBLANK_16 ; $16
 
-; card collection constants
-
-; if a card in collection is not owned yet,
+; if a card in Trunk is not owned yet,
 ; then it is initialised with this value
 DEF NOT_OWNED EQU $ff
 

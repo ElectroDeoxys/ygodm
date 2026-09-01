@@ -197,7 +197,7 @@ Func_1016d:
 	push bc
 	push de
 	ld e, $00
-	farcall GetTotalCardCount
+	farcall GetTrunkTotalCardCount
 	farcall GetPlayerDeckCardCount
 	add c
 	ld c, a
@@ -263,7 +263,7 @@ Func_101d8:
 	push bc
 	push de
 	ld e, $00
-	farcall GetTotalCardCount
+	farcall GetTrunkTotalCardCount
 	farcall GetPlayerDeckCardCount
 	add c
 	ld c, a
@@ -708,7 +708,7 @@ ClearSRAM:
 
 Func_104e2:
 	call Func_1116c
-	farcall InitCardCollection
+	farcall InitTrunk
 	farcall ClearPlayerDeck
 	call Func_27f7
 	call GenerateStartingDeck
@@ -1093,8 +1093,8 @@ SRAMToWRAMMap:
 	dwb $cfb7, $01
 	dwb $cfdf, $02
 	dwb wPlayerDeck, DECK_SIZE * $2
-	dwb wCardCollection, $ff
-	dwb wCardCollection + $ff, LOW(NUM_CARDS - $ff)
+	dwb wTrunk, $ff
+	dwb wTrunk + $ff, LOW(NUM_CARDS - $ff)
 	dwb $cf4e, $22
 	dwb $cf70, $22
 	dwb $cf99, $08

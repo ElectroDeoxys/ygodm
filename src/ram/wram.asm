@@ -55,7 +55,7 @@ wOppLP:: dw ; cab3
 
 wCardID_cae2:: dw ; cae2
 
-wCardCollection:: ; cae4
+wTrunk:: ; cae4
 	ds NUM_CARDS
 
 	ds $9

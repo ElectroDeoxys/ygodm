@@ -3,13 +3,13 @@
 	farcall_table_start
 	farfunc Func_4068 ; $03
 	farfunc Func_551f ; $05
-	farfunc InitCardCollection ; $07
-	farfunc GetTotalCardCount ; $09
+	farfunc InitTrunk ; $07
+	farfunc GetTrunkTotalCardCount ; $09
 	farfunc $5b92 ; $0b
 	farfunc Func_56e0 ; $0d
 	farfunc Func_5c86 ; $0f
 	farfunc Func_5af2 ; $11
-	farfunc GetCardCountInCollection ; $13
+	farfunc GetCardCountInTrunk ; $13
 	farfunc $5bb8 ; $15
 	farfunc $5bd1 ; $17
 	farfunc $5c10 ; $19
@@ -782,12 +782,12 @@ Func_58a3:
 
 SECTION "Bank 01@5acb", ROMX[$5acb], BANK[$01]
 
-; initialises all wCardCollection cards with NOT_OWNED
-InitCardCollection:
+; initialises all wTrunk cards with NOT_OWNED
+InitTrunk:
 	push af
 	push bc
 	push hl
-	ld hl, wCardCollection
+	ld hl, wTrunk
 	ld a, NOT_OWNED
 	ld b, HIGH(NUM_CARDS)
 .loop_hi
@@ -831,7 +831,7 @@ GiveCard::
 	push af
 	push bc
 	push hl
-	call GetCardCountInCollection
+	call GetCardCountInTrunk
 	cp NOT_OWNED
 	jr nz, .asm_5b12
 	xor a
@@ -841,7 +841,7 @@ GiveCard::
 	ld c, a
 	ld a, [wCardID_cae2 + 1]
 	ld b, a
-	ld hl, wCardCollection
+	ld hl, wTrunk
 	add hl, bc
 	ld a, [hl]
 	cp MAX_CARD_COUNT
@@ -865,7 +865,7 @@ Func_5b52::
 	ld c, a
 	ld a, [wCardID_cae2 + 1]
 	ld b, a
-	ld hl, wCardCollection
+	ld hl, wTrunk
 	add hl, bc
 	ld a, [hl]
 	cp NOT_OWNED
@@ -886,7 +886,7 @@ Func_5b6c:
 	ld c, a
 	ld a, [wCardID_cae2 + 1]
 	ld b, a
-	ld hl, wCardCollection
+	ld hl, wTrunk
 	add hl, bc
 	pop af
 	ld [hl], a
@@ -894,14 +894,14 @@ Func_5b6c:
 	pop bc
 	ret
 
-GetCardCountInCollection::
+GetCardCountInTrunk::
 	push bc
 	push hl
 	ld a, [wCardID_cae2 + 0]
 	ld c, a
 	ld a, [wCardID_cae2 + 1]
 	ld b, a
-	ld hl, wCardCollection
+	ld hl, wTrunk
 	add hl, bc
 	ld a, [hl]
 	pop hl
@@ -920,7 +920,7 @@ Func_5c29:
 	ld e, NUM_SECRET_CARDS
 .loop_secret_cards
 	call Func_5af2
-	call GetCardCountInCollection
+	call GetCardCountInTrunk
 	cp NOT_OWNED
 	jr z, .next_card
 	ld d, $00
@@ -935,8 +935,8 @@ Func_5c29:
 	ret
 
 ; outputs in bc the total number
-; of cards in card collection
-GetTotalCardCount:
+; of cards in the player's Trunk
+GetTrunkTotalCardCount:
 	push af
 	push de
 	push hl
@@ -945,7 +945,7 @@ GetTotalCardCount:
 	ld e, 200
 .loop_cards_1
 	call Func_5af2
-	call GetCardCountInCollection
+	call GetCardCountInTrunk
 	cp NOT_OWNED
 	jr nz, .got_count_1
 	; not owned count as 0
@@ -962,7 +962,7 @@ GetTotalCardCount:
 	ld e, NUM_CARDS - 200
 .loop_cards_2
 	call Func_5af2
-	call GetCardCountInCollection
+	call GetCardCountInTrunk
 	cp NOT_OWNED
 	jr nz, .got_count_2
 	; not owned count as 0

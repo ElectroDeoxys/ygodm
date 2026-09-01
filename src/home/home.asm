@@ -2216,7 +2216,7 @@ Func_1508::
 	farcall Func_42c5
 	farcall Func_42ec
 	farcall Func_5af2
-	farcall GetCardCountInCollection
+	farcall GetCardCountInTrunk
 	cp $ff
 	jr nz, .asm_153e
 	ld hl, $cab9
@@ -2239,7 +2239,7 @@ Func_1542::
 	ld a, $00
 	farcall Func_42d0
 	farcall Func_5af2
-	farcall GetCardCountInCollection
+	farcall GetCardCountInTrunk
 	cp $ff
 	jr z, .asm_1567
 	ld [$cadc], a
