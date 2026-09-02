@@ -94,8 +94,8 @@ SwapMaterialCards:
 
 ; with cards given in wMaterial1CardID and wMaterial2CardID,
 ; attempt to fuse them into a Fusion monster
-; if found, wFusionCardID will hold the card ID
-; otherwise, it will hold INVALID_CARD
+; if found, wFusionCardID = card ID and a = TRUE
+; otherwise, wFusionCardID = INVALID_CARD and a = FALSE
 AttemptFusionSummon:
 	push bc
 	push de

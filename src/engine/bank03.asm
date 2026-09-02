@@ -91,9 +91,52 @@ Func_c106:
 	ld [$cad1], a
 	pop af
 	ret
-; 0xc10e
 
-SECTION "Bank 3@4142", ROMX[$4142], BANK[$3]
+Func_c10e:
+	ld [$cad1], a
+	ret
+
+Func_c112:
+	push af
+	ld a, $01
+	call Func_c10e
+	pop af
+	ret
+
+Func_c11a:
+	push af
+	ld a, $02
+	call Func_c10e
+	pop af
+	ret
+
+Func_c122:
+	push af
+	ld a, $03
+	call Func_c10e
+	pop af
+	ret
+
+Func_c12a:
+	push af
+	ld a, $04
+	call Func_c10e
+	pop af
+	ret
+
+Func_c132:
+	push af
+	ld a, $05
+	call Func_c10e
+	pop af
+	ret
+
+Func_c13a:
+	push af
+	ld a, $06
+	call Func_c10e
+	pop af
+	ret
 
 Func_c142:
 	call Func_c152
@@ -904,9 +947,7 @@ Func_c786:
 	ld a, [hli]
 	ld h, [hl]
 	ld l, a
-	ld bc, $479c
-	push bc
-	jp hl
+	call_hl
 ; 0xc79c
 
 SECTION "Bank 3@47b3", ROMX[$47b3], BANK[$3]
@@ -1250,9 +1291,13 @@ Func_cd72:
 	ld [$cd5c], a
 	pop af
 	ret
-; 0xcd7a
 
-SECTION "Bank 3@4d82", ROMX[$4d82], BANK[$3]
+Func_cd7a:
+	push af
+	ld a, $01
+	ld [$cd5c], a
+	pop af
+	ret
 
 Func_cd82:
 	push af
@@ -2094,9 +2139,9 @@ Func_d2e9:
 	call Func_d366
 	cp $00
 	jr nz, .asm_d307
-	farcall $03, $05
-	farcall $05, $05
-	farcall $03, $01
+	farcall Func_14036
+	farcall Func_14185
+	farcall Func_4068
 	call Func_d3ec
 	call EnableObjects
 .asm_d307
@@ -2120,9 +2165,9 @@ Func_d2e9:
 	call Func_d366
 	cp $00
 	jr nz, .asm_d340
-	farcall $03, $05
-	farcall $05, $05
-	farcall $03, $01
+	farcall Func_14036
+	farcall Func_14185
+	farcall Func_4068
 	call Func_d3ec
 	call EnableObjects
 .asm_d340
@@ -2133,7 +2178,7 @@ Func_d2e9:
 	call Func_2b31
 	call Func_ced3
 	call Func_f104
-	farcall $15, $04
+	farcall Func_108f0
 	jr .asm_d364
 .asm_d354
 	cp $04
@@ -2141,7 +2186,7 @@ Func_d2e9:
 	call Func_2b31
 	call Func_ced3
 	call Func_f10b
-	farcall $15, $04
+	farcall Func_108f0
 .asm_d364
 	pop af
 	ret
@@ -2155,7 +2200,7 @@ Func_d366:
 	ld a, [$cd10]
 	ld b, a
 	call IsValidCard
-	cp $00
+	cp TRUE
 	jr z, .asm_d37e
 	ld a, $01
 	jr .asm_d3ad
@@ -2807,11 +2852,11 @@ Func_d7cd:
 Func_d804:
 	push af
 	call Func_d921
-	cp $00
-	jr z, .asm_d811
+	cp TRUE
+	jr z, .skip
 	ld a, $01
 	ld [$cd62], a
-.asm_d811
+.skip
 	pop af
 	ret
 
@@ -2997,9 +3042,9 @@ Func_d900:
 Func_d921:
 	push bc
 	push de
-	ld b, $00
-	ld e, $01
-.asm_d927
+	ld b, 0
+	ld e, FALSE
+.loop_field
 	ld c, CARD_LOCATION_PLAYER_FIELD
 	call SetCardLocationAndIndex
 	call Func_1c92
@@ -3010,17 +3055,17 @@ Func_d921:
 	ld b, a
 	call IsValidCard
 	cp TRUE
-	jr nz, .asm_d948
+	jr nz, .next
 	call Func_2203
 	cp $00
-	jr nz, .asm_d948
-	ld e, $00
-.asm_d948
+	jr nz, .next
+	ld e, TRUE
+.next
 	pop bc
 	inc b
 	ld a, b
-	cp $05
-	jr nz, .asm_d927
+	cp FIELD_SIZE
+	jr nz, .loop_field
 	ld a, e
 	pop de
 	pop bc
@@ -3118,7 +3163,7 @@ Func_d9ce:
 	ld e, a
 	call CompareBCAndDE
 	pop de
-	cp $02
+	cp DE_LARGER_THAN_BC
 	jr z, .asm_da25
 	ld hl, $2
 	add hl, de
@@ -3143,7 +3188,7 @@ Func_d9ce:
 	ld d, a
 	call CompareBCAndDE
 	pop de
-	cp $02
+	cp DE_LARGER_THAN_BC
 	jr nz, .asm_da25
 	ld h, d
 	ld l, e
@@ -3331,9 +3376,51 @@ Func_daf3:
 	pop hl
 	pop bc
 	ret
-; 0xdb21
 
-SECTION "Bank 3@5b63", ROMX[$5b63], BANK[$3]
+IsCardAtLocationDragonType:
+	push bc
+	push de
+	push hl
+	ld e, FALSE
+	call SetCardLocationAndIndex
+	call Func_1c92
+	; is it a valid card?
+	ld a, [wTempCardID + 0]
+	ld c, a
+	ld a, [wTempCardID + 1]
+	ld b, a
+	call IsValidCard
+	cp TRUE
+	jr nz, .ok
+	; is it Dragon-type?
+	farcall LoadCardData
+	ld a, [wLoadedCardType]
+	cp DRAGON
+	jr nz, .ok
+	; yes
+	ld e, TRUE
+.ok
+	ld a, e
+	pop hl
+	pop de
+	pop bc
+	ret
+
+Func_db4c:
+	push af
+	push bc
+	ld a, [wTempCardID + 0]
+	ld c, a
+	ld a, [wTempCardID + 1]
+	ld b, a
+	call IsValidCard
+	cp TRUE
+	jr nz, .asm_db60
+	call Func_215c
+.asm_db60
+	pop bc
+	pop af
+	ret
 
 Func_db63:
 	push af
@@ -3703,15 +3790,287 @@ Func_de81:
 	ld a, [$ce01]
 	ld c, a
 	sla c
-	ld hl, $5ea7
+	ld hl, .Jumptable
 	add hl, bc
 	ld a, [hli]
 	ld h, [hl]
 	ld l, a
 	call_hl
-; 0xde9d
+	call Func_e124
+	call Func_e14b
+	pop hl
+	pop bc
+	pop af
+	ret
 
-SECTION "Bank 3@608a", ROMX[$608a], BANK[$3]
+.Jumptable:
+	dw Func_deb9
+	dw Func_deba
+	dw Func_df31
+	dw Func_df86
+	dw Func_dfe2
+	dw Func_df8d
+	dw Func_e013
+	dw Func_e044
+	dw Func_e054
+
+Func_deb9:
+	ret
+
+Func_deba:
+	push af
+	push bc
+	push de
+	call Func_225d
+	call Func_2273
+	call Func_2289
+	call Func_229f
+	call Func_22c0
+	call Func_22d6
+	call Func_2318
+	call Func_232e
+	ld a, [$ce0a]
+	ld c, a
+	ld a, [$ce0b]
+	ld b, a
+	ld a, [$ce0e]
+	ld e, a
+	ld a, [$ce0f]
+	ld d, a
+	call Func_e06b
+	ld a, e
+	cp $02
+	jr nz, .asm_df02
+	call Func_e0f8
+	call Func_e1b0
+	cp $02
+	jr z, .asm_defa
+	call Func_e10e
+.asm_defa
+	call Func_230d
+	call Func_22b5
+	jr .asm_df2d
+.asm_df02
+	cp $01
+	jr nz, .asm_df1a
+	call Func_e0f8
+	call Func_e103
+	call Func_230d
+	call Func_2323
+	call Func_22b5
+	call Func_22cb
+	jr .asm_df2d
+.asm_df1a
+	call Func_e103
+	call Func_e1d1
+	cp $02
+	jr z, .asm_df27
+	call Func_e119
+.asm_df27
+	call Func_2323
+	call Func_22cb
+.asm_df2d
+	pop de
+	pop bc
+	pop af
+	ret
+
+Func_df31:
+	push af
+	push bc
+	push de
+	call Func_225d
+	call Func_2273
+	call Func_2289
+	call Func_22aa
+	call Func_2318
+	call Func_232e
+	call Func_22c0
+	call Func_22d6
+	ld a, [$ce0a]
+	ld c, a
+	ld a, [$ce0b]
+	ld b, a
+	ld a, [$ce10]
+	ld e, a
+	ld a, [$ce11]
+	ld d, a
+	call Func_e06b
+	ld a, e
+	cp $02
+	jr nz, .asm_df73
+	call Func_e1b0
+	cp $02
+	jr z, .asm_df6e
+	call Func_e10e
+.asm_df6e
+	call Func_230d
+	jr .asm_df82
+.asm_df73
+	cp $01
+	jr nz, .asm_df79
+	jr .asm_df82
+.asm_df79
+	call Func_e103
+	call Func_2323
+	call Func_22cb
+.asm_df82
+	pop de
+	pop bc
+	pop af
+	ret
+
+Func_df86:
+	call Func_2318
+	call Func_232e
+	ret
+
+Func_df8d:
+	push af
+	push bc
+	push de
+	call Func_225d
+	call Func_2273
+	call Func_2294
+	call Func_229f
+	call Func_2318
+	call Func_232e
+	call Func_22c0
+	call Func_22d6
+	ld a, [$ce0e]
+	ld e, a
+	ld a, [$ce0f]
+	ld d, a
+	ld a, [$ce0c]
+	ld c, a
+	ld a, [$ce0d]
+	ld b, a
+	call Func_e06b
+	ld a, e
+	cp $02
+	jr nz, .asm_dfcb
+	call Func_e0f8
+	call Func_230d
+	call Func_22b5
+	jr .asm_dfde
+.asm_dfcb
+	cp $01
+	jr nz, .asm_dfd1
+	jr .asm_dfde
+.asm_dfd1
+	call Func_e1d1
+	cp $02
+	jr z, .asm_dfdb
+	call Func_e119
+.asm_dfdb
+	call Func_2323
+.asm_dfde
+	pop de
+	pop bc
+	pop af
+	ret
+
+Func_dfe2:
+	push af
+	push bc
+	push de
+	call Func_225d
+	call Func_2318
+	call Func_232e
+	call Func_2289
+	call Func_227e
+	call Func_22c0
+	call Func_22d6
+	ld a, [$ce0a]
+	ld c, a
+	ld a, [$ce0b]
+	ld b, a
+	call Func_e1d1
+	cp $02
+	jr z, .asm_e00c
+	call Func_e119
+.asm_e00c
+	call Func_2323
+	pop de
+	pop bc
+	pop af
+	ret
+
+Func_e013:
+	push af
+	push bc
+	push de
+	call Func_2268
+	call Func_2273
+	call Func_229f
+	call Func_2318
+	call Func_232e
+	call Func_22c0
+	call Func_22d6
+	ld a, [$ce0e]
+	ld c, a
+	ld a, [$ce0f]
+	ld b, a
+	call Func_e1b0
+	cp $02
+	jr z, .asm_e03d
+	call Func_e10e
+.asm_e03d
+	call Func_230d
+	pop de
+	pop bc
+	pop af
+	ret
+
+Func_e044:
+	push af
+	push bc
+	ld a, [$ce0a]
+	ld c, a
+	ld a, [$ce0b]
+	ld b, a
+	call Func_e196
+	pop bc
+	pop af
+	ret
+
+Func_e054:
+	push af
+	push bc
+	ld a, [$ce0e]
+	ld c, a
+	ld a, [$ce0f]
+	ld b, a
+	call Func_e1d1
+	cp $02
+	jr z, .asm_e068
+	call Func_e119
+.asm_e068
+	pop bc
+	pop af
+	ret
+
+Func_e06b:
+	push af
+	push hl
+	ld l, $02
+	call Func_13bb
+	ld a, e
+	cp $01
+	jr nz, .asm_e079
+	ld l, $01
+.asm_e079
+	ld a, e
+	cp $00
+	jr nz, .asm_e086
+	ld l, $00
+	ld de, NULL
+	call Func_13bb
+.asm_e086
+	ld e, l
+	pop hl
+	pop af
+	ret
 
 Func_e08a:
 	ld [$ce01], a
@@ -3770,9 +4129,147 @@ Func_e0d8:
 	pop bc
 	pop af
 	ret
-; 0xe0f8
 
-SECTION "Bank 3@61f2", ROMX[$61f2], BANK[$3]
+Func_e0f8:
+	push af
+	ld a, [$ce12]
+	or $01
+	ld [$ce12], a
+	pop af
+	ret
+
+Func_e103:
+	push af
+	ld a, [$ce12]
+	or $02
+	ld [$ce12], a
+	pop af
+	ret
+
+Func_e10e:
+	push af
+	ld a, [$ce12]
+	or $04
+	ld [$ce12], a
+	pop af
+	ret
+
+Func_e119:
+	push af
+	ld a, [$ce12]
+	or $08
+	ld [$ce12], a
+	pop af
+	ret
+
+Func_e124:
+	push af
+	ld a, [$ce06]
+	ld [wPlayerLP], a
+	ld [$ced6], a
+	ld a, [$ce07]
+	ld [$cab1], a
+	ld [$ced7], a
+	ld a, [$ce08]
+	ld [wOppLP], a
+	ld [$cee1], a
+	ld a, [$ce09]
+	ld [$cab4], a
+	ld [$cee2], a
+	pop af
+	ret
+
+Func_e14b:
+	push af
+	ld a, [$ce02]
+	ld [$ced2], a
+	ld a, [$ce03]
+	ld [$ced3], a
+	ld a, [$ce0a]
+	ld [$ced8], a
+	ld a, [$ce0b]
+	ld [$ced9], a
+	ld a, [$ce0c]
+	ld [$ceda], a
+	ld a, [$ce0d]
+	ld [$cedb], a
+	ld a, [$ce04]
+	ld [$cedd], a
+	ld a, [$ce05]
+	ld [$cede], a
+	ld a, [$ce0e]
+	ld [$cee3], a
+	ld a, [$ce0f]
+	ld [$cee4], a
+	ld a, [$ce10]
+	ld [$cee5], a
+	ld a, [$ce11]
+	ld [$cee6], a
+	pop af
+	ret
+
+; adds bc to $ce06
+Func_e196:
+	push af
+	push bc
+	push de
+	ld a, [$ce06]
+	ld e, a
+	ld a, [$ce07]
+	ld d, a
+	call DecimalAddBCAndDE
+	ld a, c
+	ld [$ce06], a
+	ld a, b
+	ld [$ce07], a
+	pop de
+	pop bc
+	pop af
+	ret
+
+Func_e1b0:
+	push bc
+	push de
+	ld a, [$ce06]
+	ld e, a
+	ld a, [$ce07]
+	ld d, a
+	call Func_13bb
+	ld a, e
+	cp $00
+	jr nz, .asm_e1c5
+	ld bc, NULL
+.asm_e1c5
+	ld a, c
+	ld [$ce06], a
+	ld a, b
+	ld [$ce07], a
+	ld a, e
+	pop de
+	pop bc
+	ret
+
+Func_e1d1:
+	push bc
+	push de
+	ld a, [$ce08]
+	ld e, a
+	ld a, [$ce09]
+	ld d, a
+	call Func_13bb
+	ld a, e
+	cp $00
+	jr nz, .asm_e1e6
+	ld bc, NULL
+.asm_e1e6
+	ld a, c
+	ld [$ce08], a
+	ld a, b
+	ld [$ce09], a
+	ld a, e
+	pop de
+	pop bc
+	ret
 
 Func_e1f2:
 	push af
@@ -3900,9 +4397,28 @@ Func_e2b2:
 	call Func_e26f
 	pop af
 	ret
-; 0xe2d8
 
-SECTION "Bank 3@62f8", ROMX[$62f8], BANK[$3]
+Func_e2d8:
+	push af
+	ld a, c
+	ld [$ce0a], a
+	ld a, b
+	ld [$ce0b], a
+	ld a, $07
+	call Func_e08a
+	pop af
+	ret
+
+Func_e2e8:
+	push af
+	ld a, c
+	ld [$ce0e], a
+	ld a, b
+	ld [$ce0f], a
+	ld a, $08
+	call Func_e08a
+	pop af
+	ret
 
 Func_e2f8:
 	push af
@@ -3998,9 +4514,12 @@ Func_e3ab:
 	farcall Func_4068
 	call Func_2a97
 	ret
-; 0xe3b2
 
-SECTION "Bank 3@63bc", ROMX[$63bc], BANK[$3]
+Func_e3b2:
+	call Func_de81
+	call Func_e3bc
+	call Func_c142
+	ret
 
 Func_e3bc:
 	push af
@@ -4490,9 +5009,9 @@ Func_e711:
 	ld hl, $cea5
 	ld c, $05
 .asm_e71e
-	ld a, $6d
+	ld a, LOW(INVALID_CARD)
 	ld [hli], a
-	ld a, $01
+	ld a, HIGH(INVALID_CARD)
 	ld [hli], a
 	dec c
 	jr nz, .asm_e71e
@@ -4668,9 +5187,29 @@ Func_ee83:
 .asm_ee91
 	pop af
 	ret
-; 0xee93
 
-SECTION "Bank 3@6ebf", ROMX[$6ebf], BANK[$3]
+Func_ee93:
+	push af
+	push bc
+	ld a, [$cd60]
+	ld b, a
+	ld c, CARD_LOCATION_PLAYER_HAND
+	call SetCardLocationAndIndex
+	call Func_1c92
+	ld a, [wcd5e]
+	ld b, a
+	ld c, CARD_LOCATION_PLAYER_FIELD
+	call SetCardLocationAndIndex
+	call Func_21d9
+	call Func_1c7a
+	ld a, [$cd60]
+	ld b, a
+	ld c, CARD_LOCATION_PLAYER_HAND
+	call SetCardLocationAndIndex
+	call Func_1c65
+	pop bc
+	pop af
+	ret
 
 Func_eebf:
 	push af
@@ -4695,9 +5234,29 @@ Func_eebf:
 	pop bc
 	pop af
 	ret
-; 0xeeee
 
-SECTION "Bank 3@6f1d", ROMX[$6f1d], BANK[$3]
+Func_eeee:
+	push af
+	push bc
+	ld a, [wcd5e]
+	ld b, a
+	ld c, CARD_LOCATION_PLAYER_FIELD
+	call SetCardLocationAndIndex
+	ld a, [wFusionCardID + 0]
+	ld [wTempCardID + 0], a
+	ld a, [wFusionCardID + 1]
+	ld [wTempCardID + 1], a
+	call Func_21d9
+	call Func_da4a
+	call Func_1caa
+	ld a, [$cd60]
+	ld b, a
+	ld c, CARD_LOCATION_PLAYER_HAND
+	call SetCardLocationAndIndex
+	call Func_1c65
+	pop bc
+	pop af
+	ret
 
 Func_ef1d:
 	push af
@@ -4751,15 +5310,72 @@ Func_ef64:
 	ld b, $00
 	ld c, a
 	sla c
-	ld hl, $6f82
+	ld hl, .Jumptable
 	add hl, bc
 	ld a, [hli]
 	ld h, [hl]
 	ld l, a
 	call_hl
-; 0xef7e
+	pop hl
+	pop bc
+	pop af
+	ret
 
-SECTION "Bank 3@6fee", ROMX[$6fee], BANK[$3]
+.Jumptable:
+	dw Func_f189 ; EFFECT_00
+	dw Func_f191 ; EFFECT_01
+	dw Func_f19b ; EFFECT_02
+	dw Func_f1a2 ; EFFECT_FOREST
+	dw Func_f1b6 ; EFFECT_WASTELAND
+	dw Func_f1ca ; EFFECT_MOUNTAIN
+	dw Func_f1de ; EFFECT_SOGEN
+	dw Func_f1f2 ; EFFECT_UMI
+	dw Func_f206 ; EFFECT_YAMI
+	dw Func_f21a ; EFFECT_MOOYAN_CURRY
+	dw Func_f236 ; EFFECT_RED_MEDICINE
+	dw Func_f252 ; EFFECT_GOBLINS_REMEDY
+	dw Func_f26e ; EFFECT_SOUL_OF_THE_PURE
+	dw Func_f28a ; EFFECT_DIAN_KETO_THE_CURE
+	dw Func_f2a6 ; EFFECT_SPARKS
+	dw Func_f2c2 ; EFFECT_HINOTAMA
+	dw Func_f2e0 ; EFFECT_FINAL_FLAME
+	dw Func_f2fe ; EFFECT_OOKAZI
+	dw Func_f31c ; EFFECT_TREMENDOUS_FIRE
+	dw Func_f33a ; EFFECT_13
+	dw Func_f36b ; EFFECT_14
+	dw Func_f394 ; EFFECT_15
+	dw Func_f3ca ; EFFECT_16
+	dw Func_f400 ; EFFECT_17
+	dw Func_f436 ; EFFECT_18
+	dw Func_f46c ; EFFECT_19
+	dw Func_f4a2 ; EFFECT_1A
+	dw Func_f4d8 ; EFFECT_1B
+	dw Func_f50e ; EFFECT_1C
+	dw Func_f544 ; EFFECT_1D
+	dw Func_f57a ; EFFECT_1E
+	dw Func_f5b0 ; EFFECT_1F
+	dw Func_f5e6 ; EFFECT_20
+	dw Func_f61c ; EFFECT_21
+	dw Func_f652 ; EFFECT_22
+	dw Func_f688 ; EFFECT_23
+	dw Func_f6be ; EFFECT_24
+	dw Func_f6f4 ; EFFECT_25
+	dw Func_f72a ; EFFECT_26
+	dw Func_f760 ; EFFECT_27
+	dw Func_f796 ; EFFECT_28
+	dw Func_f7cc ; EFFECT_29
+	dw Func_f802 ; EFFECT_2A
+	dw Func_f838 ; EFFECT_2B
+	dw Func_f86e ; EFFECT_2C
+	dw Func_f8a4 ; EFFECT_2D
+	dw Func_f8da ; EFFECT_2E
+	dw Func_f18a ; EFFECT_2F
+	dw Func_f910 ; skip
+	dw Func_f926 ; EFFECT_31
+	dw Func_f96b ; skip
+	dw Func_f9a3 ; skip
+	dw Func_f9d8 ; skip
+	dw Func_fa05 ; EFFECT_35
 
 Func_efee:
 	push bc
@@ -4776,7 +5392,7 @@ Func_efee:
 	ld b, a
 	ld de, $12c
 	call CompareBCAndDE
-	cp $02
+	cp DE_LARGER_THAN_BC
 	jr nz, .asm_f013
 	ld a, $2f
 	jr .asm_f01a
@@ -4795,41 +5411,133 @@ Func_efee:
 
 SECTION "Bank 3@705f", ROMX[$705f], BANK[$3]
 
+; output:
+; - a = ?
 Func_f05f:
 	push bc
 	push de
 	push hl
-	ld a, [$cecd]
+	ld a, [wMaterial2CardID + 0]
 	ld c, a
-	ld a, [$cece]
+	ld a, [wMaterial2CardID + 1]
 	ld b, a
-	ld de, $12c
+	ld de, MAGIC_CARDS
 	call CompareBCAndDE
-	cp $02
-	jr nz, .asm_f083
+	cp DE_LARGER_THAN_BC
+	jr nz, .is_special_card
 	farcall AttemptFusionSummon
-	cp $00
-	jr nz, .asm_f07f
-	ld a, $01
+	cp TRUE
+	jr nz, .no_fusion
+	ld a, EFFECT_01
 	jr .asm_f081
-.asm_f07f
-	ld a, $02
+.no_fusion
+	ld a, EFFECT_02
 .asm_f081
-	jr .asm_f08a
-.asm_f083
-	ld hl, $6f62
+	jr .done
+.is_special_card
+	ld hl, .data - MAGIC_CARDS
 	add hl, bc
 	ld b, h
 	ld c, l
 	ld a, [hl]
-.asm_f08a
+.done
 	pop hl
 	pop de
 	pop bc
 	ret
-; 0xf08e
 
-SECTION "Bank 3@70f7", ROMX[$70f7], BANK[$3]
+.data
+	db EFFECT_15 ; LEGENDARY_SWORD
+	db EFFECT_16 ; SWORD_OF_DARK
+	db EFFECT_17 ; DARK_ENERGY
+	db EFFECT_18 ; AXE_OF_DESPAIR
+	db EFFECT_19 ; LAZER_CANNON_ARMOR
+	db EFFECT_1A ; INSECT_ARMOR_LASER
+	db EFFECT_1B ; ELFS_LIGHT
+	db EFFECT_1C ; BEAST_FANGS
+	db EFFECT_1D ; STEEL_SHELL
+	db EFFECT_1E ; VILE_GERMS
+	db EFFECT_1F ; BLACK_PENDANT
+	db EFFECT_20 ; SILVER_BOW_AND_ARROW
+	db EFFECT_21 ; HORN_OF_LIGHT
+	db EFFECT_22 ; HORN_OF_UNICORN
+	db EFFECT_23 ; DRAGON_TREASURE
+	db EFFECT_24 ; ELECTRO_WHIP
+	db EFFECT_25 ; CYBER_SHIELD
+	db EFFECT_35 ; ELEGANT_EGOTIST
+	db EFFECT_26 ; MYSTICAL_MOON
+	db EFFECT_2F ; STOP_DEFENSE
+	db EFFECT_27 ; MALEVOLENT_NUZZLER
+	db EFFECT_28 ; VIOLET_CRYSTAL
+	db EFFECT_29 ; BOOK_OF_SECRET_ART
+	db EFFECT_2A ; INVIGORATION
+	db EFFECT_2B ; MACHINE_CONVERSION
+	db EFFECT_2C ; RAISE_BODY_HEAT
+	db EFFECT_2D ; FOLLOW_WIND
+	db EFFECT_2E ; POWER_OF_KAISHIN
+	db EFFECT_31 ; DRAGON_CAPTURE_JAR
+	db EFFECT_FOREST ; FOREST
+	db EFFECT_WASTELAND ; WASTELAND
+	db EFFECT_MOUNTAIN ; MOUNTAIN
+	db EFFECT_SOGEN ; SOGEN
+	db EFFECT_UMI ; UMI
+	db EFFECT_YAMI ; YAMI
+	db EFFECT_13 ; DARK_HOLE
+	db EFFECT_14 ; RAIGEKI
+	db EFFECT_MOOYAN_CURRY ; MOOYAN_CURRY
+	db EFFECT_RED_MEDICINE ; RED_MEDICINE
+	db EFFECT_GOBLINS_REMEDY ; GOBLINS_REMEDY
+	db EFFECT_SOUL_OF_THE_PURE ; SOUL_OF_THE_PURE
+	db EFFECT_DIAN_KETO_THE_CURE ; DIAN_KETO_THE_CURE
+	db EFFECT_SPARKS ; SPARKS
+	db EFFECT_HINOTAMA ; HINOTAMA
+	db EFFECT_FINAL_FLAME ; FINAL_FLAME
+	db EFFECT_OOKAZI ; OOKAZI
+	db EFFECT_TREMENDOUS_FIRE ; TREMENDOUS_FIRE
+	db EFFECT_00 ; SWORDS_REVEALING
+	db EFFECT_00 ; SPELLBIND_CIRCLE
+	db EFFECT_00 ; DARK_PIERCE_LIGHT
+	db EFFECT_02 ; YARANZO
+	db EFFECT_02 ; KANAN_THE_SWORD
+	db EFFECT_02 ; TAKRIMINOS
+	db EFFECT_02 ; STUFFED_ANIMAL
+	db EFFECT_02 ; MEGASONIC_EYE
+	db EFFECT_02 ; SUPER_WAR_LION
+	db EFFECT_02 ; YAMADRON
+	db EFFECT_02 ; SEIYARYU
+	db EFFECT_02 ; THREE_LEGGED_ZOMBIES
+	db EFFECT_02 ; ZERA_THE_MANT
+	db EFFECT_02 ; FLYING_PENGUIN
+	db EFFECT_02 ; MILLENNIUM_SHIELD
+	db EFFECT_02 ; FAIRYS_GIFT
+	db EFFECT_02 ; B_LUSTER_SOLDIER
+	db EFFECT_02 ; FIENDS_MIRROR
+
+Func_f0cf:
+	push af
+	push bc
+	ld a, [wcd5e]
+	ld b, a
+	ld c, CARD_LOCATION_PLAYER_HAND
+	call SetCardLocationAndIndex
+	call Func_1c65
+	call Func_cd82
+	call Func_d804
+	pop bc
+	pop af
+	ret
+
+Func_f0e6:
+	push af
+	push bc
+	ld a, [$cd60]
+	ld b, a
+	ld c, CARD_LOCATION_PLAYER_HAND
+	call SetCardLocationAndIndex
+	call Func_1c65
+	pop bc
+	pop af
+	ret
 
 Func_f0f7:
 	call Func_cd72
@@ -4908,9 +5616,1254 @@ Func_f182:
 	call Func_cd82
 	call Func_ce47
 	ret
-; 0xf189
 
-SECTION "Bank 3@7a4d", ROMX[$7a4d], BANK[$3]
+Func_f189:
+	ret
+
+Func_f18a:
+	call Func_2b68
+	call Func_cd7a
+	ret
+
+Func_f191:
+	call Func_2b10
+	farcall Func_15194
+	call Func_eeee
+	ret
+
+Func_f19b:
+	call Func_2b05
+	call Func_ee93
+	ret
+
+Func_f1a2:
+	push af
+	call Func_c112
+	call Func_f0cf
+	call Func_2b1b
+	call Func_c142
+	ld a, $1d
+	farcall Func_15148
+	pop af
+	ret
+
+Func_f1b6:
+	push af
+	call Func_c11a
+	call Func_f0cf
+	call Func_2b1b
+	call Func_c142
+	ld a, $1e
+	farcall Func_15148
+	pop af
+	ret
+
+Func_f1ca:
+	push af
+	call Func_c122
+	call Func_f0cf
+	call Func_2b1b
+	call Func_c142
+	ld a, $1f
+	farcall Func_15148
+	pop af
+	ret
+
+Func_f1de:
+	push af
+	call Func_c12a
+	call Func_f0cf
+	call Func_2b1b
+	call Func_c142
+	ld a, $20
+	farcall Func_15148
+	pop af
+	ret
+
+Func_f1f2:
+	push af
+	call Func_c132
+	call Func_f0cf
+	call Func_2b1b
+	call Func_c142
+	ld a, $21
+	farcall Func_15148
+	pop af
+	ret
+
+Func_f206:
+	push af
+	call Func_c13a
+	call Func_f0cf
+	call Func_2b1b
+	call Func_c142
+	ld a, $22
+	farcall Func_15148
+	pop af
+	ret
+
+Func_f21a:
+	push af
+	push bc
+	call Func_e1f2
+	ld bc, $200
+	call Func_e2d8
+	call Func_f0cf
+	call Func_2b26
+	call Func_e3b2
+	ld a, $25
+	farcall Func_15148
+	pop bc
+	pop af
+	ret
+
+Func_f236:
+	push af
+	push bc
+	call Func_e1f2
+	ld bc, $500
+	call Func_e2d8
+	call Func_f0cf
+	call Func_2b26
+	call Func_e3b2
+	ld a, $26
+	farcall Func_15148
+	pop bc
+	pop af
+	ret
+
+Func_f252:
+	push af
+	push bc
+	call Func_e1f2
+	ld bc, $1000
+	call Func_e2d8
+	call Func_f0cf
+	call Func_2b26
+	call Func_e3b2
+	ld a, $27
+	farcall Func_15148
+	pop bc
+	pop af
+	ret
+
+Func_f26e:
+	push af
+	push bc
+	call Func_e1f2
+	ld bc, $2000
+	call Func_e2d8
+	call Func_f0cf
+	call Func_2b26
+	call Func_e3b2
+	ld a, $28
+	farcall Func_15148
+	pop bc
+	pop af
+	ret
+
+Func_f28a:
+	push af
+	push bc
+	call Func_e1f2
+	ld bc, $5000
+	call Func_e2d8
+	call Func_f0cf
+	call Func_2b26
+	call Func_e3b2
+	ld a, $29
+	farcall Func_15148
+	pop bc
+	pop af
+	ret
+
+Func_f2a6:
+	push af
+	push bc
+	call Func_e1f2
+	ld bc, $200
+	call Func_e2e8
+	call Func_f0cf
+	call Func_2b5d
+	call Func_e3b2
+	ld a, $2a
+	farcall Func_15148
+	pop bc
+	pop af
+	ret
+
+Func_f2c2:
+	push af
+	push bc
+	push de
+	call Func_e1f2
+	ld bc, $500
+	call Func_e2e8
+	call Func_f0cf
+	call Func_2b5d
+	call Func_e3b2
+	ld a, $2b
+	farcall Func_15148
+	pop de
+	pop bc
+	pop af
+	ret
+
+Func_f2e0:
+	push af
+	push bc
+	push de
+	call Func_e1f2
+	ld bc, $1000
+	call Func_e2e8
+	call Func_f0cf
+	call Func_2b5d
+	call Func_e3b2
+	ld a, $2c
+	farcall Func_15148
+	pop de
+	pop bc
+	pop af
+	ret
+
+Func_f2fe:
+	push af
+	push bc
+	push de
+	call Func_e1f2
+	ld bc, $2000
+	call Func_e2e8
+	call Func_f0cf
+	call Func_2b5d
+	call Func_e3b2
+	ld a, $2d
+	farcall Func_15148
+	pop de
+	pop bc
+	pop af
+	ret
+
+Func_f31c:
+	push af
+	push bc
+	push de
+	call Func_e1f2
+	ld bc, $5000
+	call Func_e2e8
+	call Func_f0cf
+	call Func_2b5d
+	call Func_e3b2
+	ld a, $2e
+	farcall Func_15148
+	pop de
+	pop bc
+	pop af
+	ret
+
+Func_f33a:
+	push af
+	push bc
+	push de
+	push hl
+	ld c, $01
+.asm_f340
+	ld a, c
+	cp $03
+	jr nc, .asm_f358
+	ld b, $00
+.asm_f347
+	ld a, b
+	cp $05
+	jr nc, .asm_f355
+	call SetCardLocationAndIndex
+	call Func_1c65
+	inc b
+	jr .asm_f347
+.asm_f355
+	inc c
+	jr .asm_f340
+.asm_f358
+	call Func_f0cf
+	call Func_2b5d
+	call Func_c142
+	ld a, $23
+	farcall Func_15148
+	pop hl
+	pop de
+	pop bc
+	pop af
+	ret
+
+Func_f36b:
+	push af
+	push bc
+	push de
+	push hl
+	ld c, $01
+	ld b, $00
+.asm_f373
+	ld a, b
+	cp $05
+	jr nc, .asm_f381
+	call SetCardLocationAndIndex
+	call Func_1c65
+	inc b
+	jr .asm_f373
+.asm_f381
+	call Func_f0cf
+	call Func_2b5d
+	call Func_c142
+	ld a, $24
+	farcall Func_15148
+	pop hl
+	pop de
+	pop bc
+	pop af
+	ret
+
+Func_f394:
+	push af
+	push bc
+	push de
+	ld a, [wMaterial1CardID + 0]
+	ld c, a
+	ld a, [wMaterial1CardID + 1]
+	ld b, a
+	ld d, $00
+	farcall Func_26b89
+	cp $01
+	jr nz, .asm_f3c3
+	call Func_2b26
+	ld a, [wcd5e]
+	ld b, a
+	ld c, CARD_LOCATION_PLAYER_FIELD
+	call SetCardLocationAndIndex
+	call Func_1c92
+	call Func_213a
+	call Func_1c7a
+	ld bc, $12c
+	farcall Func_151db
+.asm_f3c3
+	call Func_f0e6
+	pop de
+	pop bc
+	pop af
+	ret
+
+Func_f3ca:
+	push af
+	push bc
+	push de
+	ld a, [wMaterial1CardID + 0]
+	ld c, a
+	ld a, [wMaterial1CardID + 1]
+	ld b, a
+	ld d, $01
+	farcall Func_26b89
+	cp $01
+	jr nz, .asm_f3f9
+	call Func_2b26
+	ld a, [wcd5e]
+	ld b, a
+	ld c, CARD_LOCATION_PLAYER_FIELD
+	call SetCardLocationAndIndex
+	call Func_1c92
+	call Func_213a
+	call Func_1c7a
+	ld bc, $12d
+	farcall Func_151db
+.asm_f3f9
+	call Func_f0e6
+	pop de
+	pop bc
+	pop af
+	ret
+
+Func_f400:
+	push af
+	push bc
+	push de
+	ld a, [wMaterial1CardID + 0]
+	ld c, a
+	ld a, [wMaterial1CardID + 1]
+	ld b, a
+	ld d, $02
+	farcall Func_26b89
+	cp $01
+	jr nz, .asm_f42f
+	call Func_2b26
+	ld a, [wcd5e]
+	ld b, a
+	ld c, CARD_LOCATION_PLAYER_FIELD
+	call SetCardLocationAndIndex
+	call Func_1c92
+	call Func_213a
+	call Func_1c7a
+	ld bc, $12e
+	farcall Func_151db
+.asm_f42f
+	call Func_f0e6
+	pop de
+	pop bc
+	pop af
+	ret
+
+Func_f436:
+	push af
+	push bc
+	push de
+	ld a, [wMaterial1CardID + 0]
+	ld c, a
+	ld a, [wMaterial1CardID + 1]
+	ld b, a
+	ld d, $03
+	farcall Func_26b89
+	cp $01
+	jr nz, .asm_f465
+	call Func_2b26
+	ld a, [wcd5e]
+	ld b, a
+	ld c, CARD_LOCATION_PLAYER_FIELD
+	call SetCardLocationAndIndex
+	call Func_1c92
+	call Func_213a
+	call Func_1c7a
+	ld bc, $12f
+	farcall Func_151db
+.asm_f465
+	call Func_f0e6
+	pop de
+	pop bc
+	pop af
+	ret
+
+Func_f46c:
+	push af
+	push bc
+	push de
+	ld a, [wMaterial1CardID + 0]
+	ld c, a
+	ld a, [wMaterial1CardID + 1]
+	ld b, a
+	ld d, $04
+	farcall Func_26b89
+	cp $01
+	jr nz, .asm_f49b
+	call Func_2b26
+	ld a, [wcd5e]
+	ld b, a
+	ld c, CARD_LOCATION_PLAYER_FIELD
+	call SetCardLocationAndIndex
+	call Func_1c92
+	call Func_213a
+	call Func_1c7a
+	ld bc, $130
+	farcall Func_151db
+.asm_f49b
+	call Func_f0e6
+	pop de
+	pop bc
+	pop af
+	ret
+
+Func_f4a2:
+	push af
+	push bc
+	push de
+	ld a, [wMaterial1CardID + 0]
+	ld c, a
+	ld a, [wMaterial1CardID + 1]
+	ld b, a
+	ld d, $05
+	farcall Func_26b89
+	cp $01
+	jr nz, .asm_f4d1
+	call Func_2b26
+	ld a, [wcd5e]
+	ld b, a
+	ld c, CARD_LOCATION_PLAYER_FIELD
+	call SetCardLocationAndIndex
+	call Func_1c92
+	call Func_213a
+	call Func_1c7a
+	ld bc, $131
+	farcall Func_151db
+.asm_f4d1
+	call Func_f0e6
+	pop de
+	pop bc
+	pop af
+	ret
+
+Func_f4d8:
+	push af
+	push bc
+	push de
+	ld a, [wMaterial1CardID + 0]
+	ld c, a
+	ld a, [wMaterial1CardID + 1]
+	ld b, a
+	ld d, $06
+	farcall Func_26b89
+	cp $01
+	jr nz, .asm_f507
+	call Func_2b26
+	ld a, [wcd5e]
+	ld b, a
+	ld c, CARD_LOCATION_PLAYER_FIELD
+	call SetCardLocationAndIndex
+	call Func_1c92
+	call Func_213a
+	call Func_1c7a
+	ld bc, $132
+	farcall Func_151db
+.asm_f507
+	call Func_f0e6
+	pop de
+	pop bc
+	pop af
+	ret
+
+Func_f50e:
+	push af
+	push bc
+	push de
+	ld a, [wMaterial1CardID + 0]
+	ld c, a
+	ld a, [wMaterial1CardID + 1]
+	ld b, a
+	ld d, $07
+	farcall Func_26b89
+	cp $01
+	jr nz, .asm_f53d
+	call Func_2b26
+	ld a, [wcd5e]
+	ld b, a
+	ld c, CARD_LOCATION_PLAYER_FIELD
+	call SetCardLocationAndIndex
+	call Func_1c92
+	call Func_213a
+	call Func_1c7a
+	ld bc, $133
+	farcall Func_151db
+.asm_f53d
+	call Func_f0e6
+	pop de
+	pop bc
+	pop af
+	ret
+
+Func_f544:
+	push af
+	push bc
+	push de
+	ld a, [wMaterial1CardID + 0]
+	ld c, a
+	ld a, [wMaterial1CardID + 1]
+	ld b, a
+	ld d, $08
+	farcall Func_26b89
+	cp $01
+	jr nz, .asm_f573
+	call Func_2b26
+	ld a, [wcd5e]
+	ld b, a
+	ld c, CARD_LOCATION_PLAYER_FIELD
+	call SetCardLocationAndIndex
+	call Func_1c92
+	call Func_213a
+	call Func_1c7a
+	ld bc, $134
+	farcall Func_151db
+.asm_f573
+	call Func_f0e6
+	pop de
+	pop bc
+	pop af
+	ret
+
+Func_f57a:
+	push af
+	push bc
+	push de
+	ld a, [wMaterial1CardID + 0]
+	ld c, a
+	ld a, [wMaterial1CardID + 1]
+	ld b, a
+	ld d, $09
+	farcall Func_26b89
+	cp $01
+	jr nz, .asm_f5a9
+	call Func_2b26
+	ld a, [wcd5e]
+	ld b, a
+	ld c, CARD_LOCATION_PLAYER_FIELD
+	call SetCardLocationAndIndex
+	call Func_1c92
+	call Func_213a
+	call Func_1c7a
+	ld bc, $135
+	farcall Func_151db
+.asm_f5a9
+	call Func_f0e6
+	pop de
+	pop bc
+	pop af
+	ret
+
+Func_f5b0:
+	push af
+	push bc
+	push de
+	ld a, [wMaterial1CardID + 0]
+	ld c, a
+	ld a, [wMaterial1CardID + 1]
+	ld b, a
+	ld d, $0a
+	farcall Func_26b89
+	cp $01
+	jr nz, .asm_f5df
+	call Func_2b26
+	ld a, [wcd5e]
+	ld b, a
+	ld c, CARD_LOCATION_PLAYER_FIELD
+	call SetCardLocationAndIndex
+	call Func_1c92
+	call Func_213a
+	call Func_1c7a
+	ld bc, $136
+	farcall Func_151db
+.asm_f5df
+	call Func_f0e6
+	pop de
+	pop bc
+	pop af
+	ret
+
+Func_f5e6:
+	push af
+	push bc
+	push de
+	ld a, [wMaterial1CardID + 0]
+	ld c, a
+	ld a, [wMaterial1CardID + 1]
+	ld b, a
+	ld d, $0b
+	farcall Func_26b89
+	cp $01
+	jr nz, .asm_f615
+	call Func_2b26
+	ld a, [wcd5e]
+	ld b, a
+	ld c, CARD_LOCATION_PLAYER_FIELD
+	call SetCardLocationAndIndex
+	call Func_1c92
+	call Func_213a
+	call Func_1c7a
+	ld bc, $137
+	farcall Func_151db
+.asm_f615
+	call Func_f0e6
+	pop de
+	pop bc
+	pop af
+	ret
+
+Func_f61c:
+	push af
+	push bc
+	push de
+	ld a, [wMaterial1CardID + 0]
+	ld c, a
+	ld a, [wMaterial1CardID + 1]
+	ld b, a
+	ld d, $0c
+	farcall Func_26b89
+	cp $01
+	jr nz, .asm_f64b
+	call Func_2b26
+	ld a, [wcd5e]
+	ld b, a
+	ld c, CARD_LOCATION_PLAYER_FIELD
+	call SetCardLocationAndIndex
+	call Func_1c92
+	call Func_213a
+	call Func_1c7a
+	ld bc, $138
+	farcall Func_151db
+.asm_f64b
+	call Func_f0e6
+	pop de
+	pop bc
+	pop af
+	ret
+
+Func_f652:
+	push af
+	push bc
+	push de
+	ld a, [wMaterial1CardID + 0]
+	ld c, a
+	ld a, [wMaterial1CardID + 1]
+	ld b, a
+	ld d, $0d
+	farcall Func_26b89
+	cp $01
+	jr nz, .asm_f681
+	call Func_2b26
+	ld a, [wcd5e]
+	ld b, a
+	ld c, CARD_LOCATION_PLAYER_FIELD
+	call SetCardLocationAndIndex
+	call Func_1c92
+	call Func_213a
+	call Func_1c7a
+	ld bc, $139
+	farcall Func_151db
+.asm_f681
+	call Func_f0e6
+	pop de
+	pop bc
+	pop af
+	ret
+
+Func_f688:
+	push af
+	push bc
+	push de
+	ld a, [wMaterial1CardID + 0]
+	ld c, a
+	ld a, [wMaterial1CardID + 1]
+	ld b, a
+	ld d, $0e
+	farcall Func_26b89
+	cp $01
+	jr nz, .asm_f6b7
+	call Func_2b26
+	ld a, [wcd5e]
+	ld b, a
+	ld c, CARD_LOCATION_PLAYER_FIELD
+	call SetCardLocationAndIndex
+	call Func_1c92
+	call Func_213a
+	call Func_1c7a
+	ld bc, $13a
+	farcall Func_151db
+.asm_f6b7
+	call Func_f0e6
+	pop de
+	pop bc
+	pop af
+	ret
+
+Func_f6be:
+	push af
+	push bc
+	push de
+	ld a, [wMaterial1CardID + 0]
+	ld c, a
+	ld a, [wMaterial1CardID + 1]
+	ld b, a
+	ld d, $0f
+	farcall Func_26b89
+	cp $01
+	jr nz, .asm_f6ed
+	call Func_2b26
+	ld a, [wcd5e]
+	ld b, a
+	ld c, CARD_LOCATION_PLAYER_FIELD
+	call SetCardLocationAndIndex
+	call Func_1c92
+	call Func_213a
+	call Func_1c7a
+	ld bc, $13b
+	farcall Func_151db
+.asm_f6ed
+	call Func_f0e6
+	pop de
+	pop bc
+	pop af
+	ret
+
+Func_f6f4:
+	push af
+	push bc
+	push de
+	ld a, [wMaterial1CardID + 0]
+	ld c, a
+	ld a, [wMaterial1CardID + 1]
+	ld b, a
+	ld d, $10
+	farcall Func_26b89
+	cp $01
+	jr nz, .asm_f723
+	call Func_2b26
+	ld a, [wcd5e]
+	ld b, a
+	ld c, CARD_LOCATION_PLAYER_FIELD
+	call SetCardLocationAndIndex
+	call Func_1c92
+	call Func_213a
+	call Func_1c7a
+	ld bc, $13c
+	farcall Func_151db
+.asm_f723
+	call Func_f0e6
+	pop de
+	pop bc
+	pop af
+	ret
+
+Func_f72a:
+	push af
+	push bc
+	push de
+	ld a, [wMaterial1CardID + 0]
+	ld c, a
+	ld a, [wMaterial1CardID + 1]
+	ld b, a
+	ld d, $11
+	farcall Func_26b89
+	cp $01
+	jr nz, .asm_f759
+	call Func_2b26
+	ld a, [wcd5e]
+	ld b, a
+	ld c, CARD_LOCATION_PLAYER_FIELD
+	call SetCardLocationAndIndex
+	call Func_1c92
+	call Func_213a
+	call Func_1c7a
+	ld bc, $13e
+	farcall Func_151db
+.asm_f759
+	call Func_f0e6
+	pop de
+	pop bc
+	pop af
+	ret
+
+Func_f760:
+	push af
+	push bc
+	push de
+	ld a, [wMaterial1CardID + 0]
+	ld c, a
+	ld a, [wMaterial1CardID + 1]
+	ld b, a
+	ld d, $12
+	farcall Func_26b89
+	cp $01
+	jr nz, .asm_f78f
+	call Func_2b26
+	ld a, [wcd5e]
+	ld b, a
+	ld c, CARD_LOCATION_PLAYER_FIELD
+	call SetCardLocationAndIndex
+	call Func_1c92
+	call Func_213a
+	call Func_1c7a
+	ld bc, $140
+	farcall Func_151db
+.asm_f78f
+	call Func_f0e6
+	pop de
+	pop bc
+	pop af
+	ret
+
+Func_f796:
+	push af
+	push bc
+	push de
+	ld a, [wMaterial1CardID + 0]
+	ld c, a
+	ld a, [wMaterial1CardID + 1]
+	ld b, a
+	ld d, $13
+	farcall Func_26b89
+	cp $01
+	jr nz, .asm_f7c5
+	call Func_2b26
+	ld a, [wcd5e]
+	ld b, a
+	ld c, CARD_LOCATION_PLAYER_FIELD
+	call SetCardLocationAndIndex
+	call Func_1c92
+	call Func_213a
+	call Func_1c7a
+	ld bc, $141
+	farcall Func_151db
+.asm_f7c5
+	call Func_f0e6
+	pop de
+	pop bc
+	pop af
+	ret
+
+Func_f7cc:
+	push af
+	push bc
+	push de
+	ld a, [wMaterial1CardID + 0]
+	ld c, a
+	ld a, [wMaterial1CardID + 1]
+	ld b, a
+	ld d, $14
+	farcall Func_26b89
+	cp $01
+	jr nz, .asm_f7fb
+	call Func_2b26
+	ld a, [wcd5e]
+	ld b, a
+	ld c, CARD_LOCATION_PLAYER_FIELD
+	call SetCardLocationAndIndex
+	call Func_1c92
+	call Func_213a
+	call Func_1c7a
+	ld bc, $142
+	farcall Func_151db
+.asm_f7fb
+	call Func_f0e6
+	pop de
+	pop bc
+	pop af
+	ret
+
+Func_f802:
+	push af
+	push bc
+	push de
+	ld a, [wMaterial1CardID + 0]
+	ld c, a
+	ld a, [wMaterial1CardID + 1]
+	ld b, a
+	ld d, $15
+	farcall Func_26b89
+	cp $01
+	jr nz, .asm_f831
+	call Func_2b26
+	ld a, [wcd5e]
+	ld b, a
+	ld c, CARD_LOCATION_PLAYER_FIELD
+	call SetCardLocationAndIndex
+	call Func_1c92
+	call Func_213a
+	call Func_1c7a
+	ld bc, $143
+	farcall Func_151db
+.asm_f831
+	call Func_f0e6
+	pop de
+	pop bc
+	pop af
+	ret
+
+Func_f838:
+	push af
+	push bc
+	push de
+	ld a, [wMaterial1CardID + 0]
+	ld c, a
+	ld a, [wMaterial1CardID + 1]
+	ld b, a
+	ld d, $16
+	farcall Func_26b89
+	cp $01
+	jr nz, .asm_f867
+	call Func_2b26
+	ld a, [wcd5e]
+	ld b, a
+	ld c, CARD_LOCATION_PLAYER_FIELD
+	call SetCardLocationAndIndex
+	call Func_1c92
+	call Func_213a
+	call Func_1c7a
+	ld bc, $144
+	farcall Func_151db
+.asm_f867
+	call Func_f0e6
+	pop de
+	pop bc
+	pop af
+	ret
+
+Func_f86e:
+	push af
+	push bc
+	push de
+	ld a, [wMaterial1CardID + 0]
+	ld c, a
+	ld a, [wMaterial1CardID + 1]
+	ld b, a
+	ld d, $17
+	farcall Func_26b89
+	cp $01
+	jr nz, .asm_f89d
+	call Func_2b26
+	ld a, [wcd5e]
+	ld b, a
+	ld c, CARD_LOCATION_PLAYER_FIELD
+	call SetCardLocationAndIndex
+	call Func_1c92
+	call Func_213a
+	call Func_1c7a
+	ld bc, $145
+	farcall Func_151db
+.asm_f89d
+	call Func_f0e6
+	pop de
+	pop bc
+	pop af
+	ret
+
+Func_f8a4:
+	push af
+	push bc
+	push de
+	ld a, [wMaterial1CardID + 0]
+	ld c, a
+	ld a, [wMaterial1CardID + 1]
+	ld b, a
+	ld d, $18
+	farcall Func_26b89
+	cp $01
+	jr nz, .asm_f8d3
+	call Func_2b26
+	ld a, [wcd5e]
+	ld b, a
+	ld c, CARD_LOCATION_PLAYER_FIELD
+	call SetCardLocationAndIndex
+	call Func_1c92
+	call Func_213a
+	call Func_1c7a
+	ld bc, $146
+	farcall Func_151db
+.asm_f8d3
+	call Func_f0e6
+	pop de
+	pop bc
+	pop af
+	ret
+
+Func_f8da:
+	push af
+	push bc
+	push de
+	ld a, [wMaterial1CardID + 0]
+	ld c, a
+	ld a, [wMaterial1CardID + 1]
+	ld b, a
+	ld d, $19
+	farcall Func_26b89
+	cp $01
+	jr nz, .asm_f909
+	call Func_2b26
+	ld a, [wcd5e]
+	ld b, a
+	ld c, CARD_LOCATION_PLAYER_FIELD
+	call SetCardLocationAndIndex
+	call Func_1c92
+	call Func_213a
+	call Func_1c7a
+	ld bc, $147
+	farcall Func_151db
+.asm_f909
+	call Func_f0e6
+	pop de
+	pop bc
+	pop af
+	ret
+
+Func_f910:
+	push af
+	push bc
+	call Func_2b26
+	call Func_2bb4
+	call Func_f0cf
+	call Func_c142
+	ld a, $13
+	farcall Func_15148
+	pop bc
+	pop af
+	ret
+
+Func_f926:
+	push af
+	push bc
+	push de
+	ld c, $01
+	ld e, $01
+.asm_f92d
+	ld a, c
+	cp $03
+	jr nc, .asm_f94e
+	ld b, $00
+.asm_f934
+	ld a, b
+	cp $05
+	jr nc, .asm_f94b
+	call IsCardAtLocationDragonType
+	cp $00
+	jr nz, .asm_f948
+	call SetCardLocationAndIndex
+	call Func_1c65
+	ld e, $00
+.asm_f948
+	inc b
+	jr .asm_f934
+.asm_f94b
+	inc c
+	jr .asm_f92d
+.asm_f94e
+	call Func_f0cf
+	call Func_2b5d
+	call Func_c142
+	cp $00
+	jr nz, .asm_f962
+	ld a, $1c
+	farcall Func_15148
+	jr .asm_f967
+.asm_f962
+	ld a, $1c
+	farcall Func_15148
+.asm_f967
+	pop de
+	pop bc
+	pop af
+	ret
+
+Func_f96b:
+	push af
+	push bc
+	push de
+	call Func_2be8
+	ld c, $01
+.asm_f973
+	ld a, c
+	cp $03
+	jr nc, .asm_f991
+	ld b, $00
+.asm_f97a
+	ld a, b
+	cp $05
+	jr nc, .asm_f98e
+	call SetCardLocationAndIndex
+	call Func_1c92
+	call Func_da4a
+	call Func_1c7a
+	inc b
+	jr .asm_f97a
+.asm_f98e
+	inc c
+	jr .asm_f973
+.asm_f991
+	call Func_f0cf
+	call Func_2b26
+	call Func_c142
+	ld a, $2f
+	farcall Func_15148
+	pop de
+	pop bc
+	pop af
+	ret
+
+Func_f9a3:
+	push af
+	push bc
+	push de
+	ld c, $01
+.asm_f9a8
+	ld a, c
+	cp $03
+	jr nc, .asm_f9c6
+	ld b, $00
+.asm_f9af
+	ld a, b
+	cp $05
+	jr nc, .asm_f9c3
+	call SetCardLocationAndIndex
+	call Func_1c92
+	call Func_da4a
+	call Func_1c7a
+	inc b
+	jr .asm_f9af
+.asm_f9c3
+	inc c
+	jr .asm_f9a8
+.asm_f9c6
+	call Func_f0cf
+	call Func_2b26
+	call Func_c142
+	ld a, $31
+	farcall Func_15148
+	pop de
+	pop bc
+	pop af
+	ret
+
+Func_f9d8:
+	push af
+	push bc
+	push de
+	ld c, $01
+	ld b, $00
+.asm_f9df
+	ld a, b
+	cp $05
+	jr nc, .asm_f9f3
+	call SetCardLocationAndIndex
+	call Func_1c92
+	call Func_db4c
+	call Func_1c7a
+	inc b
+	jr .asm_f9df
+.asm_f9f3
+	call Func_f0cf
+	call Func_2b26
+	call Func_c142
+	ld a, $30
+	farcall Func_15148
+	pop de
+	pop bc
+	pop af
+	ret
+
+Func_fa05:
+	push af
+	push bc
+	push de
+	ld a, [wMaterial1CardID + 0]
+	ld c, a
+	ld a, [wMaterial1CardID + 1]
+	ld b, a
+	ld de, $3d
+	call IsBCEqualToDE
+	cp $00
+	jr nz, .asm_fa46
+	call Func_2b26
+	ld a, [wcd5e]
+	ld b, a
+	ld c, CARD_LOCATION_PLAYER_FIELD
+	call SetCardLocationAndIndex
+	call Func_1c65
+	ld bc, $3e
+	farcall Func_5af2
+	farcall SetCardAsSeen
+	ld a, c
+	ld [wTempCardID + 0], a
+	ld a, b
+	ld [wTempCardID + 1], a
+	call Func_21d9
+	call Func_2193
+	call Func_1c7a
+	farcall Func_15204
+.asm_fa46
+	call Func_f0e6
+	pop de
+	pop bc
+	pop af
+	ret
 
 HandlePlayerPetitMothEvolution:
 	push af

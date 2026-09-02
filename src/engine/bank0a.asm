@@ -8,7 +8,7 @@
 	farfunc Func_28b5a ; $0b
 	farfunc Func_28e0c ; $0d
 	farfunc Func_29163 ; $0f
-	farfunc $4fae ; $11
+	farfunc Func_28fae ; $11
 	farfunc $45d4 ; $13
 	farfunc DrawMainMenu ; $15
 	farfunc $65d4 ; $17
@@ -249,6 +249,66 @@ Func_28e0c:
 	pop af
 	ret
 ; 0x28e46
+
+SECTION "Bank a@4fae", ROMX[$4fae], BANK[$a]
+
+Func_28fae:
+	push af
+	push bc
+	push de
+	push hl
+	ld de, vTiles1
+	ld hl, $405a
+	ld b, $02
+.asm_28fba
+	ld c, $10
+.asm_28fbc
+	ld a, [hli]
+	ld [de], a
+	inc de
+	dec c
+	jr nz, .asm_28fbc
+	dec b
+	jr nz, .asm_28fba
+	ld de, vTiles1 tile $50
+	ld hl, $405a
+	ld b, $30
+.asm_28fcd
+	ld c, $10
+.asm_28fcf
+	ld a, [hli]
+	ld [de], a
+	inc de
+	dec c
+	jr nz, .asm_28fcf
+	dec b
+	jr nz, .asm_28fcd
+	ld de, vBGMap0
+	ld hl, $4ffb
+	ld b, $12
+.asm_28fe0
+	ld c, $14
+.asm_28fe2
+	ld a, [hli]
+	ld [de], a
+	inc de
+	dec c
+	jr nz, .asm_28fe2
+	push hl
+	ld hl, $c
+	add hl, de
+	ld d, h
+	ld e, l
+	pop hl
+	dec b
+	jr nz, .asm_28fe0
+	call Func_2ba73
+	pop hl
+	pop de
+	pop bc
+	pop af
+	ret
+; 0x28ffb
 
 SECTION "Bank a@5163", ROMX[$5163], BANK[$a]
 

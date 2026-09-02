@@ -22,7 +22,7 @@
 	farfunc Func_5f79 ; $27
 	farfunc Func_6008 ; $29
 	farfunc Func_6015 ; $2b
-	farfunc $5ff2 ; $2d
+	farfunc Func_5ff2 ; $2d
 	farfunc LoadCharacterGfx ; $2f
 	farfunc LoadCardGfx ; $31
 	farfunc Func_5ffb ; $33
@@ -346,6 +346,9 @@ Func_42ae:
 	pop af
 	ret
 
+; input:
+; - c = card type
+; - b = ?
 Func_42c5::
 	push af
 	ld a, c
@@ -1231,9 +1234,13 @@ LoadCharacterGfx:
 	pop bc
 	pop af
 	ret
-; 0x5ff2
 
-SECTION "Bank 1@5ffb", ROMX[$5ffb], BANK[$1]
+Func_5ff2:
+	push bc
+	bcbgcoord 1, 3
+	call Func_604f
+	pop bc
+	ret
 
 Func_5ffb:
 	push af

@@ -3,7 +3,7 @@
 	farcall_table_start
 	farfunc LoadCardData
 	farfunc Func_24024
-	farfunc $6b89
+	farfunc Func_26b89
 
 SECTION "Bank 9@4024", ROMX[$4024], BANK[$9]
 
@@ -1265,3 +1265,56 @@ CardDefenses:
 	dw $2500 ; B_LUSTER_SOLDIER
 	dw $1800 ; FIENDS_MIRROR
 	dw    -1 ; INVALID_CARD
+
+SECTION "Bank 9@6b89", ROMX[$6b89], BANK[$9]
+
+Func_26b89:
+	push bc
+	push de
+	push hl
+	ld e, d
+	ld d, $00
+	sla e
+	ld hl, $6bc8
+	add hl, de
+	ld a, [hli]
+	ld h, [hl]
+	ld l, a
+	call Func_26b9f
+	pop hl
+	pop de
+	pop bc
+	ret
+
+Func_26b9f:
+	push bc
+	push de
+	push hl
+.asm_26ba2
+	ld a, [hli]
+	ld e, a
+	ld a, [hli]
+	ld d, a
+	push bc
+	ld bc, -1
+	call IsBCEqualToDE
+	pop bc
+	cp $00
+	jr nz, .asm_26bb6
+	ld e, $00
+	jr .asm_26bc3
+.asm_26bb6
+	call IsBCEqualToDE
+	cp $00
+	jr nz, .asm_26bc1
+	ld e, $01
+	jr .asm_26bc3
+.asm_26bc1
+	jr .asm_26ba2
+.asm_26bc3
+	ld a, e
+	pop hl
+	pop de
+	pop bc
+	ret
+; 0x26bc8

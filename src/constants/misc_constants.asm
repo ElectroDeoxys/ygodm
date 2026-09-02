@@ -4,6 +4,11 @@ DEF FALSE EQU 1
 
 DEF NONE EQU 0
 
+; CompareBCAndDE results
+DEF DE_SMALLER_THAN_BC EQU $0
+DEF DE_EQUAL_TO_BC     EQU $1
+DEF DE_LARGER_THAN_BC  EQU $2
+
 ; V-Blank modes
 	const_def 0, 2
 	const VBLANK_00 ; $00

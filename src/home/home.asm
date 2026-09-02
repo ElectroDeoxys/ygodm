@@ -2007,9 +2007,24 @@ BTimesE::
 	pop bc
 	pop af
 	ret
-; 0x13ab
 
-SECTION "Bank 0@13bb", ROM0[$13bb]
+; outputs bc = bc + de, in decimal representation
+; caps result to $9999
+DecimalAddBCAndDE::
+	push af
+	ld a, e
+	add c
+	daa
+	ld c, a
+	ld a, d
+	add b
+	daa
+	ld b, a
+	jr nc, .ok
+	ld bc, $9999
+.ok
+	pop af
+	ret
 
 ; input:
 ; - bc = ?
@@ -2032,7 +2047,7 @@ Func_13bb::
 
 ; equal
 	ld bc, 0
-	ld e, $01
+	ld e, DE_EQUAL_TO_BC
 	jr .done
 
 .not_equal
@@ -2046,12 +2061,12 @@ Func_13bb::
 	daa
 	ld b, a
 
-	; de >= bc
-	ld e, $02
+	; de > bc
+	ld e, DE_LARGER_THAN_BC
 	jr nc, .done
 
 	; de < bc
-	ld e, $00
+	ld e, DE_SMALLER_THAN_BC
 
 .done
 	pop af
@@ -3356,9 +3371,9 @@ Func_1c65::
 	call Func_1cb5
 	ld h, b
 	ld l, c
-	ld a, $6d
+	ld a, LOW(INVALID_CARD)
 	ld [hli], a
-	ld a, $01
+	ld a, HIGH(INVALID_CARD)
 	ld [hli], a
 	ld a, $10
 	ld [hli], a
@@ -3491,29 +3506,29 @@ IsBCEqualToDE::
 	ret
 
 ; output:
-; - a = $00 if de  < bc
-; -     $01 if de == bc
-; -     $02 if de >= bc
+; - a = DE_SMALLER_THAN_BC, if de  < bc
+; -     DE_EQUAL_TO_BC,     if de == bc
+; -     DE_LARGER_THAN_BC,  if de  > bc
 CompareBCAndDE::
 	push bc
 	push de
 	push hl
 
-	ld l, $02
+	ld l, DE_LARGER_THAN_BC
 	call Func_13bb
 
 	; the following can be replaced
 	; with a simple ld a, e
 	ld a, e
-	cp $01
+	cp DE_EQUAL_TO_BC
 	jr nz, .asm_1d1e
 ; were equal
-	ld l, $01
+	ld l, DE_EQUAL_TO_BC
 .asm_1d1e
 	ld a, e
-	cp $00
+	cp DE_SMALLER_THAN_BC
 	jr nz, .asm_1d25
-	ld l, $00
+	ld l, DE_SMALLER_THAN_BC
 .asm_1d25
 	ld a, l
 
@@ -4201,7 +4216,50 @@ RandomRange::
 	pop bc
 	pop af
 	ret
-; 0x213a
+
+Func_213a::
+	push af
+	push bc
+	push hl
+	ld a, [$cdf4]
+	and $30
+	ld c, a
+	swap c
+	ld b, $00
+	ld hl, $2158
+	add hl, bc
+	ld a, [$cdf4]
+	and $cf
+	or [hl]
+	ld [$cdf4], a
+	pop hl
+	pop bc
+	pop af
+	ret
+; 0x2158
+
+SECTION "Bank 0@215c", ROM0[$215c]
+
+Func_215c::
+	push af
+	push bc
+	push hl
+	ld a, [$cdf4]
+	and $30
+	ld c, a
+	swap c
+	ld b, $00
+	ld hl, $217a
+	add hl, bc
+	ld a, [$cdf4]
+	and $cf
+	or [hl]
+	ld [$cdf4], a
+	pop hl
+	pop bc
+	pop af
+	ret
+; 0x217a
 
 SECTION "Bank 0@217e", ROM0[$217e]
 
@@ -4333,7 +4391,138 @@ Func_2217::
 	ld [$cee6], a
 	pop af
 	ret
-; 0x225d
+
+Func_225d::
+	push af
+	ld a, [$ced1]
+	or $01
+	ld [$ced1], a
+	pop af
+	ret
+
+Func_2268::
+	push af
+	ld a, [$ced1]
+	and $fe
+	ld [$ced1], a
+	pop af
+	ret
+
+Func_2273::
+	push af
+	ld a, [$cedc]
+	or $01
+	ld [$cedc], a
+	pop af
+	ret
+
+Func_227e::
+	push af
+	ld a, [$cedc]
+	and $fe
+	ld [$cedc], a
+	pop af
+	ret
+
+Func_2289::
+	push af
+	ld a, [$ced1]
+	or $02
+	ld [$ced1], a
+	pop af
+	ret
+
+Func_2294::
+	push af
+	ld a, [$ced1]
+	and $fd
+	ld [$ced1], a
+	pop af
+	ret
+
+Func_229f::
+	push af
+	ld a, [$cedc]
+	or $02
+	ld [$cedc], a
+	pop af
+	ret
+
+Func_22aa::
+	push af
+	ld a, [$cedc]
+	and $fd
+	ld [$cedc], a
+	pop af
+	ret
+
+Func_22b5::
+	push af
+	ld a, [$ced1]
+	or $04
+	ld [$ced1], a
+	pop af
+	ret
+
+Func_22c0::
+	push af
+	ld a, [$ced1]
+	and $fb
+	ld [$ced1], a
+	pop af
+	ret
+
+Func_22cb::
+	push af
+	ld a, [$cedc]
+	or $04
+	ld [$cedc], a
+	pop af
+	ret
+
+Func_22d6::
+	push af
+	ld a, [$cedc]
+	and $fb
+	ld [$cedc], a
+	pop af
+	ret
+; 0x22e1
+
+SECTION "Bank 0@230d", ROM0[$230d]
+
+Func_230d::
+	push af
+	ld a, [$ced1]
+	or $10
+	ld [$ced1], a
+	pop af
+	ret
+
+Func_2318::
+	push af
+	ld a, [$ced1]
+	and $ef
+	ld [$ced1], a
+	pop af
+	ret
+
+Func_2323::
+	push af
+	ld a, [$cedc]
+	or $10
+	ld [$cedc], a
+	pop af
+	ret
+
+Func_232e::
+	push af
+	ld a, [$cedc]
+	and $ef
+	ld [$cedc], a
+	pop af
+	ret
+; 0x2339
 
 SECTION "Bank 0@2344", ROM0[$2344]
 
@@ -5553,9 +5742,30 @@ Func_2afa::
 	call WaitForVBlank
 	pop af
 	ret
-; 0x2b05
 
-SECTION "Home@2b26", ROM0[$2b26]
+Func_2b05::
+	push af
+	ld a, $9b
+	call Func_29f1
+	call WaitForVBlank
+	pop af
+	ret
+
+Func_2b10::
+	push af
+	ld a, $96
+	call Func_29f1
+	call WaitForVBlank
+	pop af
+	ret
+
+Func_2b1b::
+	push af
+	ld a, $9c
+	call Func_29f1
+	call WaitForVBlank
+	pop af
+	ret
 
 Func_2b26::
 	push af
@@ -5596,9 +5806,14 @@ Func_2b52::
 	call WaitForVBlank
 	pop af
 	ret
-; 0x2b5d
 
-SECTION "Bank 0@2b68", ROM0[$2b68]
+Func_2b5d::
+	push af
+	ld a, $a3
+	call Func_29f1
+	call WaitForVBlank
+	pop af
+	ret
 
 Func_2b68::
 	push af
@@ -5631,9 +5846,6 @@ Func_2b89::
 	call WaitForVBlank
 	pop af
 	ret
-; 0x2b94
-
-SECTION "Bank 0@2b94", ROM0[$2b94]
 
 Func_2b94::
 	push af
@@ -5653,9 +5865,14 @@ Func_2ba9::
 	ld [$cfbe], a
 	pop af
 	ret
-; 0x2bb4
 
-SECTION "Bank 0@2bbf", ROM0[$2bbf]
+Func_2bb4::
+	push af
+	ld a, [$cfbf]
+	or $01
+	ld [$cfbf], a
+	pop af
+	ret
 
 Func_2bbf::
 	push af
@@ -5688,9 +5905,13 @@ Func_2bde::
 	ld [$cfc1], a
 	pop af
 	ret
-; 0x2be8
 
-SECTION "Bank 0@2bf0", ROM0[$2bf0]
+Func_2be8::
+	push af
+	ld a, $04
+	ld [$cfc1], a
+	pop af
+	ret
 
 Func_2bf0::
 	push af
@@ -5890,9 +6111,17 @@ Func_2d01::
 	ld [$cfdb], a
 	pop af
 	ret
-; 0x2d10
 
-SECTION "Home@2d1f", ROM0[$2d1f]
+Func_2d10::
+	push af
+	ld a, c
+	ld [$cfdc], a
+	ld a, b
+	ld [$cfdd], a
+	ld a, e
+	ld [$cfde], a
+	pop af
+	ret
 
 Func_2d1f:
 	ld a, $08

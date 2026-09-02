@@ -69,7 +69,7 @@ GenerateAIOpponentDeck:
 	call CompareBCAndDE
 	pop bc
 	; larger?
-	cp $00
+	cp DE_SMALLER_THAN_BC
 	jr z, .got_card
 	; no, increment card ID
 	inc bc

@@ -423,7 +423,7 @@ Func_102c0:
 	ld b, a
 	farcall SetMaterial2Card
 	farcall AttemptFusionSummon
-	cp $00
+	cp TRUE
 	jr nz, .asm_102fc
 	farcall Func_ef1d
 	jr .asm_102ff

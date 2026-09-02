@@ -299,6 +299,8 @@
 	const DRAGON_ERSATZ_HEAD   ; $129
 	const SONIC_MAID           ; $12a
 	const KURAMA               ; $12b
+
+DEF MAGIC_CARDS EQU const_value
 	const LEGENDARY_SWORD      ; $12c
 	const SWORD_OF_DARK        ; $12d
 	const DARK_ENERGY          ; $12e

@@ -54,6 +54,8 @@ ROMX $10
 	"Bank 10"
 ROMX $3b
 	"Bank 3b"
+ROMX $3c
+	"Bank 3c"
 ROMX $3d
 	"Bank 3d"
 ROMX $3e
