@@ -126,13 +126,17 @@ DoDuel:
 	farcall AIOppDrawInitialHand
 	farcall Func_4068
 	call Func_2a97
+
 .loop
+	; player's turn
 	farcall Func_d014
 	call IsDuelOngoing
 	cp FALSE
 	jr z, .duel_finished
 	farcall Func_1501f
 	call Func_2391
+
+	; opponent's turn
 	call Func_101f8
 	call Func_10302
 	call IsDuelOngoing
@@ -140,15 +144,18 @@ DoDuel:
 	jr z, .duel_finished
 	farcall Func_c142
 	jr .loop
+
 .duel_finished
 	call IncrementDuelistDuelAndWinCounts
 	farcall GiveVictoryAwardCard
 	call Func_104f5
+
+	; wait 100 frames
 	ld c, 100
-.asm_10118
+.wait
 	call WaitForVBlank
 	dec c
-	jr nz, .asm_10118
+	jr nz, .wait
 	call Func_10124
 	pop bc
 	pop af
@@ -289,9 +296,9 @@ Func_101d8:
 Func_101f8:
 	call Func_1020e
 	farcall Func_fa96
-	call Func_1023c
-	call Func_1027d
-	call Func_102c0
+	call AIPickHandCardToPlay
+	call AIPickFieldZoneToPlayCard
+	call AIPlayMonsterCard
 	farcall Func_c1bc
 	farcall Func_c1f1
 	ret
@@ -299,34 +306,36 @@ Func_101f8:
 Func_1020e:
 	push af
 	ld a, LOW(INVALID_CARD)
-	ld [$cee7], a
+	ld [wAIOppHandTargetCardID + 0], a
 	ld a, HIGH(INVALID_CARD)
-	ld [$cee8], a
+	ld [wAIOppHandTargetCardID + 1], a
 	ld a, $00
-	ld [$cee9], a
-	ld a, $00
-	ld [$ceea], a
+	ld [wAIOppHandTargetCardIndex], a
+	ld a, CARD_LOCATION_OPP_HAND
+	ld [wAIOppHandTargetCardLocation], a
 	ld a, LOW(INVALID_CARD)
-	ld [$ceeb], a
+	ld [wAIOppFieldTargetCardID + 0], a
 	ld a, HIGH(INVALID_CARD)
-	ld [$ceec], a
+	ld [wAIOppFieldTargetCardID + 1], a
 	ld a, $00
-	ld [$ceed], a
+	ld [wAIOppFieldTargetZoneIndex], a
 	ld a, $00
-	ld [$ceee], a
+	ld [wAIOppFieldTargetZoneLocation], a
 	farcall ClearFusionCards
 	pop af
 	ret
 
-Func_1023c:
+AIPickHandCardToPlay:
 	push af
 	push bc
 	push hl
+
+	; find first valid card in hand
 	ld b, $00
-.asm_10241
+.loop_hand
 	ld c, CARD_LOCATION_OPP_HAND
-	call SetCardLocationAndIndex
-	call Func_1c92
+	call SetTargetCard
+	call LoadTargetCard
 	push bc
 	ld a, [wTempCardID + 0]
 	ld c, a
@@ -335,38 +344,43 @@ Func_1023c:
 	call IsValidCard
 	pop bc
 	cp TRUE
-	jr z, .asm_10260
+	jr z, .valid_card
 	inc b
 	ld a, b
-	cp $05
-	jr c, .asm_10241
-.asm_10260
+	cp HAND_SIZE
+	jr c, .loop_hand
+.valid_card
 	ld a, b
-	cp $05
-	jr z, .asm_10279
+	cp HAND_SIZE
+	jr z, .done
+
+	; store its location and ID
 	ld a, b
-	ld [$cee9], a
+	ld [wAIOppHandTargetCardIndex], a
 	ld a, c
-	ld [$ceea], a
+	ld [wAIOppHandTargetCardLocation], a
 	ld a, [wTempCardID + 0]
-	ld [$cee7], a
+	ld [wAIOppHandTargetCardID + 0], a
 	ld a, [wTempCardID + 1]
-	ld [$cee8], a
-.asm_10279
+	ld [wAIOppHandTargetCardID + 1], a
+
+.done
 	pop hl
 	pop bc
 	pop af
 	ret
 
-Func_1027d:
+AIPickFieldZoneToPlayCard:
 	push af
 	push bc
 	push hl
+
+	; find first empty zone in field
 	ld b, $00
-.asm_10282
+.loop_field
 	ld c, CARD_LOCATION_OPP_FIELD
-	call SetCardLocationAndIndex
-	call Func_1c92
+	call SetTargetCard
+	call LoadTargetCard
 	push bc
 	ld a, [wTempCardID + 0]
 	ld c, a
@@ -375,48 +389,55 @@ Func_1027d:
 	call IsValidCard
 	pop bc
 	cp TRUE
-	jr nz, .asm_102a1
+	jr nz, .no_card
+	; not empty, next zone
 	inc b
 	ld a, b
-	cp $05
-	jr c, .asm_10282
-.asm_102a1
+	cp FIELD_SIZE
+	jr c, .loop_field
+.no_card
+	; either found an empty zone
+	; or there are no empty zones in field
 	ld a, b
-	cp $05
-	jr nz, .asm_102a8
+	cp FIELD_SIZE
+	jr nz, .is_empty
 	ld b, $00
-.asm_102a8
+.is_empty
+
+	; store its location (and ID if there's a card)
 	ld a, b
-	ld [$ceed], a
+	ld [wAIOppFieldTargetZoneIndex], a
 	ld a, c
-	ld [$ceee], a
+	ld [wAIOppFieldTargetZoneLocation], a
 	ld a, [wTempCardID + 0]
-	ld [$ceeb], a
+	ld [wAIOppFieldTargetCardID + 0], a
 	ld a, [wTempCardID + 1]
-	ld [$ceec], a
+	ld [wAIOppFieldTargetCardID + 1], a
 	pop hl
 	pop bc
 	pop af
 	ret
 
-Func_102c0:
+AIPlayMonsterCard:
 	push af
 	push bc
-	ld a, [$ceed]
+
+	; can we fuse the monsters in hand and field?
+	ld a, [wAIOppFieldTargetZoneIndex]
 	ld b, a
 	ld c, CARD_LOCATION_OPP_FIELD
-	call SetCardLocationAndIndex
-	call Func_1c92
+	call SetTargetCard
+	call LoadTargetCard
 	ld a, [wTempCardID + 0]
 	ld c, a
 	ld a, [wTempCardID + 1]
 	ld b, a
 	farcall SetMaterial1Card
-	ld a, [$cee9]
+	ld a, [wAIOppHandTargetCardIndex]
 	ld b, a
 	ld c, CARD_LOCATION_OPP_HAND
-	call SetCardLocationAndIndex
-	call Func_1c92
+	call SetTargetCard
+	call LoadTargetCard
 	ld a, [wTempCardID + 0]
 	ld c, a
 	ld a, [wTempCardID + 1]
@@ -424,12 +445,15 @@ Func_102c0:
 	farcall SetMaterial2Card
 	farcall AttemptFusionSummon
 	cp TRUE
-	jr nz, .asm_102fc
+	jr nz, .no_fusion
+	; we can, fuse them
 	farcall Func_ef1d
-	jr .asm_102ff
-.asm_102fc
+	jr .done
+.no_fusion
+	; we cannot, play card over field card
 	farcall Func_eebf
-.asm_102ff
+
+.done
 	pop bc
 	pop af
 	ret
@@ -439,26 +463,26 @@ Func_10302:
 	push bc
 	call Func_10340
 	ld a, $00
-	ld [$cef7], a
-.asm_1030c
-	ld a, [$cef7]
-	cp $05
-	jr nc, .asm_10334
+	ld [wCardLocationIndex_cef7], a
+.loop_field
+	ld a, [wCardLocationIndex_cef7]
+	cp FIELD_SIZE
+	jr nc, .break
 	call Func_2217
 	farcall Func_e1f2
 	call Func_10370
-	cp $00
+	cp TRUE
 	jr nz, .asm_10323
 	call Func_1039c
 .asm_10323
-	ld a, [$cef7]
-	add $01
-	ld [$cef7], a
+	ld a, [wCardLocationIndex_cef7]
+	add 1
+	ld [wCardLocationIndex_cef7], a
 	call IsDuelOngoing
 	cp FALSE
-	jr z, .asm_10334
-	jr .asm_1030c
-.asm_10334
+	jr z, .break
+	jr .loop_field
+.break
 	call Func_2bbf
 	call Func_2bfe
 	farcall Func_c772
@@ -469,23 +493,23 @@ Func_10302:
 Func_10340:
 	push af
 	ld a, LOW(INVALID_CARD)
-	ld [$cef0], a
+	ld [wCardID_cef0 + 0], a
 	ld a, HIGH(INVALID_CARD)
-	ld [$cef1], a
+	ld [wCardID_cef0 + 1], a
 	ld a, $00
-	ld [$cef2], a
+	ld [wcef2], a
 	ld a, $00
-	ld [$cef7], a
+	ld [wCardLocationIndex_cef7], a
 	ld a, $01
-	ld [$cef8], a
+	ld [wcef8], a
 	ld a, LOW(INVALID_CARD)
-	ld [$cef9], a
+	ld [wCardID_cef9 + 0], a
 	ld a, HIGH(INVALID_CARD)
-	ld [$cefa], a
+	ld [wCardID_cef9 + 1], a
 	ld a, $00
-	ld [$cf00], a
+	ld [wcf00], a
 	ld a, $00
-	ld [$cf01], a
+	ld [wcf01], a
 	pop af
 	ret
 
@@ -493,12 +517,12 @@ Func_10370:
 	push bc
 	push de
 	push hl
-	ld e, $01
-	ld a, [$cef7]
+	ld e, FALSE
+	ld a, [wCardLocationIndex_cef7]
 	ld b, a
 	ld c, CARD_LOCATION_OPP_FIELD
-	call SetCardLocationAndIndex
-	call Func_1c92
+	call SetTargetCard
+	call LoadTargetCard
 	push bc
 	ld a, [wTempCardID + 0]
 	ld c, a
@@ -507,10 +531,10 @@ Func_10370:
 	call IsValidCard
 	pop bc
 	cp TRUE
-	jr nz, .asm_10397
+	jr nz, .no_card
 	call Func_10433
-	ld e, $00
-.asm_10397
+	ld e, TRUE
+.no_card
 	ld a, e
 	pop hl
 	pop de
@@ -557,15 +581,15 @@ Func_103d4:
 	push af
 	push bc
 	push bc
-	ld a, [$cef7]
+	ld a, [wCardLocationIndex_cef7]
 	ld b, a
-	ld a, [$cef8]
+	ld a, [wcef8]
 	ld c, a
 	farcall Func_e285
-	call SetCardLocationAndIndex
-	call Func_1c92
+	call SetTargetCard
+	call LoadTargetCard
 	call Func_21d9
-	call Func_1c7a
+	call OverwriteTargetCard
 	pop bc
 	call Func_1045a
 	farcall Func_e2b2
@@ -577,14 +601,14 @@ Func_103d4:
 Func_103fb:
 	push af
 	push bc
-	ld a, [$cef7]
+	ld a, [wCardLocationIndex_cef7]
 	ld b, a
-	ld a, [$cef8]
+	ld a, [wcef8]
 	ld c, a
-	call SetCardLocationAndIndex
-	call Func_1c92
+	call SetTargetCard
+	call LoadTargetCard
 	call Func_21e6
-	call Func_1c7a
+	call OverwriteTargetCard
 	pop bc
 	pop af
 	ret
@@ -592,15 +616,15 @@ Func_103fb:
 Func_10414:
 	push af
 	push bc
-	ld a, [$cef7]
+	ld a, [wCardLocationIndex_cef7]
 	ld b, a
-	ld a, [$cef8]
+	ld a, [wcef8]
 	ld c, a
 	farcall Func_e285
-	call SetCardLocationAndIndex
-	call Func_1c92
+	call SetTargetCard
+	call LoadTargetCard
 	call Func_21d9
-	call Func_1c7a
+	call OverwriteTargetCard
 	farcall Func_e407
 	pop bc
 	pop af
@@ -609,15 +633,15 @@ Func_10414:
 Func_10433:
 	push af
 	ld a, [wTempCardID + 0]
-	ld [$cef0], a
+	ld [wCardID_cef0 + 0], a
 	ld a, [wTempCardID + 1]
-	ld [$cef1], a
+	ld [wCardID_cef0 + 1], a
 	ld a, $02
-	ld [$cef2], a
+	ld [wcef2], a
 	ld a, b
-	ld [$cef7], a
+	ld [wCardLocationIndex_cef7], a
 	ld a, c
-	ld [$cef8], a
+	ld [wcef8], a
 	farcall Func_cfe1
 	ld a, b
 	ld [wcd5e], a
@@ -631,16 +655,16 @@ Func_10433:
 ; - c = CARD_LOCATION_* constant
 Func_1045a:
 	push af
-	call SetCardLocationAndIndex
-	call Func_1c92
+	call SetTargetCard
+	call LoadTargetCard
 	ld a, [wTempCardID + 0]
-	ld [$cef9], a
+	ld [wCardID_cef9 + 0], a
 	ld a, [wTempCardID + 1]
-	ld [$cefa], a
+	ld [wCardID_cef9 + 1], a
 	ld a, b
-	ld [$cf00], a
+	ld [wcf00], a
 	ld a, c
-	ld [$cf01], a
+	ld [wcf01], a
 	pop af
 	ret
 

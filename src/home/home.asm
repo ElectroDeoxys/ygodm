@@ -3343,7 +3343,7 @@ Func_1c28::
 ; input:
 ; - b = card location index
 ; - c = CARD_LOCATION_* constant
-SetCardLocationAndIndex::
+SetTargetCard::
 	push af
 	ld a, b
 	ld [wCardLocationIndex], a
@@ -3364,11 +3364,11 @@ GetCardLocationAndIndex::
 	pop af
 	ret
 
-Func_1c65::
+RemoveTargetCard::
 	push af
 	push bc
 	push hl
-	call Func_1cb5
+	call GetPointerToTargetCard
 	ld h, b
 	ld l, c
 	ld a, LOW(INVALID_CARD)
@@ -3382,11 +3382,11 @@ Func_1c65::
 	pop af
 	ret
 
-Func_1c7a::
+OverwriteTargetCard::
 	push af
 	push bc
 	push hl
-	call Func_1cb5
+	call GetPointerToTargetCard
 	ld h, b
 	ld l, c
 	ld a, [wTempCardID + 0]
@@ -3400,11 +3400,11 @@ Func_1c7a::
 	pop af
 	ret
 
-Func_1c92::
+LoadTargetCard::
 	push af
 	push bc
 	push hl
-	call Func_1cb5
+	call GetPointerToTargetCard
 	ld h, b
 	ld l, c
 	ld a, [hli]
@@ -3422,14 +3422,14 @@ Func_1caa::
 	push af
 	push bc
 	farcall Func_24024
-	call Func_1c7a
+	call OverwriteTargetCard
 	pop bc
 	pop af
 	ret
 
 ; outputs in bc pointer to card that
 ; corresponds to wCardLocation and wCardLocationIndex
-Func_1cb5:
+GetPointerToTargetCard:
 	push af
 	push hl
 	ld b, $00
@@ -4272,7 +4272,7 @@ Func_217e::
 	pop af
 	ret
 
-Func_218b::
+GetCardLevel::
 	ld a, [$cdf4]
 	and $30
 	swap a

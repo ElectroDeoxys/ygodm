@@ -32,7 +32,16 @@ DEF INITIAL_LP EQU $8000
 	const ROCK          ; $12
 	const PLANT         ; $13
 
-	const MAGIC ; $14
+	const MAGIC         ; $14
+
+; duel fields
+	const_def 1
+	const FIELD_FOREST    ; $1
+	const FIELD_WASTELAND ; $2
+	const FIELD_MOUNTAIN  ; $3
+	const FIELD_SOGEN     ; $4
+	const FIELD_UMI       ; $5
+	const FIELD_YAMI      ; $6
 
 ; Exodia flags
 DEF HAS_R_LEG_OF_FORBIDDEN EQU 1 << 0

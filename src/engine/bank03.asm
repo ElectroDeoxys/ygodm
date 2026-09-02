@@ -18,7 +18,7 @@
 	farfunc $675b ; $1f
 	farfunc $67a7 ; $21
 	farfunc GetPlayerDeckCard ; $23
-	farfunc Func_c630 ; $25
+	farfunc RemoveCardFromPlayerDeck ; $25
 	farfunc $6747 ; $27
 	farfunc $6773 ; $29
 	farfunc $4d55 ; $2b
@@ -55,8 +55,6 @@
 	farfunc Func_d014 ; $69
 	farfunc Func_e711 ; $6b
 
-SECTION "Bank 3@406c", ROMX[$406c], BANK[$3]
-
 SetInitialPlayerLP:
 	push af
 	ld a, LOW(INITIAL_LP)
@@ -85,56 +83,56 @@ SetInitialOpponentLP:
 
 SECTION "Bank 3@4106", ROMX[$4106], BANK[$3]
 
-Func_c106:
+ClearActiveField:
 	push af
-	ld a, $00
-	ld [$cad1], a
+	ld a, NONE
+	ld [wActiveField], a
 	pop af
 	ret
 
-Func_c10e:
-	ld [$cad1], a
+SetActiveField:
+	ld [wActiveField], a
 	ret
 
-Func_c112:
+SetForestField:
 	push af
-	ld a, $01
-	call Func_c10e
+	ld a, FIELD_FOREST
+	call SetActiveField
 	pop af
 	ret
 
-Func_c11a:
+SetWastelandField:
 	push af
-	ld a, $02
-	call Func_c10e
+	ld a, FIELD_WASTELAND
+	call SetActiveField
 	pop af
 	ret
 
-Func_c122:
+SetMountainField:
 	push af
-	ld a, $03
-	call Func_c10e
+	ld a, FIELD_MOUNTAIN
+	call SetActiveField
 	pop af
 	ret
 
-Func_c12a:
+SetSogenField:
 	push af
-	ld a, $04
-	call Func_c10e
+	ld a, FIELD_SOGEN
+	call SetActiveField
 	pop af
 	ret
 
-Func_c132:
+SetUmiField:
 	push af
-	ld a, $05
-	call Func_c10e
+	ld a, FIELD_UMI
+	call SetActiveField
 	pop af
 	ret
 
-Func_c13a:
+SetYamiField:
 	push af
-	ld a, $06
-	call Func_c10e
+	ld a, FIELD_YAMI
+	call SetActiveField
 	pop af
 	ret
 
@@ -163,8 +161,8 @@ Func_c152:
 	push bc
 	ld b, d
 	ld c, CARD_LOCATION_PLAYER_HAND
-	call SetCardLocationAndIndex
-	call Func_1c92
+	call SetTargetCard
+	call LoadTargetCard
 	call Func_1d67
 	call Func_c226
 	pop bc
@@ -196,8 +194,8 @@ Func_c187:
 	push bc
 	ld b, d
 	ld c, CARD_LOCATION_PLAYER_FIELD
-	call SetCardLocationAndIndex
-	call Func_1c92
+	call SetTargetCard
+	call LoadTargetCard
 	call Func_1d67
 	call Func_c226
 	pop bc
@@ -229,8 +227,8 @@ Func_c1bc:
 	push bc
 	ld b, d
 	ld c, CARD_LOCATION_OPP_FIELD
-	call SetCardLocationAndIndex
-	call Func_1c92
+	call SetTargetCard
+	call LoadTargetCard
 	call Func_1d67
 	call Func_c226
 	pop bc
@@ -262,8 +260,8 @@ Func_c1f1:
 	push bc
 	ld b, d
 	ld c, CARD_LOCATION_OPP_HAND
-	call SetCardLocationAndIndex
-	call Func_1c92
+	call SetTargetCard
+	call LoadTargetCard
 	call Func_1d67
 	call Func_c226
 	pop bc
@@ -716,7 +714,7 @@ GetPlayerDeckCard:
 
 SECTION "Bank 3@4630", ROMX[$4630], BANK[$3]
 
-Func_c630:
+RemoveCardFromPlayerDeck:
 	push af
 	push bc
 	push de
@@ -724,26 +722,26 @@ Func_c630:
 	ld a, [wPlayerDeckIndex]
 	ld l, a
 	ld d, $00
-	ld e, $00
-.asm_c63c
+	ld e, 0
+.loop_deck
 	ld a, e
 	call SetPlayerDeckIndex
 	call GetPlayerDeckCard
 	ld a, e
 	cp l
-	jr z, .asm_c64f
+	jr z, .skip
 	ld a, d
 	call SetPlayerDeckIndex
 	call AddCardToPlayerDeck
 	inc d
-.asm_c64f
+.skip
 	inc e
 	ld a, e
-	cp $28
-	jr c, .asm_c63c
+	cp DECK_SIZE
+	jr c, .loop_deck
 	ld a, d
 	call SetPlayerDeckIndex
-	ld bc, $16d
+	ld bc, INVALID_CARD
 	call AddCardToPlayerDeck
 	pop hl
 	pop de
@@ -884,7 +882,7 @@ AIOppDrawCard:
 	cp DECK_SIZE
 	jr nc, .asm_c75b
 	ld c, CARD_LOCATION_OPP_HAND
-	call SetCardLocationAndIndex
+	call SetTargetCard
 	call GetOppDuelDeckCard
 	call Func_c6da
 	call IncrementOppDuelDeckIndex
@@ -1328,8 +1326,8 @@ Func_cd9a:
 	ld a, [wcd5f]
 	ld c, a
 	call Func_cfe1
-	call SetCardLocationAndIndex
-	call Func_1c92
+	call SetTargetCard
+	call LoadTargetCard
 	farcall Func_24024
 	pop bc
 	pop af
@@ -1469,7 +1467,7 @@ Func_ce47:
 	cp $02
 	jr nz, .asm_ceac
 	call Func_dabc
-	cp $00
+	cp TRUE
 	jr nz, .asm_cea7
 	ld a, b
 	ld [wcd5e], a
@@ -1983,7 +1981,7 @@ PlayerDrawCard:
 	cp DECK_SIZE
 	jr nc, .asm_d1fc
 	ld c, CARD_LOCATION_PLAYER_HAND
-	call SetCardLocationAndIndex
+	call SetTargetCard
 	call GetPlayerDuelDeckCard
 	call Func_d165
 	call IncrementPlayerDuelDeckIndex
@@ -2039,7 +2037,7 @@ SetupDuel:
 	call CreatePlayerDuelDeck
 	farcall ChoosePlayerAnteCard
 	call PlayerDrawInitialHand
-	call Func_c106
+	call ClearActiveField
 	call Func_2b94
 	call Func_2bde
 	call Func_cd55
@@ -2206,12 +2204,12 @@ Func_d366:
 	jr .asm_d3ad
 .asm_d37e
 	ld e, $01
-	ld a, [$cd12]
+	ld a, [wLoadedCardLocation]
 	ld c, a
-	ld a, [$cd11]
+	ld a, [wLoadedCardLocationIndex]
 	ld b, a
-	call SetCardLocationAndIndex
-	call Func_1c92
+	call SetTargetCard
+	call LoadTargetCard
 	ld a, c
 	cp $01
 	jr nz, .asm_d39e
@@ -2328,12 +2326,12 @@ Func_d447:
 	push bc
 	push de
 	ld e, $01
-	ld a, [$cd12]
+	ld a, [wLoadedCardLocation]
 	ld c, a
-	ld a, [$cd11]
+	ld a, [wLoadedCardLocationIndex]
 	ld b, a
-	call SetCardLocationAndIndex
-	call Func_1c92
+	call SetTargetCard
+	call LoadTargetCard
 	ld a, c
 	cp $01
 	jr nz, .asm_d469
@@ -2522,7 +2520,7 @@ Func_d58c:
 	push hl
 	call Func_1114
 	ld b, $00
-	ld a, [$cad1]
+	ld a, [wActiveField]
 	ld c, a
 	farcall Func_42c5
 	ld a, $02
@@ -2572,7 +2570,7 @@ Func_d5db:
 	call IsValidCard
 	cp TRUE
 	jr nz, .asm_d60e
-	call Func_218b
+	call GetCardLevel
 	ld b, $00
 	ld c, a
 	sla c
@@ -2700,8 +2698,8 @@ Func_d6d4:
 	ld a, [wcd5e]
 	ld b, a
 	ld c, CARD_LOCATION_PLAYER_FIELD
-	call SetCardLocationAndIndex
-	call Func_1c92
+	call SetTargetCard
+	call LoadTargetCard
 	ld a, [wTempCardID + 0]
 	ld c, a
 	ld a, [wTempCardID + 1]
@@ -2710,8 +2708,8 @@ Func_d6d4:
 	ld a, [$cd60]
 	ld b, a
 	ld c, CARD_LOCATION_PLAYER_HAND
-	call SetCardLocationAndIndex
-	call Func_1c92
+	call SetTargetCard
+	call LoadTargetCard
 	ld a, [wTempCardID + 0]
 	ld c, a
 	ld a, [wTempCardID + 1]
@@ -2741,9 +2739,9 @@ Func_d71f:
 	ld a, [wcd5e]
 	ld b, a
 	ld c, CARD_LOCATION_PLAYER_FIELD
-	call SetCardLocationAndIndex
+	call SetTargetCard
 	call Func_21d9
-	call Func_1c7a
+	call OverwriteTargetCard
 	pop bc
 	pop af
 	ret
@@ -2757,8 +2755,8 @@ Func_d733:
 	ld a, [wcd5e]
 	ld b, a
 	ld c, CARD_LOCATION_PLAYER_FIELD
-	call SetCardLocationAndIndex
-	call Func_1c92
+	call SetTargetCard
+	call LoadTargetCard
 	call Func_21f3
 	cp $02
 	jr nz, .asm_d759
@@ -2770,10 +2768,10 @@ Func_d733:
 	ld a, [wcd5e]
 	ld b, a
 	ld c, CARD_LOCATION_PLAYER_FIELD
-	call SetCardLocationAndIndex
-	call Func_1c92
+	call SetTargetCard
+	call LoadTargetCard
 	call Func_21a9
-	call Func_1c7a
+	call OverwriteTargetCard
 	call Func_f15c
 .asm_d771
 	call Func_d804
@@ -2790,11 +2788,11 @@ Func_d777:
 	ld a, [wcd5e]
 	ld b, a
 	ld c, CARD_LOCATION_PLAYER_FIELD
-	call SetCardLocationAndIndex
-	call Func_1c92
+	call SetTargetCard
+	call LoadTargetCard
 	call Func_21a9
 	call Func_da4a
-	call Func_1c7a
+	call OverwriteTargetCard
 	call Func_f16f
 	jr .asm_d7ca
 .asm_d79a
@@ -2811,11 +2809,11 @@ Func_d777:
 	ld a, [wcd5e]
 	ld b, a
 	ld c, CARD_LOCATION_PLAYER_FIELD
-	call SetCardLocationAndIndex
-	call Func_1c92
+	call SetTargetCard
+	call LoadTargetCard
 	call Func_21a9
 	call Func_da4a
-	call Func_1c7a
+	call OverwriteTargetCard
 	call Func_f152
 	call Func_e2f8
 .asm_d7ca
@@ -2836,11 +2834,11 @@ Func_d7cd:
 	ld a, [$cd60]
 	ld b, a
 	ld c, CARD_LOCATION_PLAYER_FIELD
-	call SetCardLocationAndIndex
-	call Func_1c92
+	call SetTargetCard
+	call LoadTargetCard
 	call Func_21a9
 	call Func_da4a
-	call Func_1c7a
+	call OverwriteTargetCard
 	call Func_f182
 	call Func_2b68
 	call Func_e2f8
@@ -2864,8 +2862,8 @@ Func_d813:
 	push bc
 	ld b, a
 	ld c, CARD_LOCATION_PLAYER_HAND
-	call SetCardLocationAndIndex
-	call Func_1c92
+	call SetTargetCard
+	call LoadTargetCard
 	ld a, [wTempCardID + 0]
 	ld c, a
 	ld a, [wTempCardID + 1]
@@ -2884,8 +2882,8 @@ Func_d833:
 	push bc
 	ld b, a
 	ld c, CARD_LOCATION_OPP_HAND
-	call SetCardLocationAndIndex
-	call Func_1c92
+	call SetTargetCard
+	call LoadTargetCard
 	ld a, [wTempCardID + 0]
 	ld c, a
 	ld a, [wTempCardID + 1]
@@ -2911,8 +2909,8 @@ PlayerHasAnyHandCards:
 	cp HAND_SIZE
 	jr nc, .done
 	ld c, CARD_LOCATION_PLAYER_HAND
-	call SetCardLocationAndIndex
-	call Func_1c92
+	call SetTargetCard
+	call LoadTargetCard
 	push bc
 	ld a, [wTempCardID + 0]
 	ld c, a
@@ -2945,8 +2943,8 @@ Func_d880:
 	ld a, [wcd5e]
 	ld b, a
 	ld c, CARD_LOCATION_PLAYER_FIELD
-	call SetCardLocationAndIndex
-	call Func_1c92
+	call SetTargetCard
+	call LoadTargetCard
 	call Func_2203
 	cp $00
 	jr nz, .asm_d8aa
@@ -2992,8 +2990,8 @@ Func_d8cf:
 	push bc
 	push de
 	ld e, CARD_LOCATION_OPP_FIELD
-	call SetCardLocationAndIndex
-	call Func_1c92
+	call SetTargetCard
+	call LoadTargetCard
 	ld a, [wTempCardID + 0]
 	ld c, a
 	ld a, [wTempCardID + 1]
@@ -3013,8 +3011,8 @@ Func_d8ee:
 	ld a, [wcd5e]
 	ld b, a
 	ld c, CARD_LOCATION_PLAYER_FIELD
-	call SetCardLocationAndIndex
-	call Func_1c92
+	call SetTargetCard
+	call LoadTargetCard
 	call Func_21f3
 	pop bc
 	ret
@@ -3029,11 +3027,11 @@ Func_d900:
 	cp $02
 	jr nz, .asm_d918
 	call Func_21e6
-	call Func_1c7a
+	call OverwriteTargetCard
 	jr .asm_d91e
 .asm_d918
 	call Func_21d9
-	call Func_1c7a
+	call OverwriteTargetCard
 .asm_d91e
 	pop bc
 	pop af
@@ -3046,8 +3044,8 @@ Func_d921:
 	ld e, FALSE
 .loop_field
 	ld c, CARD_LOCATION_PLAYER_FIELD
-	call SetCardLocationAndIndex
-	call Func_1c92
+	call SetTargetCard
+	call LoadTargetCard
 	push bc
 	ld a, [wTempCardID + 0]
 	ld c, a
@@ -3080,10 +3078,10 @@ Func_d953:
 	ld c, CARD_LOCATION_PLAYER_FIELD
 	ld d, $00
 .asm_d95d
-	call SetCardLocationAndIndex
-	call Func_1c92
+	call SetTargetCard
+	call LoadTargetCard
 	call Func_21b4
-	call Func_1c7a
+	call OverwriteTargetCard
 	inc b
 	ld a, b
 	cp $05
@@ -3097,9 +3095,9 @@ Func_d953:
 Func_d974:
 	push de
 	push hl
-	add sp, $fb
+	add sp, -$5
 	ld a, $02
-	ld [$cf01], a
+	ld [wcf01], a
 	ld hl, sp+$00
 	ld a, $00
 	ld [hli], a
@@ -3109,21 +3107,21 @@ Func_d974:
 	ld hl, sp+$04
 	ld [hl], $00
 	call Func_dabc
-	cp $00
+	cp TRUE
 	jr nz, .asm_d994
 	ld [hl], b
 .asm_d994
-	ld c, $02
+	ld c, CARD_LOCATION_PLAYER_FIELD
 	ld b, $00
-.asm_d998
+.loop_field
 	ld a, b
-	cp $05
-	jr nc, .asm_d9c1
+	cp FIELD_SIZE
+	jr nc, .break
 	ld hl, sp+$03
 	ld [hl], b
 	push bc
-	call SetCardLocationAndIndex
-	call Func_1c92
+	call SetTargetCard
+	call LoadTargetCard
 	ld a, [wTempCardID + 0]
 	ld c, a
 	ld a, [wTempCardID + 1]
@@ -3138,14 +3136,14 @@ Func_d974:
 .asm_d9bd
 	pop bc
 	inc b
-	jr .asm_d998
-.asm_d9c1
+	jr .loop_field
+.break
 	ld hl, sp+$04
 	ld b, [hl]
 	ld c, $02
 	ld hl, sp+$02
 	ld a, [hl]
-	add sp, $05
+	add sp, $5
 	pop hl
 	pop de
 	ret
@@ -3164,7 +3162,7 @@ Func_d9ce:
 	call CompareBCAndDE
 	pop de
 	cp DE_LARGER_THAN_BC
-	jr z, .asm_da25
+	jr z, .done
 	ld hl, $2
 	add hl, de
 	ld a, [hl]
@@ -3174,12 +3172,12 @@ Func_d9ce:
 .asm_d9ed
 	push de
 	push bc
-	ld a, $01
+	ld a, CARD_LOCATION_OPP_FIELD
 	ld c, a
-	ld a, [$cef7]
+	ld a, [wCardLocationIndex_cef7]
 	ld b, a
-	call SetCardLocationAndIndex
-	call Func_1c92
+	call SetTargetCard
+	call LoadTargetCard
 	farcall Func_24024
 	pop bc
 	ld a, [wLoadedCardAtk + 0]
@@ -3189,7 +3187,7 @@ Func_d9ce:
 	call CompareBCAndDE
 	pop de
 	cp DE_LARGER_THAN_BC
-	jr nz, .asm_da25
+	jr nz, .done
 	ld h, d
 	ld l, e
 	ld a, c
@@ -3204,30 +3202,32 @@ Func_d9ce:
 	ld hl, $2
 	add hl, de
 	ld [hl], $00
-.asm_da25
+.done
 	pop hl
 	pop bc
 	pop af
 	ret
 
+; output:
+; - bc = attack or defense of wTempCardID
 Func_da29:
 	push af
 	push hl
 	farcall Func_24024
 	call Func_21f3
 	cp $02
-	jr nz, .asm_da3f
+	jr nz, .defense
 	ld a, [wLoadedCardAtk + 0]
 	ld c, a
 	ld a, [wLoadedCardAtk + 1]
 	ld b, a
-	jr .asm_da47
-.asm_da3f
+	jr .done
+.defense
 	ld a, [wLoadedCardDef + 0]
 	ld c, a
 	ld a, [wLoadedCardDef + 1]
 	ld b, a
-.asm_da47
+.done
 	pop hl
 	pop af
 	ret
@@ -3255,8 +3255,8 @@ Func_da60:
 	ld a, b
 	cp FIELD_SIZE
 	jr nc, .done
-	call SetCardLocationAndIndex
-	call Func_1c92
+	call SetTargetCard
+	call LoadTargetCard
 	call Func_21f3
 	cp $02
 	jr nz, .next
@@ -3282,8 +3282,8 @@ Func_da8f:
 	push hl
 	ld bc, $2
 .asm_da94
-	call SetCardLocationAndIndex
-	call Func_1c92
+	call SetTargetCard
+	call LoadTargetCard
 	push bc
 	ld a, [wTempCardID + 0]
 	ld c, a
@@ -3311,10 +3311,10 @@ Func_da8f:
 Func_dabc:
 	push hl
 	ld b, $00
-	ld c, $02
-.asm_dac1
-	call SetCardLocationAndIndex
-	call Func_1c92
+	ld c, CARD_LOCATION_PLAYER_FIELD
+.loop_field
+	call SetTargetCard
+	call LoadTargetCard
 	push bc
 	ld a, [wTempCardID + 0]
 	ld c, a
@@ -3323,25 +3323,25 @@ Func_dabc:
 	call IsValidCard
 	pop bc
 	cp TRUE
-	jr nz, .asm_dadf
+	jr nz, .next
 	call Func_2203
 	cp $00
 	jr z, .asm_dae5
-.asm_dadf
+.next
 	inc b
 	ld a, b
-	cp $05
-	jr nz, .asm_dac1
+	cp FIELD_SIZE
+	jr nz, .loop_field
 .asm_dae5
 	ld a, b
-	cp $05
-	jr nz, .asm_daf0
+	cp FIELD_SIZE
+	jr nz, .true
 	ld b, $00
-	ld a, $01
-	jr .asm_daf1
-.asm_daf0
-	xor a
-.asm_daf1
+	ld a, FALSE
+	jr .false
+.true
+	xor a ; TRUE
+.false
 	pop hl
 	ret
 
@@ -3351,8 +3351,8 @@ Func_daf3:
 	ld b, $04
 	ld c, $01
 .asm_daf9
-	call SetCardLocationAndIndex
-	call Func_1c92
+	call SetTargetCard
+	call LoadTargetCard
 	push bc
 	ld a, [wTempCardID + 0]
 	ld c, a
@@ -3377,13 +3377,13 @@ Func_daf3:
 	pop bc
 	ret
 
-IsCardAtLocationDragonType:
+IsTargetCardDragonType:
 	push bc
 	push de
 	push hl
 	ld e, FALSE
-	call SetCardLocationAndIndex
-	call Func_1c92
+	call SetTargetCard
+	call LoadTargetCard
 	; is it a valid card?
 	ld a, [wTempCardID + 0]
 	ld c, a
@@ -3542,9 +3542,9 @@ Func_dc2f:
 	push bc
 	ld b, d
 	ld c, e
-	call SetCardLocationAndIndex
+	call SetTargetCard
 	pop bc
-	call Func_1c92
+	call LoadTargetCard
 	ld a, [wTempCardID + 0]
 	call Func_200e
 	ld a, [wTempCardID + 1]
@@ -3624,9 +3624,9 @@ Func_dcb0:
 	push bc
 	ld b, d
 	ld c, e
-	call SetCardLocationAndIndex
+	call SetTargetCard
 	pop bc
-	call Func_1c7a
+	call OverwriteTargetCard
 	inc d
 	dec c
 	jr nz, .asm_dcb8
@@ -3645,7 +3645,7 @@ Func_dcdc:
 	call Func_200e
 	ld a, [wOppLP + 1]
 	call Func_200e
-	ld a, [$cad1]
+	ld a, [wActiveField]
 	call Func_200e
 	ld a, [$cf02]
 	call Func_200e
@@ -3671,7 +3671,7 @@ Func_dd1b:
 	call Func_2051
 	ld [wPlayerLP + 1], a
 	call Func_2051
-	ld [$cad1], a
+	ld [wActiveField], a
 	call Func_2051
 	ld [$cf03], a
 	call Func_2051
@@ -3829,13 +3829,13 @@ Func_deba:
 	call Func_22d6
 	call Func_2318
 	call Func_232e
-	ld a, [$ce0a]
+	ld a, [wHealLPAmount + 0]
 	ld c, a
-	ld a, [$ce0b]
+	ld a, [wHealLPAmount + 1]
 	ld b, a
-	ld a, [$ce0e]
+	ld a, [wDamageLPAmount + 0]
 	ld e, a
-	ld a, [$ce0f]
+	ld a, [wDamageLPAmount + 1]
 	ld d, a
 	call Func_e06b
 	ld a, e
@@ -3887,9 +3887,9 @@ Func_df31:
 	call Func_232e
 	call Func_22c0
 	call Func_22d6
-	ld a, [$ce0a]
+	ld a, [wHealLPAmount + 0]
 	ld c, a
-	ld a, [$ce0b]
+	ld a, [wHealLPAmount + 1]
 	ld b, a
 	ld a, [$ce10]
 	ld e, a
@@ -3937,9 +3937,9 @@ Func_df8d:
 	call Func_232e
 	call Func_22c0
 	call Func_22d6
-	ld a, [$ce0e]
+	ld a, [wDamageLPAmount + 0]
 	ld e, a
-	ld a, [$ce0f]
+	ld a, [wDamageLPAmount + 1]
 	ld d, a
 	ld a, [$ce0c]
 	ld c, a
@@ -3981,9 +3981,9 @@ Func_dfe2:
 	call Func_227e
 	call Func_22c0
 	call Func_22d6
-	ld a, [$ce0a]
+	ld a, [wHealLPAmount + 0]
 	ld c, a
-	ld a, [$ce0b]
+	ld a, [wHealLPAmount + 1]
 	ld b, a
 	call Func_e1d1
 	cp $02
@@ -4007,9 +4007,9 @@ Func_e013:
 	call Func_232e
 	call Func_22c0
 	call Func_22d6
-	ld a, [$ce0e]
+	ld a, [wDamageLPAmount + 0]
 	ld c, a
-	ld a, [$ce0f]
+	ld a, [wDamageLPAmount + 1]
 	ld b, a
 	call Func_e1b0
 	cp $02
@@ -4025,9 +4025,9 @@ Func_e013:
 Func_e044:
 	push af
 	push bc
-	ld a, [$ce0a]
+	ld a, [wHealLPAmount + 0]
 	ld c, a
-	ld a, [$ce0b]
+	ld a, [wHealLPAmount + 1]
 	ld b, a
 	call Func_e196
 	pop bc
@@ -4037,9 +4037,9 @@ Func_e044:
 Func_e054:
 	push af
 	push bc
-	ld a, [$ce0e]
+	ld a, [wDamageLPAmount + 0]
 	ld c, a
-	ld a, [$ce0f]
+	ld a, [wDamageLPAmount + 1]
 	ld b, a
 	call Func_e1d1
 	cp $02
@@ -4103,9 +4103,9 @@ Func_e0b8:
 	push bc
 	farcall Func_24024
 	ld a, [wLoadedCardAtk + 0]
-	ld [$ce0a], a
+	ld [wHealLPAmount + 0], a
 	ld a, [wLoadedCardAtk + 1]
-	ld [$ce0b], a
+	ld [wHealLPAmount + 1], a
 	ld a, [wLoadedCardDef + 0]
 	ld [$ce0c], a
 	ld a, [wLoadedCardDef + 1]
@@ -4119,9 +4119,9 @@ Func_e0d8:
 	push bc
 	farcall Func_24024
 	ld a, [wLoadedCardAtk + 0]
-	ld [$ce0e], a
+	ld [wDamageLPAmount + 0], a
 	ld a, [wLoadedCardAtk + 1]
-	ld [$ce0f], a
+	ld [wDamageLPAmount + 1], a
 	ld a, [wLoadedCardDef + 0]
 	ld [$ce10], a
 	ld a, [wLoadedCardDef + 1]
@@ -4185,9 +4185,9 @@ Func_e14b:
 	ld [$ced2], a
 	ld a, [$ce03]
 	ld [$ced3], a
-	ld a, [$ce0a]
+	ld a, [wHealLPAmount + 0]
 	ld [$ced8], a
-	ld a, [$ce0b]
+	ld a, [wHealLPAmount + 1]
 	ld [$ced9], a
 	ld a, [$ce0c]
 	ld [$ceda], a
@@ -4197,9 +4197,9 @@ Func_e14b:
 	ld [$cedd], a
 	ld a, [$ce05]
 	ld [$cede], a
-	ld a, [$ce0e]
+	ld a, [wDamageLPAmount + 0]
 	ld [$cee3], a
-	ld a, [$ce0f]
+	ld a, [wDamageLPAmount + 1]
 	ld [$cee4], a
 	ld a, [$ce10]
 	ld [$cee5], a
@@ -4287,8 +4287,8 @@ Func_e200:
 	ld [$ce13], a
 	ld a, c
 	ld [$ce14], a
-	call SetCardLocationAndIndex
-	call Func_1c92
+	call SetTargetCard
+	call LoadTargetCard
 	ld a, [wTempCardID + 0]
 	ld [$ce02], a
 	ld a, [wTempCardID + 1]
@@ -4307,10 +4307,10 @@ Func_e228:
 	ld [$ce15], a
 	ld a, c
 	ld [$ce16], a
-	call SetCardLocationAndIndex
-	call Func_1c92
+	call SetTargetCard
+	call LoadTargetCard
 	call Func_da4a
-	call Func_1c7a
+	call OverwriteTargetCard
 	ld a, [wTempCardID + 0]
 	ld [$ce04], a
 	ld a, [wTempCardID + 1]
@@ -4365,10 +4365,10 @@ Func_e285:
 	ld [$ce15], a
 	ld a, c
 	ld [$ce16], a
-	call SetCardLocationAndIndex
-	call Func_1c92
+	call SetTargetCard
+	call LoadTargetCard
 	call Func_da4a
-	call Func_1c7a
+	call OverwriteTargetCard
 	ld a, [wTempCardID + 0]
 	ld [$ce04], a
 	ld a, [wTempCardID + 1]
@@ -4386,8 +4386,8 @@ Func_e2b2:
 	ld [$ce13], a
 	ld a, c
 	ld [$ce14], a
-	call SetCardLocationAndIndex
-	call Func_1c92
+	call SetTargetCard
+	call LoadTargetCard
 	ld a, [wTempCardID + 0]
 	ld [$ce02], a
 	ld a, [wTempCardID + 1]
@@ -4398,23 +4398,27 @@ Func_e2b2:
 	pop af
 	ret
 
-Func_e2d8:
+; input:
+; - bc = amount to heal
+SetHealLPAmount:
 	push af
 	ld a, c
-	ld [$ce0a], a
+	ld [wHealLPAmount + 0], a
 	ld a, b
-	ld [$ce0b], a
+	ld [wHealLPAmount + 1], a
 	ld a, $07
 	call Func_e08a
 	pop af
 	ret
 
-Func_e2e8:
+; input:
+; - bc = amount of damage
+SetDamageLPAmount:
 	push af
 	ld a, c
-	ld [$ce0e], a
+	ld [wDamageLPAmount + 0], a
 	ld a, b
-	ld [$ce0f], a
+	ld [wDamageLPAmount + 1], a
 	ld a, $08
 	call Func_e08a
 	pop af
@@ -4530,8 +4534,8 @@ Func_e3bc:
 	ld b, a
 	ld a, [$ce14]
 	ld c, a
-	call SetCardLocationAndIndex
-	call Func_1c65
+	call SetTargetCard
+	call RemoveTargetCard
 .asm_e3d2
 	ld a, [$ce12]
 	and $02
@@ -4540,8 +4544,8 @@ Func_e3bc:
 	ld b, a
 	ld a, [$ce16]
 	ld c, a
-	call SetCardLocationAndIndex
-	call Func_1c65
+	call SetTargetCard
+	call RemoveTargetCard
 .asm_e3e7
 	ld a, [$ce12]
 	and $04
@@ -5194,19 +5198,19 @@ Func_ee93:
 	ld a, [$cd60]
 	ld b, a
 	ld c, CARD_LOCATION_PLAYER_HAND
-	call SetCardLocationAndIndex
-	call Func_1c92
+	call SetTargetCard
+	call LoadTargetCard
 	ld a, [wcd5e]
 	ld b, a
 	ld c, CARD_LOCATION_PLAYER_FIELD
-	call SetCardLocationAndIndex
+	call SetTargetCard
 	call Func_21d9
-	call Func_1c7a
+	call OverwriteTargetCard
 	ld a, [$cd60]
 	ld b, a
 	ld c, CARD_LOCATION_PLAYER_HAND
-	call SetCardLocationAndIndex
-	call Func_1c65
+	call SetTargetCard
+	call RemoveTargetCard
 	pop bc
 	pop af
 	ret
@@ -5214,23 +5218,23 @@ Func_ee93:
 Func_eebf:
 	push af
 	push bc
-	ld a, [$cee9]
+	ld a, [wAIOppHandTargetCardIndex]
 	ld b, a
-	ld c, $00
-	call SetCardLocationAndIndex
-	call Func_1c92
-	ld a, [$ceed]
+	ld c, CARD_LOCATION_OPP_HAND
+	call SetTargetCard
+	call LoadTargetCard
+	ld a, [wAIOppFieldTargetZoneIndex]
 	ld b, a
-	ld c, $01
-	call SetCardLocationAndIndex
+	ld c, CARD_LOCATION_OPP_FIELD
+	call SetTargetCard
 	call Func_21d9
 	call Func_219e
-	call Func_1c7a
-	ld a, [$cee9]
+	call OverwriteTargetCard
+	ld a, [wAIOppHandTargetCardIndex]
 	ld b, a
-	ld c, $00
-	call SetCardLocationAndIndex
-	call Func_1c65
+	ld c, CARD_LOCATION_OPP_HAND
+	call SetTargetCard
+	call RemoveTargetCard
 	pop bc
 	pop af
 	ret
@@ -5241,7 +5245,7 @@ Func_eeee:
 	ld a, [wcd5e]
 	ld b, a
 	ld c, CARD_LOCATION_PLAYER_FIELD
-	call SetCardLocationAndIndex
+	call SetTargetCard
 	ld a, [wFusionCardID + 0]
 	ld [wTempCardID + 0], a
 	ld a, [wFusionCardID + 1]
@@ -5252,8 +5256,8 @@ Func_eeee:
 	ld a, [$cd60]
 	ld b, a
 	ld c, CARD_LOCATION_PLAYER_HAND
-	call SetCardLocationAndIndex
-	call Func_1c65
+	call SetTargetCard
+	call RemoveTargetCard
 	pop bc
 	pop af
 	ret
@@ -5261,21 +5265,21 @@ Func_eeee:
 Func_ef1d:
 	push af
 	push bc
-	ld a, [$cee9]
+	ld a, [wAIOppHandTargetCardIndex]
 	ld b, a
-	ld c, $01
-	call SetCardLocationAndIndex
-	ld a, [$cee7]
+	ld c, CARD_LOCATION_OPP_FIELD
+	call SetTargetCard
+	ld a, [wAIOppHandTargetCardID + 0]
 	ld [wTempCardID + 0], a
-	ld a, [$cee8]
+	ld a, [wAIOppHandTargetCardID + 1]
 	ld [wTempCardID + 1], a
 	call Func_21d9
 	call Func_1caa
-	ld a, [$ceed]
+	ld a, [wAIOppFieldTargetZoneIndex]
 	ld b, a
-	ld c, $00
-	call SetCardLocationAndIndex
-	call Func_1c65
+	ld c, CARD_LOCATION_OPP_HAND
+	call SetTargetCard
+	call RemoveTargetCard
 	pop bc
 	pop af
 	ret
@@ -5341,41 +5345,41 @@ Func_ef64:
 	dw Func_f2e0 ; EFFECT_FINAL_FLAME
 	dw Func_f2fe ; EFFECT_OOKAZI
 	dw Func_f31c ; EFFECT_TREMENDOUS_FIRE
-	dw Func_f33a ; EFFECT_13
-	dw Func_f36b ; EFFECT_14
-	dw Func_f394 ; EFFECT_15
-	dw Func_f3ca ; EFFECT_16
-	dw Func_f400 ; EFFECT_17
-	dw Func_f436 ; EFFECT_18
-	dw Func_f46c ; EFFECT_19
-	dw Func_f4a2 ; EFFECT_1A
-	dw Func_f4d8 ; EFFECT_1B
-	dw Func_f50e ; EFFECT_1C
-	dw Func_f544 ; EFFECT_1D
-	dw Func_f57a ; EFFECT_1E
-	dw Func_f5b0 ; EFFECT_1F
-	dw Func_f5e6 ; EFFECT_20
-	dw Func_f61c ; EFFECT_21
-	dw Func_f652 ; EFFECT_22
-	dw Func_f688 ; EFFECT_23
-	dw Func_f6be ; EFFECT_24
-	dw Func_f6f4 ; EFFECT_25
-	dw Func_f72a ; EFFECT_26
-	dw Func_f760 ; EFFECT_27
-	dw Func_f796 ; EFFECT_28
-	dw Func_f7cc ; EFFECT_29
-	dw Func_f802 ; EFFECT_2A
-	dw Func_f838 ; EFFECT_2B
-	dw Func_f86e ; EFFECT_2C
-	dw Func_f8a4 ; EFFECT_2D
-	dw Func_f8da ; EFFECT_2E
-	dw Func_f18a ; EFFECT_2F
+	dw Func_f33a ; EFFECT_DARK_HOLE
+	dw Func_f36b ; EFFECT_RAIGEKI
+	dw Func_f394 ; EFFECT_LEGENDARY_SWORD
+	dw Func_f3ca ; EFFECT_SWORD_OF_DARK
+	dw Func_f400 ; EFFECT_DARK_ENERGY
+	dw Func_f436 ; EFFECT_AXE_OF_DESPAIR
+	dw Func_f46c ; EFFECT_LAZER_CANNON_ARMOR
+	dw Func_f4a2 ; EFFECT_INSECT_ARMOR_LASER
+	dw Func_f4d8 ; EFFECT_ELFS_LIGHT
+	dw Func_f50e ; EFFECT_BEAST_FANGS
+	dw Func_f544 ; EFFECT_STEEL_SHELL
+	dw Func_f57a ; EFFECT_VILE_GERMS
+	dw Func_f5b0 ; EFFECT_BLACK_PENDANT
+	dw Func_f5e6 ; EFFECT_SILVER_BOW_AND_ARROW
+	dw Func_f61c ; EFFECT_HORN_OF_LIGHT
+	dw Func_f652 ; EFFECT_HORN_OF_UNICORN
+	dw Func_f688 ; EFFECT_DRAGON_TREASURE
+	dw Func_f6be ; EFFECT_ELECTRO_WHIP
+	dw Func_f6f4 ; EFFECT_CYBER_SHIELD
+	dw Func_f72a ; EFFECT_MYSTICAL_MOON
+	dw Func_f760 ; EFFECT_MALEVOLENT_NUZZLER
+	dw Func_f796 ; EFFECT_VIOLET_CRYSTAL
+	dw Func_f7cc ; EFFECT_BOOK_OF_SECRET_ART
+	dw Func_f802 ; EFFECT_INVIGORATION
+	dw Func_f838 ; EFFECT_MACHINE_CONVERSION
+	dw Func_f86e ; EFFECT_RAISE_BODY_HEAT
+	dw Func_f8a4 ; EFFECT_FOLLOW_WIND
+	dw Func_f8da ; EFFECT_POWER_OF_KAISHIN
+	dw Func_f18a ; EFFECT_STOP_DEFENSE
 	dw Func_f910 ; skip
-	dw Func_f926 ; EFFECT_31
+	dw Func_f926 ; EFFECT_DRAGON_CAPTURE_JAR
 	dw Func_f96b ; skip
 	dw Func_f9a3 ; skip
 	dw Func_f9d8 ; skip
-	dw Func_fa05 ; EFFECT_35
+	dw Func_fa05 ; EFFECT_ELEGANT_EGOTIST
 
 Func_efee:
 	push bc
@@ -5384,8 +5388,8 @@ Func_efee:
 	ld a, [wcd5e]
 	ld b, a
 	ld c, CARD_LOCATION_PLAYER_HAND
-	call SetCardLocationAndIndex
-	call Func_1c92
+	call SetTargetCard
+	call LoadTargetCard
 	ld a, [wTempCardID + 0]
 	ld c, a
 	ld a, [wTempCardID + 1]
@@ -5412,7 +5416,7 @@ Func_efee:
 SECTION "Bank 3@705f", ROMX[$705f], BANK[$3]
 
 ; output:
-; - a = ?
+; - a = effect constant
 Func_f05f:
 	push bc
 	push de
@@ -5435,7 +5439,7 @@ Func_f05f:
 .asm_f081
 	jr .done
 .is_special_card
-	ld hl, .data - MAGIC_CARDS
+	ld hl, .Effects - MAGIC_CARDS
 	add hl, bc
 	ld b, h
 	ld c, l
@@ -5446,44 +5450,44 @@ Func_f05f:
 	pop bc
 	ret
 
-.data
-	db EFFECT_15 ; LEGENDARY_SWORD
-	db EFFECT_16 ; SWORD_OF_DARK
-	db EFFECT_17 ; DARK_ENERGY
-	db EFFECT_18 ; AXE_OF_DESPAIR
-	db EFFECT_19 ; LAZER_CANNON_ARMOR
-	db EFFECT_1A ; INSECT_ARMOR_LASER
-	db EFFECT_1B ; ELFS_LIGHT
-	db EFFECT_1C ; BEAST_FANGS
-	db EFFECT_1D ; STEEL_SHELL
-	db EFFECT_1E ; VILE_GERMS
-	db EFFECT_1F ; BLACK_PENDANT
-	db EFFECT_20 ; SILVER_BOW_AND_ARROW
-	db EFFECT_21 ; HORN_OF_LIGHT
-	db EFFECT_22 ; HORN_OF_UNICORN
-	db EFFECT_23 ; DRAGON_TREASURE
-	db EFFECT_24 ; ELECTRO_WHIP
-	db EFFECT_25 ; CYBER_SHIELD
-	db EFFECT_35 ; ELEGANT_EGOTIST
-	db EFFECT_26 ; MYSTICAL_MOON
-	db EFFECT_2F ; STOP_DEFENSE
-	db EFFECT_27 ; MALEVOLENT_NUZZLER
-	db EFFECT_28 ; VIOLET_CRYSTAL
-	db EFFECT_29 ; BOOK_OF_SECRET_ART
-	db EFFECT_2A ; INVIGORATION
-	db EFFECT_2B ; MACHINE_CONVERSION
-	db EFFECT_2C ; RAISE_BODY_HEAT
-	db EFFECT_2D ; FOLLOW_WIND
-	db EFFECT_2E ; POWER_OF_KAISHIN
-	db EFFECT_31 ; DRAGON_CAPTURE_JAR
+.Effects:
+	db EFFECT_LEGENDARY_SWORD ; LEGENDARY_SWORD
+	db EFFECT_SWORD_OF_DARK ; SWORD_OF_DARK
+	db EFFECT_DARK_ENERGY ; DARK_ENERGY
+	db EFFECT_AXE_OF_DESPAIR ; AXE_OF_DESPAIR
+	db EFFECT_LAZER_CANNON_ARMOR ; LAZER_CANNON_ARMOR
+	db EFFECT_INSECT_ARMOR_LASER ; INSECT_ARMOR_LASER
+	db EFFECT_ELFS_LIGHT ; ELFS_LIGHT
+	db EFFECT_BEAST_FANGS ; BEAST_FANGS
+	db EFFECT_STEEL_SHELL ; STEEL_SHELL
+	db EFFECT_VILE_GERMS ; VILE_GERMS
+	db EFFECT_BLACK_PENDANT ; BLACK_PENDANT
+	db EFFECT_SILVER_BOW_AND_ARROW ; SILVER_BOW_AND_ARROW
+	db EFFECT_HORN_OF_LIGHT ; HORN_OF_LIGHT
+	db EFFECT_HORN_OF_UNICORN ; HORN_OF_UNICORN
+	db EFFECT_DRAGON_TREASURE ; DRAGON_TREASURE
+	db EFFECT_ELECTRO_WHIP ; ELECTRO_WHIP
+	db EFFECT_CYBER_SHIELD ; CYBER_SHIELD
+	db EFFECT_ELEGANT_EGOTIST ; ELEGANT_EGOTIST
+	db EFFECT_MYSTICAL_MOON ; MYSTICAL_MOON
+	db EFFECT_STOP_DEFENSE ; STOP_DEFENSE
+	db EFFECT_MALEVOLENT_NUZZLER ; MALEVOLENT_NUZZLER
+	db EFFECT_VIOLET_CRYSTAL ; VIOLET_CRYSTAL
+	db EFFECT_BOOK_OF_SECRET_ART ; BOOK_OF_SECRET_ART
+	db EFFECT_INVIGORATION ; INVIGORATION
+	db EFFECT_MACHINE_CONVERSION ; MACHINE_CONVERSION
+	db EFFECT_RAISE_BODY_HEAT ; RAISE_BODY_HEAT
+	db EFFECT_FOLLOW_WIND ; FOLLOW_WIND
+	db EFFECT_POWER_OF_KAISHIN ; POWER_OF_KAISHIN
+	db EFFECT_DRAGON_CAPTURE_JAR ; DRAGON_CAPTURE_JAR
 	db EFFECT_FOREST ; FOREST
 	db EFFECT_WASTELAND ; WASTELAND
 	db EFFECT_MOUNTAIN ; MOUNTAIN
 	db EFFECT_SOGEN ; SOGEN
 	db EFFECT_UMI ; UMI
 	db EFFECT_YAMI ; YAMI
-	db EFFECT_13 ; DARK_HOLE
-	db EFFECT_14 ; RAIGEKI
+	db EFFECT_DARK_HOLE ; DARK_HOLE
+	db EFFECT_RAIGEKI ; RAIGEKI
 	db EFFECT_MOOYAN_CURRY ; MOOYAN_CURRY
 	db EFFECT_RED_MEDICINE ; RED_MEDICINE
 	db EFFECT_GOBLINS_REMEDY ; GOBLINS_REMEDY
@@ -5519,8 +5523,8 @@ Func_f0cf:
 	ld a, [wcd5e]
 	ld b, a
 	ld c, CARD_LOCATION_PLAYER_HAND
-	call SetCardLocationAndIndex
-	call Func_1c65
+	call SetTargetCard
+	call RemoveTargetCard
 	call Func_cd82
 	call Func_d804
 	pop bc
@@ -5533,8 +5537,8 @@ Func_f0e6:
 	ld a, [$cd60]
 	ld b, a
 	ld c, CARD_LOCATION_PLAYER_HAND
-	call SetCardLocationAndIndex
-	call Func_1c65
+	call SetTargetCard
+	call RemoveTargetCard
 	pop bc
 	pop af
 	ret
@@ -5638,7 +5642,7 @@ Func_f19b:
 
 Func_f1a2:
 	push af
-	call Func_c112
+	call SetForestField
 	call Func_f0cf
 	call Func_2b1b
 	call Func_c142
@@ -5649,7 +5653,7 @@ Func_f1a2:
 
 Func_f1b6:
 	push af
-	call Func_c11a
+	call SetWastelandField
 	call Func_f0cf
 	call Func_2b1b
 	call Func_c142
@@ -5660,7 +5664,7 @@ Func_f1b6:
 
 Func_f1ca:
 	push af
-	call Func_c122
+	call SetMountainField
 	call Func_f0cf
 	call Func_2b1b
 	call Func_c142
@@ -5671,7 +5675,7 @@ Func_f1ca:
 
 Func_f1de:
 	push af
-	call Func_c12a
+	call SetSogenField
 	call Func_f0cf
 	call Func_2b1b
 	call Func_c142
@@ -5682,7 +5686,7 @@ Func_f1de:
 
 Func_f1f2:
 	push af
-	call Func_c132
+	call SetUmiField
 	call Func_f0cf
 	call Func_2b1b
 	call Func_c142
@@ -5693,7 +5697,7 @@ Func_f1f2:
 
 Func_f206:
 	push af
-	call Func_c13a
+	call SetYamiField
 	call Func_f0cf
 	call Func_2b1b
 	call Func_c142
@@ -5707,7 +5711,7 @@ Func_f21a:
 	push bc
 	call Func_e1f2
 	ld bc, $200
-	call Func_e2d8
+	call SetHealLPAmount
 	call Func_f0cf
 	call Func_2b26
 	call Func_e3b2
@@ -5722,7 +5726,7 @@ Func_f236:
 	push bc
 	call Func_e1f2
 	ld bc, $500
-	call Func_e2d8
+	call SetHealLPAmount
 	call Func_f0cf
 	call Func_2b26
 	call Func_e3b2
@@ -5737,7 +5741,7 @@ Func_f252:
 	push bc
 	call Func_e1f2
 	ld bc, $1000
-	call Func_e2d8
+	call SetHealLPAmount
 	call Func_f0cf
 	call Func_2b26
 	call Func_e3b2
@@ -5752,7 +5756,7 @@ Func_f26e:
 	push bc
 	call Func_e1f2
 	ld bc, $2000
-	call Func_e2d8
+	call SetHealLPAmount
 	call Func_f0cf
 	call Func_2b26
 	call Func_e3b2
@@ -5767,7 +5771,7 @@ Func_f28a:
 	push bc
 	call Func_e1f2
 	ld bc, $5000
-	call Func_e2d8
+	call SetHealLPAmount
 	call Func_f0cf
 	call Func_2b26
 	call Func_e3b2
@@ -5782,7 +5786,7 @@ Func_f2a6:
 	push bc
 	call Func_e1f2
 	ld bc, $200
-	call Func_e2e8
+	call SetDamageLPAmount
 	call Func_f0cf
 	call Func_2b5d
 	call Func_e3b2
@@ -5798,7 +5802,7 @@ Func_f2c2:
 	push de
 	call Func_e1f2
 	ld bc, $500
-	call Func_e2e8
+	call SetDamageLPAmount
 	call Func_f0cf
 	call Func_2b5d
 	call Func_e3b2
@@ -5815,7 +5819,7 @@ Func_f2e0:
 	push de
 	call Func_e1f2
 	ld bc, $1000
-	call Func_e2e8
+	call SetDamageLPAmount
 	call Func_f0cf
 	call Func_2b5d
 	call Func_e3b2
@@ -5832,7 +5836,7 @@ Func_f2fe:
 	push de
 	call Func_e1f2
 	ld bc, $2000
-	call Func_e2e8
+	call SetDamageLPAmount
 	call Func_f0cf
 	call Func_2b5d
 	call Func_e3b2
@@ -5849,7 +5853,7 @@ Func_f31c:
 	push de
 	call Func_e1f2
 	ld bc, $5000
-	call Func_e2e8
+	call SetDamageLPAmount
 	call Func_f0cf
 	call Func_2b5d
 	call Func_e3b2
@@ -5865,24 +5869,24 @@ Func_f33a:
 	push bc
 	push de
 	push hl
-	ld c, $01
-.asm_f340
+	ld c, CARD_LOCATION_OPP_FIELD
+.loop_fields
 	ld a, c
-	cp $03
-	jr nc, .asm_f358
-	ld b, $00
-.asm_f347
+	cp CARD_LOCATION_PLAYER_FIELD + 1
+	jr nc, .break
+	ld b, 0
+.loop_field
 	ld a, b
-	cp $05
-	jr nc, .asm_f355
-	call SetCardLocationAndIndex
-	call Func_1c65
+	cp FIELD_SIZE
+	jr nc, .next_field
+	call SetTargetCard
+	call RemoveTargetCard
 	inc b
-	jr .asm_f347
-.asm_f355
+	jr .loop_field
+.next_field
 	inc c
-	jr .asm_f340
-.asm_f358
+	jr .loop_fields
+.break
 	call Func_f0cf
 	call Func_2b5d
 	call Func_c142
@@ -5899,17 +5903,17 @@ Func_f36b:
 	push bc
 	push de
 	push hl
-	ld c, $01
-	ld b, $00
-.asm_f373
+	ld c, CARD_LOCATION_OPP_FIELD
+	ld b, 0
+.loop_field
 	ld a, b
-	cp $05
-	jr nc, .asm_f381
-	call SetCardLocationAndIndex
-	call Func_1c65
+	cp FIELD_SIZE
+	jr nc, .break
+	call SetTargetCard
+	call RemoveTargetCard
 	inc b
-	jr .asm_f373
-.asm_f381
+	jr .loop_field
+.break
 	call Func_f0cf
 	call Func_2b5d
 	call Func_c142
@@ -5931,17 +5935,17 @@ Func_f394:
 	ld b, a
 	ld d, $00
 	farcall Func_26b89
-	cp $01
+	cp FALSE
 	jr nz, .asm_f3c3
 	call Func_2b26
 	ld a, [wcd5e]
 	ld b, a
 	ld c, CARD_LOCATION_PLAYER_FIELD
-	call SetCardLocationAndIndex
-	call Func_1c92
+	call SetTargetCard
+	call LoadTargetCard
 	call Func_213a
-	call Func_1c7a
-	ld bc, $12c
+	call OverwriteTargetCard
+	ld bc, LEGENDARY_SWORD
 	farcall Func_151db
 .asm_f3c3
 	call Func_f0e6
@@ -5960,17 +5964,17 @@ Func_f3ca:
 	ld b, a
 	ld d, $01
 	farcall Func_26b89
-	cp $01
+	cp FALSE
 	jr nz, .asm_f3f9
 	call Func_2b26
 	ld a, [wcd5e]
 	ld b, a
 	ld c, CARD_LOCATION_PLAYER_FIELD
-	call SetCardLocationAndIndex
-	call Func_1c92
+	call SetTargetCard
+	call LoadTargetCard
 	call Func_213a
-	call Func_1c7a
-	ld bc, $12d
+	call OverwriteTargetCard
+	ld bc, SWORD_OF_DARK
 	farcall Func_151db
 .asm_f3f9
 	call Func_f0e6
@@ -5989,17 +5993,17 @@ Func_f400:
 	ld b, a
 	ld d, $02
 	farcall Func_26b89
-	cp $01
+	cp FALSE
 	jr nz, .asm_f42f
 	call Func_2b26
 	ld a, [wcd5e]
 	ld b, a
 	ld c, CARD_LOCATION_PLAYER_FIELD
-	call SetCardLocationAndIndex
-	call Func_1c92
+	call SetTargetCard
+	call LoadTargetCard
 	call Func_213a
-	call Func_1c7a
-	ld bc, $12e
+	call OverwriteTargetCard
+	ld bc, DARK_ENERGY
 	farcall Func_151db
 .asm_f42f
 	call Func_f0e6
@@ -6018,17 +6022,17 @@ Func_f436:
 	ld b, a
 	ld d, $03
 	farcall Func_26b89
-	cp $01
+	cp FALSE
 	jr nz, .asm_f465
 	call Func_2b26
 	ld a, [wcd5e]
 	ld b, a
 	ld c, CARD_LOCATION_PLAYER_FIELD
-	call SetCardLocationAndIndex
-	call Func_1c92
+	call SetTargetCard
+	call LoadTargetCard
 	call Func_213a
-	call Func_1c7a
-	ld bc, $12f
+	call OverwriteTargetCard
+	ld bc, AXE_OF_DESPAIR
 	farcall Func_151db
 .asm_f465
 	call Func_f0e6
@@ -6047,17 +6051,17 @@ Func_f46c:
 	ld b, a
 	ld d, $04
 	farcall Func_26b89
-	cp $01
+	cp FALSE
 	jr nz, .asm_f49b
 	call Func_2b26
 	ld a, [wcd5e]
 	ld b, a
 	ld c, CARD_LOCATION_PLAYER_FIELD
-	call SetCardLocationAndIndex
-	call Func_1c92
+	call SetTargetCard
+	call LoadTargetCard
 	call Func_213a
-	call Func_1c7a
-	ld bc, $130
+	call OverwriteTargetCard
+	ld bc, LAZER_CANNON_ARMOR
 	farcall Func_151db
 .asm_f49b
 	call Func_f0e6
@@ -6076,17 +6080,17 @@ Func_f4a2:
 	ld b, a
 	ld d, $05
 	farcall Func_26b89
-	cp $01
+	cp FALSE
 	jr nz, .asm_f4d1
 	call Func_2b26
 	ld a, [wcd5e]
 	ld b, a
 	ld c, CARD_LOCATION_PLAYER_FIELD
-	call SetCardLocationAndIndex
-	call Func_1c92
+	call SetTargetCard
+	call LoadTargetCard
 	call Func_213a
-	call Func_1c7a
-	ld bc, $131
+	call OverwriteTargetCard
+	ld bc, INSECT_ARMOR_LASER
 	farcall Func_151db
 .asm_f4d1
 	call Func_f0e6
@@ -6105,17 +6109,17 @@ Func_f4d8:
 	ld b, a
 	ld d, $06
 	farcall Func_26b89
-	cp $01
+	cp FALSE
 	jr nz, .asm_f507
 	call Func_2b26
 	ld a, [wcd5e]
 	ld b, a
 	ld c, CARD_LOCATION_PLAYER_FIELD
-	call SetCardLocationAndIndex
-	call Func_1c92
+	call SetTargetCard
+	call LoadTargetCard
 	call Func_213a
-	call Func_1c7a
-	ld bc, $132
+	call OverwriteTargetCard
+	ld bc, ELFS_LIGHT
 	farcall Func_151db
 .asm_f507
 	call Func_f0e6
@@ -6134,17 +6138,17 @@ Func_f50e:
 	ld b, a
 	ld d, $07
 	farcall Func_26b89
-	cp $01
+	cp FALSE
 	jr nz, .asm_f53d
 	call Func_2b26
 	ld a, [wcd5e]
 	ld b, a
 	ld c, CARD_LOCATION_PLAYER_FIELD
-	call SetCardLocationAndIndex
-	call Func_1c92
+	call SetTargetCard
+	call LoadTargetCard
 	call Func_213a
-	call Func_1c7a
-	ld bc, $133
+	call OverwriteTargetCard
+	ld bc, BEAST_FANGS
 	farcall Func_151db
 .asm_f53d
 	call Func_f0e6
@@ -6163,17 +6167,17 @@ Func_f544:
 	ld b, a
 	ld d, $08
 	farcall Func_26b89
-	cp $01
+	cp FALSE
 	jr nz, .asm_f573
 	call Func_2b26
 	ld a, [wcd5e]
 	ld b, a
 	ld c, CARD_LOCATION_PLAYER_FIELD
-	call SetCardLocationAndIndex
-	call Func_1c92
+	call SetTargetCard
+	call LoadTargetCard
 	call Func_213a
-	call Func_1c7a
-	ld bc, $134
+	call OverwriteTargetCard
+	ld bc, STEEL_SHELL
 	farcall Func_151db
 .asm_f573
 	call Func_f0e6
@@ -6192,17 +6196,17 @@ Func_f57a:
 	ld b, a
 	ld d, $09
 	farcall Func_26b89
-	cp $01
+	cp FALSE
 	jr nz, .asm_f5a9
 	call Func_2b26
 	ld a, [wcd5e]
 	ld b, a
 	ld c, CARD_LOCATION_PLAYER_FIELD
-	call SetCardLocationAndIndex
-	call Func_1c92
+	call SetTargetCard
+	call LoadTargetCard
 	call Func_213a
-	call Func_1c7a
-	ld bc, $135
+	call OverwriteTargetCard
+	ld bc, VILE_GERMS
 	farcall Func_151db
 .asm_f5a9
 	call Func_f0e6
@@ -6221,17 +6225,17 @@ Func_f5b0:
 	ld b, a
 	ld d, $0a
 	farcall Func_26b89
-	cp $01
+	cp FALSE
 	jr nz, .asm_f5df
 	call Func_2b26
 	ld a, [wcd5e]
 	ld b, a
 	ld c, CARD_LOCATION_PLAYER_FIELD
-	call SetCardLocationAndIndex
-	call Func_1c92
+	call SetTargetCard
+	call LoadTargetCard
 	call Func_213a
-	call Func_1c7a
-	ld bc, $136
+	call OverwriteTargetCard
+	ld bc, BLACK_PENDANT
 	farcall Func_151db
 .asm_f5df
 	call Func_f0e6
@@ -6250,17 +6254,17 @@ Func_f5e6:
 	ld b, a
 	ld d, $0b
 	farcall Func_26b89
-	cp $01
+	cp FALSE
 	jr nz, .asm_f615
 	call Func_2b26
 	ld a, [wcd5e]
 	ld b, a
 	ld c, CARD_LOCATION_PLAYER_FIELD
-	call SetCardLocationAndIndex
-	call Func_1c92
+	call SetTargetCard
+	call LoadTargetCard
 	call Func_213a
-	call Func_1c7a
-	ld bc, $137
+	call OverwriteTargetCard
+	ld bc, SILVER_BOW_AND_ARROW
 	farcall Func_151db
 .asm_f615
 	call Func_f0e6
@@ -6279,17 +6283,17 @@ Func_f61c:
 	ld b, a
 	ld d, $0c
 	farcall Func_26b89
-	cp $01
+	cp FALSE
 	jr nz, .asm_f64b
 	call Func_2b26
 	ld a, [wcd5e]
 	ld b, a
 	ld c, CARD_LOCATION_PLAYER_FIELD
-	call SetCardLocationAndIndex
-	call Func_1c92
+	call SetTargetCard
+	call LoadTargetCard
 	call Func_213a
-	call Func_1c7a
-	ld bc, $138
+	call OverwriteTargetCard
+	ld bc, HORN_OF_LIGHT
 	farcall Func_151db
 .asm_f64b
 	call Func_f0e6
@@ -6308,17 +6312,17 @@ Func_f652:
 	ld b, a
 	ld d, $0d
 	farcall Func_26b89
-	cp $01
+	cp FALSE
 	jr nz, .asm_f681
 	call Func_2b26
 	ld a, [wcd5e]
 	ld b, a
 	ld c, CARD_LOCATION_PLAYER_FIELD
-	call SetCardLocationAndIndex
-	call Func_1c92
+	call SetTargetCard
+	call LoadTargetCard
 	call Func_213a
-	call Func_1c7a
-	ld bc, $139
+	call OverwriteTargetCard
+	ld bc, HORN_OF_UNICORN
 	farcall Func_151db
 .asm_f681
 	call Func_f0e6
@@ -6337,17 +6341,17 @@ Func_f688:
 	ld b, a
 	ld d, $0e
 	farcall Func_26b89
-	cp $01
+	cp FALSE
 	jr nz, .asm_f6b7
 	call Func_2b26
 	ld a, [wcd5e]
 	ld b, a
 	ld c, CARD_LOCATION_PLAYER_FIELD
-	call SetCardLocationAndIndex
-	call Func_1c92
+	call SetTargetCard
+	call LoadTargetCard
 	call Func_213a
-	call Func_1c7a
-	ld bc, $13a
+	call OverwriteTargetCard
+	ld bc, DRAGON_TREASURE
 	farcall Func_151db
 .asm_f6b7
 	call Func_f0e6
@@ -6366,17 +6370,17 @@ Func_f6be:
 	ld b, a
 	ld d, $0f
 	farcall Func_26b89
-	cp $01
+	cp FALSE
 	jr nz, .asm_f6ed
 	call Func_2b26
 	ld a, [wcd5e]
 	ld b, a
 	ld c, CARD_LOCATION_PLAYER_FIELD
-	call SetCardLocationAndIndex
-	call Func_1c92
+	call SetTargetCard
+	call LoadTargetCard
 	call Func_213a
-	call Func_1c7a
-	ld bc, $13b
+	call OverwriteTargetCard
+	ld bc, ELECTRO_WHIP
 	farcall Func_151db
 .asm_f6ed
 	call Func_f0e6
@@ -6395,17 +6399,17 @@ Func_f6f4:
 	ld b, a
 	ld d, $10
 	farcall Func_26b89
-	cp $01
+	cp FALSE
 	jr nz, .asm_f723
 	call Func_2b26
 	ld a, [wcd5e]
 	ld b, a
 	ld c, CARD_LOCATION_PLAYER_FIELD
-	call SetCardLocationAndIndex
-	call Func_1c92
+	call SetTargetCard
+	call LoadTargetCard
 	call Func_213a
-	call Func_1c7a
-	ld bc, $13c
+	call OverwriteTargetCard
+	ld bc, CYBER_SHIELD
 	farcall Func_151db
 .asm_f723
 	call Func_f0e6
@@ -6424,17 +6428,17 @@ Func_f72a:
 	ld b, a
 	ld d, $11
 	farcall Func_26b89
-	cp $01
+	cp FALSE
 	jr nz, .asm_f759
 	call Func_2b26
 	ld a, [wcd5e]
 	ld b, a
 	ld c, CARD_LOCATION_PLAYER_FIELD
-	call SetCardLocationAndIndex
-	call Func_1c92
+	call SetTargetCard
+	call LoadTargetCard
 	call Func_213a
-	call Func_1c7a
-	ld bc, $13e
+	call OverwriteTargetCard
+	ld bc, MYSTICAL_MOON
 	farcall Func_151db
 .asm_f759
 	call Func_f0e6
@@ -6453,17 +6457,17 @@ Func_f760:
 	ld b, a
 	ld d, $12
 	farcall Func_26b89
-	cp $01
+	cp FALSE
 	jr nz, .asm_f78f
 	call Func_2b26
 	ld a, [wcd5e]
 	ld b, a
 	ld c, CARD_LOCATION_PLAYER_FIELD
-	call SetCardLocationAndIndex
-	call Func_1c92
+	call SetTargetCard
+	call LoadTargetCard
 	call Func_213a
-	call Func_1c7a
-	ld bc, $140
+	call OverwriteTargetCard
+	ld bc, MALEVOLENT_NUZZLER
 	farcall Func_151db
 .asm_f78f
 	call Func_f0e6
@@ -6482,17 +6486,17 @@ Func_f796:
 	ld b, a
 	ld d, $13
 	farcall Func_26b89
-	cp $01
+	cp FALSE
 	jr nz, .asm_f7c5
 	call Func_2b26
 	ld a, [wcd5e]
 	ld b, a
 	ld c, CARD_LOCATION_PLAYER_FIELD
-	call SetCardLocationAndIndex
-	call Func_1c92
+	call SetTargetCard
+	call LoadTargetCard
 	call Func_213a
-	call Func_1c7a
-	ld bc, $141
+	call OverwriteTargetCard
+	ld bc, VIOLET_CRYSTAL
 	farcall Func_151db
 .asm_f7c5
 	call Func_f0e6
@@ -6511,17 +6515,17 @@ Func_f7cc:
 	ld b, a
 	ld d, $14
 	farcall Func_26b89
-	cp $01
+	cp FALSE
 	jr nz, .asm_f7fb
 	call Func_2b26
 	ld a, [wcd5e]
 	ld b, a
 	ld c, CARD_LOCATION_PLAYER_FIELD
-	call SetCardLocationAndIndex
-	call Func_1c92
+	call SetTargetCard
+	call LoadTargetCard
 	call Func_213a
-	call Func_1c7a
-	ld bc, $142
+	call OverwriteTargetCard
+	ld bc, BOOK_OF_SECRET_ART
 	farcall Func_151db
 .asm_f7fb
 	call Func_f0e6
@@ -6540,17 +6544,17 @@ Func_f802:
 	ld b, a
 	ld d, $15
 	farcall Func_26b89
-	cp $01
+	cp FALSE
 	jr nz, .asm_f831
 	call Func_2b26
 	ld a, [wcd5e]
 	ld b, a
 	ld c, CARD_LOCATION_PLAYER_FIELD
-	call SetCardLocationAndIndex
-	call Func_1c92
+	call SetTargetCard
+	call LoadTargetCard
 	call Func_213a
-	call Func_1c7a
-	ld bc, $143
+	call OverwriteTargetCard
+	ld bc, INVIGORATION
 	farcall Func_151db
 .asm_f831
 	call Func_f0e6
@@ -6569,17 +6573,17 @@ Func_f838:
 	ld b, a
 	ld d, $16
 	farcall Func_26b89
-	cp $01
+	cp FALSE
 	jr nz, .asm_f867
 	call Func_2b26
 	ld a, [wcd5e]
 	ld b, a
 	ld c, CARD_LOCATION_PLAYER_FIELD
-	call SetCardLocationAndIndex
-	call Func_1c92
+	call SetTargetCard
+	call LoadTargetCard
 	call Func_213a
-	call Func_1c7a
-	ld bc, $144
+	call OverwriteTargetCard
+	ld bc, MACHINE_CONVERSION
 	farcall Func_151db
 .asm_f867
 	call Func_f0e6
@@ -6598,17 +6602,17 @@ Func_f86e:
 	ld b, a
 	ld d, $17
 	farcall Func_26b89
-	cp $01
+	cp FALSE
 	jr nz, .asm_f89d
 	call Func_2b26
 	ld a, [wcd5e]
 	ld b, a
 	ld c, CARD_LOCATION_PLAYER_FIELD
-	call SetCardLocationAndIndex
-	call Func_1c92
+	call SetTargetCard
+	call LoadTargetCard
 	call Func_213a
-	call Func_1c7a
-	ld bc, $145
+	call OverwriteTargetCard
+	ld bc, RAISE_BODY_HEAT
 	farcall Func_151db
 .asm_f89d
 	call Func_f0e6
@@ -6627,17 +6631,17 @@ Func_f8a4:
 	ld b, a
 	ld d, $18
 	farcall Func_26b89
-	cp $01
+	cp FALSE
 	jr nz, .asm_f8d3
 	call Func_2b26
 	ld a, [wcd5e]
 	ld b, a
 	ld c, CARD_LOCATION_PLAYER_FIELD
-	call SetCardLocationAndIndex
-	call Func_1c92
+	call SetTargetCard
+	call LoadTargetCard
 	call Func_213a
-	call Func_1c7a
-	ld bc, $146
+	call OverwriteTargetCard
+	ld bc, FOLLOW_WIND
 	farcall Func_151db
 .asm_f8d3
 	call Func_f0e6
@@ -6656,17 +6660,17 @@ Func_f8da:
 	ld b, a
 	ld d, $19
 	farcall Func_26b89
-	cp $01
+	cp FALSE
 	jr nz, .asm_f909
 	call Func_2b26
 	ld a, [wcd5e]
 	ld b, a
 	ld c, CARD_LOCATION_PLAYER_FIELD
-	call SetCardLocationAndIndex
-	call Func_1c92
+	call SetTargetCard
+	call LoadTargetCard
 	call Func_213a
-	call Func_1c7a
-	ld bc, $147
+	call OverwriteTargetCard
+	ld bc, POWER_OF_KAISHIN
 	farcall Func_151db
 .asm_f909
 	call Func_f0e6
@@ -6692,39 +6696,39 @@ Func_f926:
 	push af
 	push bc
 	push de
-	ld c, $01
-	ld e, $01
-.asm_f92d
+	ld c, CARD_LOCATION_OPP_FIELD
+	ld e, FALSE
+.loop_fields
 	ld a, c
-	cp $03
-	jr nc, .asm_f94e
+	cp CARD_LOCATION_PLAYER_FIELD + 1
+	jr nc, .break
 	ld b, $00
-.asm_f934
+.loop_field
 	ld a, b
-	cp $05
-	jr nc, .asm_f94b
-	call IsCardAtLocationDragonType
-	cp $00
-	jr nz, .asm_f948
-	call SetCardLocationAndIndex
-	call Func_1c65
-	ld e, $00
-.asm_f948
+	cp FIELD_SIZE
+	jr nc, .next_field
+	call IsTargetCardDragonType
+	cp TRUE
+	jr nz, .next_monster
+	call SetTargetCard
+	call RemoveTargetCard
+	ld e, TRUE
+.next_monster
 	inc b
-	jr .asm_f934
-.asm_f94b
+	jr .loop_field
+.next_field
 	inc c
-	jr .asm_f92d
-.asm_f94e
+	jr .loop_fields
+.break
 	call Func_f0cf
 	call Func_2b5d
 	call Func_c142
-	cp $00
-	jr nz, .asm_f962
+	cp TRUE
+	jr nz, .false
 	ld a, $1c
 	farcall Func_15148
 	jr .asm_f967
-.asm_f962
+.false
 	ld a, $1c
 	farcall Func_15148
 .asm_f967
@@ -6748,10 +6752,10 @@ Func_f96b:
 	ld a, b
 	cp $05
 	jr nc, .asm_f98e
-	call SetCardLocationAndIndex
-	call Func_1c92
+	call SetTargetCard
+	call LoadTargetCard
 	call Func_da4a
-	call Func_1c7a
+	call OverwriteTargetCard
 	inc b
 	jr .asm_f97a
 .asm_f98e
@@ -6782,10 +6786,10 @@ Func_f9a3:
 	ld a, b
 	cp $05
 	jr nc, .asm_f9c3
-	call SetCardLocationAndIndex
-	call Func_1c92
+	call SetTargetCard
+	call LoadTargetCard
 	call Func_da4a
-	call Func_1c7a
+	call OverwriteTargetCard
 	inc b
 	jr .asm_f9af
 .asm_f9c3
@@ -6812,10 +6816,10 @@ Func_f9d8:
 	ld a, b
 	cp $05
 	jr nc, .asm_f9f3
-	call SetCardLocationAndIndex
-	call Func_1c92
+	call SetTargetCard
+	call LoadTargetCard
 	call Func_db4c
-	call Func_1c7a
+	call OverwriteTargetCard
 	inc b
 	jr .asm_f9df
 .asm_f9f3
@@ -6837,17 +6841,17 @@ Func_fa05:
 	ld c, a
 	ld a, [wMaterial1CardID + 1]
 	ld b, a
-	ld de, $3d
+	ld de, HARPIE_LADY
 	call IsBCEqualToDE
-	cp $00
-	jr nz, .asm_fa46
+	cp TRUE
+	jr nz, .not_harpy_lady
 	call Func_2b26
 	ld a, [wcd5e]
 	ld b, a
 	ld c, CARD_LOCATION_PLAYER_FIELD
-	call SetCardLocationAndIndex
-	call Func_1c65
-	ld bc, $3e
+	call SetTargetCard
+	call RemoveTargetCard
+	ld bc, HARPIE_LADY_SISTER
 	farcall Func_5af2
 	farcall SetCardAsSeen
 	ld a, c
@@ -6856,9 +6860,9 @@ Func_fa05:
 	ld [wTempCardID + 1], a
 	call Func_21d9
 	call Func_2193
-	call Func_1c7a
+	call OverwriteTargetCard
 	farcall Func_15204
-.asm_fa46
+.not_harpy_lady
 	call Func_f0e6
 	pop de
 	pop bc
@@ -6874,8 +6878,8 @@ HandlePlayerPetitMothEvolution:
 	cp FIELD_SIZE
 	jr nc, .asm_fa93
 	ld c, CARD_LOCATION_PLAYER_FIELD
-	call SetCardLocationAndIndex
-	call Func_1c92
+	call SetTargetCard
+	call LoadTargetCard
 	push bc
 	ld a, [wTempCardID + 0]
 	ld c, a
@@ -6900,7 +6904,7 @@ HandlePlayerPetitMothEvolution:
 	ld [wTempCardID + 0], a
 	ld a, b
 	ld [wTempCardID + 1], a
-	call Func_1c7a
+	call OverwriteTargetCard
 	farcall Func_5af2
 	farcall SetCardAsSeen
 .asm_fa8f
@@ -6917,13 +6921,13 @@ Func_fa96:
 	push bc
 	push hl
 	ld b, $00
-.asm_fa9b
+.loop_field
 	ld a, b
-	cp $05
-	jr nc, .asm_fad7
-	ld c, $01
-	call SetCardLocationAndIndex
-	call Func_1c92
+	cp FIELD_SIZE
+	jr nc, .break
+	ld c, CARD_LOCATION_OPP_FIELD
+	call SetTargetCard
+	call LoadTargetCard
 	push bc
 	ld a, [wTempCardID + 0]
 	ld c, a
@@ -6946,12 +6950,12 @@ Func_fa96:
 	ld [wTempCardID + 0], a
 	ld a, b
 	ld [wTempCardID + 1], a
-	call Func_1c7a
+	call OverwriteTargetCard
 .asm_fad3
 	pop bc
 	inc b
-	jr .asm_fa9b
-.asm_fad7
+	jr .loop_field
+.break
 	pop hl
 	pop bc
 	pop af
@@ -6996,10 +7000,10 @@ Func_fadb:
 	call IsBCEqualToDE
 	pop bc
 	cp TRUE
-	jr nz, .asm_fb19
+	jr nz, .next
 	ld b, $01
 	jr .done
-.asm_fb19
+.next
 	inc c
 	jr .loop
 .done

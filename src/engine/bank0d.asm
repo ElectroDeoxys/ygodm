@@ -732,14 +732,15 @@ Func_36e34:
 	push bc
 	call PlayerLostDuel
 	cp TRUE
-	jr nz, .asm_36e4e
+	jr nz, .won
+; lost
 	ld a, [$cfb8]
 	farcall SetPlayerDeckIndex
 	farcall GetPlayerDeckCard
 	farcall Func_b894
-	farcall Func_c630
+	farcall RemoveCardFromPlayerDeck
 	jr .asm_36e5a
-.asm_36e4e
+.won
 	call Func_36e5d
 	farcall Func_5af2
 	farcall GiveCard

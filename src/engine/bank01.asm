@@ -93,8 +93,8 @@ Func_40b0:
 .asm_40bb
 	ld b, d
 	ld c, CARD_LOCATION_PLAYER_HAND
-	call SetCardLocationAndIndex
-	call Func_1c92
+	call SetTargetCard
+	call LoadTargetCard
 	call Func_1d67
 	call Func_40f1
 	inc hl
@@ -108,8 +108,8 @@ Func_40b0:
 .asm_40d7
 	ld b, d
 	ld c, CARD_LOCATION_OPP_HAND
-	call SetCardLocationAndIndex
-	call Func_1c92
+	call SetTargetCard
+	call LoadTargetCard
 	call Func_1d67
 	call Func_40f1
 	inc hl
@@ -215,7 +215,7 @@ Func_4164:
 	push de
 	push hl
 	ld b, $00
-	ld a, [$cad1]
+	ld a, [wActiveField]
 	ld c, a
 	call Func_42c5
 	ld a, $02
@@ -258,8 +258,8 @@ Func_41a1:
 .asm_41ac
 	ld b, d
 	ld c, CARD_LOCATION_PLAYER_FIELD
-	call SetCardLocationAndIndex
-	call Func_1c92
+	call SetTargetCard
+	call LoadTargetCard
 	call Func_1d67
 	call Func_40f1
 	inc hl
@@ -284,8 +284,8 @@ Func_41c6:
 .asm_41d1
 	ld b, d
 	ld c, CARD_LOCATION_OPP_FIELD
-	call SetCardLocationAndIndex
-	call Func_1c92
+	call SetTargetCard
+	call LoadTargetCard
 	call Func_1d67
 	call Func_40f1
 	inc hl

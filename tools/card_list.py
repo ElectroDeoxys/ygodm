@@ -1,3 +1,34 @@
+import reader
+
+OFFSETS = [
+	0x26bfc,
+	0x26c62,
+	0x26cac,
+	0x26df2,
+	0x26e60,
+	0x26efa,
+	0x26f22,
+	0x26f64,
+	0x27030,
+	0x2703a,
+	0x27056,
+	0x270e0,
+	0x27110,
+	0x2713e,
+	0x27190,
+	0x271e4,
+	0x27262,
+	0x27290,
+	0x272fa,
+	0x27376,
+	0x273d2,
+	0x27436,
+	0x274d0,
+	0x274f0,
+	0x27576,
+	0x27600,
+]
+
 cards = [
 	"B_EYE_WHITE_DRAGON",
 	"MYSTICAL_ELF",
@@ -366,8 +397,13 @@ cards = [
 	"FIENDS_MIRROR",
 ]
 
-card_list = [
-]
-
-for card in card_list:
-	print(f"\tdw {cards[card]}")
+for offset in OFFSETS:
+	print(f"CardList_{offset:0x}:")
+	pos = offset
+	while True:
+		card_id = reader.get_rom_byte(pos + 0) + (reader.get_rom_byte(pos + 1) << 8)
+		pos += 2
+		if card_id == 0xffff:
+			print("\tdw -1 ; end\n")
+			break
+		print(f"\tdw {cards[card_id]}")

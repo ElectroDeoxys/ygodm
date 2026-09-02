@@ -48,10 +48,14 @@ wVBlankMode:: db ; caac
 
 wPlayerLP:: dw ; cab0
 	ds $1
-wOppLP:: dw ; cab3
+wOppLP::    dw ; cab3
 	ds $1
 
-	ds $cae2 - $cab6
+	ds $cad1 - $cab6
+
+wActiveField:: db ; cad1
+
+	ds $cae2 - $cad2
 
 wCardID_cae2:: dw ; cae2
 
@@ -74,7 +78,8 @@ wBeatGame:: db ; ccfe
 	ds $cd0f - $ccff
 
 wLoadedCardID::   dw ; cd0f
-	ds $2
+wLoadedCardLocationIndex:: db ; cd11
+wLoadedCardLocation:: db ; cd12
 wLoadedCardAtk::  dw ; cd13
 wLoadedCardDef::  dw ; cd15
 wLoadedCardType:: db ; cd17
@@ -102,7 +107,13 @@ wCardLocationIndex:: db ; cdf0
 wCardLocation:: db ; cdf1
 wTempCardID:: dw ; cdf2
 
-	ds $ce97 - $cdf4
+	ds $ce0a - $cdf4
+
+wHealLPAmount:: dw ; ce0a
+	ds $2
+wDamageLPAmount:: dw ; ce0ae
+
+	ds $ce97 - $ce10
 
 wce97:: db ; ce97
 wce98:: db ; ce98
@@ -121,11 +132,28 @@ wMaterial1CardID:: dw ; cecb
 wMaterial2CardID:: dw ; cecd
 wFusionCardID::    dw ; cecf
 
-	ds $ceef - $ced1
+	ds $cee7 - $ced1
+
+wAIOppHandTargetCardID::        dw ; cee7
+wAIOppHandTargetCardIndex::     db ; cee9
+wAIOppHandTargetCardLocation::  db ; ceea
+wAIOppFieldTargetCardID::       dw ; ceeb
+wAIOppFieldTargetZoneIndex::    db ; ceed
+wAIOppFieldTargetZoneLocation:: db ; ceee
 
 wNPCDuelist:: db ; ceef
 
-	ds $cf4e - $cef0
+wCardID_cef0:: dw ; cef0
+wcef2:: db ; cef2
+	ds $4
+wCardLocationIndex_cef7:: db ; cef7
+wcef8:: db ; cef8
+wCardID_cef9:: dw ; cef9
+	ds $5
+wcf00:: db ; cf00
+wcf01:: db ; cf01
+
+	ds $cf4e - $cf02
 
 ; duel and win counts against each of the NPC duelists
 wDuelistDuelCounts:: ; cf4e

@@ -530,8 +530,8 @@ HandleExodiaWinCondition:
 	ld a, b
 	cp HAND_SIZE
 	jr nc, .check_exodia_flags
-	call SetCardLocationAndIndex
-	call Func_1c92
+	call SetTargetCard
+	call LoadTargetCard
 	push bc
 	ld a, [wTempCardID + 0]
 	ld c, a
@@ -1516,13 +1516,13 @@ Func_15204:
 	ld [$cf47], a
 	call Func_2c4a
 	ld e, $04
-	ld bc, $13d
+	ld bc, ELEGANT_EGOTIST
 	call Func_2cf2
 	ld e, $04
-	ld bc, $3d
+	ld bc, HARPIE_LADY
 	call Func_2d01
 	ld e, $04
-	ld bc, $3e
+	ld bc, HARPIE_LADY_SISTER
 	call Func_2d10
 	call Func_145cd
 	pop de
