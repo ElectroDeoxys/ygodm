@@ -13,10 +13,10 @@
 	farfunc Func_e7eb ; $15
 	farfunc Func_cc4c ; $17
 	farfunc Func_e84e ; $19
-	farfunc $4618 ; $1b
-	farfunc $4664 ; $1d
-	farfunc $675b ; $1f
-	farfunc $67a7 ; $21
+	farfunc Func_c618 ; $1b
+	farfunc Func_c664 ; $1d
+	farfunc Func_e75b ; $1f
+	farfunc Func_e7a7 ; $21
 	farfunc GetPlayerDeckCard ; $23
 	farfunc RemoveCardFromPlayerDeck ; $25
 	farfunc $6747 ; $27
@@ -62,7 +62,7 @@ SetInitialPlayerLP:
 	ld a, HIGH(INITIAL_LP)
 	ld [wPlayerLP + 1], a
 	ld a, $00
-	ld [$cab2], a
+	ld [wcab2], a
 	pop af
 	ret
 ; 0xc07e
@@ -76,7 +76,7 @@ SetInitialOpponentLP:
 	ld a, HIGH(INITIAL_LP)
 	ld [wOppLP + 1], a
 	ld a, $00
-	ld [$cab5], a
+	ld [wcab5], a
 	pop af
 	ret
 ; 0xc0cb
@@ -710,9 +710,25 @@ GetPlayerDeckCard:
 	pop hl
 	pop af
 	ret
-; 0xc618
 
-SECTION "Bank 3@4630", ROMX[$4630], BANK[$3]
+Func_c618:
+	push bc
+	push de
+	ld d, b
+	ld e, c
+	call Func_c664
+	ld a, b
+	cp TRUE
+	jr nz, .asm_c62d
+	ld a, c
+	call SetPlayerDeckIndex
+	ld b, d
+	ld c, e
+	call AddCardToPlayerDeck
+.asm_c62d
+	pop de
+	pop bc
+	ret
 
 RemoveCardFromPlayerDeck:
 	push af
@@ -748,9 +764,37 @@ RemoveCardFromPlayerDeck:
 	pop bc
 	pop af
 	ret
-; 0xc664
 
-SECTION "Bank 3@468a", ROMX[$468a], BANK[$3]
+Func_c664:
+	push af
+	push de
+	push hl
+	ld hl, wPlayerDeck
+	ld e, $00
+.loop_deck
+	ld a, [hli]
+	ld c, a
+	ld a, [hli]
+	ld b, a
+	call IsValidCard
+	cp FALSE
+	jr z, .found
+	inc e
+	ld a, e
+	cp DECK_SIZE
+	jr c, .loop_deck
+.found
+	ld b, TRUE
+	ld c, e
+	ld a, c
+	cp DECK_SIZE
+	jr nz, .true
+	inc b ; FALSE
+.true
+	pop hl
+	pop de
+	pop af
+	ret
 
 ; outputs in a the total number of
 ; cards in wPlayerDeck
@@ -1191,7 +1235,7 @@ Func_ccb0:
 
 Func_ccbd:
 	push bc
-	ld a, $04
+	ld a, VBLANK_04
 	call SetPendingVBlankMode
 	call Func_cbf1
 	call Func_cc1e
@@ -1249,7 +1293,7 @@ Func_cd2a:
 	ret
 
 Func_cd2f:
-	ld a, $04
+	ld a, VBLANK_04
 	call SetPendingVBlankMode
 	call Func_cc0a
 	call Func_cc1e
@@ -1259,7 +1303,7 @@ Func_cd2f:
 	ret
 
 Func_cd42:
-	ld a, $04
+	ld a, VBLANK_04
 	call SetPendingVBlankMode
 	call Func_cbf6
 	call Func_cc1e
@@ -4744,8 +4788,8 @@ Func_e4fb:
 	dw Func_e575
 	dw Func_e5f3
 	dw Func_e606
-	dw $6619
-	dw $65cf
+	dw Func_e619
+	dw Func_e5cf
 
 Func_e52e:
 	push bc
@@ -4835,9 +4879,26 @@ Func_e575:
 .done
 	ld a, $01
 	ret
-; 0xe5cf
 
-SECTION "Bank 3@65f3", ROMX[$65f3], BANK[$3]
+Func_e5cf:
+	ld a, VBLANK_04
+	call SetPendingVBlankMode
+	call Func_e6e9
+	call RequestVBlankMode
+	call WaitForVBlank
+	ld a, e
+	cp $80
+	jr nz, .asm_e5f1
+	farcall Func_10a1b
+	call Func_e6be
+	call Func_e49c
+	ld e, $00
+	ld a, $01
+	jr .asm_e5f2
+.asm_e5f1
+	xor a
+.asm_e5f2
+	ret
 
 Func_e5f3:
 	ld a, VBLANK_04
@@ -4848,9 +4909,6 @@ Func_e5f3:
 	call WaitForVBlank
 	xor a
 	ret
-; 0xe606
-
-SECTION "Bank 3@6606", ROMX[$6606], BANK[$3]
 
 Func_e606:
 	ld a, VBLANK_04
@@ -4861,9 +4919,14 @@ Func_e606:
 	call WaitForVBlank
 	xor a
 	ret
-; 0xe619
 
-SECTION "Bank 3@6626", ROMX[$6626], BANK[$3]
+Func_e619:
+	ld a, $02
+	call SetPendingVBlankMode
+	call RequestVBlankMode
+	call WaitForVBlank
+	xor a
+	ret
 
 Func_e626:
 	push af
@@ -5023,7 +5086,87 @@ Func_e711:
 	pop bc
 	pop af
 	ret
-; 0xe72b
+
+Func_e72b:
+	ld [$cea4], a
+	ret
+
+Func_e72f:
+	push af
+	push bc
+	push de
+	push hl
+	ld d, $00
+	ld a, [$cea4]
+	ld e, a
+	sla e
+	ld hl, $cea5
+	add hl, de
+	ld a, c
+	ld [hli], a
+	ld [hl], b
+	pop hl
+	pop de
+	pop bc
+	pop af
+	ret
+; 0xe747
+
+SECTION "Bank 3@675b", ROMX[$675b], BANK[$3]
+
+Func_e75b:
+	push bc
+	push de
+	ld d, b
+	ld e, c
+	call Func_e7a7
+	ld a, b
+	cp $00
+	jr nz, .asm_e770
+	ld a, c
+	call Func_e72b
+	ld b, d
+	ld c, e
+	call Func_e72f
+.asm_e770
+	pop de
+	pop bc
+	ret
+; 0xe773
+
+SECTION "Bank 3@67a7", ROMX[$67a7], BANK[$3]
+
+Func_e7a7:
+	push af
+	push de
+	push hl
+	ld hl, $cea5
+	ld e, $00
+.asm_e7af
+	ld a, [hli]
+	ld c, a
+	ld a, [hli]
+	ld b, a
+	call IsValidCard
+	cp FALSE
+	jr z, .asm_e7c0
+	inc e
+	ld a, e
+	cp $05
+	jr c, .asm_e7af
+.asm_e7c0
+	ld b, $00
+	ld c, e
+	ld a, c
+	cp $05
+	jr nz, .asm_e7c9
+	inc b
+.asm_e7c9
+	pop hl
+	pop de
+	pop af
+	ret
+; 0xe7cd
 
 SECTION "Bank 3@67eb", ROMX[$67eb], BANK[$3]
 

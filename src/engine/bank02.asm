@@ -17,7 +17,7 @@
 	farfunc Func_b7ee ; $1d
 	farfunc Func_b807 ; $1f
 	farfunc Func_b823 ; $21
-	farfunc $7840 ; $23
+	farfunc Func_b840 ; $23
 	farfunc Func_b57d ; $25
 	farfunc Func_b85d ; $27
 	farfunc Func_b87e ; $29
@@ -26,9 +26,9 @@
 	farfunc Func_b62d ; $2f
 	farfunc Func_b679 ; $31
 	farfunc $789f ; $33
-	farfunc $78b2 ; $35
-	farfunc $78cb ; $37
-	farfunc $78e4 ; $39
+	farfunc Func_b8b2 ; $35
+	farfunc Func_b8cb ; $37
+	farfunc Func_b8e4 ; $39
 	farfunc $78fd ; $3b
 	farfunc Func_b916 ; $3d
 
@@ -1502,9 +1502,23 @@ Func_b823:
 	pop bc
 	pop af
 	ret
-; 0xb840
 
-SECTION "Bank 2@785d", ROMX[$785d], BANK[$2]
+Func_b840:
+	push af
+	push bc
+	push de
+	call Func_29fd
+	ld a, YAMI_YUGI
+	ld [wNPCCharacter], a
+	ld a, $54
+	ld [$cd51], a
+	farcall Func_18008
+	call Func_2a3f
+	call Func_884a
+	pop de
+	pop bc
+	pop af
+	ret
 
 Func_b85d:
 	push af
@@ -1550,6 +1564,48 @@ Func_b894:
 	pop af
 	ret
 ; 0xb89f
+
+SECTION "Bank 2@78b2", ROMX[$78b2], BANK[$2]
+
+Func_b8b2:
+	push af
+	call Func_29fd
+	ld a, YAMI_YUGI
+	ld [wNPCCharacter], a
+	ld a, $55
+	ld [$cd51], a
+	farcall Func_18008
+	call Func_2a3f
+	call Func_884a
+	pop af
+	ret
+
+Func_b8cb:
+	push af
+	call Func_29fd
+	ld a, YAMI_YUGI
+	ld [wNPCCharacter], a
+	ld a, $56
+	ld [$cd51], a
+	farcall Func_18008
+	call Func_2a3f
+	call Func_884a
+	pop af
+	ret
+
+Func_b8e4:
+	push af
+	call Func_29fd
+	ld a, YAMI_YUGI
+	ld [wNPCCharacter], a
+	ld a, $57
+	ld [$cd51], a
+	farcall Func_18008
+	call Func_2a3f
+	call Func_884a
+	pop af
+	ret
+; 0xb8fd
 
 SECTION "Bank 2@7916", ROMX[$7916], BANK[$2]
 

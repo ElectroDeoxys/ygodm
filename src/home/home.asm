@@ -48,12 +48,12 @@ Func_19f:
 	ld hl, rIF
 	res B_IE_SERIAL, [hl]
 	ld a, $00
-	ld [$caa1], a
+	ld [wcaa1], a
 	xor a
-	ld [$caa4], a
-	ld [$caa2], a
-	ld [$caa3], a
-	ld [$caa0], a
+	ld [wcaa4], a
+	ld [wcaa2], a
+	ld [wcaa3], a
+	ld [wcaa0], a
 	ldh [rSC], a
 	ld a, $00
 	ldh [rSB], a
@@ -69,7 +69,7 @@ Serial:
 	push bc
 	push de
 	push hl
-	ld a, [$caa1]
+	ld a, [wcaa1]
 	cp $00
 	jr nz, .asm_1e0
 	call Func_1f6
@@ -94,7 +94,7 @@ Serial:
 
 Func_1f6:
 	ldh a, [rSB]
-	ld [$caa2], a
+	ld [wcaa2], a
 	cp $20
 	jr z, .asm_20e
 	ld a, $00
@@ -102,26 +102,26 @@ Func_1f6:
 	call Func_376
 	ld a, SC_EXTERNAL
 	ldh [rSC], a
-	ld a, SC_START
+	ld a, SC_EXTERNAL | SC_START
 	ldh [rSC], a
 .asm_20e
 	ret
 
 Func_20f:
 	ldh a, [rSB]
-	ld [$caa2], a
+	ld [wcaa2], a
 	ld a, $01
-	ld [$caa0], a
+	ld [wcaa0], a
 	ret
 
 Func_21a:
 	ldh a, [rSB]
-	ld [$caa2], a
+	ld [wcaa2], a
 	ld c, a
 	and $f0
 	cp $80
 	jr nz, .asm_22e
-	ld a, [$caa2]
+	ld a, [wcaa2]
 	call Func_2025
 	jr .asm_235
 .asm_22e
@@ -129,16 +129,16 @@ Func_21a:
 	jr z, .asm_235
 	call Func_1e65
 .asm_235
-	ld a, [$caa3]
+	ld a, [wcaa3]
 	ldh [rSB], a
 	ld hl, rSC
 	set B_SC_START, [hl]
 	ld a, $01
-	ld [$caa0], a
+	ld [wcaa0], a
 	xor a
-	ld [$caad], a
-	ld [$caae], a
-	ld [$caaf], a
+	ld [wcaad], a
+	ld [wcaae], a
+	ld [wcaaf], a
 	ret
 
 Func_24f::
@@ -146,7 +146,7 @@ Func_24f::
 	push de
 	push hl
 	call Func_19f
-	call Func_1fc8
+	call EnableSerial
 .asm_258
 	ld e, $00
 	ld b, $0a
@@ -182,7 +182,7 @@ Func_24f::
 	cp $00
 	jr nz, .asm_258
 .asm_28e
-	call Func_1fd7
+	call DisableSerial
 	ld a, d
 	pop hl
 	pop de
@@ -192,18 +192,19 @@ Func_24f::
 Func_296:
 	push hl
 	ld hl, rSC
-	ld [hl], $00
+	ld [hl], SC_EXTERNAL
 	ld a, $10
 	ldh [rSB], a
-	ld [hl], $01
-	set 7, [hl]
+	ld [hl], SC_INTERNAL
+	set B_SC_START, [hl]
 	call WaitForVBlank
 	ld l, FALSE
-	ld a, [$caa2]
+	ld a, [wcaa2]
 	cp $20
-	jr nz, .asm_2b2
+	jr nz, .false
+; true
 	ld l, TRUE
-.asm_2b2
+.false
 	ld a, l
 	pop hl
 	ret
@@ -211,20 +212,21 @@ Func_296:
 Func_2b5:
 	push hl
 	ld hl, rSC
-	ld a, $00
+	ld a, SC_EXTERNAL
 	ld [hl], a
 	ld a, $00
-	ld [$caa2], a
+	ld [wcaa2], a
 	ld a, $20
 	ldh [rSB], a
-	set 7, [hl]
+	set B_SC_START, [hl]
 	call WaitForVBlank
-	ld l, $01
-	ld a, [$caa2]
+	ld l, FALSE
+	ld a, [wcaa2]
 	cp $10
-	jr nz, .asm_2d5
-	ld l, $00
-.asm_2d5
+	jr nz, .false
+; true
+	ld l, TRUE
+.false
 	ld a, l
 	pop hl
 	ret
@@ -255,17 +257,17 @@ Func_2d8:
 	ret
 
 Func_301:
-	ld [$caa1], a
+	ld [wcaa1], a
 	ret
 
 Func_305::
 	push af
 	push hl
 	ld a, $10
-	ld [$caa4], a
+	ld [wcaa4], a
 	ld a, $02
 	call Func_301
-	ld a, $01
+	ld a, SC_INTERNAL
 	ldh [rSC], a
 	pop hl
 	pop af
@@ -274,10 +276,10 @@ Func_305::
 Func_318::
 	push af
 	ld a, $20
-	ld [$caa4], a
+	ld [wcaa4], a
 	ld a, $04
 	call Func_301
-	ld a, $00
+	ld a, SC_EXTERNAL
 	ldh [rSC], a
 	pop af
 	ret
@@ -288,7 +290,7 @@ Func_329:
 	ld a, $50
 	call Func_357
 	call WaitForVBlank
-	ld a, [$caa2]
+	ld a, [wcaa2]
 	cp $60
 	jr nz, .asm_33d
 	ld b, $00
@@ -303,7 +305,7 @@ Func_340:
 	ld a, $60
 	call Func_37f
 	call Func_f91
-	ld a, [$caa2]
+	ld a, [wcaa2]
 	cp $50
 	jr nz, .asm_354
 	ld b, $00
@@ -318,9 +320,9 @@ Func_357:
 	di
 	ld hl, rSC
 	call Func_36a
-	ld [hl], $01
+	ld [hl], SC_INTERNAL
 	ldh [rSB], a
-	set 7, [hl]
+	set B_SC_START, [hl]
 	ei
 	pop hl
 	pop af
@@ -330,9 +332,9 @@ Func_36a:
 	push af
 	push hl
 	ld hl, rSC
-.asm_36f
-	bit 7, [hl]
-	jr nz, .asm_36f
+.wait
+	bit B_SC_START, [hl]
+	jr nz, .wait
 	pop hl
 	pop af
 	ret
@@ -354,12 +356,12 @@ Func_37f:
 	push af
 	di
 	xor a
-	ld [$caa0], a
-	ld a, $00
+	ld [wcaa0], a
+	ld a, SC_EXTERNAL
 	ldh [rSC], a
 	pop af
 	ldh [rSB], a
-	ld a, $80
+	ld a, SC_EXTERNAL | SC_START
 	ldh [rSC], a
 	ei
 	pop hl
@@ -1291,30 +1293,30 @@ Func_f91:
 	push af
 	push hl
 	xor a
-	ld [$caad], a
-	ld [$caae], a
-	ld [$caaf], a
+	ld [wcaad], a
+	ld [wcaae], a
+	ld [wcaaf], a
 .asm_f9d
 	call Func_fb1
 	cp $01
 	jr z, .asm_faa
-	ld a, [$caa0]
+	ld a, [wcaa0]
 	or a
 	jr z, .asm_f9d
 .asm_faa
 	xor a
-	ld [$caa0], a
+	ld [wcaa0], a
 	pop hl
 	pop af
 	ret
 
 Func_fb1:
-	ld a, [$caad]
+	ld a, [wcaad]
 	add $01
-	ld [$caad], a
-	ld a, [$caae]
+	ld [wcaad], a
+	ld a, [wcaae]
 	adc $00
-	ld [$caae], a
+	ld [wcaae], a
 	cp $ff
 	jr nz, .asm_fcc
 	call Func_1e65
@@ -3679,19 +3681,19 @@ Func_1dea:
 	push de
 	push hl
 	ld a, $00
-	ld [$caa2], a
+	ld [wcaa2], a
 	ld a, $00
 	ld [$cdfb], a
 	call Func_207c
 	ld de, $fefe
 .asm_1dfe
-	ld a, [$caa4]
+	ld a, [wcaa4]
 	cp $10
 	jr nz, .asm_1e22
 	ld a, $30
 	call Func_357
 	call WaitForVBlank
-	ld a, [$caa2]
+	ld a, [wcaa2]
 	and $f0
 	cp $40
 	jr nz, .asm_1e20
@@ -3742,9 +3744,9 @@ Func_1e48:
 Func_1e55:
 	push af
 	xor a
-	ld [$caad], a
-	ld [$caae], a
-	ld [$caaf], a
+	ld [wcaad], a
+	ld [wcaae], a
+	ld [wcaaf], a
 	ld [$cdfc], a
 	pop af
 	ret
@@ -3759,8 +3761,8 @@ Func_1e65:
 
 Func_1e70::
 	push af
-	call Func_1fc8
-	ld a, [$caa4]
+	call EnableSerial
+	ld a, [wcaa4]
 	cp $10
 	jr nz, .asm_1e80
 	call Func_1e88
@@ -3768,7 +3770,7 @@ Func_1e70::
 .asm_1e80
 	call Func_1ed5
 .asm_1e83
-	call Func_1fd7
+	call DisableSerial
 	pop af
 	ret
 
@@ -3824,7 +3826,7 @@ Func_1ed5:
 	call Func_207c
 	call Func_1e55
 	ld a, $90
-	ld [$caa3], a
+	ld [wcaa3], a
 	ld c, $7f
 .asm_1ef2
 	ld a, [$cdfc]
@@ -3850,7 +3852,7 @@ Func_1ed5:
 
 Func_1f1b:
 	push af
-	ld a, [$caa2]
+	ld a, [wcaa2]
 	and $f0
 	cp $90
 	jr z, .asm_1f28
@@ -3861,7 +3863,7 @@ Func_1f1b:
 
 Func_1f2a:
 	push af
-	ld a, [$caa2]
+	ld a, [wcaa2]
 	and $f0
 	cp $50
 	jr z, .asm_1f39
@@ -3877,7 +3879,7 @@ Func_1f2a:
 
 Func_1f43:
 	push af
-	ld a, [$caa2]
+	ld a, [wcaa2]
 	and $f0
 	cp $60
 	jr z, .asm_1f50
@@ -3898,7 +3900,7 @@ Func_1f57::
 
 Func_1f5f::
 	push af
-	ld a, [$caa4]
+	ld a, [wcaa4]
 	cp $10
 	jr nz, .asm_1f6c
 	call Func_1f71
@@ -3972,42 +3974,40 @@ Func_1fc0::
 	pop af
 	ret
 
-Func_1fc8:
+EnableSerial:
 	push hl
 	di
 	ld hl, rIF
 	res B_IF_SERIAL, [hl]
 	ld hl, rIE
-	set B_IF_SERIAL, [hl]
+	set B_IE_SERIAL, [hl]
 	ei
 	pop hl
 	ret
 
-Func_1fd7:
+DisableSerial:
 	push hl
 	di
 	ld hl, rIF
 	res B_IF_SERIAL, [hl]
 	ld hl, rIE
-	res B_IF_SERIAL, [hl]
+	res B_IE_SERIAL, [hl]
 	ei
 	pop hl
 	ret
-; 0x1fe6
-
-SECTION "Home@1fe6", ROM0[$1fe6]
 
 Func_1fe6::
 	push af
 	push bc
 	push hl
-	ld hl, $ce17
+	; fill wce17 with $80
+	ld hl, wce17
 	ld a, $80
 	ld c, $80
-.asm_1ff0
+.loop
 	ld [hli], a
 	dec c
-	jr nz, .asm_1ff0
+	jr nz, .loop
 	xor a
 	ld [wce97], a
 	ld [wce98], a
@@ -4049,7 +4049,7 @@ Func_2025:
 	xor a
 .asm_2035
 	ld [wce98], a
-	ld hl, $ce17
+	ld hl, wce17
 	add hl, bc
 	pop af
 	ld [hl], a
@@ -4085,7 +4085,7 @@ Func_2062:
 	xor a
 .asm_2071
 	ld [wce97], a
-	ld hl, $ce17
+	ld hl, wce17
 	add hl, bc
 	ld a, [hl]
 	pop hl
@@ -4542,15 +4542,30 @@ Func_2364:
 	ld b, $00
 	ld a, [wNPCDuelist]
 	ld c, a
-	ld hl, $2374
+	ld hl, .Categories
 	add hl, bc
 	ld a, [hl]
 	pop hl
 	pop bc
 	ret
-; 0x2374
 
-SECTION "Bank 0@2384", ROM0[$2384]
+.Categories:
+	db $01 ; DUELIST_WEEVIL
+	db $01 ; DUELIST_MAI
+	db $01 ; DUELIST_REX
+	db $01 ; DUELIST_MAKO
+	db $01 ; DUELIST_SETO_KAIBA
+	db $01 ; DUELIST_MOKUBA
+	db $01 ; DUELIST_PUPPETEER
+	db $01 ; DUELIST_PANIK
+	db $01 ; DUELIST_BANDIT_KEITH
+	db $00 ; DUELIST_YUGI
+	db $00 ; DUELIST_TRISTAN
+	db $00 ; DUELIST_JOEY
+	db $00 ; DUELIST_BAKURA
+	db $01 ; DUELIST_SIMON
+	db $02 ; DUELIST_MAXIMILLION
+	db $01 ; DUELIST_YAMI_YUGI
 
 Func_2384::
 	push af
@@ -5715,9 +5730,14 @@ Func_2abe::
 .asm_2ad7
 	pop af
 	ret
-; 0x2ad9
 
-SECTION "Bank 0@2ae4", ROM0[$2ae4]
+Func_2ad9::
+	push af
+	ld a, $9a
+	call Func_29f1
+	call WaitForVBlank
+	pop af
+	ret
 
 Func_2ae4::
 	push af

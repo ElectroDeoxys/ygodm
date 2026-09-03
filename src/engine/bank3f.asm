@@ -48,11 +48,11 @@ Func_fc004::
 	ret
 
 .Jumptable:
-	dw $41d4
-	dw $41e0
-	dw $4216
-	dw $42c6
-	dw $4290
+	dw Func_fc1d4
+	dw Func_fc1e0
+	dw Func_fc216
+	dw Func_fc2c6
+	dw Func_fc290
 
 Func_fc04e:
 	push af
@@ -129,7 +129,57 @@ Func_fc04e:
 	ret
 ; 0xfc0cb
 
-SECTION "Bank 3f@4114", ROMX[$4114], BANK[$3f]
+SECTION "Bank 3f@40cf", ROMX[$40cf], BANK[$3f]
+
+Func_fc0cf:
+	push af
+	push bc
+	push de
+	push hl
+	ld a, $00
+	ldh [rSCY], a
+	ld a, $00
+	ldh [rSCX], a
+	ld a, $00
+	ldh [rBGP], a
+	ld a, LCDC_BG_ON | LCDC_BLOCK01
+	ldh [rLCDC], a
+	ld a, $90
+	ldh [rWY], a
+	ld a, $a6
+	ldh [rWX], a
+	ld hl, vBGMap0
+	xor a
+	ld de, $c
+	ld b, $11
+.asm_fc0f4
+	ld c, $14
+.asm_fc0f6
+	ld [hli], a
+	inc a
+	dec c
+	jr nz, .asm_fc0f6
+	add hl, de
+	dec b
+	jr nz, .asm_fc0f4
+	pop hl
+	pop de
+	pop bc
+	pop af
+	ret
+
+Func_fc104:
+	push af
+	push hl
+.asm_fc106
+	ldh a, [rLY]
+	cp $93
+	jr c, .asm_fc106
+	ld hl, rLCDC
+	res B_LCDC_ENABLE, [hl]
+	pop hl
+	pop af
+	ret
 
 Func_fc114:
 	push af
@@ -197,3 +247,204 @@ Func_fc15a:
 	pop af
 	ret
 ; 0xfc170
+
+SECTION "Bank 3f@417b", ROMX[$417b], BANK[$3f]
+
+Func_fc17b:
+	push af
+	push bc
+	push de
+	push hl
+	call Func_fc104
+	ld a, c
+	cp $00
+	jr z, .asm_fc18d
+.asm_fc187
+	ld a, [hli]
+	ld [de], a
+	inc de
+	dec c
+	jr nz, .asm_fc187
+.asm_fc18d
+	ld a, b
+	cp $00
+	jr z, .asm_fc19d
+.asm_fc192
+	ld c, $00
+.asm_fc194
+	ld a, [hli]
+	ld [de], a
+	inc de
+	dec c
+	jr nz, .asm_fc194
+	dec b
+	jr nz, .asm_fc192
+.asm_fc19d
+	ld hl, rLCDC
+	set B_LCDC_ENABLE, [hl]
+	pop hl
+	pop de
+	pop bc
+	pop af
+	ret
+
+Func_fc1a7:
+	push af
+	push bc
+	push hl
+	ld hl, $41c4
+	ld bc, NULL
+.asm_fc1b0
+	push hl
+	add hl, bc
+	ld a, [hli]
+	ld h, [hl]
+	ld l, a
+	call Func_fc114
+	pop hl
+	inc c
+	inc c
+	ld a, c
+	cp $10
+	jr c, .asm_fc1b0
+	pop hl
+	pop bc
+	pop af
+	ret
+; 0xfc1c4
+
+SECTION "Bank 3f@41d4", ROMX[$41d4], BANK[$3f]
+
+Func_fc1d4:
+	push af
+	push bc
+	push de
+	push hl
+	call Func_fc1a7
+	pop hl
+	pop de
+	pop bc
+	pop af
+	ret
+
+Func_fc1e0:
+	push af
+	push bc
+	push de
+	push hl
+	call Func_fc0cf
+	ld hl, rLCDC
+	set B_LCDC_ENABLE, [hl]
+	ld hl, $43b1
+	call Func_fc114
+	ld hl, $4348
+	ld bc, $5a
+	ld de, vTiles0
+	call Func_fc17b
+	ld hl, $4401
+	call Func_fc114
+	ld a, $00
+	ldh [rBGP], a
+	ld hl, $4411
+	call Func_fc114
+	call Func_fc104
+	pop hl
+	pop de
+	pop bc
+	pop af
+	ret
+
+Func_fc216:
+	push af
+	push bc
+	push de
+	push hl
+	call Func_fc0cf
+	ld hl, rLCDC
+	set B_LCDC_ENABLE, [hl]
+	ld hl, $4441
+	call Func_fc114
+	ld a, $e4
+	ldh [rBGP], a
+	ld hl, $4d91
+	ld bc, $1000
+	ld de, vTiles0
+	call Func_fc17b
+	ld hl, $4451
+	call Func_fc114
+	ld bc, $1000
+	ld hl, $4d91
+	add hl, bc
+	ld bc, $1000
+	ld de, vTiles0
+	call Func_fc17b
+	ld hl, $4461
+	call Func_fc114
+	ld hl, $4531
+	ld bc, $1080
+	ld de, vTiles0
+	call Func_fc17b
+	ld hl, $43f1
+	call Func_fc114
+	ld hl, $43c1
+	call Func_fc114
+	ld hl, $4348
+	ld bc, $5a
+	ld de, vTiles0
+	call Func_fc17b
+	ld hl, $4401
+	call Func_fc114
+	ld a, $00
+	ldh [rBGP], a
+	ld hl, $4411
+	call Func_fc114
+	call Func_fc104
+	pop hl
+	pop de
+	pop bc
+	pop af
+	ret
+
+Func_fc290:
+	push af
+	push bc
+	push de
+	push hl
+	call Func_fc0cf
+	ld hl, rLCDC
+	set B_LCDC_ENABLE, [hl]
+	ld hl, $43e1
+	call Func_fc114
+	ld hl, $42df
+	ld bc, $5a
+	ld de, vTiles0
+	call Func_fc17b
+	ld hl, $4401
+	call Func_fc114
+	ld a, $00
+	ldh [rBGP], a
+	ld hl, $4411
+	call Func_fc114
+	call Func_fc104
+	pop hl
+	pop de
+	pop bc
+	pop af
+	ret
+
+Func_fc2c6:
+	push af
+	push bc
+	push hl
+	ld a, $00
+	ldh [rBGP], a
+	ld hl, rLCDC
+	set B_LCDC_ENABLE, [hl]
+	ld hl, $43d1
+	call Func_fc114
+	call Func_fc104
+	pop hl
+	pop bc
+	pop af
+	ret
+; 0xfc2df

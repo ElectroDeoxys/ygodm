@@ -31,7 +31,11 @@ wVirtualOAM:: ; ca00
 
 SECTION "WRAM 2", WRAM0
 
-	ds $5
+wcaa0:: db ; caa0
+wcaa1:: db ; caa1
+wcaa2:: db ; caa2
+wcaa3:: db ; caa3
+wcaa4:: db ; caa4
 
 wJoypadDown::    db ; caa5
 wJoypadPressed:: db ; caa6
@@ -44,12 +48,14 @@ wVBlankStructSize:: db ; caaa
 wPendingVBlankMode:: db ; caab
 wVBlankMode:: db ; caac
 
-	ds $3
+wcaad:: db ; caad
+wcaae:: db ; caae
+wcaaf:: db ; caaf
 
 wPlayerLP:: dw ; cab0
-	ds $1
+wcab2::     db ; cab2
 wOppLP::    dw ; cab3
-	ds $1
+wcab5::     db ; cab5
 
 	ds $cad1 - $cab6
 
@@ -111,9 +117,12 @@ wTempCardID:: dw ; cdf2
 
 wHealLPAmount:: dw ; ce0a
 	ds $2
-wDamageLPAmount:: dw ; ce0ae
+wDamageLPAmount:: dw ; ce0e
 
-	ds $ce97 - $ce10
+	ds $ce17 - $ce10
+
+wce17:: ; ce17
+	ds $80
 
 wce97:: db ; ce97
 wce98:: db ; ce98

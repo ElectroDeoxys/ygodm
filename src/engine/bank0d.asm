@@ -5,7 +5,7 @@
 	farfunc ChoosePlayerAnteCard
 	farfunc Func_36e34
 	farfunc Func_3708e
-	farfunc $70e6
+	farfunc Func_370e6
 
 GiveVictoryAwardCard:
 	push af
@@ -1109,4 +1109,158 @@ Func_3708e:
 	ld [$cfe0], a
 	pop af
 	ret
-; 0x3709b
+
+Func_3709b:
+	push af
+	push bc
+	push hl
+	ld b, $00
+	ld c, a
+	ld hl, $70be
+	add hl, bc
+	ld a, c
+	cp $08
+	jr nc, .asm_370b3
+	ld a, [$cfdf]
+	or [hl]
+	ld [$cfdf], a
+	jr .asm_370ba
+.asm_370b3
+	ld a, [$cfe0]
+	or [hl]
+	ld [$cfe0], a
+.asm_370ba
+	pop hl
+	pop bc
+	pop af
+	ret
+; 0x370be
+
+SECTION "Bank d@70c7", ROMX[$70c7], BANK[$d]
+
+Func_370c7:
+	push bc
+	push hl
+	ld b, $00
+	ld c, a
+	ld hl, $70be
+	add hl, bc
+	ld a, c
+	cp $08
+	jr nc, .asm_370db
+	ld a, [$cfdf]
+	and [hl]
+	jr .asm_370df
+.asm_370db
+	ld a, [$cfe0]
+	and [hl]
+.asm_370df
+	jr z, .asm_370e3
+	ld a, $01
+.asm_370e3
+	pop hl
+	pop bc
+	ret
+
+Func_370e6:
+	push af
+	push bc
+	push de
+	push hl
+	ld c, $00
+.asm_370ec
+	ld a, c
+	cp $09
+	jr nc, .asm_370fc
+	ld a, c
+	call Func_3714f
+	cp $00
+	jr z, .asm_370fc
+	inc c
+	jr .asm_370ec
+.asm_370fc
+	ld a, c
+	cp $09
+	jr nc, .asm_37106
+	call Func_3710e
+	jr .asm_37109
+.asm_37106
+	farcall Func_b8e4
+.asm_37109
+	pop hl
+	pop de
+	pop bc
+	pop af
+	ret
+
+Func_3710e:
+	push af
+	push bc
+	push hl
+	ld b, $00
+	ld c, a
+	call Func_370c7
+	cp $00
+	jr nz, .asm_37136
+	ld a, c
+	call Func_3709b
+	sla c
+	ld hl, CardList_3713d
+	add hl, bc
+	ld a, [hli]
+	ld b, [hl]
+	ld c, a
+	farcall Func_5af2
+	farcall GiveCard
+	farcall Func_104f5
+	farcall Func_b8b2
+	jr .asm_37139
+.asm_37136
+	farcall Func_b8cb
+.asm_37139
+	pop hl
+	pop bc
+	pop af
+	ret
+
+CardList_3713d:
+	dw FAIRYS_GIFT
+	dw FLYING_PENGUIN
+	dw MEGASONIC_EYE
+	dw TAKRIMINOS
+	dw KANAN_THE_SWORD
+	dw YARANZO
+	dw STUFFED_ANIMAL
+	dw SEIYARYU
+	dw THREE_LEGGED_ZOMBIES
+
+Func_3714f:
+	push bc
+	push de
+	push hl
+	ld b, $00
+	ld c, a
+	sla c
+	ld hl, $7173
+	add hl, bc
+	ld a, [hli]
+	ld d, [hl]
+	ld e, a
+	ld hl, $cfa1
+	ld c, $08
+.asm_37163
+	ld a, [de]
+	cp [hl]
+	jr z, .asm_37169
+	ld b, $01
+.asm_37169
+	inc de
+	inc hl
+	dec c
+	jr nz, .asm_37163
+	ld a, b
+	pop hl
+	pop de
+	pop bc
+	ret
+; 0x37173
