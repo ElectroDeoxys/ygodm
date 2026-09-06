@@ -1084,13 +1084,13 @@ LoadCharacterOAMGfx:
 	dw YugiOAMGfx        ; YUGI
 	dw TeaOAMGfx         ; TEA
 	dw JoeyOAMGfx        ; JOEY
-	dw SetoOAMGfx        ; SETO_KAIBA
+	dw SetoKaibaOAMGfx   ; SETO_KAIBA
 	dw MokubaOAMGfx      ; MOKUBA
 	dw TristanOAMGfx     ; TRISTAN
 	dw BakuraOAMGfx      ; BAKURA
 	dw PuppeteerOAMGfx   ; PUPPETEER
 	dw PanikOAMGfx       ; PANIK
-	dw BanditOAMGfx      ; BANDIT_KEITH
+	dw BanditKeithOAMGfx ; BANDIT_KEITH
 	dw MaximillionOAMGfx ; MAXIMILLION
 	dw SimonOAMGfx       ; SIMON
 	dw ExodiaOAMGfx      ; EXODIA
@@ -1103,13 +1103,13 @@ YamiYugiOAMGfx:    INCBIN "gfx/characters/yami_yugi_oam.2bpp"
 YugiOAMGfx:        INCBIN "gfx/characters/yugi_oam.2bpp"
 TeaOAMGfx:         INCBIN "gfx/characters/tea_oam.2bpp"
 JoeyOAMGfx:        INCBIN "gfx/characters/joey_oam.2bpp"
-SetoOAMGfx:        INCBIN "gfx/characters/seto_oam.2bpp"
+SetoKaibaOAMGfx:   INCBIN "gfx/characters/seto_kaiba_oam.2bpp"
 MokubaOAMGfx:      INCBIN "gfx/characters/mokuba_oam.2bpp"
 TristanOAMGfx:     INCBIN "gfx/characters/tristan_oam.2bpp"
 BakuraOAMGfx:      INCBIN "gfx/characters/bakura_oam.2bpp"
 PuppeteerOAMGfx:   INCBIN "gfx/characters/puppeteer_oam.2bpp"
 PanikOAMGfx:       INCBIN "gfx/characters/panik_oam.2bpp"
-BanditOAMGfx:      INCBIN "gfx/characters/bandit_oam.2bpp"
+BanditKeithOAMGfx: INCBIN "gfx/characters/bandit_keith_oam.2bpp"
 MaximillionOAMGfx: INCBIN "gfx/characters/maximillion_oam.2bpp"
 SimonOAMGfx:       INCBIN "gfx/characters/simon_oam.2bpp"
 ExodiaOAMGfx:      INCBIN "gfx/characters/exodia_oam.2bpp"

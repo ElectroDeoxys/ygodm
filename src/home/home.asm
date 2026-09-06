@@ -2958,29 +2958,372 @@ Func_18b8:
 	ret
 
 CardGraphicsBanks:
-	db $10, $10, $10, $10, $10, $10, $10, $10, $10, $10, $10, $10, $10, $11, $11, $11
-	db $11, $11, $11, $11, $11, $11, $11, $11, $11, $11, $11, $12, $12, $12, $12, $12
-	db $12, $12, $12, $12, $12, $12, $12, $12, $13, $13, $13, $13, $13, $13, $13, $13
-	db $13, $13, $13, $13, $13, $14, $14, $14, $14, $14, $14, $14, $14, $14, $14, $14
-	db $14, $14, $15, $15, $15, $15, $15, $15, $15, $15, $15, $15, $15, $15, $15, $16
-	db $16, $16, $16, $16, $16, $16, $16, $16, $16, $16, $16, $16, $17, $17, $17, $17
-	db $17, $17, $17, $17, $17, $17, $17, $17, $17, $18, $18, $18, $18, $18, $18, $18
-	db $18, $18, $18, $18, $18, $18, $19, $19, $19, $19, $19, $19, $19, $19, $19, $19
-	db $19, $19, $19, $1a, $1a, $1a, $1a, $1a, $1a, $1a, $1a, $1a, $1a, $1a, $1a, $1a
-	db $1b, $1b, $1b, $1b, $1b, $1b, $1b, $1b, $1b, $1b, $1b, $1b, $1b, $1c, $1c, $1c
-	db $1c, $1c, $1c, $1c, $1c, $1c, $1c, $1c, $1c, $1c, $1d, $1d, $1d, $1d, $1d, $1d
-	db $1d, $1d, $1d, $1d, $1d, $1d, $1d, $1e, $1e, $1e, $1e, $1e, $1e, $1e, $1e, $1e
-	db $1e, $1e, $1e, $1f, $1f, $1f, $1e, $1f, $1f, $1f, $1f, $1f, $1f, $1f, $1f, $1f
-	db $1f, $21, $21, $21, $21, $21, $21, $21, $21, $21, $21, $21, $21, $21, $22, $22
-	db $22, $22, $22, $22, $22, $22, $22, $22, $22, $22, $22, $23, $23, $23, $23, $23
-	db $23, $23, $23, $23, $23, $23, $23, $23, $24, $24, $24, $24, $24, $24, $24, $24
-	db $24, $24, $24, $24, $24, $25, $25, $25, $25, $25, $25, $25, $25, $25, $25, $25
-	db $25, $25, $26, $26, $26, $26, $26, $26, $26, $26, $26, $26, $26, $26, $26, $27
-	db $27, $27, $27, $27, $27, $27, $27, $27, $27, $27, $27, $27, $28, $28, $28, $28
-	db $28, $28, $28, $28, $28, $28, $28, $28, $28, $29, $29, $29, $29, $29, $29, $29
-	db $29, $29, $29, $29, $29, $29, $2a, $2a, $2a, $2a, $2a, $2a, $2a, $2a, $2a, $2a
-	db $2a, $2a, $2a, $2b, $2b, $2b, $2b, $2b, $2b, $2b, $2b, $2b, $2b, $2b, $2b, $2b
-	db $2c, $2c, $2c, $2c, $2c, $2c, $2c, $2c, $2c, $2c, $2c, $2c, $2c, $2c
+	db BANK(BEyeWhiteDragonGfx)    ; B_EYE_WHITE_DRAGON
+	db BANK(MysticalElfGfx)        ; MYSTICAL_ELF
+	db BANK(HitotsuMeGiantGfx)     ; HITOTSU_ME_GIANT
+	db BANK(BabyDragonGfx)         ; BABY_DRAGON
+	db BANK(RyuKishinGfx)          ; RYU_KISHIN
+	db BANK(FeralImpGfx)           ; FERAL_IMP
+	db BANK(WingedDragon1Gfx)      ; WINGED_DRAGON_1
+	db BANK(MushroomManGfx)        ; MUSHROOM_MAN
+	db BANK(ShadowSpecterGfx)      ; SHADOW_SPECTER
+	db BANK(BlacklandDragonGfx)    ; BLACKLAND_DRAGON
+	db BANK(SwordArmDragonGfx)     ; SWORD_ARM_DRAGON
+	db BANK(SwampBattleguardGfx)   ; SWAMP_BATTLEGUARD
+	db BANK(TyhoneGfx)             ; TYHONE
+	db BANK(BattleSteerGfx)        ; BATTLE_STEER
+	db BANK(FlameSwordsmanGfx)     ; FLAME_SWORDSMAN
+	db BANK(TimeWizardGfx)         ; TIME_WIZARD
+	db BANK(RLegOfForbiddenGfx)    ; R_LEG_OF_FORBIDDEN
+	db BANK(LLegOfForbiddenGfx)    ; L_LEG_OF_FORBIDDEN
+	db BANK(RArmOfForbiddenGfx)    ; R_ARM_OF_FORBIDDEN
+	db BANK(LArmOfForbiddenGfx)    ; L_ARM_OF_FORBIDDEN
+	db BANK(ExodiaForbiddenGfx)    ; EXODIA_FORBIDDEN
+	db BANK(SummonedSkullGfx)      ; SUMMONED_SKULL
+	db BANK(WickedWormBeastGfx)    ; WICKED_WORM_BEAST
+	db BANK(SkullServantGfx)       ; SKULL_SERVANT
+	db BANK(HornImpGfx)            ; HORN_IMP
+	db BANK(BattleOxGfx)           ; BATTLE_OX
+	db BANK(BeaverWarriorGfx)      ; BEAVER_WARRIOR
+	db BANK(RockOgreGrotto1Gfx)    ; ROCK_OGRE_GROTTO1
+	db BANK(MountainWarriorGfx)    ; MOUNTAIN_WARRIOR
+	db BANK(ZombieWarriorGfx)      ; ZOMBIE_WARRIOR
+	db BANK(KoumoriDragonGfx)      ; KOUMORI_DRAGON
+	db BANK(TwoHeadedKingRexGfx)   ; TWO_HEADED_KING_REX
+	db BANK(JudgeManGfx)           ; JUDGE_MAN
+	db BANK(SaggiTheClownGfx)      ; SAGGI_THE_CLOWN
+	db BANK(DarkMagicianGfx)       ; DARK_MAGICIAN
+	db BANK(TheSnakeHairGfx)       ; THE_SNAKE_HAIR
+	db BANK(GaiaDragonChampGfx)    ; GAIA_DRAGON_CHAMP
+	db BANK(GaiaFierceKnightGfx)   ; GAIA_FIERCE_KNIGHT
+	db BANK(CurseOfDragonGfx)      ; CURSE_OF_DRAGON
+	db BANK(DragonPiperGfx)        ; DRAGON_PIPER
+	db BANK(CelticGuardianGfx)     ; CELTIC_GUARDIAN
+	db BANK(IllusionFacelessGfx)   ; ILLUSION_FACELESS
+	db BANK(KarbonalaWarriorGfx)   ; KARBONALA_WARRIOR
+	db BANK(RogueDollGfx)          ; ROGUE_DOLL
+	db BANK(WattkidGfx)            ; WATTKID
+	db BANK(GrifforeGfx)           ; GRIFFORE
+	db BANK(TorikeGfx)             ; TORIKE
+	db BANK(SanganGfx)             ; SANGAN
+	db BANK(BigInsectGfx)          ; BIG_INSECT
+	db BANK(BasicInsectGfx)        ; BASIC_INSECT
+	db BANK(ArmoredLizardGfx)      ; ARMORED_LIZARD
+	db BANK(HerculesBeetleGfx)     ; HERCULES_BEETLE
+	db BANK(KillerNeedleGfx)       ; KILLER_NEEDLE
+	db BANK(GokiboreGfx)           ; GOKIBORE
+	db BANK(GiantFleaGfx)          ; GIANT_FLEA
+	db BANK(LarvaeMothGfx)         ; LARVAE_MOTH
+	db BANK(GreatMothGfx)          ; GREAT_MOTH
+	db BANK(KuribohGfx)            ; KURIBOH
+	db BANK(MammothGraveyardGfx)   ; MAMMOTH_GRAVEYARD
+	db BANK(GreatWhiteGfx)         ; GREAT_WHITE
+	db BANK(WolfGfx)               ; WOLF
+	db BANK(HarpieLadyGfx)         ; HARPIE_LADY
+	db BANK(HarpieLadySisterGfx)   ; HARPIE_LADY_SISTER
+	db BANK(TigerAxeGfx)           ; TIGER_AXE
+	db BANK(SilverFangGfx)         ; SILVER_FANG
+	db BANK(KojikocyGfx)           ; KOJIKOCY
+	db BANK(PerfectGreatMothGfx)   ; PERFECT_GREAT_MOTH
+	db BANK(GaroozisGfx)           ; GAROOZIS
+	db BANK(ThousandDragonGfx)     ; THOUSAND_DRAGON
+	db BANK(FiendKrakenGfx)        ; FIEND_KRAKEN
+	db BANK(JellyfishGfx)          ; JELLYFISH
+	db BANK(CocoonEvolutionGfx)    ; COCOON_EVOLUTION
+	db BANK(KairyuShinGfx)         ; KAIRYU_SHIN
+	db BANK(SoldierOfStoneGfx)     ; SOLDIER_OF_STONE
+	db BANK(ManEatingPlantGfx)     ; MAN_EATING_PLANT
+	db BANK(KrokodilusGfx)         ; KROKODILUS
+	db BANK(GrapplerGfx)           ; GRAPPLER
+	db BANK(AxeRaiderGfx)          ; AXE_RAIDER
+	db BANK(MegazowlerGfx)         ; MEGAZOWLER
+	db BANK(UrabyGfx)              ; URABY
+	db BANK(CrawlingDragon2Gfx)    ; CRAWLING_DRAGON_2
+	db BANK(RedEyesBDragonGfx)     ; RED_EYES_B_DRAGON
+	db BANK(CastleOfDarkGfx)       ; CASTLE_OF_DARK
+	db BANK(ReaperOfTheCardGfx)    ; REAPER_OF_THE_CARD
+	db BANK(KingOfYamimakaiGfx)    ; KING_OF_YAMIMAKAI
+	db BANK(BaroxGfx)              ; BAROX
+	db BANK(DarkChimeraGfx)        ; DARK_CHIMERA
+	db BANK(MetalGuardianGfx)      ; METAL_GUARDIAN
+	db BANK(CatapultTurtleGfx)     ; CATAPULT_TURTLE
+	db BANK(GyakutennoMegamiGfx)   ; GYAKUTENNO_MEGAMI
+	db BANK(MysticHorsemanGfx)     ; MYSTIC_HORSEMAN
+	db BANK(RabidHorsemanGfx)      ; RABID_HORSEMAN
+	db BANK(ZankiGfx)              ; ZANKI
+	db BANK(CrawlingDragonGfx)     ; CRAWLING_DRAGON
+	db BANK(CrassClownGfx)         ; CRASS_CLOWN
+	db BANK(ArmoredZombieGfx)      ; ARMORED_ZOMBIE
+	db BANK(DragonZombieGfx)       ; DRAGON_ZOMBIE
+	db BANK(ClownZombieGfx)        ; CLOWN_ZOMBIE
+	db BANK(PumpkingTheKingGfx)    ; PUMPKING_THE_KING
+	db BANK(BattleWarriorGfx)      ; BATTLE_WARRIOR
+	db BANK(WingsOfFlameGfx)       ; WINGS_OF_FLAME
+	db BANK(MaskOfDarknessGfx)     ; MASK_OF_DARKNESS
+	db BANK(JobChangeMirrorGfx)    ; JOB_CHANGE_MIRROR
+	db BANK(CurtainOfDarkGfx)      ; CURTAIN_OF_DARK
+	db BANK(TomozaurusGfx)         ; TOMOZAURUS
+	db BANK(SpiritOfTheWindGfx)    ; SPIRIT_OF_THE_WIND
+	db BANK(KageningenGfx)         ; KAGENINGEN
+	db BANK(GraveyardAndHandGfx)   ; GRAVEYARD_AND_HAND
+	db BANK(GoddessThirdEyeGfx)    ; GODDESS_THIRD_EYE
+	db BANK(HeroOfTheEastGfx)      ; HERO_OF_THE_EAST
+	db BANK(DomaTheAngelGfx)       ; DOMA_THE_ANGEL
+	db BANK(ThatWhichFeedsGfx)     ; THAT_WHICH_FEEDS
+	db BANK(DarkGrayGfx)           ; DARK_GRAY
+	db BANK(WhiteMagicalHatGfx)    ; WHITE_MAGICAL_HAT
+	db BANK(KamionwizardGfx)       ; KAMIONWIZARD
+	db BANK(NightmareScorpionGfx)  ; NIGHTMARE_SCORPION
+	db BANK(SpiritOfTheBookGfx)    ; SPIRIT_OF_THE_BOOK
+	db BANK(SupporterShadowsGfx)   ; SUPPORTER_SHADOWS
+	db BANK(TrialOfNightmareGfx)   ; TRIAL_OF_NIGHTMARE
+	db BANK(DreamClownGfx)         ; DREAM_CLOWN
+	db BANK(SleepingLionGfx)       ; SLEEPING_LION
+	db BANK(YamatanoScrollGfx)     ; YAMATANO_SCROLL
+	db BANK(DarkPlantGfx)          ; DARK_PLANT
+	db BANK(AncientToolGfx)        ; ANCIENT_TOOL
+	db BANK(FaithBirdGfx)          ; FAITH_BIRD
+	db BANK(OrionTheBattleGfx)     ; ORION_THE_BATTLE
+	db BANK(AnsatsuGfx)            ; ANSATSU
+	db BANK(LamoonGfx)             ; LAMOON
+	db BANK(NemurikoGfx)           ; NEMURIKO
+	db BANK(WeatherControlGfx)     ; WEATHER_CONTROL
+	db BANK(OctoberserGfx)         ; OCTOBERSER
+	db BANK(The13thGraveGfx)       ; THE_13TH_GRAVE
+	db BANK(CharubinTheFireGfx)    ; CHARUBIN_THE_FIRE
+	db BANK(MysticalCaptureGfx)    ; MYSTICAL_CAPTURE
+	db BANK(FiendsHandGfx)         ; FIENDS_HAND
+	db BANK(WittyPhantomGfx)       ; WITTY_PHANTOM
+	db BANK(MysteryHandGfx)        ; MYSTERY_HAND
+	db BANK(DragonStatueGfx)       ; DRAGON_STATUE
+	db BANK(BEyedSilZombieGfx)     ; B_EYED_SIL_ZOMBIE
+	db BANK(ToadMasterGfx)         ; TOAD_MASTER
+	db BANK(SpikedSnailGfx)        ; SPIKED_SNAIL
+	db BANK(FlameManipulatorGfx)   ; FLAME_MANIPULATOR
+	db BANK(NecrolancerGfx)        ; NECROLANCER
+	db BANK(DjinnTheWatcherGfx)    ; DJINN_THE_WATCHER
+	db BANK(BewitchingPhantomGfx)  ; BEWITCHING_PHANTOM
+	db BANK(TempleOfSkullsGfx)     ; TEMPLE_OF_SKULLS
+	db BANK(MonsterEggGfx)         ; MONSTER_EGG
+	db BANK(ShadowWhoControlGfx)   ; SHADOW_WHO_CONTROL
+	db BANK(LordOfTheLampGfx)      ; LORD_OF_THE_LAMP
+	db BANK(AkihironGfx)           ; AKIHIRON
+	db BANK(RhaimundosRedGfx)      ; RHAIMUNDOS_RED
+	db BANK(MeltingRedShadowGfx)   ; MELTING_RED_SHADOW
+	db BANK(DokuroizoTheGrimGfx)   ; DOKUROIZO_THE_GRIM
+	db BANK(FireReaperGfx)         ; FIRE_REAPER
+	db BANK(LarvasGfx)             ; LARVAS
+	db BANK(HardArmorGfx)          ; HARD_ARMOR
+	db BANK(FiregrassGfx)          ; FIREGRASS
+	db BANK(ManEaterGfx)           ; MAN_EATER
+	db BANK(DigBeakGfx)            ; DIG_BEAK
+	db BANK(MWarrior1Gfx)          ; M_WARRIOR_1
+	db BANK(MWarrior2Gfx)          ; M_WARRIOR_2
+	db BANK(TaintedWisdomGfx)      ; TAINTED_WISDOM
+	db BANK(LisarkGfx)             ; LISARK
+	db BANK(LordOfZemiaGfx)        ; LORD_OF_ZEMIA
+	db BANK(TheJudgementHandGfx)   ; THE_JUDGEMENT_HAND
+	db BANK(MysteriousPuppetGfx)   ; MYSTERIOUS_PUPPET
+	db BANK(AncientJarGfx)         ; ANCIENT_JAR
+	db BANK(DarkfireDragonGfx)     ; DARKFIRE_DRAGON
+	db BANK(DarkKingAbyssGfx)      ; DARK_KING_ABYSS
+	db BANK(SpiritOfTheHarpGfx)    ; SPIRIT_OF_THE_HARP
+	db BANK(BigEyeGfx)             ; BIG_EYE
+	db BANK(ArmaillGfx)            ; ARMAILL
+	db BANK(DarkPrisonerGfx)       ; DARK_PRISONER
+	db BANK(HurricailGfx)          ; HURRICAIL
+	db BANK(AncientBrainGfx)       ; ANCIENT_BRAIN
+	db BANK(FireEyeGfx)            ; FIRE_EYE
+	db BANK(MonsturtleGfx)         ; MONSTURTLE
+	db BANK(ClawReacherGfx)        ; CLAW_REACHER
+	db BANK(PhantomDewanGfx)       ; PHANTOM_DEWAN
+	db BANK(ArlownayGfx)           ; ARLOWNAY
+	db BANK(DarkShadeGfx)          ; DARK_SHADE
+	db BANK(MaskedClownGfx)        ; MASKED_CLOWN
+	db BANK(LuckyTrinketGfx)       ; LUCKY_TRINKET
+	db BANK(GeninGfx)              ; GENIN
+	db BANK(EyearmorGfx)           ; EYEARMOR
+	db BANK(FiendReflection2Gfx)   ; FIEND_REFLECTION2
+	db BANK(GateDeegGfx)           ; GATE_DEEG
+	db BANK(SyncharGfx)            ; SYNCHAR
+	db BANK(FusionistGfx)          ; FUSIONIST
+	db BANK(AkakieisuGfx)          ; AKAKIEISU
+	db BANK(LalaLiOonGfx)          ; LALA_LI_OON
+	db BANK(KeyMaceGfx)            ; KEY_MACE
+	db BANK(TurtleTigerGfx)        ; TURTLE_TIGER
+	db BANK(TerraTheTerribleGfx)   ; TERRA_THE_TERRIBLE
+	db BANK(DoronGfx)              ; DORON
+	db BANK(ArmaKnightGfx)      ; ARMA_KNIGHT
+	db BANK(MechMoleZombieGfx)         ; MECH_MOLE_ZOMBIE
+	db BANK(HappyLoverGfx)     ; HAPPY_LOVER
+	db BANK(PenguinKnightGfx)         ; PENGUIN_KNIGHT
+	db BANK(PetitDragonGfx)        ; PETIT_DRAGON
+	db BANK(FrenziedPandaGfx)      ; FRENZIED_PANDA
+	db BANK(ArchfiendMarmotGfx)    ; ARCHFIEND_MARMOT
+	db BANK(PhantomGhostGfx)       ; PHANTOM_GHOST
+	db BANK(MabarrelGfx)           ; MABARREL
+	db BANK(DoroverGfx)            ; DOROVER
+	db BANK(TwinLongRods1Gfx)      ; TWIN_LONG_RODS_1
+	db BANK(DrollBirdGfx)          ; DROLL_BIRD
+	db BANK(PetitAngelGfx)         ; PETIT_ANGEL
+	db BANK(WingedCleaverGfx)      ; WINGED_CLEAVER
+	db BANK(HinotamaSoulGfx)       ; HINOTAMA_SOUL
+	db BANK(ThunderKidGfx)         ; THUNDER_KID
+	db BANK(MeotokoGfx)            ; MEOTOKO
+	db BANK(AquaMadoorGfx)         ; AQUA_MADOOR
+	db BANK(KagemushaBlueGfx)      ; KAGEMUSHA_BLUE
+	db BANK(FlameGhostGfx)         ; FLAME_GHOST
+	db BANK(DryadGfx)              ; DRYAD
+	db BANK(BSkullDragonGfx)       ; B_SKULL_DRAGON
+	db BANK(TwoMouthDarkrulerGfx)  ; TWO_MOUTH_DARKRULER
+	db BANK(SolitudeGfx)           ; SOLITUDE
+	db BANK(MaskedSorcererGfx)     ; MASKED_SORCERER
+	db BANK(KumootokoGfx)          ; KUMOOTOKO
+	db BANK(MidnightFiendGfx)      ; MIDNIGHT_FIEND
+	db BANK(RoarOceanSnakeGfx)     ; ROAR_OCEAN_SNAKE
+	db BANK(TrapMasterGfx)         ; TRAP_MASTER
+	db BANK(FiendSwordGfx)         ; FIEND_SWORD
+	db BANK(SkullStalkerGfx)       ; SKULL_STALKER
+	db BANK(HitodenchakGfx)        ; HITODENCHAK
+	db BANK(WoodRemainsGfx)        ; WOOD_REMAINS
+	db BANK(HourglassOfLifeGfx)    ; HOURGLASS_OF_LIFE
+	db BANK(RareFishGfx)           ; RARE_FISH
+	db BANK(WoodClownGfx)          ; WOOD_CLOWN
+	db BANK(MadjinnGunnGfx)        ; MADJINN_GUNN
+	db BANK(DarkTitanTerrorGfx)    ; DARK_TITAN_TERROR
+	db BANK(BeautifulHeadhuntGfx)  ; BEAUTIFUL_HEADHUNT
+	db BANK(WodanTheResidentGfx)   ; WODAN_THE_RESIDENT
+	db BANK(GuardianLabyrinthGfx)  ; GUARDIAN_LABYRINTH
+	db BANK(HaniwaGfx)             ; HANIWA
+	db BANK(YashinokiGfx)          ; YASHINOKI
+	db BANK(VishwarRandiGfx)       ; VISHWAR_RANDI
+	db BANK(TheDrdekGfx)           ; THE_DRDEK
+	db BANK(DAssailantGfx)         ; D_ASSAILANT
+	db BANK(CandleOfFateGfx)       ; CANDLE_OF_FATE
+	db BANK(WaterElementGfx)       ; WATER_ELEMENT
+	db BANK(DissolverockGfx)       ; DISSOLVEROCK
+	db BANK(MedaBatGfx)            ; MEDA_BAT
+	db BANK(OneWhoHuntsSoulGfx)    ; ONE_WHO_HUNTS_SOUL
+	db BANK(RootWaterGfx)          ; ROOT_WATER
+	db BANK(MasterAndExpertGfx)    ; MASTER_AND_EXPERT
+	db BANK(WaterOmoticsGfx)       ; WATER_OMOTICS
+	db BANK(HyoGfx)                ; HYO
+	db BANK(EnchantingMermaidGfx)  ; ENCHANTING_MERMAID
+	db BANK(Nekogal1Gfx)           ; NEKOGAL_1
+	db BANK(AngelwitchGfx)         ; ANGELWITCH
+	db BANK(EmbryonicBeastGfx)     ; EMBRYONIC_BEAST
+	db BANK(PreventRatGfx)         ; PREVENT_RAT
+	db BANK(DdWarriorGfx)          ; DD_WARRIOR
+	db BANK(StoneArmadillerGfx)    ; STONE_ARMADILLER
+	db BANK(BeastkingOfSwampGfx)   ; BEASTKING_OF_SWAMP
+	db BANK(AncientSorcererGfx)    ; ANCIENT_SORCERER
+	db BANK(LunarQueenElzaimGfx)   ; LUNAR_QUEEN_ELZAIM
+	db BANK(ArchfiendMirrorGfx)    ; ARCHFIEND_MIRROR
+	db BANK(SwordsmanOfAileGfx)    ; SWORDSMAN_OF_AILE
+	db BANK(RockOgreGrotto2Gfx)    ; ROCK_OGRE_GROTTO2
+	db BANK(WingEggElfGfx)         ; WING_EGG_ELF
+	db BANK(FuriousSeaKingGfx)     ; FURIOUS_SEA_KING
+	db BANK(PrincessTsurugiGfx)    ; PRINCESS_TSURUGI
+	db BANK(UnknownWarriorGfx)     ; UNKNOWN_WARRIOR
+	db BANK(SectarianSecretGfx)    ; SECTARIAN_SECRET
+	db BANK(VersagoDestroyerGfx)   ; VERSAGO_DESTROYER
+	db BANK(WethaGfx)              ; WETHA
+	db BANK(MegirusLightGfx)       ; MEGIRUS_LIGHT
+	db BANK(MavelusGfx)            ; MAVELUS
+	db BANK(AncientTreeGfx)        ; ANCIENT_TREE
+	db BANK(GreenPhantomKingGfx)   ; GREEN_PHANTOM_KING
+	db BANK(GroundAttackerGfx)     ; GROUND_ATTACKER
+	db BANK(RayAndTemperatureGfx)  ; RAY_AND_TEMPERATURE
+	db BANK(GorgonEggGfx)          ; GORGON_EGG
+	db BANK(PetitMothGfx)          ; PETIT_MOTH
+	db BANK(KingFogGfx)            ; KING_FOG
+	db BANK(ProtectorThroneGfx)    ; PROTECTOR_THRONE
+	db BANK(MysticClownGfx)        ; MYSTIC_CLOWN
+	db BANK(MysticalSheep2Gfx)     ; MYSTICAL_SHEEP_2
+	db BANK(HolograhGfx)           ; HOLOGRAH
+	db BANK(TaoTheChanterGfx)      ; TAO_THE_CHANTER
+	db BANK(SerpentMarauderGfx)    ; SERPENT_MARAUDER
+	db BANK(GatekeeperGfx)         ; GATEKEEPER
+	db BANK(OgreOfTheBlackGfx)     ; OGRE_OF_THE_BLACK
+	db BANK(DarkArtistGfx)         ; DARK_ARTIST
+	db BANK(ChangeSlimeGfx)        ; CHANGE_SLIME
+	db BANK(MoonEnvoyGfx)          ; MOON_ENVOY
+	db BANK(FireyarouGfx)          ; FIREYAROU
+	db BANK(PsychicKappaGfx)       ; PSYCHIC_KAPPA
+	db BANK(MasakiTheLegendGfx)    ; MASAKI_THE_LEGEND
+	db BANK(DragonessWickedGfx)    ; DRAGONESS_WICKED
+	db BANK(BioPlantGfx)           ; BIO_PLANT
+	db BANK(OneEyedShieldGfx)      ; ONE_EYED_SHIELD
+	db BANK(CyberSoldierDarkGfx)   ; CYBER_SOLDIER_DARK
+	db BANK(DragonErsatzHeadGfx)   ; DRAGON_ERSATZ_HEAD
+	db BANK(SonicMaidGfx)          ; SONIC_MAID
+	db BANK(KuramaGfx)             ; KURAMA
+	db BANK(LegendarySwordGfx)     ; LEGENDARY_SWORD
+	db BANK(SwordOfDarkGfx)        ; SWORD_OF_DARK
+	db BANK(DarkEnergyGfx)         ; DARK_ENERGY
+	db BANK(AxeOfDespairGfx)       ; AXE_OF_DESPAIR
+	db BANK(LazerCannonArmorGfx)   ; LAZER_CANNON_ARMOR
+	db BANK(InsectArmorLaserGfx)   ; INSECT_ARMOR_LASER
+	db BANK(ElfsLightGfx)          ; ELFS_LIGHT
+	db BANK(BeastFangsGfx)         ; BEAST_FANGS
+	db BANK(SteelShellGfx)         ; STEEL_SHELL
+	db BANK(VileGermsGfx)          ; VILE_GERMS
+	db BANK(BlackPendantGfx)       ; BLACK_PENDANT
+	db BANK(SilverBowAndArrowGfx)  ; SILVER_BOW_AND_ARROW
+	db BANK(HornOfLightGfx)        ; HORN_OF_LIGHT
+	db BANK(HornOfUnicornGfx)      ; HORN_OF_UNICORN
+	db BANK(DragonTreasureGfx)     ; DRAGON_TREASURE
+	db BANK(ElectroWhipGfx)        ; ELECTRO_WHIP
+	db BANK(CyberShieldGfx)        ; CYBER_SHIELD
+	db BANK(ElegantEgotistGfx)     ; ELEGANT_EGOTIST
+	db BANK(MysticalMoonGfx)       ; MYSTICAL_MOON
+	db BANK(StopDefenseGfx)        ; STOP_DEFENSE
+	db BANK(MalevolentNuzzlerGfx)  ; MALEVOLENT_NUZZLER
+	db BANK(VioletCrystalGfx)      ; VIOLET_CRYSTAL
+	db BANK(BookOfSecretArtGfx)    ; BOOK_OF_SECRET_ART
+	db BANK(InvigorationGfx)       ; INVIGORATION
+	db BANK(MachineConversionGfx)  ; MACHINE_CONVERSION
+	db BANK(RaiseBodyHeatGfx)      ; RAISE_BODY_HEAT
+	db BANK(FollowWindGfx)         ; FOLLOW_WIND
+	db BANK(PowerOfKaishinGfx)     ; POWER_OF_KAISHIN
+	db BANK(DragonCaptureJarGfx)   ; DRAGON_CAPTURE_JAR
+	db BANK(ForestGfx)             ; FOREST
+	db BANK(WastelandGfx)          ; WASTELAND
+	db BANK(MountainGfx)           ; MOUNTAIN
+	db BANK(SogenGfx)              ; SOGEN
+	db BANK(UmiGfx)                ; UMI
+	db BANK(YamiGfx)               ; YAMI
+	db BANK(DarkHoleGfx)           ; DARK_HOLE
+	db BANK(RaigekiGfx)            ; RAIGEKI
+	db BANK(MooyanCurryGfx)        ; MOOYAN_CURRY
+	db BANK(RedMedicineGfx)        ; RED_MEDICINE
+	db BANK(GoblinsRemedyGfx)      ; GOBLINS_REMEDY
+	db BANK(SoulOfThePureGfx)      ; SOUL_OF_THE_PURE
+	db BANK(DianKetoTheCureGfx)    ; DIAN_KETO_THE_CURE
+	db BANK(SparksGfx)             ; SPARKS
+	db BANK(HinotamaGfx)           ; HINOTAMA
+	db BANK(FinalFlameGfx)         ; FINAL_FLAME
+	db BANK(OokaziGfx)             ; OOKAZI
+	db BANK(TremendousFireGfx)     ; TREMENDOUS_FIRE
+	db BANK(SwordsRevealingGfx)    ; SWORDS_REVEALING
+	db BANK(SpellbindCircleGfx)    ; SPELLBIND_CIRCLE
+	db BANK(DarkPierceLightGfx)    ; DARK_PIERCE_LIGHT
+	db BANK(YaranzoGfx)            ; YARANZO
+	db BANK(KananTheSwordGfx)      ; KANAN_THE_SWORD
+	db BANK(TakriminosGfx)         ; TAKRIMINOS
+	db BANK(StuffedAnimalGfx)      ; STUFFED_ANIMAL
+	db BANK(MegasonicEyeGfx)       ; MEGASONIC_EYE
+	db BANK(SuperWarLionGfx)       ; SUPER_WAR_LION
+	db BANK(YamadronGfx)           ; YAMADRON
+	db BANK(SeiyaryuGfx)           ; SEIYARYU
+	db BANK(ThreeLeggedZombiesGfx) ; THREE_LEGGED_ZOMBIES
+	db BANK(ZeraTheMantGfx)        ; ZERA_THE_MANT
+	db BANK(FlyingPenguinGfx)      ; FLYING_PENGUIN
+	db BANK(MillenniumShieldGfx)   ; MILLENNIUM_SHIELD
+	db BANK(FairysGiftGfx)         ; FAIRYS_GIFT
+	db BANK(BLusterSoldierGfx)     ; B_LUSTER_SOLDIER
+	db BANK(FiendsMirrorGfx)       ; FIENDS_MIRROR
+	db BANK(InvalidCardGfx)        ; INVALID_CARD
 
 Func_1a5e:
 	call Func_1a65
@@ -3009,7 +3352,7 @@ Func_1a65:
 	ld bc, $c0 tiles
 	call SetDecompressLength
 	pop bc
-	ld hl, $1a9d
+	ld hl, CharacterGfxBanks
 	add hl, bc
 	ld a, [hl]
 	call Bankswitch1
@@ -3019,7 +3362,25 @@ Func_1a65:
 	pop af
 	ret
 
-	db $2e, $2e, $2e, $2e, $2e, $2e, $2f, $2f, $2f, $2f, $2f, $2f, $30, $30, $30, $30, $30, $30
+CharacterGfxBanks:
+	db BANK(WeevilGfx)      ; WEEVIL
+	db BANK(MaiGfx)         ; MAI
+	db BANK(RexGfx)         ; REX
+	db BANK(MakoGfx)        ; MAKO
+	db BANK(YamiYugiGfx)    ; YAMI_YUGI
+	db BANK(YugiGfx)        ; YUGI
+	db BANK(TeaGfx)         ; TEA
+	db BANK(JoeyGfx)        ; JOEY
+	db BANK(SetoKaibaGfx)   ; SETO_KAIBA
+	db BANK(MokubaGfx)      ; MOKUBA
+	db BANK(TristanGfx)     ; TRISTAN
+	db BANK(BakuraGfx)      ; BAKURA
+	db BANK(PuppeteerGfx)   ; PUPPETEER
+	db BANK(PanikGfx)       ; PANIK
+	db BANK(BanditKeithGfx) ; BANDIT_KEITH
+	db BANK(MaximillionGfx) ; MAXIMILLION
+	db BANK(SimonGfx)       ; SIMON
+	db BANK(ExodiaGfx)      ; EXODIA
 
 Func_1aaf:
 	push af

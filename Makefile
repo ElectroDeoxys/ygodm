@@ -3,6 +3,7 @@ rom := ygodm.gb
 rom_obj := \
 	src/audio.o \
 	src/home.o \
+	src/gfx.o \
 	src/main.o \
 	src/ram.o
 

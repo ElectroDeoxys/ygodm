@@ -43,9 +43,6 @@ INCLUDE "engine/bank0e.asm"
 SECTION "Bank 0f", ROMX
 INCLUDE "engine/bank0f.asm"
 
-SECTION "Bank 10", ROMX
-INCLUDE "engine/bank10.asm"
-
 SECTION "Bank 3b", ROMX
 INCLUDE "engine/duel/fusion.asm"
 

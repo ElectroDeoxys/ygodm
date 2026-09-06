@@ -11,6 +11,11 @@ def get_rom_byte(offset):
 # get one byte from offset
     return get_rom_bytes(offset, 1)[0]
 
+def get_rom_word(offset):
+# get word from offset
+    data = get_rom_bytes(offset, 2)
+    return data[0] | (data[1] << 8)
+
 def read_symbols():
     symbols = {}
 

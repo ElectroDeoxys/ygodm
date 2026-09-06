@@ -22,3 +22,4 @@
 *.png binary diff=hex
 *.bin binary diff=hex
 *.tilemap binary diff=hex
+*.lz binary diff=hex
