@@ -62,7 +62,7 @@ Func_4068:
 	call Func_10d9
 	farcall Func_cd9a
 	farcall Func_2801e
-	farcall Func_803e
+	farcall LoadFontToVTiles2
 	call Func_40b0
 	call Func_4110
 	call Func_413a
@@ -167,7 +167,7 @@ Func_4110:
 	call Func_42c5
 	call Func_42ec
 	hlbgcoord 5, 16
-	ld de, $cab9
+	ld de, wTextBuffer
 	ld c, $04
 .asm_412f
 	ld a, [de]
@@ -195,7 +195,7 @@ Func_413a:
 	call Func_42c5
 	call Func_42ec
 	hlbgcoord 5, 1
-	ld de, $cab9
+	ld de, wTextBuffer
 	ld c, $04
 .asm_4159
 	ld a, [de]
@@ -223,17 +223,17 @@ Func_4164:
 	call Func_42ec
 	call Func_1114
 	hlbgcoord 1, 3
-	ld de, $cab9
+	ld de, wTextBuffer
 	ld c, $08
 .asm_4184
 	ld a, [de]
 	inc de
-	call Func_1144
+	call ProcessChar
 	push hl
 	push bc
-	ld bc, $20
+	ld bc, TILEMAP_WIDTH
 	add hl, bc
-	ld a, [$cad0]
+	ld a, [wCurChar]
 	ld [hl], a
 	pop bc
 	pop hl
@@ -352,14 +352,14 @@ Func_42ae:
 Func_42c5::
 	push af
 	ld a, c
-	ld [$cab6], a
+	ld [wcab6], a
 	ld a, b
-	ld [$cab7], a
+	ld [wcab7], a
 	pop af
 	ret
 
 Func_42d0::
-	ld [$cab8], a
+	ld [wcab8], a
 	ret
 
 Func_42d4:
@@ -367,7 +367,7 @@ Func_42d4:
 	push bc
 	push de
 	push hl
-	ld hl, $cab9
+	ld hl, wTextBuffer
 	xor a
 	ld c, $14
 .asm_42de
@@ -387,7 +387,7 @@ Func_42ec::
 	push bc
 	push hl
 	ld b, $00
-	ld a, [$cab8]
+	ld a, [wcab8]
 	ld c, a
 	ld hl, .Jumptable
 	add hl, bc
@@ -418,8 +418,8 @@ Func_4319:
 	push de
 	push hl
 	call Func_42d4
-	ld hl, $cab9
-	ld de, $cab7
+	ld hl, wTextBuffer
+	ld de, wcab7
 	ld b, $01
 	ld c, $02
 .asm_432a
@@ -467,7 +467,7 @@ Func_435c:
 	push bc
 	push hl
 	call Func_4319
-	ld hl, $cab9
+	ld hl, wTextBuffer
 	ld c, $04
 .asm_4367
 	ld a, [hl]
@@ -494,13 +494,13 @@ Func_437b:
 	push hl
 	ld de, $439c
 	ld h, $00
-	ld a, [$cab6]
+	ld a, [wcab6]
 	ld l, a
 	add hl, hl
 	add hl, hl
 	add hl, hl
 	add hl, de
-	ld de, $cab9
+	ld de, wTextBuffer
 	ld c, $08
 .asm_4391
 	ld a, [hli]
@@ -524,9 +524,9 @@ Func_43d4:
 	push hl
 	call Func_42d4
 	ld de, $440f
-	ld a, [$cab6]
+	ld a, [wcab6]
 	ld l, a
-	ld a, [$cab7]
+	ld a, [wcab7]
 	ld h, a
 	add hl, hl
 	ld b, h
@@ -545,7 +545,7 @@ Func_43d4:
 	ld b, [hl]
 	ld c, a
 	pop hl
-	ld de, $cab9
+	ld de, wTextBuffer
 	ld b, $00
 .asm_43fc
 	ld a, c
@@ -574,15 +574,15 @@ Func_52a5:
 	push de
 	push hl
 	ld de, $52c8
-	ld a, [$cab6]
+	ld a, [wcab6]
 	ld l, a
-	ld a, [$cab7]
+	ld a, [wcab7]
 	ld h, a
 	add hl, hl
 	add hl, hl
 	add hl, hl
 	add hl, de
-	ld de, $cab9
+	ld de, wTextBuffer
 	ld c, $08
 .asm_52bd
 	ld a, [hli]
@@ -605,15 +605,15 @@ Func_52d8:
 	push de
 	push hl
 	ld de, $52c8
-	ld a, [$cab6]
+	ld a, [wcab6]
 	ld l, a
-	ld a, [$cab7]
+	ld a, [wcab7]
 	ld h, a
 	add hl, hl
 	add hl, hl
 	add hl, hl
 	add hl, de
-	ld de, $cab9
+	ld de, wTextBuffer
 	ld c, $08
 .asm_52f0
 	ld a, [hli]
@@ -634,7 +634,7 @@ Func_5313:
 	push af
 	push bc
 	push hl
-	ld hl, $cab9
+	ld hl, wTextBuffer
 	xor a
 	ld c, $08
 .asm_531c
@@ -651,8 +651,8 @@ Func_5324:
 	push bc
 	push de
 	push hl
-	ld hl, $cab9
-	ld de, $cab6
+	ld hl, wTextBuffer
+	ld de, wcab6
 	ld c, $02
 .asm_5330
 	push bc
@@ -701,13 +701,13 @@ Func_536d:
 	push hl
 	ld de, $538e
 	ld h, $00
-	ld a, [$cab6]
+	ld a, [wcab6]
 	ld l, a
 	add hl, hl
 	add hl, hl
 	add hl, hl
 	add hl, de
-	ld de, $cab9
+	ld de, wTextBuffer
 	ld c, $08
 .asm_5383
 	ld a, [hli]
@@ -731,13 +731,13 @@ Func_5436:
 	push hl
 	ld de, $5457
 	ld h, $00
-	ld a, [$cab6]
+	ld a, [wcab6]
 	ld l, a
 	add hl, hl
 	add hl, hl
 	add hl, hl
 	add hl, de
-	ld de, $cab9
+	ld de, wTextBuffer
 	ld c, $08
 .asm_544c
 	ld a, [hli]
@@ -760,7 +760,7 @@ Func_54ef:
 	push de
 	push hl
 	call Func_42d4
-	ld de, $cab9
+	ld de, wTextBuffer
 	ld hl, $cf99
 	ld c, $08
 .asm_54fe
@@ -769,7 +769,7 @@ Func_54ef:
 	inc de
 	dec c
 	jr nz, .asm_54fe
-	ld hl, $cab9
+	ld hl, wTextBuffer
 	ld de, NULL
 	ld c, $08
 .asm_550c
@@ -796,7 +796,7 @@ Func_551f:
 	call DisableLCD
 	ld hl, $554b
 	call Func_10d9
-	farcall Func_803e
+	farcall LoadFontToVTiles2
 	farcall Func_28392
 	call Func_5555
 	call Func_558a
@@ -981,25 +981,25 @@ Func_566b:
 	ld b, a
 	call Func_1508
 	call Func_111c
-	ld de, $cab9
+	ld de, wTextBuffer
 	ld c, $08
 .asm_5690
 	ld a, [de]
 	inc de
-	call Func_1144
+	call ProcessChar
 	ld a, [$cacf]
 	ld [hli], a
 	dec c
 	jr nz, .asm_5690
 	ld de, $18
 	add hl, de
-	ld de, $cab9
+	ld de, wTextBuffer
 	ld c, $08
 .asm_56a5
 	ld a, [de]
 	inc de
-	call Func_1144
-	ld a, [$cad0]
+	call ProcessChar
+	ld a, [wCurChar]
 	ld [hli], a
 	dec c
 	jr nz, .asm_56a5
@@ -1443,12 +1443,12 @@ Func_5976:
 	ld b, a
 	call Func_1508
 	call Func_111c
-	ld de, $cab9
+	ld de, wTextBuffer
 	ld c, $08
 .asm_598d
 	ld a, [de]
 	inc de
-	call Func_1144
+	call ProcessChar
 	ld a, [$cacf]
 	call AddByteToVBlankStruct
 	dec c
@@ -1502,12 +1502,12 @@ Func_59e5:
 	ld b, a
 	call Func_1508
 	call Func_111c
-	ld hl, $cab9
+	ld hl, wTextBuffer
 	ld c, $08
 .asm_5a01
 	ld a, [hli]
-	call Func_1144
-	ld a, [$cad0]
+	call ProcessChar
+	ld a, [wCurChar]
 	call AddByteToVBlankStruct
 	dec c
 	jr nz, .asm_5a01
@@ -2617,7 +2617,7 @@ Func_6101:
 	call DisableLCD
 	ld hl, $612d
 	call Func_10d9
-	farcall Func_803e
+	farcall LoadFontToVTiles2
 	farcall Func_285d4
 	call Func_6137
 	call Func_616c
@@ -2802,25 +2802,25 @@ Func_624d:
 	ld b, a
 	call Func_1508
 	call Func_111c
-	ld de, $cab9
+	ld de, wTextBuffer
 	ld c, $08
 .asm_6272
 	ld a, [de]
 	inc de
-	call Func_1144
+	call ProcessChar
 	ld a, [$cacf]
 	ld [hli], a
 	dec c
 	jr nz, .asm_6272
 	ld de, $18
 	add hl, de
-	ld de, $cab9
+	ld de, wTextBuffer
 	ld c, $08
 .asm_6287
 	ld a, [de]
 	inc de
-	call Func_1144
-	ld a, [$cad0]
+	call ProcessChar
+	ld a, [wCurChar]
 	ld [hli], a
 	dec c
 	jr nz, .asm_6287
@@ -3402,7 +3402,7 @@ Func_689e:
 	call DisableLCD
 	ld hl, $68c1
 	call Func_10d9
-	farcall Func_803e
+	farcall LoadFontToVTiles2
 	farcall Func_3000e
 	call Func_68cb
 	call EnableLCD
@@ -3530,7 +3530,7 @@ Func_6a97:
 	call DisableLCD
 	ld hl, $6aba
 	call Func_10d9
-	farcall Func_803e
+	farcall LoadFontToVTiles2
 	farcall Func_3115d
 	call Func_6ac4
 	call EnableLCD
@@ -3658,7 +3658,7 @@ Func_6c90:
 	call DisableLCD
 	ld hl, $6cb3
 	call Func_10d9
-	farcall Func_803e
+	farcall LoadFontToVTiles2
 	farcall Func_3230c
 	call Func_6cbd
 	call EnableLCD

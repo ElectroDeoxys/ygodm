@@ -57,7 +57,14 @@ wcab2::     db ; cab2
 wOppLP::    dw ; cab3
 wcab5::     db ; cab5
 
-	ds $cad1 - $cab6
+wcab6:: db ; cab6
+wcab7:: db ; cab7
+wcab8:: db ; cab8
+wTextBuffer:: ds $8 ; cab9
+
+	ds $cad0 - $cac1
+
+wCurChar:: db ; cad0
 
 wActiveField:: db ; cad1
 
@@ -90,11 +97,28 @@ wLoadedCardAtk::  dw ; cd13
 wLoadedCardDef::  dw ; cd15
 wLoadedCardType:: db ; cd17
 
-	ds $cd50 - $cd18
+	ds $cd1f - $cd18
+
+wcd1f:: db ; cd1f
+
+	ds $cd44 - $cd20
+
+wcd44:: db ; cd44
+wcd45:: db ; cd45
+wcd46:: db ; cd46
+wcd47:: db ; cd47
+wcd48:: dw ; cd48
+wcd4a:: db ; cd4a
+wcd4b:: db ; cd4b
+wcd4c:: db ; cd4c
+wcd4d:: db ; cd4d
+wcd4e:: db ; cd4e
+wcd4f:: db ; cd4f
 
 wNPCCharacter:: db ; cd50
+wTextID:: db ; cd51
 
-	ds $cd5e - $cd51
+	ds $cd5e - $cd52
 
 wcd5e:: db ; cd5e
 wcd5f:: db ; cd5f
@@ -162,7 +186,12 @@ wCardID_cef9:: dw ; cef9
 wcf00:: db ; cf00
 wcf01:: db ; cf01
 
-	ds $cf4e - $cf02
+	ds $cf16 - $cf02
+
+wcf16:: db ; cf16
+wcf17:: db ; cf17
+
+	ds $cf4e - $cf18
 
 ; duel and win counts against each of the NPC duelists
 wDuelistDuelCounts:: ; cf4e
@@ -170,7 +199,18 @@ wDuelistDuelCounts:: ; cf4e
 wDuelistWinCounts:: ; cf70
 	ds NUM_DUELISTS * 2
 
-	ds $d9fe - $cf92
+	ds $cfa0 - $cf92
+
+wcfa0:: db ; cfa0
+wcfa1:: ds $8 ; cfa1
+wcfa9:: db ; cfa9
+wcfaa:: db ; cfaa
+wcfab:: db ; cfab
+wcfac:: db ; cfac
+	ds $2
+wcfaf:: db ; cfaf
+
+	ds $d9fe - $cfb0
 
 wJob4Stack:: ; d9fe
 	ds $100

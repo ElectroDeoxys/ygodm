@@ -19,6 +19,7 @@ hAudioJobState::      db ; ffe1
 hDecompressJobState:: db ; ffe2
 hJob4State::          db ; ffe3
 
+hJobFlags::
 hVBlankJobFlags::     db ; ffe4
 hAudioJobFlags::      db ; ffe5
 hDecompressJobFlags:: db ; ffe6

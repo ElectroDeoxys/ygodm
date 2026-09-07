@@ -16,8 +16,8 @@ Func_18008:
 	call Func_10d9
 	call ClearOAM
 	farcall LoadCharacterGfx
-	call Func_18042
-	call Func_1817b
+	call LoadTextBoxGfx
+	call DrawTextBox
 	call Func_1814d
 	farcall LoadCharacterOAMGfx
 	farcall Func_8bfe
@@ -30,7 +30,7 @@ Func_18008:
 
 SECTION "Bank 6@4042", ROMX[$4042], BANK[$6]
 
-Func_18042:
+LoadTextBoxGfx:
 	push af
 	push bc
 	push de
@@ -38,16 +38,16 @@ Func_18042:
 	ld hl, vTiles1 tile $3b
 	ld de, Gfx_1805e
 	ld b, $10 ; tiles
-.asm_1804e
+.loop_tiles
 	ld c, TILE_SIZE
-.asm_18050
+.loop_copy
 	ld a, [de]
 	ld [hli], a
 	inc de
 	dec c
-	jr nz, .asm_18050
+	jr nz, .loop_copy
 	dec b
-	jr nz, .asm_1804e
+	jr nz, .loop_tiles
 	pop hl
 	pop de
 	pop bc
@@ -67,7 +67,7 @@ Func_1814d:
 	ld a, [wNPCCharacter]
 	ld c, a
 	sla c
-	ld hl, $4229
+	ld hl, NPCCharacterTilemaps
 	add hl, bc
 	ld a, [hli]
 	ld d, [hl]
@@ -94,7 +94,7 @@ Func_1814d:
 	pop af
 	ret
 
-Func_1817b:
+DrawTextBox:
 	push af
 	push bc
 	push de
@@ -123,6 +123,29 @@ Func_1817b:
 	ret
 ; 0x1819d
 
+SECTION "Bank 6@4229", ROMX[$4229], BANK[$6]
+
+NPCCharacterTilemaps:
+	dw $424d
+	dw $4329
+	dw $4405
+	dw $44e1
+	dw $45bd
+	dw $4699
+	dw $4775
+	dw $4851
+	dw $492d
+	dw $4a09
+	dw $4ae5
+	dw $4bc1
+	dw $4c9d
+	dw $4d79
+	dw $4e55
+	dw $4f31
+	dw $500d
+	dw $50e9
+; 0x1824d
+
 SECTION "Bank 6@51c5", ROMX[$51c5], BANK[$6]
 
 Func_191c5:
@@ -134,7 +157,7 @@ Func_191c5:
 	ld hl, $51f3
 	call Func_10d9
 	farcall Func_29163
-	farcall Func_8059
+	farcall LoadDigitTiles
 	call Func_191fd
 	call Func_1921e
 	call Func_19248
@@ -183,7 +206,7 @@ Func_1921e:
 	farcall Func_42c5
 	farcall Func_42ec
 	hlbgcoord 4, 16
-	ld de, $cab9
+	ld de, wTextBuffer
 	ld c, $04
 .asm_1923d
 	ld a, [de]
@@ -211,7 +234,7 @@ Func_19248:
 	farcall Func_42c5
 	farcall Func_42ec
 	hlbgcoord 14, 16
-	ld de, $cab9
+	ld de, wTextBuffer
 	ld c, $04
 .asm_19267
 	ld a, [de]
@@ -335,26 +358,26 @@ Func_19330:
 	call Func_1508
 	bcbgcoord 1, 0
 	call AddWordToVBlankStruct
-	ld de, $cab9
+	ld de, wTextBuffer
 	ld c, $08
 .asm_1934d
 	ld a, [de]
 	inc de
-	call Func_1144
+	call ProcessChar
 	ld a, [$cacf]
 	call AddByteToVBlankStruct
 	dec c
 	jr nz, .asm_1934d
 	ld bc, vTiles1 tile $50
 	call AddWordToVBlankStruct
-	ld de, $cab9
+	ld de, wTextBuffer
 	ld c, $08
 .asm_19366
 	ld a, [de]
 	inc de
-	call Func_1144
-	ld a, [$cad0]
-	farcall Func_80b4
+	call ProcessChar
+	ld a, [wCurChar]
+	farcall LoadCharTileToVBlankStruct
 	dec c
 	jr nz, .asm_19366
 	pop hl
@@ -390,7 +413,7 @@ Func_19379:
 	call AddByteToVBlankStruct
 	dec c
 	jr nz, .asm_193a3
-	ld hl, $cab9
+	ld hl, wTextBuffer
 	ld c, $04
 .asm_193af
 	ld a, [hli]
@@ -433,7 +456,7 @@ Func_193bf:
 	call AddByteToVBlankStruct
 	dec c
 	jr nz, .asm_193e9
-	ld hl, $cab9
+	ld hl, wTextBuffer
 	ld c, $04
 .asm_193f5
 	ld a, [hli]
@@ -552,26 +575,26 @@ Func_194b6:
 	call Func_1508
 	bcbgcoord 11, 0
 	call AddWordToVBlankStruct
-	ld de, $cab9
+	ld de, wTextBuffer
 	ld c, $08
 .asm_194d3
 	ld a, [de]
 	inc de
-	call Func_1144
+	call ProcessChar
 	ld a, [$cacf]
 	call AddByteToVBlankStruct
 	dec c
 	jr nz, .asm_194d3
 	ld bc, vTiles1 tile $58
 	call AddWordToVBlankStruct
-	ld de, $cab9
+	ld de, wTextBuffer
 	ld c, $08
 .asm_194ec
 	ld a, [de]
 	inc de
-	call Func_1144
-	ld a, [$cad0]
-	farcall Func_80b4
+	call ProcessChar
+	ld a, [wCurChar]
+	farcall LoadCharTileToVBlankStruct
 	dec c
 	jr nz, .asm_194ec
 	pop hl
@@ -607,7 +630,7 @@ Func_194ff:
 	call AddByteToVBlankStruct
 	dec c
 	jr nz, .asm_19529
-	ld hl, $cab9
+	ld hl, wTextBuffer
 	ld c, $04
 .asm_19535
 	ld a, [hli]
@@ -650,7 +673,7 @@ Func_19545:
 	call AddByteToVBlankStruct
 	dec c
 	jr nz, .asm_1956f
-	ld hl, $cab9
+	ld hl, wTextBuffer
 	ld c, $04
 .asm_1957b
 	ld a, [hli]
@@ -782,7 +805,7 @@ Func_1962f:
 	call AddByteToVBlankStruct
 	dec c
 	jr nz, .asm_19656
-	ld hl, $cab9
+	ld hl, wTextBuffer
 	ld c, $04
 .asm_19662
 	ld a, [hli]
@@ -899,7 +922,7 @@ Func_19703:
 	call AddByteToVBlankStruct
 	dec c
 	jr nz, .asm_1972a
-	ld hl, $cab9
+	ld hl, wTextBuffer
 	ld c, $04
 .asm_19736
 	ld a, [hli]

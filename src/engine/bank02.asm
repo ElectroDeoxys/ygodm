@@ -1,14 +1,14 @@
 	dw BANK(@)
 
 	farcall_table_start
-	farfunc Func_803e ; $03
-	farfunc Func_8059 ; $05
+	farfunc LoadFontToVTiles2 ; $03
+	farfunc LoadDigitTiles ; $05
 	farfunc Func_883d ; $07
 	farfunc $484a ; $09
 	farfunc LoadCharacterOAMGfx ; $0b
 	farfunc Func_8bfe ; $0d
 	farfunc $4074 ; $0f
-	farfunc Func_80b4 ; $11
+	farfunc LoadCharTileToVBlankStruct ; $11
 	farfunc Func_b52c ; $13
 	farfunc Func_b547 ; $15
 	farfunc Func_b562 ; $17
@@ -32,17 +32,17 @@
 	farfunc $78fd ; $3b
 	farfunc Func_b916 ; $3d
 
-Func_803e:
+LoadFontToVTiles2:
 	push af
 	push bc
 	push de
 	push hl
 	ld hl, vTiles2
 	ld de, TILE_SIZE
-	ld a, $00
+	ld a, ' '
 	ld b, $80 ; tiles
 .loop
-	call LoadCharacterTile
+	call LoadCharTile
 	add hl, de
 	inc a
 	dec b
@@ -53,28 +53,31 @@ Func_803e:
 	pop af
 	ret
 
-Func_8059:
+LoadDigitTiles:
 	push af
 	push bc
 	push de
 	push hl
 	ld hl, vTiles1 tile $46
-	ld a, $01
-	ld de, $10
-	ld b, $0a
-.asm_8067
-	call LoadCharacterTile
+	ld a, '0'
+	ld de, 1 tiles
+	ld b, 10
+.loop
+	call LoadCharTile
 	add hl, de
 	inc a
 	dec b
-	jr nz, .asm_8067
+	jr nz, .loop
 	pop hl
 	pop de
 	pop bc
 	pop af
 	ret
 
-LoadCharacterTile:
+; input:
+; - a  = which character to load
+; - hl = pointer to VRAM
+LoadCharTile:
 	push af
 	push bc
 	push de
@@ -130,7 +133,9 @@ LoadCharacterTile:
 	pop af
 	ret
 
-Func_80b4:
+; input:
+; - a = which character to load
+LoadCharTileToVBlankStruct:
 	push af
 	push bc
 	push de
@@ -140,21 +145,21 @@ Func_80b4:
 	ld h, $00
 	add hl, hl
 	add hl, hl
-	add hl, hl
+	add hl, hl ; *8
 	ld de, Gfx_80d9
 	add hl, de
 	ld d, h
 	ld e, l
 	pop hl
-	ld c, $08
-.asm_80c8
+	ld c, TILE_1BPP_SIZE
+.loop
 	ld a, [de]
 	call AddByteToVBlankStruct
 	ld a, [de]
 	call AddByteToVBlankStruct
 	inc de
 	dec c
-	jr nz, .asm_80c8
+	jr nz, .loop
 	pop hl
 	pop de
 	pop bc
@@ -168,17 +173,17 @@ SECTION "Bank 2@44e1", ROMX[$44e1], BANK[$2]
 Func_84e1:
 	push af
 	ld a, $01
-	ld [$cd45], a
+	ld [wcd45], a
 	ld a, $00
-	ld [$cd47], a
+	ld [wcd47], a
 	ld a, $00
-	ld [$cd48], a
+	ld [wcd48 + 0], a
 	ld a, $00
-	ld [$cd49], a
+	ld [wcd48 + 1], a
 	ld a, $00
-	ld [$cd4a], a
+	ld [wcd4a], a
 	ld a, $00
-	ld [$cd44], a
+	ld [wcd44], a
 	call Func_86ec
 	pop af
 	ret
@@ -196,11 +201,12 @@ Func_8511:
 	push bc
 	push de
 	push hl
+
 	ld b, $00
-	ld a, [$cd4a]
+	ld a, [wcd4a]
 	ld c, a
 	sla c
-	ld hl, $454d
+	ld hl, .BGCoords
 	add hl, bc
 	ld a, [hli]
 	ld b, [hl]
@@ -213,7 +219,8 @@ Func_8511:
 	call AddByteToVBlankStruct
 	dec e
 	jr nz, .asm_852c
-	ld hl, $20
+
+	ld hl, TILEMAP_WIDTH
 	add hl, bc
 	ld b, h
 	ld c, l
@@ -230,9 +237,11 @@ Func_8511:
 	pop bc
 	pop af
 	ret
-; 0x854d
 
-SECTION "Bank 2@4553", ROMX[$4553], BANK[$2]
+.BGCoords:
+	dwcoord 1, 11
+	dwcoord 1, 13
+	dwcoord 1, 15
 
 Func_8553:
 	push af
@@ -240,8 +249,8 @@ Func_8553:
 	push de
 	push hl
 	call Func_8565
-	ld a, [$cad0]
-	call Func_80b4
+	ld a, [wCurChar]
+	call LoadCharTileToVBlankStruct
 	pop hl
 	pop de
 	pop bc
@@ -254,7 +263,7 @@ Func_8565:
 	push de
 	push hl
 	ld b, $00
-	ld a, [$cd4a]
+	ld a, [wcd4a]
 	ld c, a
 	sla c
 	ld hl, $458d
@@ -263,7 +272,7 @@ Func_8565:
 	ld d, [hl]
 	ld e, a
 	ld h, $00
-	ld a, [$cd49]
+	ld a, [wcd48 + 1]
 	ld l, a
 	add hl, hl
 	add hl, hl
@@ -286,8 +295,8 @@ Func_8593:
 	push af
 	push bc
 	push hl
-	ld a, [$cd46]
-	cp $b0
+	ld a, [wcd46]
+	cp CONTROL_CHAR
 	jr nc, .asm_85bd
 	call Func_85e3
 	push af
@@ -308,10 +317,10 @@ Func_8593:
 	jr .asm_85d5
 .asm_85bd
 	ld b, $00
-	sub $b0
+	sub CONTROL_CHAR
 	ld c, a
 	sla c
-	ld hl, $45d9
+	ld hl, .PtrTable
 	add hl, bc
 	ld a, [hli]
 	ld h, [hl]
@@ -324,25 +333,29 @@ Func_8593:
 	pop bc
 	pop af
 	ret
-; 0x85d9
 
-SECTION "Bank 2@45e3", ROMX[$45e3], BANK[$2]
+.PtrTable:
+	dw Func_8655 ; <LINE>
+	dw Func_867a ; <PROMPT>
+	dw Func_86ce ; <B2>
+	dw Func_86d6 ; <B3>
+	dw Func_86e8 ; <DONE>
 
 Func_85e3:
 	push af
 	push bc
 	push de
 	push hl
-	ld a, [$cd45]
+	ld a, [wcd45]
 	cp $01
 	jr nz, .asm_8616
 	ld a, $00
-	ld [$cd44], a
+	ld [wcd44], a
 	call Func_8710
-	ld a, [$cd46]
-	call Func_1144
+	ld a, [wcd46]
+	call ProcessChar
 	ld b, $00
-	ld a, [$cd49]
+	ld a, [wcd48 + 1]
 	ld c, a
 	ld hl, $cd20
 	add hl, bc
@@ -361,14 +374,14 @@ Func_85e3:
 
 Func_861b:
 	push af
-	ld a, [$cd49]
+	ld a, [wcd48 + 1]
 	inc a
-	ld [$cd49], a
+	ld [wcd48 + 1], a
 	cp $12
 	jr c, .asm_862f
 	call Func_8655
 	ld a, $01
-	ld [$cd44], a
+	ld [wcd44], a
 .asm_862f
 	pop af
 	ret
@@ -379,14 +392,14 @@ Func_8631:
 	push de
 	push hl
 	ld b, $00
-	ld a, [$cd4a]
+	ld a, [wcd4a]
 	ld c, a
 	ld hl, $4652
 	add hl, bc
-	ld a, [$cd49]
+	ld a, [wcd48 + 1]
 	add [hl]
 	ld e, a
-	ld a, [$cd49]
+	ld a, [wcd48 + 1]
 	ld c, a
 	ld hl, $cd32
 	add hl, bc
@@ -402,37 +415,99 @@ SECTION "Bank 2@4655", ROMX[$4655], BANK[$2]
 
 Func_8655:
 	push af
-	ld a, [$cd44]
+	ld a, [wcd44]
 	cp $00
 	jr nz, .asm_8673
 	ld a, $00
-	ld [$cd49], a
-	ld a, [$cd4a]
+	ld [wcd48 + 1], a
+	ld a, [wcd4a]
 	inc a
 	cp $03
 	jr nz, .asm_866b
 	dec a
 .asm_866b
-	ld [$cd4a], a
+	ld [wcd4a], a
 	call Func_86ec
 	jr .asm_8678
 .asm_8673
 	ld a, $00
-	ld [$cd44], a
+	ld [wcd44], a
 .asm_8678
 	pop af
 	ret
-; 0x867a
 
-SECTION "Bank 2@46ec", ROMX[$46ec], BANK[$2]
+Func_867a:
+	push af
+	ld a, [wcd45]
+	cp $01
+	jr nz, .asm_868c
+	ld a, $00
+	ld [wcd44], a
+	call Func_8788
+	jr .asm_86cc
+.asm_868c
+	cp $14
+	jr nz, .asm_86a2
+	ld a, $00
+	ld [$cd49], a
+	ld a, $02
+	ld [wcd4a], a
+	call Func_86ec
+	call Func_8511
+	jr .asm_86cc
+.asm_86a2
+	cp $13
+	jr nz, .asm_86b8
+	ld a, $00
+	ld [$cd49], a
+	ld a, $01
+	ld [wcd4a], a
+	call Func_86ec
+	call Func_8511
+	jr .asm_86cc
+.asm_86b8
+	cp $12
+	jr nz, .asm_86cc
+	ld a, $00
+	ld [$cd49], a
+	ld a, $00
+	ld [wcd4a], a
+	call Func_86ec
+	call Func_8511
+.asm_86cc
+	pop af
+	ret
+
+Func_86ce:
+	push af
+	ld a, $00
+	ld [wcd44], a
+	pop af
+	ret
+
+Func_86d6:
+	push af
+	ld a, [wcd45]
+	cp $01
+	jr nz, .asm_86e6
+	ld a, $00
+	ld [wcd44], a
+	call Func_8795
+.asm_86e6
+	pop af
+	ret
+
+Func_86e8:
+	call Func_87a2
+	ret
 
 Func_86ec:
 	push af
 	push bc
 	push hl
 	call Func_8710
-	ld a, $00
-	call Func_1144
+	ld a, ' '
+	call ProcessChar
 	ld a, [$cacf]
 	ld hl, $cd20
 	ld c, $12
@@ -440,7 +515,7 @@ Func_86ec:
 	ld [hli], a
 	dec c
 	jr nz, .asm_86ff
-	ld a, [$cad0]
+	ld a, [wCurChar]
 	ld c, $12
 .asm_8708
 	ld [hli], a
@@ -453,7 +528,7 @@ Func_86ec:
 
 Func_8710:
 	push af
-	ld a, [$cd4a]
+	ld a, [wcd4a]
 	cp $00
 	jr nz, .asm_871d
 	call Func_1124
@@ -468,15 +543,15 @@ Func_8722:
 	push af
 	push bc
 	push hl
-	ld a, [$cd45]
+	ld a, [wcd45]
 	dec a
-	ld [$cd45], a
+	ld [wcd45], a
 	jr nz, .asm_8749
-	ld a, [$cd46]
+	ld a, [wcd46]
 	cp $b0
 	jr nc, .asm_873c
 	ld a, $02
-	ld [$cd45], a
+	ld [wcd45], a
 	jr .asm_8749
 .asm_873c
 	ld b, $00
@@ -485,7 +560,7 @@ Func_8722:
 	ld hl, $474d
 	add hl, bc
 	ld a, [hl]
-	ld [$cd45], a
+	ld [wcd45], a
 .asm_8749
 	pop hl
 	pop bc
@@ -529,7 +604,32 @@ Func_8752:
 	ret
 ; 0x8780
 
-SECTION "Bank 2@47aa", ROMX[$47aa], BANK[$2]
+SECTION "Bank 2@4788", ROMX[$4788], BANK[$2]
+
+Func_8788:
+	push af
+	ld a, $04
+	ld [$cd52], a
+	ld a, $01
+	ld [wcd4b], a
+	pop af
+	ret
+
+Func_8795:
+	push af
+	ld a, $02
+	ld [$cd52], a
+	ld a, $01
+	ld [wcd4b], a
+	pop af
+	ret
+
+Func_87a2:
+	push af
+	ld a, $05
+	ld [$cd52], a
+	pop af
+	ret
 
 Func_87aa:
 	call Func_87b1
@@ -540,12 +640,12 @@ Func_87b1:
 	push af
 	push bc
 	push hl
-	ld a, [$cd4b]
+	ld a, [wcd4b]
 	dec a
-	ld [$cd4b], a
+	ld [wcd4b], a
 	jr nz, .asm_87d0
 	ld a, $14
-	ld [$cd4b], a
+	ld [wcd4b], a
 	ld b, $00
 	ld a, [$cd52]
 	ld c, a
@@ -601,8 +701,8 @@ Func_883d:
 	push af
 	ld a, WEEVIL
 	ld [wNPCCharacter], a
-	ld a, $00
-	ld [$cd51], a
+	ldtx a, Text_3c15d
+	ld [wTextID], a
 	pop af
 	ret
 
@@ -610,19 +710,19 @@ Func_884a:
 	push af
 	push bc
 	ld a, $1d
-	ld [$cd4c], a
+	ld [wcd4c], a
 	ld a, $01
-	ld [$cd4d], a
+	ld [wcd4d], a
 	ld a, $11
-	ld [$cd4e], a
+	ld [wcd4e], a
 	ld a, $01
-	ld [$cd4f], a
+	ld [wcd4f], a
 	ld a, $00
 	ld [$cd53], a
 	ld a, $00
 	ld [$cd52], a
 	call Func_84e1
-.asm_886d
+.loop
 	call Random
 	ld a, VBLANK_0C
 	call SetPendingVBlankMode
@@ -642,7 +742,7 @@ Func_884a:
 	ld a, [$cd52]
 	cp $05
 	jr z, .asm_889c
-	jr .asm_886d
+	jr .loop
 .asm_889c
 	pop bc
 	pop af
@@ -653,17 +753,17 @@ Func_889f:
 	push bc
 	push de
 	push hl
-	ld a, [$cd4d]
+	ld a, [wcd4d]
 	dec a
-	ld [$cd4d], a
+	ld [wcd4d], a
 	jr nz, .asm_88c8
 	ld b, $00
-	ld a, [$cd4c]
+	ld a, [wcd4c]
 	ld c, a
 	ld hl, $48cd
 	add hl, bc
 	ld a, [hl]
-	ld [$cd4d], a
+	ld [wcd4d], a
 	call Func_8909
 	ld a, c
 	dec a
@@ -671,7 +771,7 @@ Func_889f:
 	jr nz, .asm_88c5
 	ld a, $1d
 .asm_88c5
-	ld [$cd4c], a
+	ld [wcd4c], a
 .asm_88c8
 	pop hl
 	pop de
@@ -689,7 +789,7 @@ Func_8909:
 	ld a, $00
 	call Func_8bd6
 	ld b, $00
-	ld a, [$cd4c]
+	ld a, [wcd4c]
 	ld c, a
 	ld hl, $48eb
 	add hl, bc
@@ -728,22 +828,22 @@ Func_8945:
 	jr nz, .asm_895f
 	call Func_89e4
 	ld a, $01
-	ld [$cd4f], a
+	ld [wcd4f], a
 	ld a, $11
-	ld [$cd4e], a
+	ld [wcd4e], a
 	jr .asm_8984
 .asm_895f
-	ld a, [$cd4f]
+	ld a, [wcd4f]
 	dec a
-	ld [$cd4f], a
+	ld [wcd4f], a
 	jr nz, .asm_8984
 	ld b, $00
-	ld a, [$cd4e]
+	ld a, [wcd4e]
 	ld c, a
 	ld hl, $4989
 	add hl, bc
 	ld a, [hl]
-	ld [$cd4f], a
+	ld [wcd4f], a
 	call Func_89ad
 	ld a, c
 	dec a
@@ -751,7 +851,7 @@ Func_8945:
 	jr nz, .asm_8981
 	ld a, $11
 .asm_8981
-	ld [$cd4e], a
+	ld [wcd4e], a
 .asm_8984
 	pop hl
 	pop de
@@ -769,7 +869,7 @@ Func_89ad:
 	ld a, $02
 	call Func_8bd6
 	ld b, $00
-	ld a, [$cd4e]
+	ld a, [wcd4e]
 	ld c, a
 	ld hl, $499b
 	add hl, bc
@@ -1119,8 +1219,8 @@ Func_b52c:
 	call Func_29fd
 	call ConvertNPCDuelistToCharacter
 	ld [wNPCCharacter], a
-	call Func_b744
-	ld [$cd51], a
+	call GetDuelistPreDuelTextID
+	ld [wTextID], a
 	farcall Func_18008
 	call Func_2abe
 	call Func_884a
@@ -1132,8 +1232,8 @@ Func_b547:
 	call Func_29fd
 	call ConvertNPCDuelistToCharacter
 	ld [wNPCCharacter], a
-	call Func_b789
-	ld [$cd51], a
+	call GetDuelistLossTextID
+	ld [wTextID], a
 	farcall Func_18008
 	call Func_2a76
 	call Func_884a
@@ -1145,8 +1245,8 @@ Func_b562:
 	call Func_29fd
 	call ConvertNPCDuelistToCharacter
 	ld [wNPCCharacter], a
-	call Func_b7ce
-	ld [$cd51], a
+	call GetDuelistWinTextID
+	ld [wTextID], a
 	farcall Func_18008
 	call Func_2a81
 	call Func_884a
@@ -1174,8 +1274,8 @@ Func_b595:
 	push de
 	ld a, TEA
 	ld [wNPCCharacter], a
-	ld a, $59
-	ld [$cd51], a
+	ldtx a, Text_3d159
+	ld [wTextID], a
 	call Func_2c4a
 	ld e, $00
 	ld a, [$cf14]
@@ -1211,8 +1311,8 @@ Func_b5e1:
 	push de
 	ld a, TEA
 	ld [wNPCCharacter], a
-	ld a, $5a
-	ld [$cd51], a
+	ldtx a, Text_3d174
+	ld [wTextID], a
 	call Func_2c4a
 	ld e, $00
 	ld a, [$cf14]
@@ -1248,8 +1348,8 @@ Func_b62d:
 	push de
 	ld a, TEA
 	ld [wNPCCharacter], a
-	ld a, $5b
-	ld [$cd51], a
+	ldtx a, Text_3d189
+	ld [wTextID], a
 	call Func_2c4a
 	ld e, $00
 	ld a, [$cf10]
@@ -1285,8 +1385,8 @@ Func_b679:
 	push de
 	ld a, TEA
 	ld [wNPCCharacter], a
-	ld a, $5c
-	ld [$cd51], a
+	ldtx a, Text_3d1ae
+	ld [wTextID], a
 	call Func_2c4a
 	ld e, $00
 	ld a, [$cf12]
@@ -1322,8 +1422,8 @@ Func_b6c5:
 	push de
 	ld a, TEA
 	ld [wNPCCharacter], a
-	ld a, $5d
-	ld [$cd51], a
+	ldtx a, Text_3d1db
+	ld [wTextID], a
 	call Func_2c4a
 	ld e, $00
 	ld a, [$cf12]
@@ -1389,21 +1489,22 @@ ConvertNPCDuelistToCharacter:
 	db MAXIMILLION  ; DUELIST_MAXIMILLION
 	db YAMI_YUGI    ; DUELIST_YAMI_YUGI
 
-Func_b744:
+GetDuelistPreDuelTextID:
 	push bc
 	push hl
 	ld b, $00
 	ld a, [wNPCDuelist]
-	call Func_28cd
-	ld hl, $7779
+	call GetDuelistWinCount
+	ld hl, .AlreadyBeatenTextIDs
 	ld a, c
-	cp $00
-	jr nz, .asm_b75e
+	cp LOW(0)
+	jr nz, .not_zero
 	ld a, b
-	cp $00
-	jr nz, .asm_b75e
-	ld hl, $7769
-.asm_b75e
+	cp HIGH(0)
+	jr nz, .not_zero
+	; zero wins
+	ld hl, .UnbeatenTextIDs
+.not_zero
 	ld b, $00
 	ld a, [wNPCDuelist]
 	ld c, a
@@ -1412,25 +1513,58 @@ Func_b744:
 	pop hl
 	pop bc
 	ret
-; 0xb769
 
-SECTION "Bank 2@7789", ROMX[$7789], BANK[$2]
+.UnbeatenTextIDs:
+	tx Text_3c179 ; DUELIST_WEEVIL
+	tx Text_3c1b0 ; DUELIST_MAI
+	tx Text_3c1e2 ; DUELIST_REX
+	tx Text_3c215 ; DUELIST_MAKO
+	tx Text_3c2dd ; DUELIST_SETO_KAIBA
+	tx Text_3c314 ; DUELIST_MOKUBA
+	tx Text_3c3b3 ; DUELIST_PUPPETEER
+	tx Text_3c3eb ; DUELIST_PANIK
+	tx Text_3c420 ; DUELIST_BANDIT_KEITH
+	tx Text_3c274 ; DUELIST_YUGI
+	tx Text_3c349 ; DUELIST_TRISTAN
+	tx Text_3c2a8 ; DUELIST_JOEY
+	tx Text_3c381 ; DUELIST_BAKURA
+	tx Text_3c48a ; DUELIST_SIMON
+	tx Text_3c455 ; DUELIST_MAXIMILLION
+	tx Text_3c248 ; DUELIST_YAMI_YUGI
 
-Func_b789:
+.AlreadyBeatenTextIDs:
+	tx Text_3c4bd ; DUELIST_WEEVIL
+	tx Text_3c4ef ; DUELIST_MAI
+	tx Text_3c515 ; DUELIST_REX
+	tx Text_3c531 ; DUELIST_MAKO
+	tx Text_3c5d2 ; DUELIST_SETO_KAIBA
+	tx Text_3c5f7 ; DUELIST_MOKUBA
+	tx Text_3c664 ; DUELIST_PUPPETEER
+	tx Text_3c67e ; DUELIST_PANIK
+	tx Text_3c6ac ; DUELIST_BANDIT_KEITH
+	tx Text_3c57d ; DUELIST_YUGI
+	tx Text_3c613 ; DUELIST_TRISTAN
+	tx Text_3c5a8 ; DUELIST_JOEY
+	tx Text_3c638 ; DUELIST_BAKURA
+	tx Text_3c70f ; DUELIST_SIMON
+	tx Text_3c6dd ; DUELIST_MAXIMILLION
+	tx Text_3c561 ; DUELIST_YAMI_YUGI
+
+GetDuelistLossTextID:
 	push bc
 	push hl
 	ld b, $00
 	ld a, [wNPCDuelist]
-	call Func_28cd
-	ld hl, $77be
+	call GetDuelistWinCount
+	ld hl, .DefaultTextIDs
 	ld a, c
-	cp $05
-	jr nz, .asm_b7a3
+	cp LOW(5)
+	jr nz, .not_5
 	ld a, b
-	cp $00
-	jr nz, .asm_b7a3
-	ld hl, $77ae
-.asm_b7a3
+	cp HIGH(5)
+	jr nz, .not_5
+	ld hl, .Exactly5WinsTextIDs
+.not_5
 	ld b, $00
 	ld a, [wNPCDuelist]
 	ld c, a
@@ -1439,33 +1573,81 @@ Func_b789:
 	pop hl
 	pop bc
 	ret
-; 0xb7ae
 
-SECTION "Bank 2@77ce", ROMX[$77ce], BANK[$2]
+.Exactly5WinsTextIDs:
+	tx Text_3ccaf ; DUELIST_WEEVIL
+	tx Text_3cce5 ; DUELIST_MAI
+	tx Text_3cd17 ; DUELIST_REX
+	tx Text_3cd48 ; DUELIST_MAKO
+	tx Text_3cdf6 ; DUELIST_SETO_KAIBA
+	tx Text_3ce2d ; DUELIST_MOKUBA
+	tx Text_3ceae ; DUELIST_PUPPETEER
+	tx Text_3cece ; DUELIST_PANIK
+	tx Text_3cefd ; DUELIST_BANDIT_KEITH
+	tx Text_3cd93 ; DUELIST_YUGI
+	tx Text_3ce50 ; DUELIST_TRISTAN
+	tx Text_3cdc7 ; DUELIST_JOEY
+	tx Text_3ce7e ; DUELIST_BAKURA
+	tx Text_3cf5f ; DUELIST_SIMON
+	tx Text_3cf33 ; DUELIST_MAXIMILLION
+	tx Text_3cd7e ; DUELIST_YAMI_YUGI
 
-Func_b7ce:
+.DefaultTextIDs:
+	tx Text_3ca22 ; DUELIST_WEEVIL
+	tx Text_3ca50 ; DUELIST_MAI
+	tx Text_3ca7d ; DUELIST_REX
+	tx Text_3caae ; DUELIST_MAKO
+	tx Text_3cb4d ; DUELIST_SETO_KAIBA
+	tx Text_3cb78 ; DUELIST_MOKUBA
+	tx Text_3cbea ; DUELIST_PUPPETEER
+	tx Text_3cc09 ; DUELIST_PANIK
+	tx Text_3cc2a ; DUELIST_BANDIT_KEITH
+	tx Text_3caf8 ; DUELIST_YUGI
+	tx Text_3cb98 ; DUELIST_TRISTAN
+	tx Text_3cb2b ; DUELIST_JOEY
+	tx Text_3cbb4 ; DUELIST_BAKURA
+	tx Text_3cc84 ; DUELIST_SIMON
+	tx Text_3cc56 ; DUELIST_MAXIMILLION
+	tx Text_3cae3 ; DUELIST_YAMI_YUGI
+
+GetDuelistWinTextID:
 	push bc
 	push hl
 	ld b, $00
 	ld a, [wNPCDuelist]
 	ld c, a
-	ld hl, $77de
+	ld hl, .TextIDs
 	add hl, bc
 	ld a, [hl]
 	pop hl
 	pop bc
 	ret
-; 0xb7de
 
-SECTION "Bank 2@77ee", ROMX[$77ee], BANK[$2]
+.TextIDs:
+	tx Text_3c740 ; DUELIST_WEEVIL
+	tx Text_3c76f ; DUELIST_MAI
+	tx Text_3c796 ; DUELIST_REX
+	tx Text_3c7c9 ; DUELIST_MAKO
+	tx Text_3c88e ; DUELIST_SETO_KAIBA
+	tx Text_3c8c2 ; DUELIST_MOKUBA
+	tx Text_3c944 ; DUELIST_PUPPETEER
+	tx Text_3c95d ; DUELIST_PANIK
+	tx Text_3c98c ; DUELIST_BANDIT_KEITH
+	tx Text_3c824 ; DUELIST_YUGI
+	tx Text_3c8d9 ; DUELIST_TRISTAN
+	tx Text_3c85b ; DUELIST_JOEY
+	tx Text_3c90e ; DUELIST_BAKURA
+	tx Text_3c9ef ; DUELIST_SIMON
+	tx Text_3c9bf ; DUELIST_MAXIMILLION
+	tx Text_3c7f4 ; DUELIST_YAMI_YUGI
 
 Func_b7ee:
 	push af
 	call Func_29fd
 	ld a, TEA
 	ld [wNPCCharacter], a
-	ld a, $51
-	ld [$cd51], a
+	ldtx a, Text_3cf94
+	ld [wTextID], a
 	farcall Func_18008
 	call Func_2a8c
 	call Func_884a
@@ -1477,8 +1659,8 @@ Func_b807:
 	call Func_29fd
 	ld a, EXODIA
 	ld [wNPCCharacter], a
-	ld a, $52
-	ld [$cd51], a
+	ldtx a, Text_3cfca
+	ld [wTextID], a
 	call Func_2b89
 	farcall Func_18008
 	call Func_884a
@@ -1493,8 +1675,8 @@ Func_b823:
 	call Func_29fd
 	ld a, YAMI_YUGI
 	ld [wNPCCharacter], a
-	ld a, $53
-	ld [$cd51], a
+	ldtx a, Text_3cffb
+	ld [wTextID], a
 	farcall Func_18008
 	call Func_2a3f
 	call Func_884a
@@ -1510,8 +1692,8 @@ Func_b840:
 	call Func_29fd
 	ld a, YAMI_YUGI
 	ld [wNPCCharacter], a
-	ld a, $54
-	ld [$cd51], a
+	ldtx a, Text_3d074
+	ld [wTextID], a
 	farcall Func_18008
 	call Func_2a3f
 	call Func_884a
@@ -1572,8 +1754,8 @@ Func_b8b2:
 	call Func_29fd
 	ld a, YAMI_YUGI
 	ld [wNPCCharacter], a
-	ld a, $55
-	ld [$cd51], a
+	ldtx a, Text_3d0bc
+	ld [wTextID], a
 	farcall Func_18008
 	call Func_2a3f
 	call Func_884a
@@ -1585,8 +1767,8 @@ Func_b8cb:
 	call Func_29fd
 	ld a, YAMI_YUGI
 	ld [wNPCCharacter], a
-	ld a, $56
-	ld [$cd51], a
+	ldtx a, Text_3d0db
+	ld [wTextID], a
 	farcall Func_18008
 	call Func_2a3f
 	call Func_884a
@@ -1598,8 +1780,8 @@ Func_b8e4:
 	call Func_29fd
 	ld a, YAMI_YUGI
 	ld [wNPCCharacter], a
-	ld a, $57
-	ld [$cd51], a
+	ldtx a, Text_3d106
+	ld [wTextID], a
 	farcall Func_18008
 	call Func_2a3f
 	call Func_884a
@@ -1614,8 +1796,8 @@ Func_b916:
 	call Func_29fd
 	ld a, TEA
 	ld [wNPCCharacter], a
-	ld a, $5e
-	ld [$cd51], a
+	ldtx a, Text_3d217
+	ld [wTextID], a
 	farcall Func_18008
 	call Func_2a8c
 	call Func_884a

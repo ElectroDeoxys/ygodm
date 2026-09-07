@@ -25,12 +25,12 @@ Func_f0004:
 .asm_f0023
 	ld a, [de]
 	inc de
-	call Func_1144
+	call ProcessChar
 	push hl
 	push bc
 	ld bc, $20
 	add hl, bc
-	ld a, [$cad0]
+	ld a, [wCurChar]
 	ld [hl], a
 	pop bc
 	pop hl
@@ -44,12 +44,12 @@ Func_f0004:
 .asm_f0043
 	ld a, [de]
 	inc de
-	call Func_1144
+	call ProcessChar
 	push hl
 	push bc
 	ld bc, $20
 	add hl, bc
-	ld a, [$cad0]
+	ld a, [wCurChar]
 	ld [hl], a
 	pop bc
 	pop hl

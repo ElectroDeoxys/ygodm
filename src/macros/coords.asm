@@ -19,3 +19,11 @@ ELSE
 	ld [(\2) * TILEMAP_WIDTH + (\1) + \3], a
 ENDC
 ENDM
+
+MACRO? dwcoord
+; x, y
+	rept? _NARG / 2
+		dw (\2) * TILEMAP_WIDTH + (\1) + vBGMap0
+		SHIFT 2
+	endr
+ENDM

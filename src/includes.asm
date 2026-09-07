@@ -1,9 +1,13 @@
 INCLUDE "constants/hardware.inc"
 
+INCLUDE "constants/charmap.asm"
+
 INCLUDE "macros/code.asm"
 INCLUDE "macros/const.asm"
 INCLUDE "macros/coords.asm"
 INCLUDE "macros/data.asm"
+INCLUDE "macros/ram.asm"
+INCLUDE "macros/text.asm"
 
 INCLUDE "constants/card_constants.asm"
 INCLUDE "constants/character_constants.asm"

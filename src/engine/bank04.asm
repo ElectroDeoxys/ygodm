@@ -18,7 +18,7 @@
 	farfunc Func_10a1b ; $1f
 
 GameLoop::
-	call Func_1576
+	call InitJobs
 	farcall Func_883d
 	call Func_10484
 	call Func_10505
@@ -294,8 +294,8 @@ Func_101d8:
 	ret
 
 Func_101f8:
-	call Func_1020e
-	farcall Func_fa96
+	call InitAITurnVariables
+	farcall HandleOpponentPetitMothEvolution
 	call AIPickHandCardToPlay
 	call AIPickFieldZoneToPlayCard
 	call AIPlayMonsterCard
@@ -303,7 +303,7 @@ Func_101f8:
 	farcall Func_c1f1
 	ret
 
-Func_1020e:
+InitAITurnVariables:
 	push af
 	ld a, LOW(INVALID_CARD)
 	ld [wAIOppHandTargetCardID + 0], a
@@ -671,33 +671,33 @@ Func_1045a:
 Func_10477::
 	push af
 	ld a, $00
-	ld [$cf16], a
+	ld [wcf16], a
 	ld a, $00
-	ld [$cf17], a
+	ld [wcf17], a
 	pop af
 	ret
 
 Func_10484:
 	push af
 	ld a, $00
-	ld [$cf17], a
+	ld [wcf17], a
 	call CheckSaveDataMagic
 	cp FALSE
-	jr nz, .valid_save_data
-; invalid save data
+	jr nz, .valid_magic
+; invalid magic numbers
 	call Func_109f2
 	call Func_104b3
 	ld a, $01
-	ld [$cf17], a
-.valid_save_data
-	call Func_105bc
+	ld [wcf17], a
+.valid_magic
+	call CheckSaveDataChecksum
 	cp FALSE
-	jr nz, .asm_104ae
+	jr nz, .valid_checksum
 	call Func_109f2
 	call Func_104b3
 	ld a, $01
-	ld [$cf17], a
-.asm_104ae
+	ld [wcf17], a
+.valid_checksum
 	call Func_1050f
 	pop af
 	ret
@@ -705,7 +705,7 @@ Func_10484:
 Func_104b3:
 	call ClearSRAM
 	call Func_104e2
-	call Func_10645
+	call WriteSaveDataMagic
 	call Func_1060b
 	call Func_10684
 	call Func_10618
@@ -758,7 +758,7 @@ Func_10505:
 
 Func_1050f:
 	push af
-	ld a, [$b7f0]
+	ld a, [sb7f0]
 	cp $02
 	jr nz, .asm_1051a
 	call Func_1051c
@@ -771,26 +771,26 @@ Func_1051c:
 	push bc
 	push de
 	push hl
-	ld hl, sa000
-	ld de, $abf8
+	ld hl, sSaveData
+	ld de, sBackupSaveData
 	ld c, $f8
-.asm_10528
+.loop_lo
 	ld a, [hli]
 	ld [de], a
 	inc de
 	dec c
-	jr nz, .asm_10528
+	jr nz, .loop_lo
 	ld b, $0b
-.asm_10530
-	ld c, $00
-.asm_10532
+.loop_hi
+	ld c, $00 ; aka $100
+.loop_100_bytes
 	ld a, [hli]
 	ld [de], a
 	inc de
 	dec c
-	jr nz, .asm_10532
+	jr nz, .loop_100_bytes
 	dec b
-	jr nz, .asm_10530
+	jr nz, .loop_hi
 	pop hl
 	pop de
 	pop bc
@@ -802,8 +802,8 @@ Func_10540:
 	push bc
 	push de
 	push hl
-	ld hl, sa000
-	ld de, $abf8
+	ld hl, sSaveData
+	ld de, sBackupSaveData
 	ld c, $f8
 .asm_1054c
 	ld a, [de]
@@ -833,12 +833,12 @@ Func_10564:
 	push bc
 	push de
 	push hl
-	call Func_10586
+	call CalculateSaveDataChecksum
 	ld b, $00
-	ld a, [$cf16]
+	ld a, [wcf16]
 	ld c, a
 	sla c
-	ld hl, .PtrTable
+	ld hl, SaveDataChecksumPointers
 	add hl, bc
 	ld a, [hli]
 	ld h, [hl]
@@ -852,16 +852,16 @@ Func_10564:
 	pop af
 	ret
 
-.PtrTable:
-	dw $abf6
-	dw $b7ee
+SaveDataChecksumPointers:
+	dw sSaveDataChecksum
+	dw sBackupSaveDataChecksum
 
-Func_10586:
+CalculateSaveDataChecksum:
 	push af
 	push bc
 	push hl
 	ld b, $00
-	ld a, [$cf16]
+	ld a, [wcf16]
 	ld c, a
 	sla c
 	ld hl, .PtrTable
@@ -872,125 +872,126 @@ Func_10586:
 
 	; calculate sum of $bf6 bytes in hl
 	ld de, 0
-	ld c, $f6
-.asm_1059d
+	ld c, LOW($bf6)
+.loop_lo
 	ld a, [hli]
 	add e
 	ld e, a
 	adc d
 	ld d, a
 	dec c
-	jr nz, .asm_1059d
-	ld b, $b
-.asm_105a7
+	jr nz, .loop_lo
+	ld b, HIGH($bf6)
+.loop_hi
 	ld c, $00 ; aka $100
-.asm_105a9
+.loop_100_bytes
 	ld a, [hli]
 	add e
 	ld e, a
 	adc d
 	ld d, a
 	dec c
-	jr nz, .asm_105a9
+	jr nz, .loop_100_bytes
 	dec b
-	jr nz, .asm_105a7
+	jr nz, .loop_hi
 	pop hl
 	pop bc
 	pop af
 	ret
 
 .PtrTable:
-	dw $a000
-	dw $abf8
-; 0x105bc
+	dw sSaveData
+	dw sBackupSaveData
 
-SECTION "Bank 04@45bc", ROMX[$45bc], BANK[$04]
-
-Func_105bc:
+; returns TRUE if save data checksum checks out
+CheckSaveDataChecksum:
 	push bc
 	push de
 	push hl
-	ld a, [$b7f0]
+	ld a, [sb7f0]
 	cp $03
 	jr c, .asm_105ca
-	ld a, $01
+	ld a, FALSE
 	jr .done
 .asm_105ca
 	ld b, TRUE
-	ld a, [$b7f0]
+	ld a, [sb7f0]
 	ld c, a
-	ld hl, $45fb
+	ld hl, Data_105fb
 	add hl, bc
 	ld a, [hl]
-	ld [$cf16], a
-	call Func_10586
+	ld [wcf16], a
+	call CalculateSaveDataChecksum
+
+	; check if saved checksum is valid
 	ld b, TRUE
-	ld a, [$cf16]
+	ld a, [wcf16]
 	ld c, a
 	sla c
-	ld hl, $4582
+	ld hl, SaveDataChecksumPointers
 	add hl, bc
 	ld a, [hli]
 	ld h, [hl]
 	ld l, a
 	ld a, [hli]
 	cp e
-	jr z, .asm_105f0
+	jr z, .equal_hi
 	ld b, FALSE
-.asm_105f0
+.equal_hi
 	ld a, [hl]
 	cp d
-	jr z, .asm_105f6
+	jr z, .equal_lo
 	ld b, FALSE
-.asm_105f6
+.equal_lo
 	ld a, b
 .done
 	pop hl
 	pop de
 	pop bc
 	ret
-; 0x105fb
 
-SECTION "Bank 04@45fe", ROMX[$45fe], BANK[$04]
+Data_105fb:
+	db $01, $01, $00
 
 Func_105fe:
 	push af
 	ld a, $00
-	ld [$b7f0], a
+	ld [sb7f0], a
 	ld a, $00
-	ld [$cf16], a
+	ld [wcf16], a
 	pop af
 	ret
 
 Func_1060b:
 	push af
 	ld a, $01
-	ld [$b7f0], a
+	ld [sb7f0], a
 	ld a, $00
-	ld [$cf16], a
+	ld [wcf16], a
 	pop af
 	ret
 
 Func_10618:
 	push af
 	ld a, $02
-	ld [$b7f0], a
+	ld [sb7f0], a
 	ld a, $01
-	ld [$cf16], a
+	ld [wcf16], a
 	pop af
 	ret
 ; 0x10625
 
 SECTION "Bank 04@4645", ROMX[$4645], BANK[$04]
 
-Func_10645:
+; writes magic numbers SaveDataMagic to sMagicNumbers
+WriteSaveDataMagic:
 	push af
 	push bc
 	push de
 	push hl
-	ld hl, $b7f1
+	ld hl, sMagicNumbers
 	ld de, SaveDataMagic
-	ld c, $0b
+	ld c, SaveDataMagic.end - SaveDataMagic
 .loop
 	ld a, [de]
 	ld [hli], a
@@ -1007,12 +1008,14 @@ SaveDataMagic:
 	db $98, $10, $10, $00, $10, $4b, $4f, $4e, $41, $4d, $49
 .end
 
+; returns TRUE if sMagicNumbers
+; has magic numbers SaveDataMagic
 CheckSaveDataMagic:
 	push bc
 	push de
 	push hl
 	ld b, TRUE
-	ld hl, $b7f1
+	ld hl, sMagicNumbers
 	ld de, SaveDataMagic
 	ld c, SaveDataMagic.end - SaveDataMagic
 .loop
@@ -1037,7 +1040,7 @@ Func_10684:
 	push bc
 	push de
 	push hl
-	ld de, sa000
+	ld de, sSaveData
 	ld bc, SRAMToWRAMMap
 .loop
 	ld a, [bc] ; WRAM address
@@ -1079,7 +1082,7 @@ Func_106b2:
 	push bc
 	push de
 	push hl
-	ld de, sa000
+	ld de, sSaveData
 	ld bc, SRAMToWRAMMap
 .asm_106bc
 	ld a, [bc] ; WRAM address
@@ -1115,20 +1118,20 @@ Func_106b2:
 	ret
 
 SRAMToWRAMMap:
-	dwb $ce99, $04
-	dwb $cfaf, $04
-	dwb $cfb7, $01
-	dwb $cfdf, $02
-	dwb wPlayerDeck, DECK_SIZE * $2
-	dwb wTrunk, $ff
+	dwb $ce99, $04 ; sUnk_ce99
+	dwb wcfaf, $04 ; sUnk_cfaf
+	dwb $cfb7, $01 ; sUnk_cfb7
+	dwb $cfdf, $02 ; sUnk_cfdf
+	dwb wPlayerDeck, DECK_SIZE * $2 ; sPlayerDeck
+	dwb wTrunk, $ff ; sTrunk
 	dwb wTrunk + $ff, LOW(NUM_CARDS - $ff)
-	dwb wDuelistDuelCounts, NUM_DUELISTS * $2
-	dwb wDuelistWinCounts, NUM_DUELISTS * $2
-	dwb $cf99, $08
-	dwb $b800, $c8
-	dwb $b8c8, $c8
-	dwb $b990, $c8
-	dwb $ba58, $c8
+	dwb wDuelistDuelCounts, NUM_DUELISTS * $2 ; sDuelistDuelCounts
+	dwb wDuelistWinCounts, NUM_DUELISTS * $2 ; sDuelistWinCounts
+	dwb $cf99, $08 ; sUnk_cf99
+	dwb $b800, $c8 ; sUnk_b800
+	dwb $b8c8, $c8 ; sUnk_b8c8
+	dwb $b990, $c8 ; sUnk_b990
+	dwb $ba58, $c8 ; sUnk_ba58
 	dw NULL
 
 SECTION "Bank 4@4709", ROMX[$4709], BANK[$4]
@@ -1293,15 +1296,18 @@ Func_10919:
 	ret
 ; 0x10923
 
-SECTION "Bank 04@4942", ROMX[$4942], BANK[$04]
+SECTION "Bank 04@493a", ROMX[$493a], BANK[$04]
+
+Data_1093a:
+	ds $8, $0
 
 Func_10942:
 	push af
 	push bc
 	push de
 	push hl
-	ld hl, $cfa1
-	ld de, $493a
+	ld hl, wcfa1
+	ld de, Data_1093a
 	ld c, $08
 .asm_1094e
 	ld a, [de]
@@ -1319,8 +1325,8 @@ Func_10959:
 	push bc
 	push de
 	push hl
-	ld hl, $cfa1
-	ld de, $493a
+	ld hl, wcfa1
+	ld de, Data_1093a
 	ld b, $01
 	ld c, $08
 .asm_10966
@@ -1375,7 +1381,7 @@ Func_10976:
 	ld a, [$cf9c]
 	add [hl]
 	ld b, a
-	ld a, [$cfa0]
+	ld a, [wcfa0]
 	adc b
 	ld [hli], a
 	jr z, .asm_109b2
@@ -1398,7 +1404,7 @@ Func_109c0:
 	push de
 	push hl
 	ld hl, $cf99
-	ld de, $cfa1
+	ld de, wcfa1
 	ld c, $08
 .loop
 	ld a, [de]
@@ -1418,7 +1424,7 @@ Func_109d7:
 	push hl
 	ld a, b
 	ld b, $00
-	ld hl, $cfa1
+	ld hl, wcfa1
 	add hl, bc
 	ld [hl], a
 	pop hl
@@ -1438,7 +1444,7 @@ Func_109f2:
 	ld a, $00
 	ld [$cf98], a
 .loop
-	ld a, [$cfa9]
+	ld a, [wcfa9]
 	cp $03
 	jr z, .asm_10a13
 	call Func_10a3e
@@ -1458,7 +1464,7 @@ Func_10a1b:
 	ld a, $01
 	ld [$cf98], a
 .asm_10a2a
-	ld a, [$cfa9]
+	ld a, [wcfa9]
 	cp $03
 	jr z, .asm_10a39
 	call Func_10a3e
@@ -1476,8 +1482,8 @@ Func_10a3e:
 	call DisableLCD
 	ld hl, $4a70
 	call Func_10d9
-	farcall Func_803e
-	ld a, [$cfa9]
+	farcall LoadFontToVTiles2
+	ld a, [wcfa9]
 	cp $00
 	jr nz, .asm_10a5b
 	farcall Func_334bb
@@ -1537,17 +1543,17 @@ Func_10af3:
 	push hl
 	call Func_1114
 	hlbgcoord 6, 0
-	ld de, $cfa1
+	ld de, wcfa1
 	ld c, $08
 .loop
 	ld a, [de]
 	inc de
-	call Func_1144
+	call ProcessChar
 	push hl
 	push bc
 	ld bc, TILEMAP_WIDTH
 	add hl, bc
-	ld a, [$cad0]
+	ld a, [wCurChar]
 	ld [hl], a
 	pop bc
 	pop hl
@@ -1564,20 +1570,20 @@ Func_10af3:
 Func_10b1f:
 	push af
 	ld a, $00
-	ld [$cfa9], a
+	ld [wcfa9], a
 	ld a, $00
-	ld [$cfaa], a
+	ld [wcfaa], a
 	ld a, $01
-	ld [$cfab], a
+	ld [wcfab], a
 	ld a, $00
-	ld [$cfac], a
+	ld [wcfac], a
 	pop af
 	ret
 
 Func_10b36:
 	push bc
 	push hl
-	ld a, [$cfa9]
+	ld a, [wcfa9]
 	cp $02
 	jr z, .asm_10b44
 	call Func_10b4a
@@ -1592,17 +1598,17 @@ Func_10b36:
 Func_10b4a:
 	push bc
 	push hl
-	ld a, [$cfab]
+	ld a, [wcfab]
 	ld e, a
 	ld b, $09
 	call BTimesE
 	ld b, $00
-	ld a, [$cfaa]
+	ld a, [wcfaa]
 	ld c, a
 	add hl, bc
 	ld b, h
 	ld c, l
-	ld a, [$cfa9]
+	ld a, [wcfa9]
 	cp $00
 	jr nz, .asm_10b6a
 	ld hl, $4b78
@@ -1653,7 +1659,7 @@ Func_10d5e:
 	push bc
 	push hl
 	ld b, a
-	ld a, [$cfac]
+	ld a, [wcfac]
 	ld c, a
 	cp $08
 	jr z, .asm_10d6f
@@ -1667,22 +1673,22 @@ Func_10d5e:
 	ret
 
 Func_10d76:
-	ld a, [$cfab]
+	ld a, [wcfab]
 	cp $05
 	jr nz, .asm_10da3
 	call Func_10959
 	cp $00
 	jr nz, .asm_10d8d
 	ld a, $03
-	ld [$cfa9], a
+	ld [wcfa9], a
 	ld a, $01
 	jr .asm_10da1
 .asm_10d8d
 	ld a, $00
-	ld [$cfa9], a
+	ld [wcfa9], a
 	call Func_108f0
 	ld a, $06
-	ld [$cfab], a
+	ld [wcfab], a
 	call Func_10db8
 	call Func_2ad9
 	xor a
@@ -1690,10 +1696,10 @@ Func_10d76:
 	jr .asm_10db7
 .asm_10da3
 	ld a, $00
-	ld [$cfa9], a
+	ld [wcfa9], a
 	call Func_108f0
 	ld a, $06
-	ld [$cfab], a
+	ld [wcfab], a
 	call Func_10db8
 	call Func_2ad9
 	xor a
@@ -1708,23 +1714,23 @@ Func_10db8:
 	call SetPendingVBlankMode
 	bcbgcoord 6, 0
 	call AddWordToVBlankStruct
-	ld hl, $cfa1
+	ld hl, wcfa1
 	ld c, $08
 .asm_10dcb
 	ld a, [hli]
-	call Func_1144
+	call ProcessChar
 	ld a, [$cacf]
 	call AddByteToVBlankStruct
 	dec c
 	jr nz, .asm_10dcb
 	bcbgcoord 6, 1
 	call AddWordToVBlankStruct
-	ld hl, $cfa1
+	ld hl, wcfa1
 	ld c, $08
 .asm_10de3
 	ld a, [hli]
-	call Func_1144
-	ld a, [$cad0]
+	call ProcessChar
+	ld a, [wCurChar]
 	call AddByteToVBlankStruct
 	dec c
 	jr nz, .asm_10de3
@@ -1739,21 +1745,21 @@ Func_10db8:
 Func_10dfd:
 	push af
 	push bc
-	ld a, [$cfa9]
+	ld a, [wcfa9]
 	cp $02
 	jr z, .asm_10e14
 	call Func_11075
 	ld b, $00
-	ld a, [$cfac]
+	ld a, [wcfac]
 	ld c, a
 	call Func_109d7
 	jr .asm_10e21
 .asm_10e14
 	ld a, $00
-	ld [$cfa9], a
+	ld [wcfa9], a
 	call Func_108f0
 	ld a, $06
-	ld [$cfab], a
+	ld [wcfab], a
 .asm_10e21
 	call Func_10db8
 	call Func_2ad9
@@ -1766,9 +1772,9 @@ Func_10e2a:
 	push bc
 	push de
 	push hl
-	ld a, [$cfab]
+	ld a, [wcfab]
 	ld e, a
-	ld a, [$cfa9]
+	ld a, [wcfa9]
 	cp $02
 	jr z, .asm_10e6a
 	cp $00
@@ -1779,31 +1785,31 @@ Func_10e2a:
 	ld hl, $4e8b
 .asm_10e45
 	ld b, $00
-	ld a, [$cfab]
+	ld a, [wcfab]
 	ld c, a
 	sla c
 	add hl, bc
 	ld a, [hli]
 	ld h, [hl]
 	ld l, a
-	ld a, [$cfaa]
+	ld a, [wcfaa]
 	ld c, a
 	add hl, bc
 	ld a, [hl]
-	ld [$cfaa], a
-	ld a, [$cfab]
+	ld [wcfaa], a
+	ld a, [wcfab]
 	cp $06
 	jr z, .asm_10e68
-	ld a, [$cfab]
+	ld a, [wcfab]
 	inc a
-	ld [$cfab], a
+	ld [wcfab], a
 .asm_10e68
 	jr .asm_10e6f
 .asm_10e6a
 	ld a, $06
-	ld [$cfab], a
+	ld [wcfab], a
 .asm_10e6f
-	ld a, [$cfab]
+	ld a, [wcfab]
 	cp e
 	jr z, .asm_10e78
 	call Func_2aef
@@ -1822,13 +1828,13 @@ Func_10eab:
 	push bc
 	push de
 	push hl
-	ld a, [$cfab]
+	ld a, [wcfab]
 	ld e, a
-	ld a, [$cfa9]
+	ld a, [wcfa9]
 	cp $02
 	jr z, .asm_10ee2
 	ld b, $00
-	ld a, [$cfab]
+	ld a, [wcfab]
 	ld c, a
 	sla c
 	ld hl, $4ef5
@@ -1836,24 +1842,24 @@ Func_10eab:
 	ld a, [hli]
 	ld h, [hl]
 	ld l, a
-	ld a, [$cfaa]
+	ld a, [wcfaa]
 	ld c, a
 	add hl, bc
 	ld a, [hl]
-	ld [$cfaa], a
-	ld a, [$cfab]
+	ld [wcfaa], a
+	ld a, [wcfab]
 	cp $00
 	jr z, .asm_10ee0
-	ld a, [$cfab]
+	ld a, [wcfab]
 	dec a
-	ld [$cfab], a
+	ld [wcfab], a
 .asm_10ee0
 	jr .asm_10ee7
 .asm_10ee2
 	ld a, $05
-	ld [$cfab], a
+	ld [wcfab], a
 .asm_10ee7
-	ld a, [$cfab]
+	ld a, [wcfab]
 	cp e
 	jr z, .asm_10ef0
 	call Func_2aef
@@ -1872,10 +1878,10 @@ Func_10f17:
 	push bc
 	push de
 	push hl
-	ld a, [$cfa9]
+	ld a, [wcfa9]
 	cp $02
 	jr z, .asm_10f50
-	ld a, [$cfaa]
+	ld a, [wcfaa]
 	ld e, a
 	cp $00
 	jr nz, .asm_10f2f
@@ -1885,19 +1891,19 @@ Func_10f17:
 	ld hl, $4f63
 .asm_10f32
 	ld b, $00
-	ld a, [$cfab]
+	ld a, [wcfab]
 	ld c, a
 	sla c
 	add hl, bc
 	ld a, [hli]
 	ld h, [hl]
 	ld l, a
-	ld a, [$cfaa]
+	ld a, [wcfaa]
 	ld c, a
 	add hl, bc
 	ld a, [hl]
-	ld [$cfaa], a
-	ld a, [$cfaa]
+	ld [wcfaa], a
+	ld a, [wcfaa]
 	cp e
 	jr z, .asm_10f50
 	call Func_2aef
@@ -1913,13 +1919,13 @@ SECTION "Bank 4@4f8a", ROMX[$4f8a], BANK[$4]
 
 Func_10f8a:
 	push af
-	ld a, [$cfa9]
+	ld a, [wcfa9]
 	cp $02
 	jr z, .asm_10fb7
-	ld a, [$cfaa]
+	ld a, [wcfaa]
 	ld e, a
 	ld b, $00
-	ld a, [$cfab]
+	ld a, [wcfab]
 	ld c, a
 	sla c
 	ld hl, $4fb9
@@ -1927,12 +1933,12 @@ Func_10f8a:
 	ld a, [hli]
 	ld h, [hl]
 	ld l, a
-	ld a, [$cfaa]
+	ld a, [wcfaa]
 	ld c, a
 	add hl, bc
 	ld a, [hl]
-	ld [$cfaa], a
-	ld a, [$cfaa]
+	ld [wcfaa], a
+	ld a, [wcfaa]
 	cp e
 	jr z, .asm_10fb7
 	call Func_2aef
@@ -1949,10 +1955,10 @@ Func_10fe0:
 	push de
 	push hl
 	lb bc, 0, 0
-	ld a, [$cfaa]
+	ld a, [wcfaa]
 	call Func_11024
 	ld d, a
-	ld a, [$cfab]
+	ld a, [wcfab]
 	call Func_1103a
 	call Func_123c
 
@@ -2014,7 +2020,7 @@ Func_1104e:
 	push bc
 	push hl
 	ld b, $00
-	ld a, [$cfac]
+	ld a, [wcfac]
 	ld c, a
 	ld hl, $505e
 	add hl, bc
@@ -2028,22 +2034,22 @@ SECTION "Bank 4@5067", ROMX[$5067], BANK[$4]
 
 Func_11067:
 	push af
-	ld a, [$cfac]
+	ld a, [wcfac]
 	cp $08
 	jr z, .asm_11073
 	inc a
-	ld [$cfac], a
+	ld [wcfac], a
 .asm_11073
 	pop af
 	ret
 
 Func_11075:
 	push af
-	ld a, [$cfac]
+	ld a, [wcfac]
 	cp $00
 	jr z, .asm_11081
 	dec a
-	ld [$cfac], a
+	ld [wcfac], a
 .asm_11081
 	pop af
 	ret
@@ -2201,7 +2207,7 @@ Func_1116c:
 	push de
 	push hl
 	ld hl, wce99
-	ld de, $cfaf
+	ld de, wcfaf
 	ld c, $04
 .asm_11178
 	ld a, [hli]
@@ -2460,7 +2466,7 @@ Func_112cb:
 	call DisableLCD
 	ld hl, $52f7
 	call Func_10d9
-	farcall Func_803e
+	farcall LoadFontToVTiles2
 	farcall Func_338b9
 	call Func_11301
 	call Func_113e4
@@ -2529,29 +2535,29 @@ Func_113e4:
 	farcall Func_42c5
 	farcall Func_42ec
 	call Func_111c
-	ld de, $cab9
+	ld de, wTextBuffer
 	ld a, $00
 	ld [hli], a
 	ld c, $08
 .asm_11415
 	ld a, [de]
 	inc de
-	call Func_1144
+	call ProcessChar
 	ld a, [$cacf]
 	ld [hli], a
 	dec c
 	jr nz, .asm_11415
 	ld de, $17
 	add hl, de
-	ld de, $cab9
+	ld de, wTextBuffer
 	ld a, $00
 	ld [hli], a
 	ld c, $08
 .asm_1142d
 	ld a, [de]
 	inc de
-	call Func_1144
-	ld a, [$cad0]
+	call ProcessChar
+	ld a, [wCurChar]
 	ld [hli], a
 	dec c
 	jr nz, .asm_1142d
@@ -2597,7 +2603,7 @@ Func_1145b:
 	ld hl, hMainJobState
 	add hl, bc
 	call Func_111c
-	ld de, $cab9
+	ld de, wTextBuffer
 	ld a, $00
 	ld [hli], a
 	ld a, [$cacd]
@@ -2605,7 +2611,7 @@ Func_1145b:
 .asm_11480
 	ld a, [de]
 	inc de
-	call Func_1144
+	call ProcessChar
 	ld a, [$cacf]
 	ld [hli], a
 	dec c
@@ -2613,7 +2619,7 @@ Func_1145b:
 	pop bc
 	ld h, b
 	ld l, c
-	ld de, $cab9
+	ld de, wTextBuffer
 	ld a, $00
 	ld [hli], a
 	ld a, [$cacd]
@@ -2621,8 +2627,8 @@ Func_1145b:
 .asm_11499
 	ld a, [de]
 	inc de
-	call Func_1144
-	ld a, [$cad0]
+	call ProcessChar
+	ld a, [wCurChar]
 	ld [hli], a
 	dec c
 	jr nz, .asm_11499
@@ -2650,13 +2656,13 @@ Func_114aa:
 	call Func_142c
 	farcall Func_42c5
 	farcall Func_42ec
-	ld a, [$cab9]
+	ld a, [wTextBuffer + 0]
 	ld [hli], a
-	ld a, [$caba]
+	ld a, [wTextBuffer + 1]
 	ld [hli], a
-	ld a, [$cabb]
+	ld a, [wTextBuffer + 2]
 	ld [hli], a
-	ld a, [$cabc]
+	ld a, [wTextBuffer + 3]
 	ld [hli], a
 	ld a, $20
 	ld [hli], a
@@ -2688,13 +2694,13 @@ Func_114e9:
 	farcall Func_42c5
 	farcall Func_42ec
 	pop hl
-	ld a, [$cab9]
+	ld a, [wTextBuffer + 0]
 	ld [hli], a
-	ld a, [$caba]
+	ld a, [wTextBuffer + 1]
 	ld [hli], a
-	ld a, [$cabb]
+	ld a, [wTextBuffer + 2]
 	ld [hli], a
-	ld a, [$cabc]
+	ld a, [wTextBuffer + 3]
 	ld [hli], a
 	ld a, $18
 	ld [hli], a
@@ -2709,13 +2715,13 @@ Func_114e9:
 	farcall Func_42c5
 	farcall Func_42ec
 	pop hl
-	ld a, [$cab9]
+	ld a, [wTextBuffer + 0]
 	ld [hli], a
-	ld a, [$caba]
+	ld a, [wTextBuffer + 1]
 	ld [hli], a
-	ld a, [$cabb]
+	ld a, [wTextBuffer + 2]
 	ld [hli], a
-	ld a, [$cabc]
+	ld a, [wTextBuffer + 3]
 	ld [hli], a
 	ld a, $16
 	ld [hli], a

@@ -1653,7 +1653,9 @@ Func_113c::
 	pop af
 	ret
 
-Func_1144::
+; input:
+; - a = character
+ProcessChar::
 	push af
 	push bc
 	push de
@@ -1666,29 +1668,30 @@ Func_1144::
 	sub $7d
 	rlca
 	ld c, a
-	ld hl, $11a4
+	ld hl, Data_11a4
 	add hl, bc
 	ld a, [hli]
 	ld e, a
 	ld d, [hl]
 .asm_115c
+	; is it space character?
 	ld a, d
-	cp $00
-	jr nz, .asm_116c
+	cp ' '
+	jr nz, .not_space
 	ld b, $00
 	ld a, [$cace]
 	ld c, a
-	ld hl, $1184
+	ld hl, Data_1184
 	add hl, bc
 	ld d, [hl]
-.asm_116c
+.not_space
 	ld a, d
-	ld [$cad0], a
+	ld [wCurChar], a
 	ld a, [$cace]
 	add e
 	ld e, a
 	ld d, $00
-	ld hl, $118c
+	ld hl, Data_118c
 	add hl, de
 	ld a, [hl]
 	ld [$cacf], a
@@ -1697,9 +1700,95 @@ Func_1144::
 	pop bc
 	pop af
 	ret
-; 0x1184
 
-SECTION "Home@120a", ROM0[$120a]
+Data_1184:
+	db ' '
+	db ' '
+	db ' '
+	db ' '
+	db ' '
+	db ' '
+	db ' '
+	db ' '
+
+Data_118c:
+	db $00
+	db $d3
+	db $bb
+	db $bd
+	db $80
+	db $83
+	db $00
+	db $00
+	db '゛'
+	db $7d
+	db $c6
+	db $be
+	db $8d
+	db $8f
+	db $00
+	db $00
+	db '゜'
+	db $7e
+	db $c7
+	db $bf
+	db $8e
+	db $90
+	db $00
+	db $00
+
+Data_11a4:
+	db $08, 'ウ' ; ヴ
+	db $08, 'か' ; が
+	db $08, 'き' ; ぎ
+	db $08, 'く' ; ぐ
+	db $08, 'け' ; げ
+	db $08, 'こ' ; ご
+	db $08, 'さ' ; ざ
+	db $08, 'し' ; じ
+	db $08, 'す' ; ず
+	db $08, 'せ' ; ぜ
+	db $08, 'そ' ; ぞ
+	db $08, 'た' ; だ
+	db $08, 'ち' ; ぢ
+	db $08, 'つ' ; づ
+	db $08, 'て' ; で
+	db $08, 'と' ; ど
+	db $08, 'は' ; ば
+	db $08, 'ひ' ; び
+	db $08, 'ふ' ; ぶ
+	db $08, 'へ' ; べ
+	db $08, 'ほ' ; ぼ
+	db $08, 'カ' ; ガ
+	db $08, 'キ' ; ギ
+	db $08, 'ク' ; グ
+	db $08, 'ケ' ; ゲ
+	db $08, 'コ' ; ゴ
+	db $08, 'サ' ; ザ
+	db $08, 'シ' ; ジ
+	db $08, 'ス' ; ズ
+	db $08, 'セ' ; ゼ
+	db $08, 'ソ' ; ゾ
+	db $08, 'タ' ; ダ
+	db $08, 'チ' ; ヂ
+	db $08, 'ツ' ; ヅ
+	db $08, 'テ' ; デ
+	db $08, 'ト' ; ド
+	db $08, 'ハ' ; バ
+	db $08, 'ヒ' ; ビ
+	db $08, 'フ' ; ブ
+	db $08, 'へ' ; べ
+	db $08, 'ホ' ; ボ
+	db $10, 'は' ; ぱ
+	db $10, 'ひ' ; ぴ
+	db $10, 'ふ' ; ぷ
+	db $10, 'へ' ; ぺ
+	db $10, 'ほ' ; ぽ
+	db $10, 'ハ' ; パ
+	db $10, 'ヒ' ; ピ
+	db $10, 'フ' ; プ
+	db $10, 'へ' ; ぺ
+	db $10, 'ホ' ; ポ
 
 ClearOAM::
 	push af
@@ -2222,7 +2311,7 @@ Func_1508::
 	push bc
 	push hl
 	push bc
-	ld hl, $cab9
+	ld hl, wTextBuffer
 	xor a
 	ld c, $08
 .asm_1512
@@ -2241,7 +2330,7 @@ Func_1508::
 	farcall GetCardCountInTrunk
 	cp $ff
 	jr nz, .asm_153e
-	ld hl, $cab9
+	ld hl, wTextBuffer
 	ld a, $73
 	ld c, $08
 .asm_153a
@@ -2272,7 +2361,7 @@ Func_1542::
 	farcall Func_42ec
 	jr .asm_1572
 .asm_1567
-	ld hl, $cab9
+	ld hl, wTextBuffer
 	ld a, $80
 	ld c, $08
 .asm_156e
@@ -2285,13 +2374,13 @@ Func_1542::
 	pop af
 	ret
 
-Func_1576::
+InitJobs::
 	push af
 	push hl
 	call Func_179b
-	call Func_172f
-	call InitJobs
-	call Func_15e9
+	call InitJobFlags
+	call InitJobFunctionsAndStacks
+	call SetInitialJobStates
 
 	ld hl, rIF
 	res B_IF_TIMER, [hl]
@@ -2312,11 +2401,11 @@ Func_1576::
 	pop af
 	ret
 
-InitJobs:
+InitJobFunctionsAndStacks:
 	push af
 	push bc
 	push hl
-	ld hl, JobFunctionsAndStack
+	ld hl, JobFunctionsAndStacks
 	lb bc, $3, LOW(hAudioJobStackPointer)
 .loop
 	ld a, [hli]
@@ -2360,7 +2449,7 @@ MACRO? job_func
 	dw \1
 ENDM
 
-JobFunctionsAndStack:
+JobFunctionsAndStacks:
 	job_func AudioJob,      wAudioJobStackBottom
 	job_func DecompressJob, wDecompressJobStackBottom
 	job_func Func_172c,     wJob4StackBottom
@@ -2371,7 +2460,7 @@ JobTimerConfigurations:
 	db 225, TAC_4KHZ   | TAC_STOP, TAC_4KHZ   | TAC_START ; JOB_DECOMPRESS
 	db 240, TAC_262KHZ | TAC_STOP, TAC_262KHZ | TAC_START ; JOB_4
 
-Func_15e9:
+SetInitialJobStates:
 	push af
 	push bc
 	push hl
@@ -2618,17 +2707,17 @@ Func_172c:
 
 SECTION "Home@172f", ROM0[$172f]
 
-Func_172f:
+InitJobFlags:
 	push af
 	push bc
-	ld c, LOW(hVBlankJobFlags)
+	ld c, LOW(hJobFlags)
 	xor a
 	ld b, $04
-.asm_1736
+.loop
 	ld [$ff00+c], a
 	inc c
 	dec b
-	jr nz, .asm_1736
+	jr nz, .loop
 	pop bc
 	pop af
 	ret
@@ -5187,6 +5276,7 @@ Func_2564::
 	ld a, [wNPCCharacter]
 	cp EXODIA
 	jr z, .fade_in
+; no fade in
 	ld a, $1b
 	ldh [rBGP], a
 	ld a, $e4
@@ -5195,12 +5285,12 @@ Func_2564::
 	ldh [rOBP1], a
 	jr .done
 .fade_in
-	call Func_257f
+	call .ExodiaFadeIn
 .done
 	pop af
 	ret
 
-Func_257f:
+.ExodiaFadeIn:
 	push af
 	push bc
 
@@ -5708,7 +5798,7 @@ Func_28b5:
 	pop af
 	ret
 
-Func_28cd::
+GetDuelistWinCount::
 	push af
 	push hl
 	ld b, $00
@@ -6447,7 +6537,7 @@ Func_2cc3:
 	farcall Func_42c5
 	farcall Func_42ec
 	ld hl, $cfc4
-	ld de, $cab9
+	ld de, wTextBuffer
 	ld c, $12
 .asm_2cd9
 	ld a, [de]

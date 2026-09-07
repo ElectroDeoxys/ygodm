@@ -36,7 +36,7 @@ Func_14036:
 	ld hl, $406e
 	call Func_10d9
 	call Func_12d2
-	farcall Func_803e
+	farcall LoadFontToVTiles2
 	farcall Func_28fae
 	call Func_140a3
 	call Func_140e3
@@ -87,25 +87,25 @@ Func_140a3:
 	ld b, a
 	call Func_1508
 	call Func_111c
-	ld de, $cab9
+	ld de, wTextBuffer
 	ld c, $12
 .asm_140bd
 	ld a, [de]
 	inc de
-	call Func_1144
+	call ProcessChar
 	ld a, [$cacf]
 	ld [hli], a
 	dec c
 	jr nz, .asm_140bd
 	ld de, $e
 	add hl, de
-	ld de, $cab9
+	ld de, wTextBuffer
 	ld c, $12
 .asm_140d2
 	ld a, [de]
 	inc de
-	call Func_1144
-	ld a, [$cad0]
+	call ProcessChar
+	ld a, [wCurChar]
 	ld [hli], a
 	dec c
 	jr nz, .asm_140d2
@@ -130,13 +130,13 @@ Func_140e3:
 	jr z, .asm_14110
 	farcall Func_42c5
 	farcall Func_42ec
-	ld a, [$cab9]
+	ld a, [wTextBuffer + 0]
 	ld [hli], a
-	ld a, [$caba]
+	ld a, [wTextBuffer + 1]
 	ld [hli], a
-	ld a, [$cabb]
+	ld a, [wTextBuffer + 2]
 	ld [hli], a
-	ld a, [$cabc]
+	ld a, [wTextBuffer + 3]
 	ld [hli], a
 .asm_14110
 	pop hl
@@ -158,13 +158,13 @@ Func_14113:
 	jr z, .asm_14140
 	farcall Func_42c5
 	farcall Func_42ec
-	ld a, [$cab9]
+	ld a, [wTextBuffer + 0]
 	ld [hli], a
-	ld a, [$caba]
+	ld a, [wTextBuffer + 1]
 	ld [hli], a
-	ld a, [$cabb]
+	ld a, [wTextBuffer + 2]
 	ld [hli], a
-	ld a, [$cabc]
+	ld a, [wTextBuffer + 3]
 	ld [hli], a
 .asm_14140
 	pop hl
@@ -183,24 +183,24 @@ Func_14143:
 	ld c, a
 	farcall Func_42c5
 	farcall Func_42ec
-	ld hl, $cab9
+	ld hl, wTextBuffer
 	debgcoord 11, 8
 	ld c, $08
 .asm_14160
 	ld a, [hli]
-	call Func_1144
+	call ProcessChar
 	ld a, [$cacf]
 	ld [de], a
 	inc de
 	dec c
 	jr nz, .asm_14160
-	ld hl, $cab9
+	ld hl, wTextBuffer
 	debgcoord 11, 9
 	ld c, $08
 .asm_14174
 	ld a, [hli]
-	call Func_1144
-	ld a, [$cad0]
+	call ProcessChar
+	ld a, [wCurChar]
 	ld [de], a
 	inc de
 	dec c
@@ -878,7 +878,7 @@ Func_14761:
 	jr nz, .asm_14795
 	call Func_14854
 	ld a, [$cf42]
-	call Func_1144
+	call ProcessChar
 	ld b, $00
 	ld a, [$cf45]
 	ld c, a
@@ -890,7 +890,7 @@ Func_14761:
 	ld c, a
 	ld hl, $cf2f
 	add hl, bc
-	ld a, [$cad0]
+	ld a, [wCurChar]
 	ld [hl], a
 	call Func_146ef
 	call Func_1479a
@@ -946,7 +946,7 @@ Func_14830:
 	push hl
 	call Func_14854
 	ld a, $00
-	call Func_1144
+	call ProcessChar
 	ld a, [$cacf]
 	ld hl, $cf1d
 	ld c, $12
@@ -954,7 +954,7 @@ Func_14830:
 	ld [hli], a
 	dec c
 	jr nz, .asm_14843
-	ld a, [$cad0]
+	ld a, [wCurChar]
 	ld c, $12
 .asm_1484c
 	ld [hli], a

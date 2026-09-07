@@ -1246,7 +1246,7 @@ Func_3714f:
 	ld a, [hli]
 	ld d, [hl]
 	ld e, a
-	ld hl, $cfa1
+	ld hl, wcfa1
 	ld c, $08
 .asm_37163
 	ld a, [de]

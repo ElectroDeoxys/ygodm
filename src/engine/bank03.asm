@@ -51,7 +51,7 @@
 	farfunc SetPlayerDeckIndex ; $61
 	farfunc AddCardToPlayerDeck ; $63
 	farfunc $43e3 ; $65
-	farfunc Func_fa96 ; $67
+	farfunc HandleOpponentPetitMothEvolution ; $67
 	farfunc Func_d014 ; $69
 	farfunc Func_e711 ; $6b
 
@@ -314,7 +314,7 @@ Func_c25e:
 	call DisableLCD
 	ld hl, $428a
 	call Func_10d9
-	farcall Func_803e
+	farcall LoadFontToVTiles2
 	farcall Func_28776
 	call Func_c294
 	call Func_c2c9
@@ -492,25 +492,25 @@ Func_c397:
 	call GetPlayerDeckCard
 	call Func_1508
 	call Func_111c
-	ld de, $cab9
+	ld de, wTextBuffer
 	ld c, $08
 .asm_c3bd
 	ld a, [de]
 	inc de
-	call Func_1144
+	call ProcessChar
 	ld a, [$cacf]
 	ld [hli], a
 	dec c
 	jr nz, .asm_c3bd
 	ld de, $18
 	add hl, de
-	ld de, $cab9
+	ld de, wTextBuffer
 	ld c, $08
 .asm_c3d2
 	ld a, [de]
 	inc de
-	call Func_1144
-	ld a, [$cad0]
+	call ProcessChar
+	ld a, [wCurChar]
 	ld [hli], a
 	dec c
 	jr nz, .asm_c3d2
@@ -1041,7 +1041,7 @@ Func_cb87:
 	call DisableLCD
 	ld hl, $4baa
 	call Func_10d9
-	farcall Func_803e
+	farcall LoadFontToVTiles2
 	farcall Func_28b5a
 	call Func_cbb4
 	call EnableLCD
@@ -2422,25 +2422,25 @@ Func_d48e:
 	call Func_1508
 	bcbgcoord 1, 6
 	call AddWordToVBlankStruct
-	ld de, $cab9
+	ld de, wTextBuffer
 	ld c, $08
 .asm_d4ab
 	ld a, [de]
 	inc de
-	call Func_1144
+	call ProcessChar
 	ld a, [$cacf]
 	call AddByteToVBlankStruct
 	dec c
 	jr nz, .asm_d4ab
 	bcbgcoord 1, 7
 	call AddWordToVBlankStruct
-	ld de, $cab9
+	ld de, wTextBuffer
 	ld c, $08
 .asm_d4c4
 	ld a, [de]
 	inc de
-	call Func_1144
-	ld a, [$cad0]
+	call ProcessChar
+	ld a, [wCurChar]
 	call AddByteToVBlankStruct
 	dec c
 	jr nz, .asm_d4c4
@@ -2470,7 +2470,7 @@ Func_d4d7:
 .asm_d4f6
 	bcbgcoord 5, 8
 	call AddWordToVBlankStruct
-	ld de, $cab9
+	ld de, wTextBuffer
 	ld c, $04
 .asm_d501
 	ld a, [de]
@@ -2504,7 +2504,7 @@ Func_d50e:
 .asm_d52d
 	bcbgcoord 5, 9
 	call AddWordToVBlankStruct
-	ld de, $cab9
+	ld de, wTextBuffer
 	ld c, $04
 .asm_d538
 	ld a, [de]
@@ -2530,7 +2530,7 @@ PrintDuelistsLP:
 	farcall Func_42ec
 	bcbgcoord 5, 16
 	call AddWordToVBlankStruct
-	ld hl, $cab9
+	ld hl, wTextBuffer
 	ld c, $04
 .asm_d561
 	ld a, [hli]
@@ -2545,7 +2545,7 @@ PrintDuelistsLP:
 	farcall Func_42ec
 	bcbgcoord 5, 1
 	call AddWordToVBlankStruct
-	ld hl, $cab9
+	ld hl, wTextBuffer
 	ld c, $04
 .asm_d581
 	ld a, [hli]
@@ -2572,25 +2572,25 @@ Func_d58c:
 	farcall Func_42ec
 	bcbgcoord 1, 3
 	call AddWordToVBlankStruct
-	ld de, $cab9
+	ld de, wTextBuffer
 	ld c, $08
 .asm_d5af
 	ld a, [de]
 	inc de
-	call Func_1144
+	call ProcessChar
 	ld a, [$cacf]
 	call AddByteToVBlankStruct
 	dec c
 	jr nz, .asm_d5af
 	bcbgcoord 1, 4
 	call AddWordToVBlankStruct
-	ld de, $cab9
+	ld de, wTextBuffer
 	ld c, $08
 .asm_d5c8
 	ld a, [de]
 	inc de
-	call Func_1144
-	ld a, [$cad0]
+	call ProcessChar
+	ld a, [wCurChar]
 	call AddByteToVBlankStruct
 	dec c
 	jr nz, .asm_d5c8
@@ -3735,7 +3735,7 @@ Func_dd5a:
 	call Func_200e
 	ld a, [$cfba]
 	call Func_200e
-	ld a, [$cfaf]
+	ld a, [wcfaf]
 	call Func_200e
 	ld a, [$cfb0]
 	call Func_200e
@@ -4970,7 +4970,7 @@ Func_e626:
 	cp $81
 	jr nz, .asm_e672
 	ld a, $22
-	ld [$b7f1], a
+	ld [sMagicNumbers + 0], a
 	call Func_2b7e
 	ld e, $00
 	jr .done
@@ -5177,7 +5177,7 @@ Func_e7eb:
 	call DisableLCD
 	ld hl, $680e
 	call Func_10d9
-	farcall Func_803e
+	farcall LoadFontToVTiles2
 	farcall Func_28e0c
 	call Func_e818
 	call EnableLCD
@@ -7050,6 +7050,7 @@ HandlePlayerPetitMothEvolution:
 	call OverwriteTargetCard
 	farcall Func_5af2
 	farcall SetCardAsSeen
+
 .asm_fa8f
 	pop bc
 	inc b
@@ -7059,7 +7060,7 @@ HandlePlayerPetitMothEvolution:
 	pop af
 	ret
 
-Func_fa96:
+HandleOpponentPetitMothEvolution:
 	push af
 	push bc
 	push hl
@@ -7080,6 +7081,8 @@ Func_fa96:
 	ld a, b
 	cp $01
 	jr nz, .asm_fad3
+
+	; set field card as next Petit Moth evolution
 	ld a, c
 	farcall Func_150dd
 	ld b, $00
@@ -7094,6 +7097,7 @@ Func_fa96:
 	ld a, b
 	ld [wTempCardID + 1], a
 	call OverwriteTargetCard
+
 .asm_fad3
 	pop bc
 	inc b
