@@ -8,9 +8,9 @@ Func_f0004:
 	push bc
 	push de
 	push hl
-	ld a, [wLoadedCardID]
+	ld a, [wLoadedCardID + 0]
 	ld c, a
-	ld a, [$cd10]
+	ld a, [wLoadedCardID + 1]
 	ld b, a
 	sla c
 	rl b
@@ -30,11 +30,11 @@ Func_f0004:
 	push bc
 	ld bc, $20
 	add hl, bc
-	ld a, [wCurChar]
+	ld a, [wCharTile]
 	ld [hl], a
 	pop bc
 	pop hl
-	ld a, [$cacf]
+	ld a, [wCharHeadTile]
 	ld [hli], a
 	dec c
 	jr nz, .asm_f0023
@@ -49,11 +49,11 @@ Func_f0004:
 	push bc
 	ld bc, $20
 	add hl, bc
-	ld a, [wCurChar]
+	ld a, [wCharTile]
 	ld [hl], a
 	pop bc
 	pop hl
-	ld a, [$cacf]
+	ld a, [wCharHeadTile]
 	ld [hli], a
 	dec c
 	jr nz, .asm_f0043

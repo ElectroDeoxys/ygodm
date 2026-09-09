@@ -81,9 +81,9 @@ Func_140a3:
 	push de
 	push hl
 	hlbgcoord 1, 0
-	ld a, [wLoadedCardID]
+	ld a, [wLoadedCardID + 0]
 	ld c, a
-	ld a, [$cd10]
+	ld a, [wLoadedCardID + 1]
 	ld b, a
 	call Func_1508
 	call Func_111c
@@ -93,7 +93,7 @@ Func_140a3:
 	ld a, [de]
 	inc de
 	call ProcessChar
-	ld a, [$cacf]
+	ld a, [wCharHeadTile]
 	ld [hli], a
 	dec c
 	jr nz, .asm_140bd
@@ -105,7 +105,7 @@ Func_140a3:
 	ld a, [de]
 	inc de
 	call ProcessChar
-	ld a, [wCurChar]
+	ld a, [wCharTile]
 	ld [hli], a
 	dec c
 	jr nz, .asm_140d2
@@ -119,24 +119,24 @@ Func_140e3:
 	push af
 	push hl
 	hlbgcoord 13, 5
-	ld a, $00
-	farcall Func_42d0
-	ld a, [wLoadedCardAtk]
+	ld a, TEXTLOAD_NUMBER
+	farcall SetTextLoadMode
+	ld a, [wLoadedCardAtk + 0]
 	ld c, a
-	ld a, [$cd14]
+	ld a, [wLoadedCardAtk + 1]
 	ld b, a
 	ld a, b
-	cp $ff
+	cp -1
 	jr z, .asm_14110
-	farcall Func_42c5
-	farcall Func_42ec
-	ld a, [wTextBuffer + 0]
+	farcall SetTextArg
+	farcall LoadText
+	ld a, [wTextBuffer + $0]
 	ld [hli], a
-	ld a, [wTextBuffer + 1]
+	ld a, [wTextBuffer + $1]
 	ld [hli], a
-	ld a, [wTextBuffer + 2]
+	ld a, [wTextBuffer + $2]
 	ld [hli], a
-	ld a, [wTextBuffer + 3]
+	ld a, [wTextBuffer + $3]
 	ld [hli], a
 .asm_14110
 	pop hl
@@ -147,24 +147,24 @@ Func_14113:
 	push af
 	push hl
 	hlbgcoord 13, 7
-	ld a, $00
-	farcall Func_42d0
-	ld a, [wLoadedCardDef]
+	ld a, TEXTLOAD_NUMBER
+	farcall SetTextLoadMode
+	ld a, [wLoadedCardDef + 0]
 	ld c, a
-	ld a, [$cd16]
+	ld a, [wLoadedCardDef + 1]
 	ld b, a
 	ld a, b
-	cp $ff
+	cp -1
 	jr z, .asm_14140
-	farcall Func_42c5
-	farcall Func_42ec
-	ld a, [wTextBuffer + 0]
+	farcall SetTextArg
+	farcall LoadText
+	ld a, [wTextBuffer + $0]
 	ld [hli], a
-	ld a, [wTextBuffer + 1]
+	ld a, [wTextBuffer + $1]
 	ld [hli], a
-	ld a, [wTextBuffer + 2]
+	ld a, [wTextBuffer + $2]
 	ld [hli], a
-	ld a, [wTextBuffer + 3]
+	ld a, [wTextBuffer + $3]
 	ld [hli], a
 .asm_14140
 	pop hl
@@ -176,20 +176,20 @@ Func_14143:
 	push bc
 	push de
 	push hl
-	ld a, $0e
-	farcall Func_42d0
+	ld a, TEXTLOAD_CARD_TYPE
+	farcall SetTextLoadMode
 	ld b, $00
 	ld a, [wLoadedCardType]
 	ld c, a
-	farcall Func_42c5
-	farcall Func_42ec
+	farcall SetTextArg
+	farcall LoadText
 	ld hl, wTextBuffer
 	debgcoord 11, 8
 	ld c, $08
 .asm_14160
 	ld a, [hli]
 	call ProcessChar
-	ld a, [$cacf]
+	ld a, [wCharHeadTile]
 	ld [de], a
 	inc de
 	dec c
@@ -200,7 +200,7 @@ Func_14143:
 .asm_14174
 	ld a, [hli]
 	call ProcessChar
-	ld a, [wCurChar]
+	ld a, [wCharTile]
 	ld [de], a
 	inc de
 	dec c
@@ -884,13 +884,13 @@ Func_14761:
 	ld c, a
 	ld hl, $cf1d
 	add hl, bc
-	ld a, [$cacf]
+	ld a, [wCharHeadTile]
 	ld [hl], a
 	ld a, [$cf45]
 	ld c, a
 	ld hl, $cf2f
 	add hl, bc
-	ld a, [wCurChar]
+	ld a, [wCharTile]
 	ld [hl], a
 	call Func_146ef
 	call Func_1479a
@@ -947,14 +947,14 @@ Func_14830:
 	call Func_14854
 	ld a, $00
 	call ProcessChar
-	ld a, [$cacf]
+	ld a, [wCharHeadTile]
 	ld hl, $cf1d
 	ld c, $12
 .asm_14843
 	ld [hli], a
 	dec c
 	jr nz, .asm_14843
-	ld a, [wCurChar]
+	ld a, [wCharTile]
 	ld c, $12
 .asm_1484c
 	ld [hli], a

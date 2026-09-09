@@ -42,8 +42,8 @@ INCLUDE "engine/bank0e.asm"
 
 SECTION "Bank 0f", ROMX
 INCLUDE "engine/bank0f.asm"
-INCLUDE "data/text_pointers.asm"
-INCLUDE "data/texts.asm"
+INCLUDE "text/dialogue_pointers.asm"
+INCLUDE "text/dialogue.asm"
 
 SECTION "Bank 3b", ROMX
 INCLUDE "engine/duel/fusion.asm"

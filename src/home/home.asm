@@ -1614,42 +1614,42 @@ SECTION "Home@1114", ROM0[$1114]
 Func_1114::
 	push af
 	ld a, $01
-	ld [$cace], a
+	ld [wcace], a
 	pop af
 	ret
 
 Func_111c::
 	push af
 	ld a, $00
-	ld [$cace], a
+	ld [wcace], a
 	pop af
 	ret
 
 Func_1124::
 	push af
 	ld a, $03
-	ld [$cace], a
+	ld [wcace], a
 	pop af
 	ret
 
 Func_112c::
 	push af
 	ld a, $02
-	ld [$cace], a
+	ld [wcace], a
 	pop af
 	ret
 
 Func_1134::
 	push af
 	ld a, $05
-	ld [$cace], a
+	ld [wcace], a
 	pop af
 	ret
 
 Func_113c::
 	push af
 	ld a, $04
-	ld [$cace], a
+	ld [wcace], a
 	pop af
 	ret
 
@@ -1662,10 +1662,10 @@ ProcessChar::
 	push hl
 	ld e, $00
 	ld d, a
-	cp $7d
-	jr c, .asm_115c
+	cp DIACRITIC_CHAR
+	jr c, .not_diacritic_char
 	ld b, $00
-	sub $7d
+	sub DIACRITIC_CHAR
 	rlca
 	ld c, a
 	ld hl, Data_11a4
@@ -1673,28 +1673,28 @@ ProcessChar::
 	ld a, [hli]
 	ld e, a
 	ld d, [hl]
-.asm_115c
+.not_diacritic_char
 	; is it space character?
 	ld a, d
 	cp ' '
 	jr nz, .not_space
 	ld b, $00
-	ld a, [$cace]
+	ld a, [wcace]
 	ld c, a
 	ld hl, Data_1184
 	add hl, bc
 	ld d, [hl]
 .not_space
 	ld a, d
-	ld [wCurChar], a
-	ld a, [$cace]
+	ld [wCharTile], a
+	ld a, [wcace]
 	add e
 	ld e, a
 	ld d, $00
 	ld hl, Data_118c
 	add hl, de
 	ld a, [hl]
-	ld [$cacf], a
+	ld [wCharHeadTile], a
 	pop hl
 	pop de
 	pop bc
@@ -1712,30 +1712,30 @@ Data_1184:
 	db ' '
 
 Data_118c:
-	db $00
+	db ' '
 	db $d3
-	db $bb
-	db $bd
+	db SYM_WHITE
+	db SYM_BAR_HORIZONTAL
 	db $80
 	db $83
-	db $00
-	db $00
+	db ' '
+	db ' '
 	db '゛'
 	db $7d
-	db $c6
-	db $be
+	db SYM_DAKUTEN
+	db SYM_BAR_DAKUTEN
 	db $8d
 	db $8f
-	db $00
-	db $00
+	db ' '
+	db ' '
 	db '゜'
 	db $7e
-	db $c7
-	db $bf
+	db SYM_HANDAKUTEN
+	db SYM_BAR_HANDAKUTEN
 	db $8e
 	db $90
-	db $00
-	db $00
+	db ' '
+	db ' '
 
 Data_11a4:
 	db $08, 'ウ' ; ヴ
@@ -2167,9 +2167,9 @@ Func_13db::
 	push af
 	push bc
 	push hl
-	ld a, [$cadc]
+	ld a, [wHexNumber + 0]
 	ld b, a
-	ld a, [$cadd]
+	ld a, [wHexNumber + 1]
 	ld c, a
 	ld a, [$cade]
 	ld d, a
@@ -2183,8 +2183,8 @@ Func_13db::
 	cp d
 	jr nz, .asm_140a
 	xor a
-	ld [$cadc], a
-	ld [$cadd], a
+	ld [wHexNumber + 0], a
+	ld [wHexNumber + 1], a
 	ld [$cade], a
 	ld e, $01
 	jr .asm_1428
@@ -2192,11 +2192,11 @@ Func_13db::
 	ld a, [$cadf]
 	sub b
 	daa
-	ld [$cadc], a
+	ld [wHexNumber + 0], a
 	ld a, [$cae0]
 	sbc c
 	daa
-	ld [$cadd], a
+	ld [wHexNumber + 1], a
 	ld a, [$cae1]
 	sbc d
 	daa
@@ -2210,26 +2210,30 @@ Func_13db::
 	pop af
 	ret
 
-Func_142c::
+; converts 4-digit hexadecimal number in wHexNumber
+; to 4-digit decimal representation
+; output:
+; - bc = converted value
+ConvertToDecimalRepresentation::
 	push af
 	push de
 	push hl
 	ld b, $00
-	ld a, [$cadc]
-	and $0f
+	ld a, [wHexNumber + 0]
+	and $0f ; ones digit
 	ld c, a
 	sla c
-	ld hl, $1484
+	ld hl, .OnesDigit
 	add hl, bc
 	ld a, [hli]
 	ld d, [hl]
 	ld e, a
-	ld a, [$cadc]
-	and $f0
+	ld a, [wHexNumber + 0]
+	and $f0 ; tens digit
 	ld c, a
 	swap c
 	sla c
-	ld hl, $14a4
+	ld hl, .TensDigit
 	add hl, bc
 	ld a, [hli]
 	add e
@@ -2239,11 +2243,11 @@ Func_142c::
 	adc d
 	daa
 	ld d, a
-	ld a, [$cadd]
-	and $0f
+	ld a, [wHexNumber + 1]
+	and $0f ; hundreds digit
 	ld c, a
 	sla c
-	ld hl, $14c4
+	ld hl, .HundredsDigit
 	add hl, bc
 	ld a, [hli]
 	add e
@@ -2253,12 +2257,12 @@ Func_142c::
 	adc d
 	daa
 	ld d, a
-	ld a, [$cadd]
-	and $f0
+	ld a, [wHexNumber + 1]
+	and $f0 ; thousands digit
 	ld c, a
 	swap c
 	sla c
-	ld hl, $14e4
+	ld hl, .ThousandsDigit
 	add hl, bc
 	ld a, [hli]
 	add e
@@ -2272,9 +2276,65 @@ Func_142c::
 	pop de
 	pop af
 	ret
-; 0x1484
 
-SECTION "Home@14ea", ROM0[$14ea]
+.OnesDigit:
+	dw   $0
+	dw   $1
+	dw   $2
+	dw   $3
+	dw   $4
+	dw   $5
+	dw   $6
+	dw   $7
+	dw   $8
+	dw   $9
+	dw  $10
+	dw  $11
+	dw  $12
+	dw  $13
+	dw  $14
+	dw  $15
+
+.TensDigit:
+	dw   $0
+	dw  $16
+	dw  $32
+	dw  $48
+	dw  $64
+	dw  $80
+	dw  $96
+	dw $112
+	dw $128
+	dw $144
+	dw $160
+	dw $176
+	dw $192
+	dw $208
+	dw $224
+	dw $240
+
+.HundredsDigit:
+	dw    $0
+	dw  $256
+	dw  $512
+	dw  $768
+	dw $1024
+	dw $1280
+	dw $1536
+	dw $1792
+	dw $2048
+	dw $2304
+	dw $2560
+	dw $2816
+	dw $3072
+	dw $3328
+	dw $3584
+	dw $3840
+
+.ThousandsDigit:
+	dw    $0
+	dw $4096
+	dw $8192
 
 InitTransferVirtualOAM:
 	push af
@@ -2322,16 +2382,16 @@ Func_1508::
 	call IsValidCard
 	cp TRUE
 	jr nz, .asm_153e
-	ld a, $04
-	farcall Func_42d0
-	farcall Func_42c5
-	farcall Func_42ec
+	ld a, TEXTLOAD_CARD_NAME
+	farcall SetTextLoadMode
+	farcall SetTextArg
+	farcall LoadText
 	farcall Func_5af2
 	farcall GetCardCountInTrunk
-	cp $ff
+	cp NOT_OWNED
 	jr nz, .asm_153e
 	ld hl, wTextBuffer
-	ld a, $73
+	ld a, '-'
 	ld c, $08
 .asm_153a
 	ld [hli], a
@@ -2347,20 +2407,20 @@ Func_1542::
 	push af
 	push bc
 	push hl
-	ld a, $00
-	farcall Func_42d0
+	ld a, TEXTLOAD_NUMBER
+	farcall SetTextLoadMode
 	farcall Func_5af2
 	farcall GetCardCountInTrunk
-	cp $ff
-	jr z, .asm_1567
-	ld [$cadc], a
+	cp NOT_OWNED
+	jr z, .not_owned
+	ld [wHexNumber + 0], a
 	ld a, $00
-	ld [$cadd], a
-	call Func_142c
-	farcall Func_42c5
-	farcall Func_42ec
-	jr .asm_1572
-.asm_1567
+	ld [wHexNumber + 1], a
+	call ConvertToDecimalRepresentation
+	farcall SetTextArg
+	farcall LoadText
+	jr .done
+.not_owned
 	ld hl, wTextBuffer
 	ld a, $80
 	ld c, $08
@@ -2368,7 +2428,7 @@ Func_1542::
 	ld [hli], a
 	dec c
 	jr nz, .asm_156e
-.asm_1572
+.done
 	pop hl
 	pop bc
 	pop af
@@ -3994,9 +4054,9 @@ Func_1d2a::
 	push hl
 	ld l, $02
 	ld a, [$cdf5]
-	ld [$cadc], a
+	ld [wHexNumber + 0], a
 	ld a, [$cdf6]
-	ld [$cadd], a
+	ld [wHexNumber + 1], a
 	ld a, [$cdf7]
 	ld [$cade], a
 	ld a, [$cdf8]
@@ -6514,7 +6574,7 @@ Func_2c7d::
 	ld c, a
 	ld a, [$cfc2]
 	ld e, a
-	ld a, [$cacd]
+	ld a, [wTextLength]
 	cp e
 	jr nz, .asm_2cb9
 	ld b, $01
@@ -6533,9 +6593,9 @@ Func_2cc3:
 	push de
 	push hl
 	ld a, d
-	farcall Func_42d0
-	farcall Func_42c5
-	farcall Func_42ec
+	farcall SetTextLoadMode
+	farcall SetTextArg
+	farcall LoadText
 	ld hl, $cfc4
 	ld de, wTextBuffer
 	ld c, $12

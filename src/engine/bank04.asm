@@ -1553,11 +1553,11 @@ Func_10af3:
 	push bc
 	ld bc, TILEMAP_WIDTH
 	add hl, bc
-	ld a, [wCurChar]
+	ld a, [wCharTile]
 	ld [hl], a
 	pop bc
 	pop hl
-	ld a, [$cacf]
+	ld a, [wCharHeadTile]
 	ld [hli], a
 	dec c
 	jr nz, .loop
@@ -1719,7 +1719,7 @@ Func_10db8:
 .asm_10dcb
 	ld a, [hli]
 	call ProcessChar
-	ld a, [$cacf]
+	ld a, [wCharHeadTile]
 	call AddByteToVBlankStruct
 	dec c
 	jr nz, .asm_10dcb
@@ -1730,7 +1730,7 @@ Func_10db8:
 .asm_10de3
 	ld a, [hli]
 	call ProcessChar
-	ld a, [wCurChar]
+	ld a, [wCharTile]
 	call AddByteToVBlankStruct
 	dec c
 	jr nz, .asm_10de3
@@ -2513,8 +2513,8 @@ Func_113e4:
 	push bc
 	push de
 	push hl
-	ld a, $10
-	farcall Func_42d0
+	ld a, TEXTLOAD_10
+	farcall SetTextLoadMode
 	xor a
 .asm_113ee
 	push af
@@ -2532,8 +2532,8 @@ Func_113e4:
 	ld b, $00
 	ld a, [de]
 	ld c, a
-	farcall Func_42c5
-	farcall Func_42ec
+	farcall SetTextArg
+	farcall LoadText
 	call Func_111c
 	ld de, wTextBuffer
 	ld a, $00
@@ -2543,7 +2543,7 @@ Func_113e4:
 	ld a, [de]
 	inc de
 	call ProcessChar
-	ld a, [$cacf]
+	ld a, [wCharHeadTile]
 	ld [hli], a
 	dec c
 	jr nz, .asm_11415
@@ -2557,7 +2557,7 @@ Func_113e4:
 	ld a, [de]
 	inc de
 	call ProcessChar
-	ld a, [wCurChar]
+	ld a, [wCharTile]
 	ld [hli], a
 	dec c
 	jr nz, .asm_1142d
@@ -2593,9 +2593,9 @@ Func_1145b:
 	push bc
 	push de
 	push hl
-	ld a, $12
-	farcall Func_42d0
-	farcall Func_42ec
+	ld a, TEXTLOAD_12
+	farcall SetTextLoadMode
+	farcall LoadText
 	ld b, $02
 	ld c, $00
 	call Func_118f0
@@ -2606,13 +2606,13 @@ Func_1145b:
 	ld de, wTextBuffer
 	ld a, $00
 	ld [hli], a
-	ld a, [$cacd]
+	ld a, [wTextLength]
 	ld c, a
 .asm_11480
 	ld a, [de]
 	inc de
 	call ProcessChar
-	ld a, [$cacf]
+	ld a, [wCharHeadTile]
 	ld [hli], a
 	dec c
 	jr nz, .asm_11480
@@ -2622,13 +2622,13 @@ Func_1145b:
 	ld de, wTextBuffer
 	ld a, $00
 	ld [hli], a
-	ld a, [$cacd]
+	ld a, [wTextLength]
 	ld c, a
 .asm_11499
 	ld a, [de]
 	inc de
 	call ProcessChar
-	ld a, [wCurChar]
+	ld a, [wCharTile]
 	ld [hli], a
 	dec c
 	jr nz, .asm_11499
@@ -2642,27 +2642,27 @@ Func_114aa:
 	push af
 	push bc
 	push hl
-	ld a, $00
-	farcall Func_42d0
+	ld a, TEXTLOAD_NUMBER
+	farcall SetTextLoadMode
 	ld b, $02
 	ld c, $01
 	call Func_118f0
 	ld h, b
 	ld l, c
 	call Func_111ad
-	ld [$cadc], a
+	ld [wHexNumber + 0], a
 	ld a, $00
-	ld [$cadd], a
-	call Func_142c
-	farcall Func_42c5
-	farcall Func_42ec
-	ld a, [wTextBuffer + 0]
+	ld [wHexNumber + 1], a
+	call ConvertToDecimalRepresentation
+	farcall SetTextArg
+	farcall LoadText
+	ld a, [wTextBuffer + $0]
 	ld [hli], a
-	ld a, [wTextBuffer + 1]
+	ld a, [wTextBuffer + $1]
 	ld [hli], a
-	ld a, [wTextBuffer + 2]
+	ld a, [wTextBuffer + $2]
 	ld [hli], a
-	ld a, [wTextBuffer + 3]
+	ld a, [wTextBuffer + $3]
 	ld [hli], a
 	ld a, $20
 	ld [hli], a
@@ -2678,8 +2678,8 @@ Func_114e9:
 	push bc
 	push de
 	push hl
-	ld a, $00
-	farcall Func_42d0
+	ld a, TEXTLOAD_NUMBER
+	farcall SetTextLoadMode
 	ld b, $02
 	ld c, $02
 	call Func_118f0
@@ -2691,16 +2691,16 @@ Func_114e9:
 	ld c, a
 	ld a, [hli]
 	ld b, a
-	farcall Func_42c5
-	farcall Func_42ec
+	farcall SetTextArg
+	farcall LoadText
 	pop hl
-	ld a, [wTextBuffer + 0]
+	ld a, [wTextBuffer + $0]
 	ld [hli], a
-	ld a, [wTextBuffer + 1]
+	ld a, [wTextBuffer + $1]
 	ld [hli], a
-	ld a, [wTextBuffer + 2]
+	ld a, [wTextBuffer + $2]
 	ld [hli], a
-	ld a, [wTextBuffer + 3]
+	ld a, [wTextBuffer + $3]
 	ld [hli], a
 	ld a, $18
 	ld [hli], a
@@ -2712,16 +2712,16 @@ Func_114e9:
 	ld c, a
 	ld a, [hli]
 	ld b, a
-	farcall Func_42c5
-	farcall Func_42ec
+	farcall SetTextArg
+	farcall LoadText
 	pop hl
-	ld a, [wTextBuffer + 0]
+	ld a, [wTextBuffer + $0]
 	ld [hli], a
-	ld a, [wTextBuffer + 1]
+	ld a, [wTextBuffer + $1]
 	ld [hli], a
-	ld a, [wTextBuffer + 2]
+	ld a, [wTextBuffer + $2]
 	ld [hli], a
-	ld a, [wTextBuffer + 3]
+	ld a, [wTextBuffer + $3]
 	ld [hli], a
 	ld a, $16
 	ld [hli], a

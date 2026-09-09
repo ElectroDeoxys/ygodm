@@ -57,18 +57,30 @@ wcab2::     db ; cab2
 wOppLP::    dw ; cab3
 wcab5::     db ; cab5
 
-wcab6:: db ; cab6
-wcab7:: db ; cab7
-wcab8:: db ; cab8
-wTextBuffer:: ds $8 ; cab9
-
-	ds $cad0 - $cac1
-
-wCurChar:: db ; cad0
+wTextArg::      dw ; cab6
+wTextLoadMode:: db ; cab8
+wTextBuffer::   ds $14 ; cab9
+wTextLength::   db ; cacd
+wcace::         db ; cace
+wCharHeadTile:: db ; cacf
+wCharTile::     db ; cad0
 
 wActiveField:: db ; cad1
 
-	ds $cae2 - $cad2
+wcad2:: dw ; cad2
+
+wcad4:: db ; cad4
+wcad5:: db ; cad5
+wcad6:: db ; cad6
+wcad7:: db ; cad7
+wcad8:: db ; cad8
+wcad9:: db ; cad9
+
+wcada:: dw ; cada
+
+wHexNumber:: dw ; cadc
+
+	ds $cae2 - $cade
 
 wCardID_cae2:: dw ; cae2
 
@@ -108,7 +120,7 @@ wcd45:: db ; cd45
 wcd46:: db ; cd46
 wcd47:: db ; cd47
 wcd48:: dw ; cd48
-wcd4a:: db ; cd4a
+wTextLine:: db ; cd4a
 wcd4b:: db ; cd4b
 wcd4c:: db ; cd4c
 wcd4d:: db ; cd4d
@@ -116,7 +128,7 @@ wcd4e:: db ; cd4e
 wcd4f:: db ; cd4f
 
 wNPCCharacter:: db ; cd50
-wTextID:: db ; cd51
+wDialogueID:: db ; cd51
 
 	ds $cd5e - $cd52
 

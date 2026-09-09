@@ -180,8 +180,9 @@ Func_84e1:
 	ld [wcd48 + 0], a
 	ld a, $00
 	ld [wcd48 + 1], a
-	ld a, $00
-	ld [wcd4a], a
+	; set first line
+	ld a, LINE_1
+	ld [wTextLine], a
 	ld a, $00
 	ld [wcd44], a
 	call Func_86ec
@@ -203,7 +204,7 @@ Func_8511:
 	push hl
 
 	ld b, $00
-	ld a, [wcd4a]
+	ld a, [wTextLine]
 	ld c, a
 	sla c
 	ld hl, .BGCoords
@@ -239,9 +240,9 @@ Func_8511:
 	ret
 
 .BGCoords:
-	dwcoord 1, 11
-	dwcoord 1, 13
-	dwcoord 1, 15
+	dwcoord 1, 11 ; LINE_1
+	dwcoord 1, 13 ; LINE_2
+	dwcoord 1, 15 ; LINE_3
 
 Func_8553:
 	push af
@@ -249,7 +250,7 @@ Func_8553:
 	push de
 	push hl
 	call Func_8565
-	ld a, [wCurChar]
+	ld a, [wCharTile]
 	call LoadCharTileToVBlankStruct
 	pop hl
 	pop de
@@ -263,7 +264,7 @@ Func_8565:
 	push de
 	push hl
 	ld b, $00
-	ld a, [wcd4a]
+	ld a, [wTextLine]
 	ld c, a
 	sla c
 	ld hl, $458d
@@ -359,7 +360,7 @@ Func_85e3:
 	ld c, a
 	ld hl, $cd20
 	add hl, bc
-	ld a, [$cacf]
+	ld a, [wCharHeadTile]
 	ld [hl], a
 	call Func_8631
 	call Func_8511
@@ -392,7 +393,7 @@ Func_8631:
 	push de
 	push hl
 	ld b, $00
-	ld a, [wcd4a]
+	ld a, [wTextLine]
 	ld c, a
 	ld hl, $4652
 	add hl, bc
@@ -420,13 +421,17 @@ Func_8655:
 	jr nz, .asm_8673
 	ld a, $00
 	ld [wcd48 + 1], a
-	ld a, [wcd4a]
+
+	; go to next line
+	ld a, [wTextLine]
 	inc a
-	cp $03
-	jr nz, .asm_866b
+	cp NUM_TEXTBOX_LINES
+	jr nz, .got_line
+	; stay within 3 lines
 	dec a
-.asm_866b
-	ld [wcd4a], a
+.got_line
+	ld [wTextLine], a
+
 	call Func_86ec
 	jr .asm_8678
 .asm_8673
@@ -450,8 +455,9 @@ Func_867a:
 	jr nz, .asm_86a2
 	ld a, $00
 	ld [$cd49], a
-	ld a, $02
-	ld [wcd4a], a
+	; set last line
+	ld a, LINE_3
+	ld [wTextLine], a
 	call Func_86ec
 	call Func_8511
 	jr .asm_86cc
@@ -460,8 +466,9 @@ Func_867a:
 	jr nz, .asm_86b8
 	ld a, $00
 	ld [$cd49], a
-	ld a, $01
-	ld [wcd4a], a
+	; set second line
+	ld a, LINE_2
+	ld [wTextLine], a
 	call Func_86ec
 	call Func_8511
 	jr .asm_86cc
@@ -470,8 +477,9 @@ Func_867a:
 	jr nz, .asm_86cc
 	ld a, $00
 	ld [$cd49], a
-	ld a, $00
-	ld [wcd4a], a
+	; set first line
+	ld a, LINE_1
+	ld [wTextLine], a
 	call Func_86ec
 	call Func_8511
 .asm_86cc
@@ -508,14 +516,14 @@ Func_86ec:
 	call Func_8710
 	ld a, ' '
 	call ProcessChar
-	ld a, [$cacf]
+	ld a, [wCharHeadTile]
 	ld hl, $cd20
 	ld c, $12
 .asm_86ff
 	ld [hli], a
 	dec c
 	jr nz, .asm_86ff
-	ld a, [wCurChar]
+	ld a, [wCharTile]
 	ld c, $12
 .asm_8708
 	ld [hli], a
@@ -528,7 +536,7 @@ Func_86ec:
 
 Func_8710:
 	push af
-	ld a, [wcd4a]
+	ld a, [wTextLine]
 	cp $00
 	jr nz, .asm_871d
 	call Func_1124
@@ -701,8 +709,8 @@ Func_883d:
 	push af
 	ld a, WEEVIL
 	ld [wNPCCharacter], a
-	ldtx a, Text_3c15d
-	ld [wTextID], a
+	lddlg a, Text_3c15d
+	ld [wDialogueID], a
 	pop af
 	ret
 
@@ -1219,8 +1227,8 @@ Func_b52c:
 	call Func_29fd
 	call ConvertNPCDuelistToCharacter
 	ld [wNPCCharacter], a
-	call GetDuelistPreDuelTextID
-	ld [wTextID], a
+	call GetDuelistPreDuelDialogueID
+	ld [wDialogueID], a
 	farcall Func_18008
 	call Func_2abe
 	call Func_884a
@@ -1232,8 +1240,8 @@ Func_b547:
 	call Func_29fd
 	call ConvertNPCDuelistToCharacter
 	ld [wNPCCharacter], a
-	call GetDuelistLossTextID
-	ld [wTextID], a
+	call GetDuelistLossDialogueID
+	ld [wDialogueID], a
 	farcall Func_18008
 	call Func_2a76
 	call Func_884a
@@ -1245,8 +1253,8 @@ Func_b562:
 	call Func_29fd
 	call ConvertNPCDuelistToCharacter
 	ld [wNPCCharacter], a
-	call GetDuelistWinTextID
-	ld [wTextID], a
+	call GetDuelistWinDialogueID
+	ld [wDialogueID], a
 	farcall Func_18008
 	call Func_2a81
 	call Func_884a
@@ -1274,17 +1282,17 @@ Func_b595:
 	push de
 	ld a, TEA
 	ld [wNPCCharacter], a
-	ldtx a, Text_3d159
-	ld [wTextID], a
+	lddlg a, Text_3d159
+	ld [wDialogueID], a
 	call Func_2c4a
 	ld e, $00
 	ld a, [$cf14]
 	add $01
-	ld [$cadc], a
+	ld [wHexNumber + 0], a
 	ld a, [$cf15]
 	adc $00
-	ld [$cadd], a
-	call Func_142c
+	ld [wHexNumber + 1], a
+	call ConvertToDecimalRepresentation
 	call Func_2cf2
 	ld e, $04
 	ld a, [$cf14]
@@ -1311,17 +1319,17 @@ Func_b5e1:
 	push de
 	ld a, TEA
 	ld [wNPCCharacter], a
-	ldtx a, Text_3d174
-	ld [wTextID], a
+	lddlg a, Text_3d174
+	ld [wDialogueID], a
 	call Func_2c4a
 	ld e, $00
 	ld a, [$cf14]
 	add $01
-	ld [$cadc], a
+	ld [wHexNumber + 0], a
 	ld a, [$cf15]
 	adc $00
-	ld [$cadd], a
-	call Func_142c
+	ld [wHexNumber + 1], a
+	call ConvertToDecimalRepresentation
 	call Func_2cf2
 	ld e, $04
 	ld a, [$cf14]
@@ -1348,17 +1356,17 @@ Func_b62d:
 	push de
 	ld a, TEA
 	ld [wNPCCharacter], a
-	ldtx a, Text_3d189
-	ld [wTextID], a
+	lddlg a, Text_3d189
+	ld [wDialogueID], a
 	call Func_2c4a
 	ld e, $00
 	ld a, [$cf10]
 	add $01
-	ld [$cadc], a
+	ld [wHexNumber + 0], a
 	ld a, [$cf11]
 	adc $00
-	ld [$cadd], a
-	call Func_142c
+	ld [wHexNumber + 1], a
+	call ConvertToDecimalRepresentation
 	call Func_2cf2
 	ld e, $04
 	ld a, [$cf10]
@@ -1385,17 +1393,17 @@ Func_b679:
 	push de
 	ld a, TEA
 	ld [wNPCCharacter], a
-	ldtx a, Text_3d1ae
-	ld [wTextID], a
+	lddlg a, Text_3d1ae
+	ld [wDialogueID], a
 	call Func_2c4a
 	ld e, $00
 	ld a, [$cf12]
 	add $01
-	ld [$cadc], a
+	ld [wHexNumber + 0], a
 	ld a, [$cf13]
 	adc $00
-	ld [$cadd], a
-	call Func_142c
+	ld [wHexNumber + 1], a
+	call ConvertToDecimalRepresentation
 	call Func_2cf2
 	ld e, $04
 	ld a, [$cf12]
@@ -1422,17 +1430,17 @@ Func_b6c5:
 	push de
 	ld a, TEA
 	ld [wNPCCharacter], a
-	ldtx a, Text_3d1db
-	ld [wTextID], a
+	lddlg a, Text_3d1db
+	ld [wDialogueID], a
 	call Func_2c4a
 	ld e, $00
 	ld a, [$cf12]
 	add $01
-	ld [$cadc], a
+	ld [wHexNumber + 0], a
 	ld a, [$cf13]
 	adc $00
-	ld [$cadd], a
-	call Func_142c
+	ld [wHexNumber + 1], a
+	call ConvertToDecimalRepresentation
 	call Func_2cf2
 	ld e, $04
 	ld a, [$cf12]
@@ -1489,13 +1497,13 @@ ConvertNPCDuelistToCharacter:
 	db MAXIMILLION  ; DUELIST_MAXIMILLION
 	db YAMI_YUGI    ; DUELIST_YAMI_YUGI
 
-GetDuelistPreDuelTextID:
+GetDuelistPreDuelDialogueID:
 	push bc
 	push hl
 	ld b, $00
 	ld a, [wNPCDuelist]
 	call GetDuelistWinCount
-	ld hl, .AlreadyBeatenTextIDs
+	ld hl, .AlreadyBeatenDialogueIDs
 	ld a, c
 	cp LOW(0)
 	jr nz, .not_zero
@@ -1503,7 +1511,7 @@ GetDuelistPreDuelTextID:
 	cp HIGH(0)
 	jr nz, .not_zero
 	; zero wins
-	ld hl, .UnbeatenTextIDs
+	ld hl, .UnbeatenDialogueIDs
 .not_zero
 	ld b, $00
 	ld a, [wNPCDuelist]
@@ -1514,56 +1522,56 @@ GetDuelistPreDuelTextID:
 	pop bc
 	ret
 
-.UnbeatenTextIDs:
-	tx Text_3c179 ; DUELIST_WEEVIL
-	tx Text_3c1b0 ; DUELIST_MAI
-	tx Text_3c1e2 ; DUELIST_REX
-	tx Text_3c215 ; DUELIST_MAKO
-	tx Text_3c2dd ; DUELIST_SETO_KAIBA
-	tx Text_3c314 ; DUELIST_MOKUBA
-	tx Text_3c3b3 ; DUELIST_PUPPETEER
-	tx Text_3c3eb ; DUELIST_PANIK
-	tx Text_3c420 ; DUELIST_BANDIT_KEITH
-	tx Text_3c274 ; DUELIST_YUGI
-	tx Text_3c349 ; DUELIST_TRISTAN
-	tx Text_3c2a8 ; DUELIST_JOEY
-	tx Text_3c381 ; DUELIST_BAKURA
-	tx Text_3c48a ; DUELIST_SIMON
-	tx Text_3c455 ; DUELIST_MAXIMILLION
-	tx Text_3c248 ; DUELIST_YAMI_YUGI
+.UnbeatenDialogueIDs:
+	dlg Text_3c179 ; DUELIST_WEEVIL
+	dlg Text_3c1b0 ; DUELIST_MAI
+	dlg Text_3c1e2 ; DUELIST_REX
+	dlg Text_3c215 ; DUELIST_MAKO
+	dlg Text_3c2dd ; DUELIST_SETO_KAIBA
+	dlg Text_3c314 ; DUELIST_MOKUBA
+	dlg Text_3c3b3 ; DUELIST_PUPPETEER
+	dlg Text_3c3eb ; DUELIST_PANIK
+	dlg Text_3c420 ; DUELIST_BANDIT_KEITH
+	dlg Text_3c274 ; DUELIST_YUGI
+	dlg Text_3c349 ; DUELIST_TRISTAN
+	dlg Text_3c2a8 ; DUELIST_JOEY
+	dlg Text_3c381 ; DUELIST_BAKURA
+	dlg Text_3c48a ; DUELIST_SIMON
+	dlg Text_3c455 ; DUELIST_MAXIMILLION
+	dlg Text_3c248 ; DUELIST_YAMI_YUGI
 
-.AlreadyBeatenTextIDs:
-	tx Text_3c4bd ; DUELIST_WEEVIL
-	tx Text_3c4ef ; DUELIST_MAI
-	tx Text_3c515 ; DUELIST_REX
-	tx Text_3c531 ; DUELIST_MAKO
-	tx Text_3c5d2 ; DUELIST_SETO_KAIBA
-	tx Text_3c5f7 ; DUELIST_MOKUBA
-	tx Text_3c664 ; DUELIST_PUPPETEER
-	tx Text_3c67e ; DUELIST_PANIK
-	tx Text_3c6ac ; DUELIST_BANDIT_KEITH
-	tx Text_3c57d ; DUELIST_YUGI
-	tx Text_3c613 ; DUELIST_TRISTAN
-	tx Text_3c5a8 ; DUELIST_JOEY
-	tx Text_3c638 ; DUELIST_BAKURA
-	tx Text_3c70f ; DUELIST_SIMON
-	tx Text_3c6dd ; DUELIST_MAXIMILLION
-	tx Text_3c561 ; DUELIST_YAMI_YUGI
+.AlreadyBeatenDialogueIDs:
+	dlg Text_3c4bd ; DUELIST_WEEVIL
+	dlg Text_3c4ef ; DUELIST_MAI
+	dlg Text_3c515 ; DUELIST_REX
+	dlg Text_3c531 ; DUELIST_MAKO
+	dlg Text_3c5d2 ; DUELIST_SETO_KAIBA
+	dlg Text_3c5f7 ; DUELIST_MOKUBA
+	dlg Text_3c664 ; DUELIST_PUPPETEER
+	dlg Text_3c67e ; DUELIST_PANIK
+	dlg Text_3c6ac ; DUELIST_BANDIT_KEITH
+	dlg Text_3c57d ; DUELIST_YUGI
+	dlg Text_3c613 ; DUELIST_TRISTAN
+	dlg Text_3c5a8 ; DUELIST_JOEY
+	dlg Text_3c638 ; DUELIST_BAKURA
+	dlg Text_3c70f ; DUELIST_SIMON
+	dlg Text_3c6dd ; DUELIST_MAXIMILLION
+	dlg Text_3c561 ; DUELIST_YAMI_YUGI
 
-GetDuelistLossTextID:
+GetDuelistLossDialogueID:
 	push bc
 	push hl
 	ld b, $00
 	ld a, [wNPCDuelist]
 	call GetDuelistWinCount
-	ld hl, .DefaultTextIDs
+	ld hl, .DefaultDialogueIDs
 	ld a, c
 	cp LOW(5)
 	jr nz, .not_5
 	ld a, b
 	cp HIGH(5)
 	jr nz, .not_5
-	ld hl, .Exactly5WinsTextIDs
+	ld hl, .Exactly5WinsDialogueIDs
 .not_5
 	ld b, $00
 	ld a, [wNPCDuelist]
@@ -1574,80 +1582,80 @@ GetDuelistLossTextID:
 	pop bc
 	ret
 
-.Exactly5WinsTextIDs:
-	tx Text_3ccaf ; DUELIST_WEEVIL
-	tx Text_3cce5 ; DUELIST_MAI
-	tx Text_3cd17 ; DUELIST_REX
-	tx Text_3cd48 ; DUELIST_MAKO
-	tx Text_3cdf6 ; DUELIST_SETO_KAIBA
-	tx Text_3ce2d ; DUELIST_MOKUBA
-	tx Text_3ceae ; DUELIST_PUPPETEER
-	tx Text_3cece ; DUELIST_PANIK
-	tx Text_3cefd ; DUELIST_BANDIT_KEITH
-	tx Text_3cd93 ; DUELIST_YUGI
-	tx Text_3ce50 ; DUELIST_TRISTAN
-	tx Text_3cdc7 ; DUELIST_JOEY
-	tx Text_3ce7e ; DUELIST_BAKURA
-	tx Text_3cf5f ; DUELIST_SIMON
-	tx Text_3cf33 ; DUELIST_MAXIMILLION
-	tx Text_3cd7e ; DUELIST_YAMI_YUGI
+.Exactly5WinsDialogueIDs:
+	dlg Text_3ccaf ; DUELIST_WEEVIL
+	dlg Text_3cce5 ; DUELIST_MAI
+	dlg Text_3cd17 ; DUELIST_REX
+	dlg Text_3cd48 ; DUELIST_MAKO
+	dlg Text_3cdf6 ; DUELIST_SETO_KAIBA
+	dlg Text_3ce2d ; DUELIST_MOKUBA
+	dlg Text_3ceae ; DUELIST_PUPPETEER
+	dlg Text_3cece ; DUELIST_PANIK
+	dlg Text_3cefd ; DUELIST_BANDIT_KEITH
+	dlg Text_3cd93 ; DUELIST_YUGI
+	dlg Text_3ce50 ; DUELIST_TRISTAN
+	dlg Text_3cdc7 ; DUELIST_JOEY
+	dlg Text_3ce7e ; DUELIST_BAKURA
+	dlg Text_3cf5f ; DUELIST_SIMON
+	dlg Text_3cf33 ; DUELIST_MAXIMILLION
+	dlg Text_3cd7e ; DUELIST_YAMI_YUGI
 
-.DefaultTextIDs:
-	tx Text_3ca22 ; DUELIST_WEEVIL
-	tx Text_3ca50 ; DUELIST_MAI
-	tx Text_3ca7d ; DUELIST_REX
-	tx Text_3caae ; DUELIST_MAKO
-	tx Text_3cb4d ; DUELIST_SETO_KAIBA
-	tx Text_3cb78 ; DUELIST_MOKUBA
-	tx Text_3cbea ; DUELIST_PUPPETEER
-	tx Text_3cc09 ; DUELIST_PANIK
-	tx Text_3cc2a ; DUELIST_BANDIT_KEITH
-	tx Text_3caf8 ; DUELIST_YUGI
-	tx Text_3cb98 ; DUELIST_TRISTAN
-	tx Text_3cb2b ; DUELIST_JOEY
-	tx Text_3cbb4 ; DUELIST_BAKURA
-	tx Text_3cc84 ; DUELIST_SIMON
-	tx Text_3cc56 ; DUELIST_MAXIMILLION
-	tx Text_3cae3 ; DUELIST_YAMI_YUGI
+.DefaultDialogueIDs:
+	dlg Text_3ca22 ; DUELIST_WEEVIL
+	dlg Text_3ca50 ; DUELIST_MAI
+	dlg Text_3ca7d ; DUELIST_REX
+	dlg Text_3caae ; DUELIST_MAKO
+	dlg Text_3cb4d ; DUELIST_SETO_KAIBA
+	dlg Text_3cb78 ; DUELIST_MOKUBA
+	dlg Text_3cbea ; DUELIST_PUPPETEER
+	dlg Text_3cc09 ; DUELIST_PANIK
+	dlg Text_3cc2a ; DUELIST_BANDIT_KEITH
+	dlg Text_3caf8 ; DUELIST_YUGI
+	dlg Text_3cb98 ; DUELIST_TRISTAN
+	dlg Text_3cb2b ; DUELIST_JOEY
+	dlg Text_3cbb4 ; DUELIST_BAKURA
+	dlg Text_3cc84 ; DUELIST_SIMON
+	dlg Text_3cc56 ; DUELIST_MAXIMILLION
+	dlg Text_3cae3 ; DUELIST_YAMI_YUGI
 
-GetDuelistWinTextID:
+GetDuelistWinDialogueID:
 	push bc
 	push hl
 	ld b, $00
 	ld a, [wNPCDuelist]
 	ld c, a
-	ld hl, .TextIDs
+	ld hl, .DialogueIDs
 	add hl, bc
 	ld a, [hl]
 	pop hl
 	pop bc
 	ret
 
-.TextIDs:
-	tx Text_3c740 ; DUELIST_WEEVIL
-	tx Text_3c76f ; DUELIST_MAI
-	tx Text_3c796 ; DUELIST_REX
-	tx Text_3c7c9 ; DUELIST_MAKO
-	tx Text_3c88e ; DUELIST_SETO_KAIBA
-	tx Text_3c8c2 ; DUELIST_MOKUBA
-	tx Text_3c944 ; DUELIST_PUPPETEER
-	tx Text_3c95d ; DUELIST_PANIK
-	tx Text_3c98c ; DUELIST_BANDIT_KEITH
-	tx Text_3c824 ; DUELIST_YUGI
-	tx Text_3c8d9 ; DUELIST_TRISTAN
-	tx Text_3c85b ; DUELIST_JOEY
-	tx Text_3c90e ; DUELIST_BAKURA
-	tx Text_3c9ef ; DUELIST_SIMON
-	tx Text_3c9bf ; DUELIST_MAXIMILLION
-	tx Text_3c7f4 ; DUELIST_YAMI_YUGI
+.DialogueIDs:
+	dlg Text_3c740 ; DUELIST_WEEVIL
+	dlg Text_3c76f ; DUELIST_MAI
+	dlg Text_3c796 ; DUELIST_REX
+	dlg Text_3c7c9 ; DUELIST_MAKO
+	dlg Text_3c88e ; DUELIST_SETO_KAIBA
+	dlg Text_3c8c2 ; DUELIST_MOKUBA
+	dlg Text_3c944 ; DUELIST_PUPPETEER
+	dlg Text_3c95d ; DUELIST_PANIK
+	dlg Text_3c98c ; DUELIST_BANDIT_KEITH
+	dlg Text_3c824 ; DUELIST_YUGI
+	dlg Text_3c8d9 ; DUELIST_TRISTAN
+	dlg Text_3c85b ; DUELIST_JOEY
+	dlg Text_3c90e ; DUELIST_BAKURA
+	dlg Text_3c9ef ; DUELIST_SIMON
+	dlg Text_3c9bf ; DUELIST_MAXIMILLION
+	dlg Text_3c7f4 ; DUELIST_YAMI_YUGI
 
 Func_b7ee:
 	push af
 	call Func_29fd
 	ld a, TEA
 	ld [wNPCCharacter], a
-	ldtx a, Text_3cf94
-	ld [wTextID], a
+	lddlg a, Text_3cf94
+	ld [wDialogueID], a
 	farcall Func_18008
 	call Func_2a8c
 	call Func_884a
@@ -1659,8 +1667,8 @@ Func_b807:
 	call Func_29fd
 	ld a, EXODIA
 	ld [wNPCCharacter], a
-	ldtx a, Text_3cfca
-	ld [wTextID], a
+	lddlg a, Text_3cfca
+	ld [wDialogueID], a
 	call Func_2b89
 	farcall Func_18008
 	call Func_884a
@@ -1675,8 +1683,8 @@ Func_b823:
 	call Func_29fd
 	ld a, YAMI_YUGI
 	ld [wNPCCharacter], a
-	ldtx a, Text_3cffb
-	ld [wTextID], a
+	lddlg a, Text_3cffb
+	ld [wDialogueID], a
 	farcall Func_18008
 	call Func_2a3f
 	call Func_884a
@@ -1692,8 +1700,8 @@ Func_b840:
 	call Func_29fd
 	ld a, YAMI_YUGI
 	ld [wNPCCharacter], a
-	ldtx a, Text_3d074
-	ld [wTextID], a
+	lddlg a, Text_3d074
+	ld [wDialogueID], a
 	farcall Func_18008
 	call Func_2a3f
 	call Func_884a
@@ -1754,8 +1762,8 @@ Func_b8b2:
 	call Func_29fd
 	ld a, YAMI_YUGI
 	ld [wNPCCharacter], a
-	ldtx a, Text_3d0bc
-	ld [wTextID], a
+	lddlg a, Text_3d0bc
+	ld [wDialogueID], a
 	farcall Func_18008
 	call Func_2a3f
 	call Func_884a
@@ -1767,8 +1775,8 @@ Func_b8cb:
 	call Func_29fd
 	ld a, YAMI_YUGI
 	ld [wNPCCharacter], a
-	ldtx a, Text_3d0db
-	ld [wTextID], a
+	lddlg a, Text_3d0db
+	ld [wDialogueID], a
 	farcall Func_18008
 	call Func_2a3f
 	call Func_884a
@@ -1780,8 +1788,8 @@ Func_b8e4:
 	call Func_29fd
 	ld a, YAMI_YUGI
 	ld [wNPCCharacter], a
-	ldtx a, Text_3d106
-	ld [wTextID], a
+	lddlg a, Text_3d106
+	ld [wDialogueID], a
 	farcall Func_18008
 	call Func_2a3f
 	call Func_884a
@@ -1796,8 +1804,8 @@ Func_b916:
 	call Func_29fd
 	ld a, TEA
 	ld [wNPCCharacter], a
-	ldtx a, Text_3d217
-	ld [wTextID], a
+	lddlg a, Text_3d217
+	ld [wDialogueID], a
 	farcall Func_18008
 	call Func_2a8c
 	call Func_884a

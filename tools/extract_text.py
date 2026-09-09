@@ -19,10 +19,11 @@ def main():
 	parser.add_argument('offsets', metavar='offsets', type=str, nargs='+',
 						help='offsets of text data')
 	args = parser.parse_args()
+	offsets = [int(o, 16) for o in args.offsets]
 
 	charmap = read_charmap()
 
-	for offset in [int(o, 16) for o in args.offsets]:
+	for offset in offsets:
 		print(f"Text_{offset:0x}:")
 
 		out_str = ""
@@ -53,6 +54,9 @@ def main():
 					start_text = False
 
 				out_str += charmap[val]
+
+			if pos in offsets:
+				break
 
 		print(out_str)
 

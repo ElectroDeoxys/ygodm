@@ -13,9 +13,9 @@
 	farfunc $5bb8 ; $15
 	farfunc $5bd1 ; $17
 	farfunc $5c10 ; $19
-	farfunc Func_42c5 ; $1b
-	farfunc Func_42d0 ; $1d
-	farfunc Func_42ec ; $1f
+	farfunc SetTextArg ; $1b
+	farfunc SetTextLoadMode ; $1d
+	farfunc LoadText ; $1f
 	farfunc Func_5313 ; $21
 	farfunc Func_5eb3 ; $23
 	farfunc Func_5f37 ; $25
@@ -64,8 +64,8 @@ Func_4068:
 	farcall Func_2801e
 	farcall LoadFontToVTiles2
 	call Func_40b0
-	call Func_4110
-	call Func_413a
+	call PrintPlayerLP
+	call PrintOpponentLP
 	call Func_4164
 	call Func_41a1
 	call Func_41c6
@@ -153,56 +153,58 @@ Func_40f1:
 	pop af
 	ret
 
-Func_4110:
+; prints player's LP at coordinates (5, 16)
+PrintPlayerLP:
 	push af
 	push bc
 	push de
 	push hl
-	ld a, $00
-	call Func_42d0
+	ld a, TEXTLOAD_NUMBER
+	call SetTextLoadMode
 	ld a, [wPlayerLP + 0]
 	ld c, a
 	ld a, [wPlayerLP + 1]
 	ld b, a
-	call Func_42c5
-	call Func_42ec
+	call SetTextArg
+	call LoadText
 	hlbgcoord 5, 16
 	ld de, wTextBuffer
-	ld c, $04
-.asm_412f
+	ld c, 4 ; digits
+.loop
 	ld a, [de]
 	ld [hli], a
 	inc de
 	dec c
-	jr nz, .asm_412f
+	jr nz, .loop
 	pop hl
 	pop de
 	pop bc
 	pop af
 	ret
 
-Func_413a:
+; prints opponent's LP at coordinates (5, 1)
+PrintOpponentLP:
 	push af
 	push bc
 	push de
 	push hl
-	ld a, $00
-	call Func_42d0
+	ld a, TEXTLOAD_NUMBER
+	call SetTextLoadMode
 	ld a, [wOppLP + 0]
 	ld c, a
 	ld a, [wOppLP + 1]
 	ld b, a
-	call Func_42c5
-	call Func_42ec
+	call SetTextArg
+	call LoadText
 	hlbgcoord 5, 1
 	ld de, wTextBuffer
-	ld c, $04
-.asm_4159
+	ld c, 4 ; digits
+.loop
 	ld a, [de]
 	ld [hli], a
 	inc de
 	dec c
-	jr nz, .asm_4159
+	jr nz, .loop
 	pop hl
 	pop de
 	pop bc
@@ -217,15 +219,15 @@ Func_4164:
 	ld b, $00
 	ld a, [wActiveField]
 	ld c, a
-	call Func_42c5
-	ld a, $02
-	call Func_42d0
-	call Func_42ec
+	call SetTextArg
+	ld a, TEXTLOAD_FIELD
+	call SetTextLoadMode
+	call LoadText
 	call Func_1114
 	hlbgcoord 1, 3
 	ld de, wTextBuffer
 	ld c, $08
-.asm_4184
+.loop_chars
 	ld a, [de]
 	inc de
 	call ProcessChar
@@ -233,14 +235,15 @@ Func_4164:
 	push bc
 	ld bc, TILEMAP_WIDTH
 	add hl, bc
-	ld a, [wCurChar]
+	ld a, [wCharTile]
 	ld [hl], a
 	pop bc
 	pop hl
-	ld a, [$cacf]
+	ld a, [wCharHeadTile]
 	ld [hli], a
 	dec c
-	jr nz, .asm_4184
+	jr nz, .loop_chars
+
 	pop hl
 	pop de
 	pop bc
@@ -346,23 +349,23 @@ Func_42ae:
 	pop af
 	ret
 
-; input:
-; - c = card type
-; - b = ?
-Func_42c5::
+; loads bc into wTextArg
+SetTextArg::
 	push af
 	ld a, c
-	ld [wcab6], a
+	ld [wTextArg + 0], a
 	ld a, b
-	ld [wcab7], a
+	ld [wTextArg + 1], a
 	pop af
 	ret
 
-Func_42d0::
-	ld [wcab8], a
+; input:
+; - a = TEXTLOAD_* constant
+SetTextLoadMode::
+	ld [wTextLoadMode], a
 	ret
 
-Func_42d4:
+ClearTextBuffer:
 	push af
 	push bc
 	push de
@@ -375,19 +378,21 @@ Func_42d4:
 	dec c
 	jr nz, .asm_42de
 	ld a, $00
-	ld [$cacd], a
+	ld [wTextLength], a
 	pop hl
 	pop de
 	pop bc
 	pop af
 	ret
 
-Func_42ec::
+; loads text according to wTextLoadMode and wTextArg
+; text is output in wTextBuffer
+LoadText::
 	push af
 	push bc
 	push hl
 	ld b, $00
-	ld a, [wcab8]
+	ld a, [wTextLoadMode]
 	ld c, a
 	ld hl, .Jumptable
 	add hl, bc
@@ -401,61 +406,74 @@ Func_42ec::
 	ret
 
 .Jumptable:
-	dw Func_4319
-	dw Func_437b
-	dw Func_43d4
-	dw Func_52a5
-	dw Func_52d8
-	dw Func_435c
-	dw Func_5324
-	dw Func_536d
-	dw Func_5436
-	dw Func_54ef
+	dw LoadText_Number ; TEXTLOAD_NUMBER
+	dw LoadText_Field ; TEXTLOAD_FIELD
+	dw LoadText_CardName ; TEXTLOAD_CARD_NAME
+	dw Func_52a5 ; TEXTLOAD_06
+	dw Func_52d8 ; TEXTLOAD_08
+	dw Func_435c ; TEXTLOAD_0A
+	dw Func_5324 ; TEXTLOAD_0C
+	dw LoadText_CardType ; TEXTLOAD_CARD_TYPE
+	dw Func_5436 ; TEXTLOAD_10
+	dw Func_54ef ; TEXTLOAD_12
 
-Func_4319:
+; input:
+; - wTextArg = 4-digit number
+; output:
+; - wTextBuffer = digit tiles to represent number
+; - [wTextLength] = 4
+LoadText_Number:
 	push af
 	push bc
 	push de
 	push hl
-	call Func_42d4
+	call ClearTextBuffer
 	ld hl, wTextBuffer
-	ld de, wcab7
+	ld de, wTextArg + 1
 	ld b, $01
-	ld c, $02
-.asm_432a
+	ld c, 2 ; bytes
+.loop_bytes
 	ld a, [de]
 	push de
-	ld d, $02
-.asm_432e
+	ld d, 2 ; nybbles
+.loop_nybbles
 	swap a
 	push af
 	and $0f
-	jr z, .asm_433b
-	add $01
+	jr z, .zero_digit
+	add '0'
 	ld [hl], a
 	inc b
-	jr .asm_4342
-.asm_433b
+	jr .next_nybble
+.zero_digit
+	; did we already have a non-zero digit?
 	ld a, b
 	cp $01
-	jr z, .asm_4342
-	ld [hl], $01
-.asm_4342
+	jr z, .next_nybble
+	; yes, output '0'
+	ld [hl], '0'
+.next_nybble
 	inc l
 	pop af
 	dec d
-	jr nz, .asm_432e
+	jr nz, .loop_nybbles
 	pop de
 	dec de
 	dec c
-	jr nz, .asm_432a
+	jr nz, .loop_bytes
+
+	; done processing each digit
+	; is it zero?
 	dec b
-	jr nz, .asm_4352
+	jr nz, .done
+	; yes, then no digits were output
+	; write a single '0' digit
 	dec l
-	ld [hl], $01
-.asm_4352
-	ld a, $04
-	ld [$cacd], a
+	ld [hl], '0'
+
+.done
+	ld a, 4
+	ld [wTextLength], a
 	pop hl
 	pop de
 	pop bc
@@ -466,39 +484,43 @@ Func_435c:
 	push af
 	push bc
 	push hl
-	call Func_4319
+	call LoadText_Number
 	ld hl, wTextBuffer
-	ld c, $04
-.asm_4367
+	ld c, 4
+.loop_digits
 	ld a, [hl]
-	cp $00
+	cp ' '
 	jr z, .asm_4371
 	add $c5
 	ld [hl], a
-	jr .asm_4373
+	jr .next
 .asm_4371
 	ld [hl], $80
-.asm_4373
+.next
 	inc hl
 	dec c
-	jr nz, .asm_4367
+	jr nz, .loop_digits
 	pop hl
 	pop bc
 	pop af
 	ret
 
-Func_437b:
+; input:
+; - [wTextArg] = FIELD_* constant
+; output:
+; - wTextBuffer = name of field
+LoadText_Field:
 	push af
 	push bc
 	push de
 	push hl
-	ld de, $439c
+	ld de, .Texts
 	ld h, $00
-	ld a, [wcab6]
+	ld a, [wTextArg + 0]
 	ld l, a
 	add hl, hl
 	add hl, hl
-	add hl, hl
+	add hl, hl ; *8
 	add hl, de
 	ld de, wTextBuffer
 	ld c, $08
@@ -513,28 +535,42 @@ Func_437b:
 	pop bc
 	pop af
 	ret
-; 0x439c
 
-SECTION "Bank 1@43d4", ROMX[$43d4], BANK[$1]
+.Texts:
+	text " かくとうじょう"
+	text "      もり"
+	text "     こうや"
+	text "      やま"
+	text "    そうげん"
+	text "      うみ"
+	text "      やみ"
 
-Func_43d4:
+; input:
+; - wTextArg = card ID
+; output:
+; - wTextBuffer = card name
+; - [wTextLength] = length of text
+LoadText_CardName:
 	push af
 	push bc
 	push de
 	push hl
-	call Func_42d4
-	ld de, $440f
-	ld a, [wcab6]
+
+	call ClearTextBuffer
+
+	ld de, CardNamePointers
+	ld a, [wTextArg + 0]
 	ld l, a
-	ld a, [wcab7]
+	ld a, [wTextArg + 1]
 	ld h, a
-	add hl, hl
+	add hl, hl ; *2
 	ld b, h
 	ld c, l
 	add hl, de
 	ld a, [hli]
 	ld h, [hl]
 	ld l, a
+
 	push hl
 	inc bc
 	inc bc
@@ -545,28 +581,32 @@ Func_43d4:
 	ld b, [hl]
 	ld c, a
 	pop hl
+
+	; hl = pointer to text entry
+	; bc = pointer to end of text
+
 	ld de, wTextBuffer
 	ld b, $00
-.asm_43fc
+.loop_copy
 	ld a, c
 	cp l
-	jr z, .asm_4406
+	jr z, .break
 	ld a, [hli]
 	ld [de], a
 	inc de
 	inc b
-	jr .asm_43fc
-.asm_4406
+	jr .loop_copy
+.break
 	ld a, b
-	ld [$cacd], a
+	ld [wTextLength], a
 	pop hl
 	pop de
 	pop bc
 	pop af
 	ret
-; 0x440f
 
-SECTION "Bank 1@52a5", ROMX[$52a5], BANK[$1]
+INCLUDE "text/card_name_pointers.asm"
+INCLUDE "text/card_names.asm"
 
 Func_52a5:
 	push af
@@ -574,13 +614,13 @@ Func_52a5:
 	push de
 	push hl
 	ld de, $52c8
-	ld a, [wcab6]
+	ld a, [wTextArg + 0]
 	ld l, a
-	ld a, [wcab7]
+	ld a, [wTextArg + 1]
 	ld h, a
 	add hl, hl
 	add hl, hl
-	add hl, hl
+	add hl, hl ; *8
 	add hl, de
 	ld de, wTextBuffer
 	ld c, $08
@@ -595,9 +635,10 @@ Func_52a5:
 	pop bc
 	pop af
 	ret
-; 0x52c8
 
-SECTION "Bank 1@52d8", ROMX[$52d8], BANK[$1]
+Text_52c8:
+	text "  ディテイル "
+	text "  フィ-ルド "
 
 Func_52d8:
 	push af
@@ -605,13 +646,13 @@ Func_52d8:
 	push de
 	push hl
 	ld de, $52c8
-	ld a, [wcab6]
+	ld a, [wTextArg + 0]
 	ld l, a
-	ld a, [wcab7]
+	ld a, [wTextArg + 1]
 	ld h, a
 	add hl, hl
 	add hl, hl
-	add hl, hl
+	add hl, hl ; *8
 	add hl, de
 	ld de, wTextBuffer
 	ld c, $08
@@ -626,9 +667,11 @@ Func_52d8:
 	pop bc
 	pop af
 	ret
-; 0x52fb
 
-SECTION "Bank 1@5313", ROMX[$5313], BANK[$1]
+Text_52fb:
+	text "        "
+	text "    こうげき"
+	text "    ぼうぎょ"
 
 Func_5313:
 	push af
@@ -652,7 +695,7 @@ Func_5324:
 	push de
 	push hl
 	ld hl, wTextBuffer
-	ld de, wcab6
+	ld de, wTextArg
 	ld c, $02
 .asm_5330
 	push bc
@@ -690,18 +733,19 @@ Func_5324:
 	pop bc
 	pop af
 	ret
-; 0x535d
 
-SECTION "Bank 1@536d", ROMX[$536d], BANK[$1]
+Text_535d:
+	text "0123456789"
+	text "あいうえおか"
 
-Func_536d:
+LoadText_CardType:
 	push af
 	push bc
 	push de
 	push hl
 	ld de, $538e
 	ld h, $00
-	ld a, [wcab6]
+	ld a, [wTextArg + 0]
 	ld l, a
 	add hl, hl
 	add hl, hl
@@ -720,9 +764,29 @@ Func_536d:
 	pop bc
 	pop af
 	ret
-; 0x538e
 
-SECTION "Bank 1@5436", ROMX[$5436], BANK[$1]
+Text_538e:
+	text "ドラゴン    "
+	text "まほうつかい  "
+	text "アンデット   "
+	text "せんし     "
+	text "じゅうせんし  "
+	text "けもの     "
+	text "ちょうじゅう  "
+	text "あくま     "
+	text "てんし     "
+	text "こんちゅう   "
+	text "きょうりゅう  "
+	text "はちゅうるい  "
+	text "さかな     "
+	text "かいりゅう   "
+	text "きかい     "
+	text "いかずち    "
+	text "みず      "
+	text "ほのお     "
+	text "がんせき    "
+	text "しょくぶつ   "
+	text "まほう     "
 
 Func_5436:
 	push af
@@ -731,7 +795,7 @@ Func_5436:
 	push hl
 	ld de, $5457
 	ld h, $00
-	ld a, [wcab6]
+	ld a, [wTextArg + 0]
 	ld l, a
 	add hl, hl
 	add hl, hl
@@ -750,39 +814,62 @@ Func_5436:
 	pop bc
 	pop af
 	ret
-; 0x5457
 
-SECTION "Bank 1@54ef", ROMX[$54ef], BANK[$1]
+Text_5457:
+	text "インセクタ-はが"
+	text "くじゃくまい  "
+	text "りゅうざき   "
+	text "カジキりょうた "
+	text "かいばせと   "
+	text "かいばモクバ  "
+	text "ふくわじゅつし "
+	text "やみつかい   "
+	text "キ-ス     "
+	text "むとうゆうぎ  "
+	text "ほんだヒロト  "
+	text "じょうのうち  "
+	text "ばくらりょう  "
+	text "シモン·ム-ラン"
+	text "<ぺ>ガサス    "
+	text "やみ·ゆうぎ  "
+	text "つうしんたいせん"
+	text "たいせんにんずう"
+	text "なまえ     "
 
 Func_54ef:
 	push af
 	push bc
 	push de
 	push hl
-	call Func_42d4
+
+	call ClearTextBuffer
+
 	ld de, wTextBuffer
 	ld hl, $cf99
 	ld c, $08
-.asm_54fe
+.loop_copy
 	ld a, [hli]
 	ld [de], a
 	inc de
 	dec c
-	jr nz, .asm_54fe
+	jr nz, .loop_copy
+
+	; count text length
 	ld hl, wTextBuffer
-	ld de, NULL
+	lb de, 0, 0
 	ld c, $08
-.asm_550c
+.loop_count
 	inc e
 	ld a, [hli]
-	cp $00
-	jr z, .asm_5513
+	cp ' '
+	jr z, .space
 	ld d, e
-.asm_5513
+.space
 	dec c
-	jr nz, .asm_550c
+	jr nz, .loop_count
 	ld a, d
-	ld [$cacd], a
+	ld [wTextLength], a
+
 	pop hl
 	pop de
 	pop bc
@@ -848,36 +935,36 @@ Func_558a:
 	push bc
 	push hl
 	hlbgcoord 12, 1
-	ld a, $00
-	call Func_42d0
-	ld a, [$cad8]
+	ld a, TEXTLOAD_NUMBER
+	call SetTextLoadMode
+	ld a, [wcad8]
 	add $01
-	ld [$cadc], a
+	ld [wHexNumber + 0], a
 	ld a, $00
-	ld [$cadd], a
-	call Func_142c
-	call Func_42c5
-	call Func_42ec
-	ld a, [$caba]
+	ld [wHexNumber + 1], a
+	call ConvertToDecimalRepresentation
+	call SetTextArg
+	call LoadText
+	ld a, [wTextBuffer + $1]
 	ld [hli], a
-	ld a, [$cabb]
+	ld a, [wTextBuffer + $2]
 	ld [hli], a
-	ld a, [$cabc]
+	ld a, [wTextBuffer + $3]
 	ld [hli], a
 	inc hl
-	ld a, [$cad9]
+	ld a, [wcad9]
 	add $01
-	ld [$cadc], a
+	ld [wHexNumber + 0], a
 	ld a, $00
-	ld [$cadd], a
-	call Func_142c
-	call Func_42c5
-	call Func_42ec
-	ld a, [$caba]
+	ld [wHexNumber + 1], a
+	call ConvertToDecimalRepresentation
+	call SetTextArg
+	call LoadText
+	ld a, [wTextBuffer + $1]
 	ld [hli], a
-	ld a, [$cabb]
+	ld a, [wTextBuffer + $2]
 	ld [hli], a
-	ld a, [$cabc]
+	ld a, [wTextBuffer + $3]
 	ld [hli], a
 	pop hl
 	pop bc
@@ -890,17 +977,17 @@ Func_55de:
 	push de
 	push hl
 	call Func_58a3
-	ld a, [$cada]
-	ld [$cad2], a
-	ld a, [$cadb]
-	ld [$cad3], a
+	ld a, [wcada + 0]
+	ld [wcad2 + 0], a
+	ld a, [wcada + 1]
+	ld [wcad2 + 1], a
 	ld d, $05
-	ld a, [$cad8]
+	ld a, [wcad8]
 	ld c, a
-	ld a, [$cad9]
+	ld a, [wcad9]
 	cp c
 	jr nz, .asm_5602
-	ld a, [$cad7]
+	ld a, [wcad7]
 	ld d, a
 	inc d
 .asm_5602
@@ -914,12 +1001,12 @@ Func_55de:
 	call Func_566b
 	call Func_56b6
 	inc e
-	ld a, [$cad2]
+	ld a, [wcad2 + 0]
 	add $01
-	ld [$cad2], a
-	ld a, [$cad3]
+	ld [wcad2 + 0], a
+	ld a, [wcad2 + 1]
 	adc $00
-	ld [$cad3], a
+	ld [wcad2 + 1], a
 	jr .asm_5604
 .asm_5625
 	pop hl
@@ -940,22 +1027,22 @@ Func_562a:
 	rl d
 	hlbgcoord 2, 3
 	add hl, de
-	ld a, $00
-	call Func_42d0
-	ld a, [$cad2]
+	ld a, TEXTLOAD_NUMBER
+	call SetTextLoadMode
+	ld a, [wcad2 + 0]
 	add $01
-	ld [$cadc], a
-	ld a, [$cad3]
+	ld [wHexNumber + 0], a
+	ld a, [wcad2 + 1]
 	adc $00
-	ld [$cadd], a
-	call Func_142c
-	call Func_42c5
-	call Func_42ec
-	ld a, [$caba]
+	ld [wHexNumber + 1], a
+	call ConvertToDecimalRepresentation
+	call SetTextArg
+	call LoadText
+	ld a, [wTextBuffer + $1]
 	ld [hli], a
-	ld a, [$cabb]
+	ld a, [wTextBuffer + $2]
 	ld [hli], a
-	ld a, [$cabc]
+	ld a, [wTextBuffer + $3]
 	ld [hli], a
 	pop hl
 	pop de
@@ -975,9 +1062,9 @@ Func_566b:
 	rl d
 	hlbgcoord 6, 2
 	add hl, de
-	ld a, [$cad2]
+	ld a, [wcad2 + 0]
 	ld c, a
-	ld a, [$cad3]
+	ld a, [wcad2 + 1]
 	ld b, a
 	call Func_1508
 	call Func_111c
@@ -987,7 +1074,7 @@ Func_566b:
 	ld a, [de]
 	inc de
 	call ProcessChar
-	ld a, [$cacf]
+	ld a, [wCharHeadTile]
 	ld [hli], a
 	dec c
 	jr nz, .asm_5690
@@ -999,7 +1086,7 @@ Func_566b:
 	ld a, [de]
 	inc de
 	call ProcessChar
-	ld a, [wCurChar]
+	ld a, [wCharTile]
 	ld [hli], a
 	dec c
 	jr nz, .asm_56a5
@@ -1021,14 +1108,14 @@ Func_56b6:
 	rl d
 	hlbgcoord 15, 3
 	add hl, de
-	ld a, [$cad2]
+	ld a, [wcad2 + 0]
 	ld c, a
-	ld a, [$cad3]
+	ld a, [wcad2 + 1]
 	ld b, a
 	call Func_1542
-	ld a, [$cabb]
+	ld a, [wTextBuffer + $2]
 	ld [hli], a
-	ld a, [$cabc]
+	ld a, [wTextBuffer + $3]
 	ld [hli], a
 	pop hl
 	pop de
@@ -1038,25 +1125,25 @@ Func_56b6:
 
 Func_56e0:
 	push af
+	ld a, TRUE
+	ld [wcad4], a
 	ld a, $00
-	ld [$cad4], a
+	ld [wcad5], a
 	ld a, $00
-	ld [$cad5], a
-	ld a, $00
-	ld [$cad6], a
+	ld [wcad6], a
 	ld a, $04
-	ld [$cad7], a
+	ld [wcad7], a
 	ld a, $00
-	ld [$cad8], a
+	ld [wcad8], a
 	call PlayerOwnsAnySecretCard
 	cp TRUE
 	jr nz, .no_secret_cards
 	ld a, $48
-	ld [$cad9], a
+	ld [wcad9], a
 	jr .asm_570d
 .no_secret_cards
 	ld a, $45
-	ld [$cad9], a
+	ld [wcad9], a
 .asm_570d
 	pop af
 	ret
@@ -1064,16 +1151,16 @@ Func_56e0:
 Func_570f:
 	push af
 	push bc
-	ld a, [$cad4]
+	ld a, [wcad4]
 	ld c, a
 	ld a, c
-	cp $00
+	cp TRUE
 	jr nz, .asm_5737
 	call Func_2ae4
-	ld a, $01
-	ld [$cad4], a
+	ld a, FALSE
+	ld [wcad4], a
 	ld a, $00
-	ld [$cad6], a
+	ld [wcad6], a
 	ld a, $04
 	call SetPendingVBlankMode
 	call Func_581f
@@ -1090,25 +1177,25 @@ Func_570f:
 Func_573d:
 	push af
 	call Func_2ad9
-	ld a, $00
-	ld [$cad4], a
+	ld a, TRUE
+	ld [wcad4], a
 	pop af
 	ret
 
 Func_5748:
 	push af
 	push bc
-	ld a, [$cad4]
-	cp $00
+	ld a, [wcad4]
+	cp TRUE
 	jr nz, .asm_5779
-	ld a, [$cad9]
+	ld a, [wcad9]
 	ld c, a
-	ld a, [$cad8]
+	ld a, [wcad8]
 	cp c
 	jr nz, .asm_576b
-	ld a, [$cad7]
+	ld a, [wcad7]
 	ld b, a
-	ld a, [$cad5]
+	ld a, [wcad5]
 	cp b
 	jr z, .asm_5769
 	inc a
@@ -1116,24 +1203,24 @@ Func_5748:
 .asm_5769
 	jr .asm_5776
 .asm_576b
-	ld a, [$cad5]
+	ld a, [wcad5]
 	cp $04
 	jr z, .asm_5776
 	inc a
 	call Func_2aef
 .asm_5776
-	ld [$cad5], a
+	ld [wcad5], a
 .asm_5779
-	ld a, [$cad4]
-	cp $01
+	ld a, [wcad4]
+	cp FALSE
 	jr nz, .asm_578e
-	ld a, [$cad6]
+	ld a, [wcad6]
 	cp $00
 	jr nz, .asm_578b
 	inc a
 	call Func_2aef
 .asm_578b
-	ld [$cad6], a
+	ld [wcad6], a
 .asm_578e
 	pop bc
 	pop af
@@ -1141,27 +1228,27 @@ Func_5748:
 
 Func_5791:
 	push af
-	ld a, [$cad4]
-	cp $00
+	ld a, [wcad4]
+	cp TRUE
 	jr nz, .asm_57a7
-	ld a, [$cad5]
+	ld a, [wcad5]
 	cp $00
 	jr z, .asm_57a4
 	dec a
 	call Func_2aef
 .asm_57a4
-	ld [$cad5], a
+	ld [wcad5], a
 .asm_57a7
-	ld a, [$cad4]
-	cp $01
+	ld a, [wcad4]
+	cp FALSE
 	jr nz, .asm_57bc
-	ld a, [$cad6]
+	ld a, [wcad6]
 	cp $01
 	jr nz, .asm_57b9
 	dec a
 	call Func_2aef
 .asm_57b9
-	ld [$cad6], a
+	ld [wcad6], a
 .asm_57bc
 	pop af
 	ret
@@ -1170,32 +1257,32 @@ Func_57be:
 	push af
 	push bc
 	push de
-	ld a, [$cad4]
-	cp $00
+	ld a, [wcad4]
+	cp TRUE
 	jr nz, .asm_57fa
-	ld a, [$cad9]
+	ld a, [wcad9]
 	ld c, a
-	ld a, [$cad8]
+	ld a, [wcad8]
 	cp c
 	jr z, .asm_57fa
 	inc a
-	ld [$cad8], a
+	ld [wcad8], a
 	call Func_2aef
 	cp c
 	jr nz, .asm_57ea
-	ld a, [$cad7]
+	ld a, [wcad7]
 	ld d, a
-	ld a, [$cad5]
+	ld a, [wcad5]
 	cp d
 	jr c, .asm_57ea
 	ld a, d
-	ld [$cad5], a
+	ld [wcad5], a
 .asm_57ea
 	ld e, $05
-	ld a, [$cad8]
+	ld a, [wcad8]
 	cp c
 	jr nz, .asm_57f7
-	ld a, [$cad7]
+	ld a, [wcad7]
 	ld e, a
 	inc e
 .asm_57f7
@@ -1210,14 +1297,14 @@ Func_57fe:
 	push af
 	push bc
 	push de
-	ld a, [$cad4]
-	cp $00
+	ld a, [wcad4]
+	cp TRUE
 	jr nz, .asm_581b
-	ld a, [$cad8]
+	ld a, [wcad8]
 	cp $00
 	jr z, .asm_581b
 	dec a
-	ld [$cad8], a
+	ld [wcad8], a
 	call Func_2aef
 	ld e, $05
 	call Func_58bd
@@ -1232,8 +1319,8 @@ Func_581f:
 	push bc
 	push de
 	push hl
-	ld a, [$cad4]
-	cp $00
+	ld a, [wcad4]
+	cp TRUE
 	jr nz, .asm_584a
 	ld c, $00
 	ld a, $ff
@@ -1244,20 +1331,20 @@ Func_581f:
 	ld d, $10
 	call Func_123c
 	ld bc, $2
-	ld a, [$cad5]
+	ld a, [wcad5]
 	call Func_588d
 	ld d, $10
 	call Func_123c
 .asm_584a
-	ld a, [$cad4]
-	cp $01
+	ld a, [wcad4]
+	cp FALSE
 	jr nz, .asm_5888
 	ld c, $00
 	ld a, $ff
 	ld d, $10
 	call Func_123c
 	ld bc, $1
-	ld a, [$cad6]
+	ld a, [wcad6]
 	cp $02
 	jr z, .asm_5870
 	add $05
@@ -1272,7 +1359,7 @@ Func_581f:
 	call Func_123c
 .asm_587a
 	ld bc, $102
-	ld a, [$cad5]
+	ld a, [wcad5]
 	call Func_588d
 	ld d, $10
 	call Func_123c
@@ -1303,14 +1390,14 @@ Func_58a3:
 	push bc
 	push de
 	push hl
-	ld a, [$cad8]
+	ld a, [wcad8]
 	ld e, a
 	ld b, $05
 	call BTimesE
 	ld a, l
-	ld [$cada], a
+	ld [wcada + 0], a
 	ld a, h
-	ld [$cadb], a
+	ld [wcada + 1], a
 	pop hl
 	pop de
 	pop bc
@@ -1349,12 +1436,12 @@ Func_58bd:
 	add hl, bc
 	ld b, h
 	ld c, l
-	ld a, [$cada]
+	ld a, [wcada + 0]
 	add $01
-	ld [$cada], a
-	ld a, [$cadb]
+	ld [wcada + 0], a
+	ld a, [wcada + 1]
 	adc $00
-	ld [$cadb], a
+	ld [wcada + 1], a
 	ld a, e
 	and $01
 	jr nz, .asm_590e
@@ -1437,9 +1524,9 @@ Func_5976:
 	push bc
 	push de
 	push hl
-	ld a, [$cada]
+	ld a, [wcada + 0]
 	ld c, a
-	ld a, [$cadb]
+	ld a, [wcada + 1]
 	ld b, a
 	call Func_1508
 	call Func_111c
@@ -1449,7 +1536,7 @@ Func_5976:
 	ld a, [de]
 	inc de
 	call ProcessChar
-	ld a, [$cacf]
+	ld a, [wCharHeadTile]
 	call AddByteToVBlankStruct
 	dec c
 	jr nz, .asm_598d
@@ -1465,22 +1552,22 @@ Func_59a0:
 	ld a, $80
 	call AddByteToVBlankStruct
 	call AddByteToVBlankStruct
-	ld a, $00
-	call Func_42d0
-	ld a, [$cada]
+	ld a, TEXTLOAD_NUMBER
+	call SetTextLoadMode
+	ld a, [wcada + 0]
 	add $01
-	ld [$cadc], a
-	ld a, [$cadb]
+	ld [wHexNumber + 0], a
+	ld a, [wcada + 1]
 	adc $00
-	ld [$cadd], a
-	call Func_142c
-	call Func_42c5
-	call Func_42ec
-	ld a, [$caba]
+	ld [wHexNumber + 1], a
+	call ConvertToDecimalRepresentation
+	call SetTextArg
+	call LoadText
+	ld a, [wTextBuffer + $1]
 	call AddByteToVBlankStruct
-	ld a, [$cabb]
+	ld a, [wTextBuffer + $2]
 	call AddByteToVBlankStruct
-	ld a, [$cabc]
+	ld a, [wTextBuffer + $3]
 	call AddByteToVBlankStruct
 	ld a, $80
 	call AddByteToVBlankStruct
@@ -1494,11 +1581,11 @@ Func_59e5:
 	push bc
 	push de
 	push hl
-	ld a, $04
-	call Func_42d0
-	ld a, [$cada]
+	ld a, TEXTLOAD_CARD_NAME
+	call SetTextLoadMode
+	ld a, [wcada + 0]
 	ld c, a
-	ld a, [$cadb]
+	ld a, [wcada + 1]
 	ld b, a
 	call Func_1508
 	call Func_111c
@@ -1507,20 +1594,20 @@ Func_59e5:
 .asm_5a01
 	ld a, [hli]
 	call ProcessChar
-	ld a, [wCurChar]
+	ld a, [wCharTile]
 	call AddByteToVBlankStruct
 	dec c
 	jr nz, .asm_5a01
 	ld a, $80
 	call AddByteToVBlankStruct
-	ld a, [$cada]
+	ld a, [wcada + 0]
 	ld c, a
-	ld a, [$cadb]
+	ld a, [wcada + 1]
 	ld b, a
 	call Func_1542
-	ld a, [$cabb]
+	ld a, [wTextBuffer + $2]
 	call AddByteToVBlankStruct
-	ld a, [$cabc]
+	ld a, [wTextBuffer + $3]
 	call AddByteToVBlankStruct
 	ld a, $80
 	call AddByteToVBlankStruct
@@ -1555,37 +1642,37 @@ Func_5a3a:
 	call AddByteToVBlankStruct
 	dec c
 	jr nz, .asm_5a61
-	ld a, $00
-	call Func_42d0
-	ld a, [$cad8]
+	ld a, TEXTLOAD_NUMBER
+	call SetTextLoadMode
+	ld a, [wcad8]
 	add $01
-	ld [$cadc], a
+	ld [wHexNumber + 0], a
 	ld a, $00
-	ld [$cadd], a
-	call Func_142c
-	call Func_42c5
-	call Func_42ec
-	ld a, [$caba]
+	ld [wHexNumber + 1], a
+	call ConvertToDecimalRepresentation
+	call SetTextArg
+	call LoadText
+	ld a, [wTextBuffer + $1]
 	call AddByteToVBlankStruct
-	ld a, [$cabb]
+	ld a, [wTextBuffer + $2]
 	call AddByteToVBlankStruct
-	ld a, [$cabc]
+	ld a, [wTextBuffer + $3]
 	call AddByteToVBlankStruct
 	ld a, $81
 	call AddByteToVBlankStruct
-	ld a, [$cad9]
+	ld a, [wcad9]
 	add $01
-	ld [$cadc], a
+	ld [wHexNumber + 0], a
 	ld a, $00
-	ld [$cadd], a
-	call Func_142c
-	call Func_42c5
-	call Func_42ec
-	ld a, [$caba]
+	ld [wHexNumber + 1], a
+	call ConvertToDecimalRepresentation
+	call SetTextArg
+	call LoadText
+	ld a, [wTextBuffer + $1]
 	call AddByteToVBlankStruct
-	ld a, [$cabb]
+	ld a, [wTextBuffer + $2]
 	call AddByteToVBlankStruct
-	ld a, [$cabc]
+	ld a, [wTextBuffer + $3]
 	call AddByteToVBlankStruct
 	ld a, $80
 	call AddByteToVBlankStruct
@@ -1980,7 +2067,7 @@ Func_5d0d:
 	ld a, $04
 	call SetPendingVBlankMode
 	ld b, $00
-	ld a, [$cad4]
+	ld a, [wcad4]
 	ld c, a
 	ld hl, $5d2e
 	add hl, bc
@@ -2036,7 +2123,7 @@ Func_5d66:
 
 Func_5d76:
 	push af
-	ld a, [$cad6]
+	ld a, [wcad6]
 	cp $00
 	jr nz, .asm_5d8f
 	ld a, [$ce00]
@@ -2064,13 +2151,13 @@ Func_5da0:
 	push af
 	push bc
 	push hl
-	ld a, [$cad5]
+	ld a, [wcad5]
 	ld c, a
 	call Func_58a3
-	ld a, [$cada]
+	ld a, [wcada + 0]
 	add c
 	ld c, a
-	ld a, [$cadb]
+	ld a, [wcada + 1]
 	adc $00
 	ld b, a
 	call Func_5af2
@@ -2080,14 +2167,14 @@ Func_5da0:
 	farcall LoadCardData
 	farcall Func_14036
 	farcall Func_14185
-	ld a, $00
-	ld [$cad4], a
+	ld a, TRUE
+	ld [wcad4], a
 	call Func_551f
 	jr .asm_5dda
 .asm_5dd2
 	call Func_2afa
-	ld a, $00
-	ld [$cad4], a
+	ld a, TRUE
+	ld [wcad4], a
 .asm_5dda
 	pop hl
 	pop bc
@@ -2098,13 +2185,13 @@ Func_5dde:
 	push af
 	push bc
 	push hl
-	ld a, [$cad5]
+	ld a, [wcad5]
 	ld c, a
 	call Func_58a3
-	ld a, [$cada]
+	ld a, [wcada + 0]
 	add c
 	ld c, a
-	ld a, [$cadb]
+	ld a, [wcada + 1]
 	adc $00
 	ld b, a
 	call Func_5af2
@@ -2114,14 +2201,14 @@ Func_5dde:
 	farcall LoadCardData
 	farcall Func_14036
 	farcall Func_14185
-	ld a, $00
-	ld [$cad4], a
+	ld a, TRUE
+	ld [wcad4], a
 	call Func_6101
 	jr .asm_5e18
 .asm_5e10
 	call Func_2afa
-	ld a, $00
-	ld [$cad4], a
+	ld a, TRUE
+	ld [wcad4], a
 .asm_5e18
 	pop hl
 	pop bc
@@ -2133,11 +2220,11 @@ Func_5e1c:
 	push bc
 	push de
 	push hl
-	ld a, [$cad8]
+	ld a, [wcad8]
 	ld b, a
 	ld e, $05
 	call BTimesE
-	ld a, [$cad5]
+	ld a, [wcad5]
 	add l
 	ld c, a
 	ld a, h
@@ -2152,10 +2239,10 @@ Func_5e1c:
 .asm_5e41
 	call Func_2afa
 .asm_5e44
+	ld a, TRUE
+	ld [wcad4], a
 	ld a, $00
-	ld [$cad4], a
-	ld a, $00
-	ld [$cad6], a
+	ld [wcad6], a
 	ld a, $04
 	call SetPendingVBlankMode
 	call Func_581f
@@ -2175,11 +2262,11 @@ Func_5e66:
 	push de
 	push hl
 	call Func_2ae4
-	ld a, [$cad8]
+	ld a, [wcad8]
 	ld b, a
 	ld e, $05
 	call BTimesE
-	ld a, [$cad5]
+	ld a, [wcad5]
 	add l
 	ld c, a
 	ld a, h
@@ -2194,10 +2281,10 @@ Func_5e66:
 .asm_5e8e
 	call Func_2afa
 .asm_5e91
+	ld a, TRUE
+	ld [wcad4], a
 	ld a, $00
-	ld [$cad4], a
-	ld a, $00
-	ld [$cad6], a
+	ld [wcad6], a
 	ld a, $04
 	call SetPendingVBlankMode
 	call Func_581f
@@ -2218,9 +2305,9 @@ Func_5eb3:
 	push hl
 	ld a, $00
 	call Func_1842
-	ld a, [wLoadedCardID]
+	ld a, [wLoadedCardID + 0]
 	call Func_1842
-	ld a, [$cd10]
+	ld a, [wLoadedCardID + 1]
 	call Func_1842
 	call SetJobFlag
 	ld bc, $cde6
@@ -2292,9 +2379,9 @@ Func_5f37:
 	push hl
 	ld a, $00
 	call Func_1842
-	ld a, [wLoadedCardID]
+	ld a, [wLoadedCardID + 0]
 	call Func_1842
-	ld a, [$cd10]
+	ld a, [wLoadedCardID + 1]
 	call Func_1842
 	call SetJobFlag
 	ld bc, $cde6
@@ -2329,9 +2416,9 @@ Func_5f79:
 	push hl
 	ld a, $00
 	call Func_1842
-	ld a, [wLoadedCardID]
+	ld a, [wLoadedCardID + 0]
 	call Func_1842
-	ld a, [$cd10]
+	ld a, [wLoadedCardID + 1]
 	call Func_1842
 	call SetJobFlag
 	ld bc, $cde6
@@ -2669,36 +2756,36 @@ Func_616c:
 	push bc
 	push hl
 	hlbgcoord 12, 1
-	ld a, $00
-	call Func_42d0
-	ld a, [$cad8]
+	ld a, TEXTLOAD_NUMBER
+	call SetTextLoadMode
+	ld a, [wcad8]
 	add $01
-	ld [$cadc], a
+	ld [wHexNumber + 0], a
 	ld a, $00
-	ld [$cadd], a
-	call Func_142c
-	call Func_42c5
-	call Func_42ec
-	ld a, [$caba]
+	ld [wHexNumber + 1], a
+	call ConvertToDecimalRepresentation
+	call SetTextArg
+	call LoadText
+	ld a, [wTextBuffer + $1]
 	ld [hli], a
-	ld a, [$cabb]
+	ld a, [wTextBuffer + $2]
 	ld [hli], a
-	ld a, [$cabc]
+	ld a, [wTextBuffer + $3]
 	ld [hli], a
 	inc hl
-	ld a, [$cad9]
+	ld a, [wcad9]
 	add $01
-	ld [$cadc], a
+	ld [wHexNumber + 0], a
 	ld a, $00
-	ld [$cadd], a
-	call Func_142c
-	call Func_42c5
-	call Func_42ec
-	ld a, [$caba]
+	ld [wHexNumber + 1], a
+	call ConvertToDecimalRepresentation
+	call SetTextArg
+	call LoadText
+	ld a, [wTextBuffer + $1]
 	ld [hli], a
-	ld a, [$cabb]
+	ld a, [wTextBuffer + $2]
 	ld [hli], a
-	ld a, [$cabc]
+	ld a, [wTextBuffer + $3]
 	ld [hli], a
 	pop hl
 	pop bc
@@ -2711,17 +2798,17 @@ Func_61c0:
 	push de
 	push hl
 	call Func_58a3
-	ld a, [$cada]
+	ld a, [wcada + 0]
 	ld [$cea2], a
-	ld a, [$cadb]
+	ld a, [wcada + 1]
 	ld [$cea3], a
 	ld d, $05
-	ld a, [$cad8]
+	ld a, [wcad8]
 	ld c, a
-	ld a, [$cad9]
+	ld a, [wcad9]
 	cp c
 	jr nz, .asm_61e4
-	ld a, [$cad7]
+	ld a, [wcad7]
 	ld d, a
 	inc d
 .asm_61e4
@@ -2761,22 +2848,22 @@ Func_620c:
 	rl d
 	hlbgcoord 2, 3
 	add hl, de
-	ld a, $00
-	call Func_42d0
+	ld a, TEXTLOAD_NUMBER
+	call SetTextLoadMode
 	ld a, [$cea2]
 	add $01
-	ld [$cadc], a
+	ld [wHexNumber + 0], a
 	ld a, [$cea3]
 	adc $00
-	ld [$cadd], a
-	call Func_142c
-	call Func_42c5
-	call Func_42ec
-	ld a, [$caba]
+	ld [wHexNumber + 1], a
+	call ConvertToDecimalRepresentation
+	call SetTextArg
+	call LoadText
+	ld a, [wTextBuffer + $1]
 	ld [hli], a
-	ld a, [$cabb]
+	ld a, [wTextBuffer + $2]
 	ld [hli], a
-	ld a, [$cabc]
+	ld a, [wTextBuffer + $3]
 	ld [hli], a
 	pop hl
 	pop de
@@ -2808,7 +2895,7 @@ Func_624d:
 	ld a, [de]
 	inc de
 	call ProcessChar
-	ld a, [$cacf]
+	ld a, [wCharHeadTile]
 	ld [hli], a
 	dec c
 	jr nz, .asm_6272
@@ -2820,7 +2907,7 @@ Func_624d:
 	ld a, [de]
 	inc de
 	call ProcessChar
-	ld a, [wCurChar]
+	ld a, [wCharTile]
 	ld [hli], a
 	dec c
 	jr nz, .asm_6287
@@ -2847,9 +2934,9 @@ Func_6298:
 	ld a, [$cea3]
 	ld b, a
 	call Func_1542
-	ld a, [$cabb]
+	ld a, [wTextBuffer + $2]
 	ld [hli], a
-	ld a, [$cabc]
+	ld a, [wTextBuffer + $3]
 	ld [hli], a
 	pop hl
 	pop de

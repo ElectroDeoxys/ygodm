@@ -301,7 +301,7 @@ Func_c24d:
 	push af
 	ld a, VBLANK_0E
 	call SetPendingVBlankMode
-	call Func_d58c
+	call PrintActiveField
 	call RequestVBlankMode
 	call WaitForVBlank
 	pop af
@@ -366,33 +366,33 @@ Func_c2c9:
 	push bc
 	push hl
 	hlbgcoord 12, 1
-	ld a, $00
-	farcall Func_42d0
+	ld a, TEXTLOAD_NUMBER
+	farcall SetTextLoadMode
 	ld a, [$cc56]
 	add $01
-	ld [$cadc], a
+	ld [wHexNumber + 0], a
 	ld a, $00
-	ld [$cadd], a
-	call Func_142c
-	farcall Func_42c5
-	farcall Func_42ec
-	ld a, [$caba]
+	ld [wHexNumber + 1], a
+	call ConvertToDecimalRepresentation
+	farcall SetTextArg
+	farcall LoadText
+	ld a, [wTextBuffer + $1]
 	ld [hli], a
-	ld a, [$cabb]
+	ld a, [wTextBuffer + $2]
 	ld [hli], a
-	ld a, [$cabc]
+	ld a, [wTextBuffer + $3]
 	ld [hli], a
 	inc hl
 	ld a, [$cc57]
 	add $01
-	ld [$cadc], a
+	ld [wHexNumber + 0], a
 	ld a, $00
-	ld [$cadd], a
-	call Func_142c
-	farcall Func_42c5
-	farcall Func_42ec
+	ld [wHexNumber + 1], a
+	call ConvertToDecimalRepresentation
+	farcall SetTextArg
+	farcall LoadText
 	inc hl
-	ld a, [$cabc]
+	ld a, [wTextBuffer + $3]
 	ld [hli], a
 	pop hl
 	pop bc
@@ -449,25 +449,25 @@ Func_c351:
 	rl d
 	hlbgcoord 2, 3
 	add hl, de
-	ld a, $00
-	farcall Func_42d0
+	ld a, TEXTLOAD_NUMBER
+	farcall SetTextLoadMode
 	ld a, [$cc51]
 	call SetPlayerDeckIndex
 	call GetPlayerDeckCard
 	ld a, c
 	add $01
-	ld [$cadc], a
+	ld [wHexNumber + 0], a
 	ld a, b
 	adc $00
-	ld [$cadd], a
-	call Func_142c
-	farcall Func_42c5
-	farcall Func_42ec
-	ld a, [$caba]
+	ld [wHexNumber + 1], a
+	call ConvertToDecimalRepresentation
+	farcall SetTextArg
+	farcall LoadText
+	ld a, [wTextBuffer + $1]
 	ld [hli], a
-	ld a, [$cabb]
+	ld a, [wTextBuffer + $2]
 	ld [hli], a
-	ld a, [$cabc]
+	ld a, [wTextBuffer + $3]
 	ld [hli], a
 	pop hl
 	pop de
@@ -498,7 +498,7 @@ Func_c397:
 	ld a, [de]
 	inc de
 	call ProcessChar
-	ld a, [$cacf]
+	ld a, [wCharHeadTile]
 	ld [hli], a
 	dec c
 	jr nz, .asm_c3bd
@@ -510,7 +510,7 @@ Func_c397:
 	ld a, [de]
 	inc de
 	call ProcessChar
-	ld a, [wCurChar]
+	ld a, [wCharTile]
 	ld [hli], a
 	dec c
 	jr nz, .asm_c3d2
@@ -2199,9 +2199,9 @@ Func_d2e9:
 	cp $02
 	jr nz, .asm_d342
 	call Func_cd9a
-	ld a, [wLoadedCardID]
+	ld a, [wLoadedCardID + 0]
 	ld c, a
-	ld a, [$cd10]
+	ld a, [wLoadedCardID + 1]
 	ld b, a
 	call IsValidCard
 	call Func_d366
@@ -2237,9 +2237,9 @@ Func_d366:
 	push bc
 	push de
 	call Func_cd9a
-	ld a, [wLoadedCardID]
+	ld a, [wLoadedCardID + 0]
 	ld c, a
-	ld a, [$cd10]
+	ld a, [wLoadedCardID + 1]
 	ld b, a
 	call IsValidCard
 	cp TRUE
@@ -2402,10 +2402,10 @@ Func_d447:
 
 Func_d47b:
 	call Func_d48e
-	call Func_d4d7
-	call Func_d50e
+	call PrintLoadedCardAttack
+	call PrintLoadedCardDefense
 	call PrintDuelistsLP
-	call Func_d58c
+	call PrintActiveField
 	call Func_d5db
 	ret
 
@@ -2428,7 +2428,7 @@ Func_d48e:
 	ld a, [de]
 	inc de
 	call ProcessChar
-	ld a, [$cacf]
+	ld a, [wCharHeadTile]
 	call AddByteToVBlankStruct
 	dec c
 	jr nz, .asm_d4ab
@@ -2440,7 +2440,7 @@ Func_d48e:
 	ld a, [de]
 	inc de
 	call ProcessChar
-	ld a, [wCurChar]
+	ld a, [wCharTile]
 	call AddByteToVBlankStruct
 	dec c
 	jr nz, .asm_d4c4
@@ -2450,28 +2450,29 @@ Func_d48e:
 	pop af
 	ret
 
-Func_d4d7:
+; prints loaded card's attack in coordinates (5, 8)
+PrintLoadedCardAttack:
 	push af
 	push bc
 	push de
 	push hl
-	ld a, $00
-	farcall Func_42d0
+	ld a, TEXTLOAD_NUMBER
+	farcall SetTextLoadMode
 	ld a, [wLoadedCardAtk + 0]
 	ld c, a
 	ld a, [wLoadedCardAtk + 1]
 	ld b, a
-	farcall Func_42c5
-	farcall Func_42ec
+	farcall SetTextArg
+	farcall LoadText
 	ld a, b
-	cp $ff
+	cp -1
 	jr nz, .asm_d4f6
 	farcall Func_5313
 .asm_d4f6
 	bcbgcoord 5, 8
 	call AddWordToVBlankStruct
 	ld de, wTextBuffer
-	ld c, $04
+	ld c, 4 ; digits
 .asm_d501
 	ld a, [de]
 	inc de
@@ -2484,28 +2485,29 @@ Func_d4d7:
 	pop af
 	ret
 
-Func_d50e:
+; prints loaded card's defense in coordinates (5, 8)
+PrintLoadedCardDefense:
 	push af
 	push bc
 	push de
 	push hl
-	ld a, $00
-	farcall Func_42d0
+	ld a, TEXTLOAD_NUMBER
+	farcall SetTextLoadMode
 	ld a, [wLoadedCardDef + 0]
 	ld c, a
 	ld a, [wLoadedCardDef + 1]
 	ld b, a
-	farcall Func_42c5
-	farcall Func_42ec
+	farcall SetTextArg
+	farcall LoadText
 	ld a, b
-	cp $ff
+	cp -1
 	jr nz, .asm_d52d
 	farcall Func_5313
 .asm_d52d
 	bcbgcoord 5, 9
 	call AddWordToVBlankStruct
 	ld de, wTextBuffer
-	ld c, $04
+	ld c, 4 ; digits
 .asm_d538
 	ld a, [de]
 	inc de
@@ -2526,8 +2528,8 @@ PrintDuelistsLP:
 	ld c, a
 	ld a, [wPlayerLP + 1]
 	ld b, a
-	farcall Func_42c5
-	farcall Func_42ec
+	farcall SetTextArg
+	farcall LoadText
 	bcbgcoord 5, 16
 	call AddWordToVBlankStruct
 	ld hl, wTextBuffer
@@ -2541,8 +2543,8 @@ PrintDuelistsLP:
 	ld c, a
 	ld a, [wOppLP + 1]
 	ld b, a
-	farcall Func_42c5
-	farcall Func_42ec
+	farcall SetTextArg
+	farcall LoadText
 	bcbgcoord 5, 1
 	call AddWordToVBlankStruct
 	ld hl, wTextBuffer
@@ -2557,7 +2559,8 @@ PrintDuelistsLP:
 	pop af
 	ret
 
-Func_d58c:
+; prints active field to coordinates (1, 4)
+PrintActiveField:
 	push af
 	push bc
 	push de
@@ -2566,10 +2569,10 @@ Func_d58c:
 	ld b, $00
 	ld a, [wActiveField]
 	ld c, a
-	farcall Func_42c5
-	ld a, $02
-	farcall Func_42d0
-	farcall Func_42ec
+	farcall SetTextArg
+	ld a, TEXTLOAD_FIELD
+	farcall SetTextLoadMode
+	farcall LoadText
 	bcbgcoord 1, 3
 	call AddWordToVBlankStruct
 	ld de, wTextBuffer
@@ -2578,7 +2581,7 @@ Func_d58c:
 	ld a, [de]
 	inc de
 	call ProcessChar
-	ld a, [$cacf]
+	ld a, [wCharHeadTile]
 	call AddByteToVBlankStruct
 	dec c
 	jr nz, .asm_d5af
@@ -2590,7 +2593,7 @@ Func_d58c:
 	ld a, [de]
 	inc de
 	call ProcessChar
-	ld a, [wCurChar]
+	ld a, [wCharTile]
 	call AddByteToVBlankStruct
 	dec c
 	jr nz, .asm_d5c8

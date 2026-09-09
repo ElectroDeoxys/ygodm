@@ -42,7 +42,7 @@ Func_3c027:
 	ld [wcd46], a
 	jr .asm_3c04e
 .asm_3c038
-	call .ReadNextTextChar
+	call .ReadNextDialogueChar
 	ld [wcd46], a
 	call Func_3c07e
 	cp TRUE
@@ -55,15 +55,15 @@ Func_3c027:
 	pop bc
 	ret
 
-.ReadNextTextChar:
+.ReadNextDialogueChar:
 	push bc
 	push hl
 	ld b, $00
-	ld a, [wTextID]
+	ld a, [wDialogueID]
 	ld c, a
 	sla c
 	rl b
-	ld hl, TextPointers
+	ld hl, DialoguePointers
 	add hl, bc
 	ld a, [hli]
 	ld h, [hl]

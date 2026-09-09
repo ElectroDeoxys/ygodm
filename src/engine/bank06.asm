@@ -197,14 +197,14 @@ Func_1921e:
 	push bc
 	push de
 	push hl
-	ld a, $0a
-	farcall Func_42d0
+	ld a, TEXTLOAD_0A
+	farcall SetTextLoadMode
 	ld a, [$ced4]
 	ld c, a
 	ld a, [$ced5]
 	ld b, a
-	farcall Func_42c5
-	farcall Func_42ec
+	farcall SetTextArg
+	farcall LoadText
 	hlbgcoord 4, 16
 	ld de, wTextBuffer
 	ld c, $04
@@ -225,14 +225,14 @@ Func_19248:
 	push bc
 	push de
 	push hl
-	ld a, $0a
-	farcall Func_42d0
+	ld a, TEXTLOAD_0A
+	farcall SetTextLoadMode
 	ld a, [$cedf]
 	ld c, a
 	ld a, [$cee0]
 	ld b, a
-	farcall Func_42c5
-	farcall Func_42ec
+	farcall SetTextArg
+	farcall LoadText
 	hlbgcoord 14, 16
 	ld de, wTextBuffer
 	ld c, $04
@@ -364,7 +364,7 @@ Func_19330:
 	ld a, [de]
 	inc de
 	call ProcessChar
-	ld a, [$cacf]
+	ld a, [wCharHeadTile]
 	call AddByteToVBlankStruct
 	dec c
 	jr nz, .asm_1934d
@@ -376,7 +376,7 @@ Func_19330:
 	ld a, [de]
 	inc de
 	call ProcessChar
-	ld a, [wCurChar]
+	ld a, [wCharTile]
 	farcall LoadCharTileToVBlankStruct
 	dec c
 	jr nz, .asm_19366
@@ -391,14 +391,14 @@ Func_19379:
 	push bc
 	push de
 	push hl
-	ld a, $0a
-	farcall Func_42d0
+	ld a, TEXTLOAD_0A
+	farcall SetTextLoadMode
 	ld a, [$ced8]
 	ld c, a
 	ld a, [$ced9]
 	ld b, a
-	farcall Func_42c5
-	farcall Func_42ec
+	farcall SetTextArg
+	farcall LoadText
 	ld a, b
 	cp $ff
 	jr nz, .asm_19398
@@ -434,14 +434,14 @@ Func_193bf:
 	push bc
 	push de
 	push hl
-	ld a, $0a
-	farcall Func_42d0
+	ld a, TEXTLOAD_0A
+	farcall SetTextLoadMode
 	ld a, [$ceda]
 	ld c, a
 	ld a, [$cedb]
 	ld b, a
-	farcall Func_42c5
-	farcall Func_42ec
+	farcall SetTextArg
+	farcall LoadText
 	ld a, b
 	cp $ff
 	jr nz, .asm_193de
@@ -581,7 +581,7 @@ Func_194b6:
 	ld a, [de]
 	inc de
 	call ProcessChar
-	ld a, [$cacf]
+	ld a, [wCharHeadTile]
 	call AddByteToVBlankStruct
 	dec c
 	jr nz, .asm_194d3
@@ -593,7 +593,7 @@ Func_194b6:
 	ld a, [de]
 	inc de
 	call ProcessChar
-	ld a, [wCurChar]
+	ld a, [wCharTile]
 	farcall LoadCharTileToVBlankStruct
 	dec c
 	jr nz, .asm_194ec
@@ -608,14 +608,14 @@ Func_194ff:
 	push bc
 	push de
 	push hl
-	ld a, $0a
-	farcall Func_42d0
+	ld a, TEXTLOAD_0A
+	farcall SetTextLoadMode
 	ld a, [$cee3]
 	ld c, a
 	ld a, [$cee4]
 	ld b, a
-	farcall Func_42c5
-	farcall Func_42ec
+	farcall SetTextArg
+	farcall LoadText
 	ld a, b
 	cp $ff
 	jr nz, .asm_1951e
@@ -651,14 +651,14 @@ Func_19545:
 	push bc
 	push de
 	push hl
-	ld a, $0a
-	farcall Func_42d0
+	ld a, TEXTLOAD_0A
+	farcall SetTextLoadMode
 	ld a, [$cee5]
 	ld c, a
 	ld a, [$cee6]
 	ld b, a
-	farcall Func_42c5
-	farcall Func_42ec
+	farcall SetTextArg
+	farcall LoadText
 	ld a, b
 	cp $ff
 	jr nz, .asm_19564
@@ -748,9 +748,9 @@ Func_195a4:
 	cp $01
 	jr z, .asm_19622
 	ld a, $01
-	ld [$cadc], a
+	ld [wHexNumber + 0], a
 	ld a, $00
-	ld [$cadd], a
+	ld [wHexNumber + 1], a
 	ld a, $00
 	ld [$cade], a
 	ld a, c
@@ -762,9 +762,9 @@ Func_195a4:
 	push de
 	call Func_13db
 	pop de
-	ld a, [$cadc]
+	ld a, [wHexNumber + 0]
 	ld c, a
-	ld a, [$cadd]
+	ld a, [wHexNumber + 1]
 	ld b, a
 	dec e
 	jr nz, .asm_195e0
@@ -787,10 +787,10 @@ Func_1962f:
 	push hl
 	ld a, $14
 	call SetPendingVBlankMode
-	ld a, $0a
-	farcall Func_42d0
-	farcall Func_42c5
-	farcall Func_42ec
+	ld a, TEXTLOAD_0A
+	farcall SetTextLoadMode
+	farcall SetTextArg
+	farcall LoadText
 	ld a, b
 	cp $ff
 	jr nz, .asm_1964b
@@ -865,9 +865,9 @@ Func_19678:
 	cp $01
 	jr z, .asm_196f6
 	ld a, $01
-	ld [$cadc], a
+	ld [wHexNumber + 0], a
 	ld a, $00
-	ld [$cadd], a
+	ld [wHexNumber + 1], a
 	ld a, $00
 	ld [$cade], a
 	ld a, c
@@ -879,9 +879,9 @@ Func_19678:
 	push de
 	call Func_13db
 	pop de
-	ld a, [$cadc]
+	ld a, [wHexNumber + 0]
 	ld c, a
-	ld a, [$cadd]
+	ld a, [wHexNumber + 1]
 	ld b, a
 	dec e
 	jr nz, .asm_196b4
@@ -904,10 +904,10 @@ Func_19703:
 	push hl
 	ld a, $14
 	call SetPendingVBlankMode
-	ld a, $0a
-	farcall Func_42d0
-	farcall Func_42c5
-	farcall Func_42ec
+	ld a, TEXTLOAD_0A
+	farcall SetTextLoadMode
+	farcall SetTextArg
+	farcall LoadText
 	ld a, b
 	cp $ff
 	jr nz, .asm_1971f

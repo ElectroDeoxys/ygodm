@@ -14,16 +14,16 @@ MACRO? done
 	db "<DONE>"
 ENDM
 
-MACRO? text_ptr
+MACRO? dialogue_ptr
 	dw \1
 	const \1_
 EXPORT \1_
 ENDM
 
-MACRO? ldtx
+MACRO? lddlg
 	ld \1, \2_
 ENDM
 
-MACRO? tx
+MACRO? dlg
 	db \1_
 ENDM

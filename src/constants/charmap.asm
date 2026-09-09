@@ -131,6 +131,7 @@
 	CHARMAP ")",         $7c
 
 	; characters with diacritics
+DEF DIACRITIC_CHAR EQU $7d
 	CHARMAP "ヴ",        $7d
 	CHARMAP "が",        $7e
 	CHARMAP "ぎ",        $7f
@@ -194,3 +195,19 @@ DEF CONTROL_CHAR EQU $b0
 	CHARMAP "<DONE>",    $b4
 	CHARMAP "<B5>",      $b5
 	CHARMAP "<B6>",      $b6
+
+	; text box tiles
+	const_def $bb
+	const SYM_WHITE              ; $bb
+	const SYM_BLACK              ; $bc
+	const SYM_BAR_HORIZONTAL     ; $bd
+	const SYM_BAR_DAKUTEN        ; $be
+	const SYM_BAR_HANDAKUTEN     ; $bf
+	const SYM_CORNER_LOWER_RIGHT ; $c0
+	const SYM_CORNER_LOWER_LEFT  ; $c1
+	const SYM_BAR_LEFT           ; $c2
+	const SYM_BAR_RIGHT          ; $c3
+	const SYM_CORNER_UPPER_RIGHT ; $c4
+	const SYM_CORNER_UPPER_LEFT  ; $c5
+	const SYM_DAKUTEN            ; $c6
+	const SYM_HANDAKUTEN         ; $c7
