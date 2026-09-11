@@ -34,7 +34,7 @@ Func_14036:
 	call Func_101d
 	call DisableLCD
 	ld hl, $406e
-	call Func_10d9
+	call SetScreenConfig
 	call Func_12d2
 	farcall LoadFontToVTiles2
 	farcall Func_28fae
@@ -65,7 +65,7 @@ Func_14078:
 	call Func_1c1d
 	ld bc, NULL
 	call Func_1c12
-	ld a, $0a
+	ld a, VBLANK_0A
 	call SetPendingVBlankMode
 	call Func_1282
 	farcall Func_5ff2
@@ -216,18 +216,27 @@ Func_14185:
 	push bc
 	push de
 	push hl
+.loop
 	call Func_141a8
 	ld b, $00
 	ld c, a
-	ld hl, $41a4
+	ld hl, .Jumptable
 	add hl, bc
 	ld a, [hli]
 	ld h, [hl]
 	ld l, a
 	call_hl
-; 0x1419b
+	cp $01
+	jr nz, .loop
+	pop hl
+	pop de
+	pop bc
+	pop af
+	ret
 
-SECTION "Bank 5@41a8", ROMX[$41a8], BANK[$5]
+.Jumptable:
+	dw Func_141ce
+	dw Func_141db
 
 Func_141a8:
 	push bc
@@ -254,7 +263,23 @@ Func_141a8:
 	ret
 ; 0x141c6
 
-SECTION "Bank 5@41e9", ROMX[$41e9], BANK[$5]
+SECTION "Bank 5@41ce", ROMX[$41ce], BANK[$5]
+
+Func_141ce:
+	ld a, VBLANK_02
+	call SetPendingVBlankMode
+	call RequestVBlankMode
+	call WaitForVBlank
+	xor a
+	ret
+
+Func_141db:
+	ld a, VBLANK_02
+	call SetPendingVBlankMode
+	call RequestVBlankMode
+	call WaitForVBlank
+	ld a, $01
+	ret
 
 Func_141e9:
 	push af
@@ -853,7 +878,7 @@ Func_14731:
 	sub $b0
 	ld c, a
 	sla c
-	ld hl, $4757
+	ld hl, .Jumptable
 	add hl, bc
 	ld a, [hli]
 	ld h, [hl]
@@ -864,9 +889,13 @@ Func_14731:
 	pop bc
 	pop af
 	ret
-; 0x14757
 
-SECTION "Bank 5@4761", ROMX[$4761], BANK[$5]
+.Jumptable:
+	dw Func_147b0
+	dw Func_147d4
+	dw Func_14812
+	dw Func_1481a
+	dw Func_1482c
 
 Func_14761:
 	push af
@@ -936,9 +965,61 @@ Func_147b0:
 .asm_147d2
 	pop af
 	ret
-; 0x147d4
 
-SECTION "Bank 5@4830", ROMX[$4830], BANK[$5]
+Func_147d4:
+	push af
+	ld a, [$cf41]
+	cp $01
+	jr nz, .asm_147e6
+	ld a, $00
+	ld [$cf1c], a
+	call Func_14f90
+	jr .asm_14810
+.asm_147e6
+	cp $13
+	jr nz, .asm_147fc
+	ld a, $00
+	ld [$cf45], a
+	ld a, $01
+	ld [$cf46], a
+	call Func_14830
+	call Func_146ef
+	jr .asm_14810
+.asm_147fc
+	cp $12
+	jr nz, .asm_14810
+	ld a, $00
+	ld [$cf45], a
+	ld a, $00
+	ld [$cf46], a
+	call Func_14830
+	call Func_146ef
+.asm_14810
+	pop af
+	ret
+
+Func_14812:
+	push af
+	ld a, $00
+	ld [$cf1c], a
+	pop af
+	ret
+
+Func_1481a:
+	push af
+	ld a, [$cf41]
+	cp $01
+	jr nz, .asm_1482a
+	ld a, $00
+	ld [$cf1c], a
+	call Func_14f9d
+.asm_1482a
+	pop af
+	ret
+
+Func_1482c:
+	call Func_14faa
+	ret
 
 Func_14830:
 	push af
@@ -1194,7 +1275,32 @@ Func_14f5a:
 	ret
 ; 0x14f88
 
-SECTION "Bank 5@4fb2", ROMX[$4fb2], BANK[$5]
+SECTION "Bank 5@4f90", ROMX[$4f90], BANK[$5]
+
+Func_14f90:
+	push af
+	ld a, $04
+	ld [$cf48], a
+	ld a, $01
+	ld [$cf4d], a
+	pop af
+	ret
+
+Func_14f9d:
+	push af
+	ld a, $02
+	ld [$cf48], a
+	ld a, $01
+	ld [$cf4d], a
+	pop af
+	ret
+
+Func_14faa:
+	push af
+	ld a, $05
+	ld [$cf48], a
+	pop af
+	ret
 
 Func_14fb2:
 	call Func_14fb9

@@ -13,11 +13,11 @@ Func_3000e:
 	push bc
 	push de
 	push hl
-	ld hl, $4055
+	ld hl, Gfx_30055
 	ld de, vTiles2
-	ld b, $80
+	ld b, $80 ; tiles
 .asm_3001a
-	ld c, $10
+	ld c, TILE_SIZE
 .asm_3001c
 	ld a, [hli]
 	ld [de], a
@@ -27,9 +27,9 @@ Func_3000e:
 	dec b
 	jr nz, .asm_3001a
 	ld de, vTiles1
-	ld b, $80
+	ld b, $80 ; tiles
 .asm_3002a
-	ld c, $10
+	ld c, TILE_SIZE
 .asm_3002c
 	ld a, [hli]
 	ld [de], a
@@ -62,7 +62,8 @@ Func_3000e:
 	pop bc
 	pop af
 	ret
-; 0x30055
+
+Gfx_30055: INCBIN "gfx/gfx_30055.2bpp"
 
 SECTION "Bank c@515d", ROMX[$515d], BANK[$c]
 
@@ -71,11 +72,11 @@ Func_3115d:
 	push bc
 	push de
 	push hl
-	ld hl, $51a4
+	ld hl, Gfx_311a4
 	ld de, vTiles2
-	ld b, $80
+	ld b, $80 ; tiles
 .asm_31169
-	ld c, $10
+	ld c, TILE_SIZE
 .asm_3116b
 	ld a, [hli]
 	ld [de], a
@@ -85,9 +86,9 @@ Func_3115d:
 	dec b
 	jr nz, .asm_31169
 	ld de, vTiles1
-	ld b, $80
+	ld b, $80 ; tiles
 .asm_31179
-	ld c, $10
+	ld c, TILE_SIZE
 .asm_3117b
 	ld a, [hli]
 	ld [de], a
@@ -120,7 +121,8 @@ Func_3115d:
 	pop bc
 	pop af
 	ret
-; 0x311a4
+
+Gfx_311a4: INCBIN "gfx/gfx_311a4.2bpp"
 
 SECTION "Bank c@630c", ROMX[$630c], BANK[$c]
 
@@ -129,11 +131,11 @@ Func_3230c:
 	push bc
 	push de
 	push hl
-	ld hl, $6353
+	ld hl, Gfx_32353
 	ld de, vTiles2
-	ld b, $80
+	ld b, $80 ; tiles
 .asm_32318
-	ld c, $10
+	ld c, TILE_SIZE
 .asm_3231a
 	ld a, [hli]
 	ld [de], a
@@ -143,9 +145,9 @@ Func_3230c:
 	dec b
 	jr nz, .asm_32318
 	ld de, vTiles1
-	ld b, $80
+	ld b, $80 ; tiles
 .asm_32328
-	ld c, $10
+	ld c, TILE_SIZE
 .asm_3232a
 	ld a, [hli]
 	ld [de], a
@@ -178,7 +180,8 @@ Func_3230c:
 	pop bc
 	pop af
 	ret
-; 0x32353
+
+Gfx_32353: INCBIN "gfx/gfx_32353.2bpp"
 
 SECTION "Bank 0c@74bb", ROMX[$74bb], BANK[$0c]
 

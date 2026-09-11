@@ -4,14 +4,14 @@
 	farfunc Func_2801e ; $03
 	farfunc Func_28392 ; $05
 	farfunc Func_28776 ; $07
-	farfunc $49b8 ; $09
+	farfunc Func_289b8 ; $09
 	farfunc Func_28b5a ; $0b
 	farfunc Func_28e0c ; $0d
 	farfunc Func_29163 ; $0f
 	farfunc Func_28fae ; $11
 	farfunc Func_285d4 ; $13
 	farfunc DrawMainMenu ; $15
-	farfunc $65d4 ; $17
+	farfunc Func_2a5d4 ; $17
 	farfunc Func_2a813 ; $19
 	farfunc Func_2b9ed ; $1b
 	farfunc $79c2 ; $1f
@@ -202,6 +202,53 @@ Func_28776:
 	pop af
 	ret
 ; 0x287b0
+
+SECTION "Bank a@49b8", ROMX[$49b8], BANK[$a]
+
+Func_289b8:
+	push af
+	push bc
+	push de
+	push hl
+	ld de, vTiles1
+	ld hl, $47b0
+	ld b, $80
+.asm_289c4
+	ld c, $10
+.asm_289c6
+	ld a, [hli]
+	ld [de], a
+	inc de
+	dec c
+	jr nz, .asm_289c6
+	dec b
+	jr nz, .asm_289c4
+	ld de, vBGMap0
+	ld hl, $49f2
+	ld b, $12
+.asm_289d7
+	ld c, $14
+.asm_289d9
+	ld a, [hli]
+	ld [de], a
+	inc de
+	dec c
+	jr nz, .asm_289d9
+	push hl
+	ld hl, $c
+	add hl, de
+	ld d, h
+	ld e, l
+	pop hl
+	dec b
+	jr nz, .asm_289d7
+	call Func_2ba73
+	pop hl
+	pop de
+	pop bc
+	pop af
+	ret
+; 0x289f2
 
 SECTION "Bank a@4b5a", ROMX[$4b5a], BANK[$a]
 
@@ -475,6 +522,53 @@ DrawMainMenu:
 MainMenuGfx: INCBIN "gfx/gfx_2946c.2bpp"
 ; 0x2a46c
 
+SECTION "Bank a@65d4", ROMX[$65d4], BANK[$a]
+
+; unreferenced?
+Func_2a5d4:
+	push af
+	push bc
+	push de
+	push hl
+	ld de, vTiles1
+	ld hl, $660b
+	ld b, $11
+.asm_2a5e0
+	ld c, $10
+.asm_2a5e2
+	ld a, [hli]
+	ld [de], a
+	inc de
+	dec c
+	jr nz, .asm_2a5e2
+	dec b
+	jr nz, .asm_2a5e0
+	ld de, vBGMap0
+	ld hl, $66ab
+	ld b, $12
+.asm_2a5f3
+	ld c, $14
+.asm_2a5f5
+	ld a, [hli]
+	ld [de], a
+	inc de
+	dec c
+	jr nz, .asm_2a5f5
+	push hl
+	ld hl, $c
+	add hl, de
+	ld d, h
+	ld e, l
+	pop hl
+	dec b
+	jr nz, .asm_2a5f3
+	pop hl
+	pop de
+	pop bc
+	pop af
+	ret
+; 0x2a60b
+
 SECTION "Bank a@6813", ROMX[$6813], BANK[$a]
 
 Func_2a813:
@@ -483,10 +577,10 @@ Func_2a813:
 	push de
 	push hl
 	ld de, vTiles2
-	ld hl, $685a
-	ld b, $80
+	ld hl, Gfx_2a85a
+	ld b, $80 ; tiles
 .asm_2a81f
-	ld c, $10
+	ld c, TILE_SIZE
 .asm_2a821
 	ld a, [hli]
 	ld [de], a
@@ -496,9 +590,9 @@ Func_2a813:
 	dec b
 	jr nz, .asm_2a81f
 	ld de, vTiles1
-	ld b, $80
+	ld b, $80 ; tiles
 .asm_2a82f
-	ld c, $10
+	ld c, TILE_SIZE
 .asm_2a831
 	ld a, [hli]
 	ld [de], a
@@ -531,7 +625,8 @@ Func_2a813:
 	pop bc
 	pop af
 	ret
-; 0x2a85a
+
+Gfx_2a85a: INCBIN "gfx/gfx_2a85a.2bpp"
 
 SECTION "Bank a@79ed", ROMX[$79ed], BANK[$a]
 

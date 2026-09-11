@@ -3,7 +3,7 @@
 	farcall_table_start
 	farfunc InitAudio
 	farfunc UpdateAudio
-	farfunc Func_f8076
+	farfunc _PlaySound
 
 InitAudio::
 	ld a, $ff
@@ -76,7 +76,7 @@ InitAudio::
 
 ; input:
 ; - a = sound constant to play?
-Func_f8076::
+_PlaySound::
 	ld [$c920], a
 	ret
 

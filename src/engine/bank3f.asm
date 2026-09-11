@@ -65,7 +65,7 @@ Func_fc04e:
 	ldh [rBGP], a
 	ld hl, rLCDC
 	set B_LCDC_ENABLE, [hl]
-	ld hl, $4421
+	ld hl, SGBPacket_fc421
 	call Func_fc114
 	ld e, $00
 .asm_fc067
@@ -181,26 +181,32 @@ Func_fc104:
 	pop af
 	ret
 
+; input:
+; - hl = SGB packet to send
 Func_fc114:
 	push af
 	push bc
 	push de
-.asm_fc117
+
+	; wait for V-Blank
+.wait
 	ldh a, [rLY]
 	cp LY_VBLANK
-	jr c, .asm_fc117
+	jr c, .wait
+
 	ld a, JOYP_SGB_FINISH
 	ldh [rJOYP], a
 	ld a, JOYP_SGB_START
 	ldh [rJOYP], a
 	ld a, JOYP_SGB_FINISH
 	ldh [rJOYP], a
-	ld d, $10
-.asm_fc12b
+
+	ld d, $10 ; bytes
+.loop_bytes
 	ld a, [hli]
 	ld b, a
-	ld e, $08
-.asm_fc12f
+	ld e, 8 ; bits
+.loop_bits
 	srl b
 	jr c, .bit_set
 ; bit unset
@@ -208,41 +214,42 @@ Func_fc114:
 	ldh [rJOYP], a
 	ld a, JOYP_SGB_FINISH
 	ldh [rJOYP], a
-	jr .asm_fc145
+	jr .next_bit
 .bit_set
 	ld a, JOYP_SGB_ONE
 	ldh [rJOYP], a
 	ld a, JOYP_SGB_FINISH
 	ldh [rJOYP], a
-.asm_fc145
+.next_bit
 	dec e
-	jr nz, .asm_fc12f
+	jr nz, .loop_bits
 	dec d
-	jr nz, .asm_fc12b
+	jr nz, .loop_bytes
+
 	ld a, JOYP_SGB_ZERO
 	ldh [rJOYP], a
 	ld a, JOYP_SGB_FINISH
 	ldh [rJOYP], a
-	call Func_fc15a
+	call .Do4Frames
 	pop de
 	pop bc
 	pop af
 	ret
 
-Func_fc15a:
+.Do4Frames:
 	push af
 	push bc
-	ld b, $04
-.asm_fc15e
+	ld b, 4
+.loop_frame
 	ldh a, [rLY]
 	cp LY_VBLANK
-	jr c, .asm_fc15e
-.asm_fc164
+	jr c, .loop_frame
+.wait_begin_frame
 	ldh a, [rLY]
 	cp 0
-	jr nz, .asm_fc164
+	jr nz, .wait_begin_frame
 	dec b
-	jr nz, .asm_fc15e
+	jr nz, .loop_frame
 	pop bc
 	pop af
 	ret
@@ -448,3 +455,9 @@ Func_fc2c6:
 	pop af
 	ret
 ; 0xfc2df
+
+SECTION "Bank 3f@4421", ROMX[$4421], BANK[$3f]
+
+SGBPacket_fc421:
+	db $89, $01, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
+; 0xfc431

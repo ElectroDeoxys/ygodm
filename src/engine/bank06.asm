@@ -13,7 +13,7 @@ Func_18008:
 	call Func_101d
 	call DisableLCD
 	ld hl, $4038
-	call Func_10d9
+	call SetScreenConfig
 	call ClearOAM
 	farcall LoadCharacterGfx
 	call LoadTextBoxGfx
@@ -21,7 +21,7 @@ Func_18008:
 	call Func_1814d
 	farcall LoadCharacterOAMGfx
 	farcall Func_8bfe
-	call Func_1225
+	call CopyOAMDirect
 	call EnableLCD
 	call Func_2564
 	pop hl
@@ -155,7 +155,7 @@ Func_191c5:
 	call Func_101d
 	call DisableLCD
 	ld hl, $51f3
-	call Func_10d9
+	call SetScreenConfig
 	farcall Func_29163
 	farcall LoadDigitTiles
 	call Func_191fd
@@ -290,7 +290,7 @@ Func_1929a:
 	ld e, $05
 .asm_192bc
 	call Func_1282
-	ld a, $04
+	ld a, VBLANK_04
 	call SetPendingVBlankMode
 	call RequestVBlankMode
 	call WaitForVBlank
@@ -298,7 +298,7 @@ Func_1929a:
 	jr nz, .asm_192bc
 	ld bc, NULL
 	call Func_1c12
-	ld a, $0a
+	ld a, VBLANK_0A
 	call SetPendingVBlankMode
 	call Func_1282
 	farcall Func_603d
@@ -306,7 +306,7 @@ Func_1929a:
 	call WaitForVBlank
 	ld bc, $c038
 	call Func_1c1d
-	ld a, $04
+	ld a, VBLANK_04
 	call SetPendingVBlankMode
 	call RequestVBlankMode
 	call WaitForVBlank
@@ -318,7 +318,7 @@ Func_1929a:
 Func_192f9:
 	push af
 	farcall Func_5f37
-	ld a, $0a
+	ld a, VBLANK_0A
 	call SetPendingVBlankMode
 	call Func_1282
 	farcall Func_6008
@@ -329,7 +329,7 @@ Func_192f9:
 
 Func_19310:
 	push af
-	ld a, $14
+	ld a, VBLANK_14
 	call SetPendingVBlankMode
 	call Func_19330
 	ld a, [$ced1]
@@ -507,7 +507,7 @@ Func_19420:
 	ld e, $05
 .asm_19442
 	call Func_1282
-	ld a, $04
+	ld a, VBLANK_04
 	call SetPendingVBlankMode
 	call RequestVBlankMode
 	call WaitForVBlank
@@ -515,7 +515,7 @@ Func_19420:
 	jr nz, .asm_19442
 	ld bc, NULL
 	call Func_1c12
-	ld a, $0a
+	ld a, VBLANK_0A
 	call SetPendingVBlankMode
 	call Func_1282
 	farcall Func_6046
@@ -523,7 +523,7 @@ Func_19420:
 	call WaitForVBlank
 	ld bc, $b038
 	call Func_1c1d
-	ld a, $04
+	ld a, VBLANK_04
 	call SetPendingVBlankMode
 	call RequestVBlankMode
 	call WaitForVBlank
@@ -535,7 +535,7 @@ Func_19420:
 Func_1947f:
 	push af
 	farcall Func_5f79
-	ld a, $0a
+	ld a, VBLANK_0A
 	call SetPendingVBlankMode
 	call Func_1282
 	farcall Func_6015
@@ -546,7 +546,7 @@ Func_1947f:
 
 Func_19496:
 	push af
-	ld a, $14
+	ld a, VBLANK_14
 	call SetPendingVBlankMode
 	call Func_194b6
 	ld a, [$cedc]
@@ -785,7 +785,7 @@ Func_1962f:
 	push bc
 	push de
 	push hl
-	ld a, $14
+	ld a, VBLANK_14
 	call SetPendingVBlankMode
 	ld a, TEXTLOAD_0A
 	farcall SetTextLoadMode
@@ -902,7 +902,7 @@ Func_19703:
 	push bc
 	push de
 	push hl
-	ld a, $14
+	ld a, VBLANK_14
 	call SetPendingVBlankMode
 	ld a, TEXTLOAD_0A
 	farcall SetTextLoadMode

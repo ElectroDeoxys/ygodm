@@ -10,9 +10,9 @@
 	farfunc Func_5c86 ; $0f
 	farfunc Func_5af2 ; $11
 	farfunc GetCardCountInTrunk ; $13
-	farfunc $5bb8 ; $15
+	farfunc Func_5bb8 ; $15
 	farfunc $5bd1 ; $17
-	farfunc $5c10 ; $19
+	farfunc Func_5c10 ; $19
 	farfunc SetTextArg ; $1b
 	farfunc SetTextLoadMode ; $1d
 	farfunc LoadText ; $1f
@@ -31,7 +31,7 @@
 	farfunc Func_6034 ; $39
 	farfunc Func_603d ; $3b
 	farfunc Func_6046 ; $3d
-	farfunc $6101 ; $3f
+	farfunc Func_6101 ; $3f
 	farfunc GiveCard ; $41
 	farfunc SetCardAsSeen ; $43
 	farfunc Func_62c2 ; $45
@@ -59,16 +59,16 @@ Func_4068:
 	call Func_101d
 	call DisableLCD
 	ld hl, $40a6
-	call Func_10d9
+	call SetScreenConfig
 	farcall Func_cd9a
 	farcall Func_2801e
 	farcall LoadFontToVTiles2
-	call Func_40b0
+	call DrawDuelistHands
 	call PrintPlayerLP
 	call PrintOpponentLP
 	call Func_4164
-	call Func_41a1
-	call Func_41c6
+	call DrawPlayerField
+	call DrawOpponentField
 	call Func_41eb
 	call Func_42a7
 	call Func_42ae
@@ -82,14 +82,15 @@ Func_4068:
 
 SECTION "Bank 1@40b0", ROMX[$40b0], BANK[$1]
 
-Func_40b0:
+DrawDuelistHands:
 	push af
 	push bc
 	push de
 	push hl
+
 	hlbgcoord 10, 16
 	ld d, $00
-	ld e, $05
+	ld e, HAND_SIZE
 .asm_40bb
 	ld b, d
 	ld c, CARD_LOCATION_PLAYER_HAND
@@ -102,9 +103,10 @@ Func_40b0:
 	inc d
 	dec e
 	jr nz, .asm_40bb
+
 	hlbgcoord 10, 0
 	ld d, $04
-	ld e, $05
+	ld e, HAND_SIZE
 .asm_40d7
 	ld b, d
 	ld c, CARD_LOCATION_OPP_HAND
@@ -117,6 +119,7 @@ Func_40b0:
 	dec d
 	dec e
 	jr nz, .asm_40d7
+
 	pop hl
 	pop de
 	pop bc
@@ -250,14 +253,14 @@ Func_4164:
 	pop af
 	ret
 
-Func_41a1:
+DrawPlayerField:
 	push af
 	push bc
 	push de
 	push hl
 	hlbgcoord 10, 14
 	ld d, $00
-	ld e, $05
+	ld e, FIELD_SIZE
 .asm_41ac
 	ld b, d
 	ld c, CARD_LOCATION_PLAYER_FIELD
@@ -276,14 +279,14 @@ Func_41a1:
 	pop af
 	ret
 
-Func_41c6:
+DrawOpponentField:
 	push af
 	push bc
 	push de
 	push hl
 	hlbgcoord 10, 2
 	ld d, $04
-	ld e, $05
+	ld e, FIELD_SIZE
 .asm_41d1
 	ld b, d
 	ld c, CARD_LOCATION_OPP_FIELD
@@ -308,30 +311,29 @@ Func_41eb:
 	push de
 	push hl
 	ld hl, vTiles0 tile $50
-	ld de, $4207
-	ld b, $0c
-.asm_41f7
-	ld c, $10
-.asm_41f9
+	ld de, Gfx_4207
+	ld b, 12 ; tiles, should be 10
+.loop_tiles
+	ld c, TILE_SIZE
+.loop_copy
 	ld a, [de]
 	ld [hli], a
 	inc de
 	dec c
-	jr nz, .asm_41f9
+	jr nz, .loop_copy
 	dec b
-	jr nz, .asm_41f7
+	jr nz, .loop_tiles
 	pop hl
 	pop de
 	pop bc
 	pop af
 	ret
-; 0x4207
 
-SECTION "Bank 1@42a7", ROMX[$42a7], BANK[$1]
+Gfx_4207: INCBIN "gfx/gfx_4207.2bpp"
 
 Func_42a7:
 	call Func_12d2
-	call Func_1225
+	call CopyOAMDirect
 	ret
 
 Func_42ae:
@@ -339,12 +341,12 @@ Func_42ae:
 	ld a, [$cdff]
 	cp $02
 	jr nz, .asm_42c3
-	ld a, $07
+	ld a, 0 + WX_OFS
 	ldh [rWX], a
-	ld a, $67
+	ld a, 103
 	ldh [rWY], a
 	ld hl, rLCDC
-	res 1, [hl]
+	res B_LCDC_OBJS, [hl]
 .asm_42c3
 	pop af
 	ret
@@ -882,7 +884,7 @@ Func_551f:
 	call Func_101d
 	call DisableLCD
 	ld hl, $554b
-	call Func_10d9
+	call SetScreenConfig
 	farcall LoadFontToVTiles2
 	farcall Func_28392
 	call Func_5555
@@ -903,7 +905,7 @@ Func_5555:
 	call ClearOAM
 	call Func_581f
 	call Func_5562
-	call Func_1225
+	call CopyOAMDirect
 	ret
 
 Func_5562:
@@ -1161,7 +1163,7 @@ Func_570f:
 	ld [wcad4], a
 	ld a, $00
 	ld [wcad6], a
-	ld a, $04
+	ld a, VBLANK_04
 	call SetPendingVBlankMode
 	call Func_581f
 	call RequestVBlankMode
@@ -1421,7 +1423,7 @@ Func_58bd:
 	ld a, e
 	and $01
 	jr z, .asm_58db
-	ld a, $06
+	ld a, VBLANK_06
 	call SetPendingVBlankMode
 .asm_58db
 	call AddWordToVBlankStruct
@@ -1459,7 +1461,7 @@ Func_58bd:
 	ld a, e
 	and $01
 	jr z, .asm_5921
-	ld a, $06
+	ld a, VBLANK_06
 	call SetPendingVBlankMode
 .asm_5921
 	call AddWordToVBlankStruct
@@ -1624,7 +1626,7 @@ Func_5a3a:
 	push bc
 	push de
 	push hl
-	ld a, $06
+	ld a, VBLANK_06
 	call SetPendingVBlankMode
 	bcbgcoord 0, 1
 	call AddWordToVBlankStruct
@@ -1863,7 +1865,23 @@ Func_5b92:
 	pop de
 	pop bc
 	ret
-; 0x5bb8
+
+Func_5bb8:
+	push af
+	push bc
+	farcall Func_c664
+	ld a, c
+	cp $01
+	jr z, .asm_5bce
+	farcall GetPlayerDeckCard
+	call Func_5af2
+	call GiveCard
+	farcall RemoveCardFromPlayerDeck
+.asm_5bce
+	pop bc
+	pop af
+	ret
+; 0x5bd1
 
 SECTION "Bank 1@5bea", ROMX[$5bea], BANK[$1]
 
@@ -1891,9 +1909,22 @@ Func_5bea:
 	pop de
 	pop bc
 	ret
-; 0x5c10
 
-SECTION "Bank 1@5c29", ROMX[$5c29], BANK[$1]
+Func_5c10:
+	push af
+	push bc
+	farcall Func_e7a7
+	ld a, c
+	cp $00
+	jr z, .asm_5c26
+	farcall Func_e747
+	call Func_5af2
+	call GiveCard
+	farcall Func_e773
+.asm_5c26
+	pop bc
+	pop af
+	ret
 
 ; returns TRUE if player owns any of the Secret cards
 PlayerOwnsAnySecretCard:
@@ -2044,7 +2075,7 @@ Func_5cb3:
 SECTION "Bank 1@5ced", ROMX[$5ced], BANK[$1]
 
 Func_5ced:
-	ld a, $02
+	ld a, VBLANK_02
 	call SetPendingVBlankMode
 	call RequestVBlankMode
 	call WaitForVBlank
@@ -2052,7 +2083,7 @@ Func_5ced:
 	ret
 
 Func_5cfa:
-	ld a, $04
+	ld a, VBLANK_04
 	call SetPendingVBlankMode
 	call Func_570f
 	call Func_581f
@@ -2064,7 +2095,7 @@ Func_5cfa:
 Func_5d0d:
 	push bc
 	push hl
-	ld a, $04
+	ld a, VBLANK_04
 	call SetPendingVBlankMode
 	ld b, $00
 	ld a, [wcad4]
@@ -2084,7 +2115,7 @@ Func_5d0d:
 SECTION "Bank 1@5d30", ROMX[$5d30], BANK[$1]
 
 Func_5d30:
-	ld a, $04
+	ld a, VBLANK_04
 	call SetPendingVBlankMode
 	call Func_5791
 	call Func_581f
@@ -2094,7 +2125,7 @@ Func_5d30:
 	ret
 
 Func_5d43:
-	ld a, $04
+	ld a, VBLANK_04
 	call SetPendingVBlankMode
 	call Func_5748
 	call Func_581f
@@ -2105,7 +2136,7 @@ Func_5d43:
 
 Func_5d56:
 	call Func_57fe
-	ld a, $04
+	ld a, VBLANK_04
 	call SetPendingVBlankMode
 	call RequestVBlankMode
 	call WaitForVBlank
@@ -2114,7 +2145,7 @@ Func_5d56:
 
 Func_5d66:
 	call Func_57be
-	ld a, $04
+	ld a, VBLANK_04
 	call SetPendingVBlankMode
 	call RequestVBlankMode
 	call WaitForVBlank
@@ -2243,7 +2274,7 @@ Func_5e1c:
 	ld [wcad4], a
 	ld a, $00
 	ld [wcad6], a
-	ld a, $04
+	ld a, VBLANK_04
 	call SetPendingVBlankMode
 	call Func_581f
 	call RequestVBlankMode
@@ -2285,7 +2316,7 @@ Func_5e66:
 	ld [wcad4], a
 	ld a, $00
 	ld [wcad6], a
-	ld a, $04
+	ld a, VBLANK_04
 	call SetPendingVBlankMode
 	call Func_581f
 	call RequestVBlankMode
@@ -2317,7 +2348,7 @@ Func_5eb3:
 	ld bc, vTiles0
 	ld e, $0a
 .asm_5ed6
-	ld a, $08
+	ld a, VBLANK_08
 	call SetPendingVBlankMode
 	call AddWordToVBlankStruct
 	ld hl, $80
@@ -2391,7 +2422,7 @@ Func_5f37:
 	ld bc, vTiles1 tile $60
 	ld e, $0a
 .asm_5f5a
-	ld a, $08
+	ld a, VBLANK_08
 	call SetPendingVBlankMode
 	call AddWordToVBlankStruct
 	ld hl, $80
@@ -2428,7 +2459,7 @@ Func_5f79:
 	ld bc, vTiles2 tile $30
 	ld e, $0a
 .asm_5f9c
-	ld a, $08
+	ld a, VBLANK_08
 	call SetPendingVBlankMode
 	call AddWordToVBlankStruct
 	ld hl, $80
@@ -2703,7 +2734,7 @@ Func_6101:
 	call Func_101d
 	call DisableLCD
 	ld hl, $612d
-	call Func_10d9
+	call SetScreenConfig
 	farcall LoadFontToVTiles2
 	farcall Func_285d4
 	call Func_6137
@@ -2724,7 +2755,7 @@ Func_6137:
 	call ClearOAM
 	call Func_581f
 	call Func_6144
-	call Func_1225
+	call CopyOAMDirect
 	ret
 
 Func_6144:
@@ -2950,7 +2981,7 @@ Func_62c2:
 	call Func_101d
 	call DisableLCD
 	ld hl, $62e5
-	call Func_10d9
+	call SetScreenConfig
 	farcall Func_2a813
 	call Func_62ef
 	call Func_63cb
@@ -2994,7 +3025,7 @@ SECTION "Bank 1@63cb", ROMX[$63cb], BANK[$1]
 Func_63cb:
 	call Func_12fb
 	call Func_64ca
-	call Func_1225
+	call CopyOAMDirect
 	ret
 ; 0x63d5
 
@@ -3005,18 +3036,32 @@ Func_63d6:
 	push bc
 	push de
 	push hl
+.loop
 	call Func_6403
 	ld b, $00
 	ld c, a
-	ld hl, $63f5
+	ld hl, .Jumptable
 	add hl, bc
 	ld a, [hli]
 	ld h, [hl]
 	ld l, a
 	call_hl
-; 0x63ec
+	cp $00
+	jr z, .loop
+	pop hl
+	pop de
+	pop bc
+	pop af
+	ret
 
-SECTION "Bank 1@6403", ROMX[$6403], BANK[$1]
+.Jumptable:
+	dw Func_6429
+	dw Func_6436
+	dw Func_644c
+	dw Func_645f
+	dw Func_6472
+	dw Func_6485
+	dw Func_6498
 
 Func_6403:
 	push bc
@@ -3043,12 +3088,88 @@ Func_6403:
 	ret
 ; 0x6421
 
-SECTION "Bank 1@64b5", ROMX[$64b5], BANK[$1]
+SECTION "Bank 1@6429", ROMX[$6429], BANK[$1]
+
+Func_6429:
+	ld a, VBLANK_04
+	call SetPendingVBlankMode
+	call RequestVBlankMode
+	call WaitForVBlank
+	xor a
+	ret
+
+Func_6436:
+	call Func_6536
+	ld a, VBLANK_02
+	call SetPendingVBlankMode
+	call RequestVBlankMode
+	call WaitForVBlank
+	ld a, $01
+	ld [wCampaignStage], a
+	ld a, $01
+	ret
+
+Func_644c:
+	ld a, VBLANK_02
+	call SetPendingVBlankMode
+	call RequestVBlankMode
+	call WaitForVBlank
+	ld a, $00
+	ld [wCampaignStage], a
+	ld a, $01
+	ret
+
+Func_645f:
+	call Func_6519
+	ld a, VBLANK_04
+	call SetPendingVBlankMode
+	call Func_64ca
+	call RequestVBlankMode
+	call WaitForVBlank
+	xor a
+	ret
+
+Func_6472:
+	call Func_64fd
+	ld a, VBLANK_04
+	call SetPendingVBlankMode
+	call Func_64ca
+	call RequestVBlankMode
+	call WaitForVBlank
+	xor a
+	ret
+
+Func_6485:
+	ld a, VBLANK_02
+	call SetPendingVBlankMode
+	call RequestVBlankMode
+	call WaitForVBlank
+	ld a, $02
+	ld [wCampaignStage], a
+	ld a, $01
+	ret
+
+Func_6498:
+	ld a, VBLANK_02
+	call SetPendingVBlankMode
+	call RequestVBlankMode
+	call WaitForVBlank
+	call Func_2958
+	cp $02
+	jr c, .asm_64b3
+	ld a, $04
+	ld [wCampaignStage], a
+	ld a, $01
+	jr .asm_64b4
+.asm_64b3
+	xor a
+.asm_64b4
+	ret
 
 Func_64b5:
 	push af
 	push bc
-	ld a, $00
+	ld a, DUELIST_WEEVIL
 	ld [$cf04], a
 	call Func_653f
 	ld a, b
@@ -3088,9 +3209,51 @@ Func_64ca:
 	pop bc
 	pop af
 	ret
-; 0x64fd
 
-SECTION "Bank 1@653f", ROMX[$653f], BANK[$1]
+Func_64fd:
+	push af
+	push bc
+	ld a, [$cf04]
+	inc a
+	cp IN_THE_SHIP_DUELISTS
+	jr nz, .asm_6508
+	xor a
+.asm_6508
+	ld [$cf04], a
+	call Func_653f
+	ld a, b
+	ld [$cf05], a
+	ld a, c
+	ld [$cf06], a
+	pop bc
+	pop af
+	ret
+
+Func_6519:
+	push af
+	push bc
+	ld a, [$cf04]
+	dec a
+	cp -1
+	jr nz, .asm_6525
+	ld a, NUM_DUEL_KINGDOM_DUELISTS - 1
+.asm_6525
+	ld [$cf04], a
+	call Func_653f
+	ld a, b
+	ld [$cf05], a
+	ld a, c
+	ld [$cf06], a
+	pop bc
+	pop af
+	ret
+
+Func_6536:
+	push af
+	ld a, [$cf04]
+	call SetNPCDuelist
+	pop af
+	ret
 
 Func_653f:
 	push af
@@ -3116,7 +3279,7 @@ Func_6595::
 
 	call DisableLCD
 	ld hl, .Config
-	call Func_10d9
+	call SetScreenConfig
 	farcall Func_2c00a
 	call EnableLCD
 	call DoFrame
@@ -3151,7 +3314,7 @@ Func_65c4::
 	push hl
 	call DisableLCD
 	ld hl, $65e9
-	call Func_10d9
+	call SetScreenConfig
 	farcall Func_2c4c9
 	call EnableLCD
 	call DoFrame
@@ -3177,7 +3340,7 @@ Func_65f3::
 	push hl
 	call DisableLCD
 	ld hl, $6618
-	call Func_10d9
+	call SetScreenConfig
 	farcall Func_2cb88
 	call EnableLCD
 	call DoFrame
@@ -3204,7 +3367,7 @@ Func_6622:
 	call Func_101d
 	call DisableLCD
 	ld hl, $6642
-	call Func_10d9
+	call SetScreenConfig
 	farcall Func_2d717
 	call Func_664c
 	call EnableLCD
@@ -3221,7 +3384,7 @@ Func_664c:
 	call ClearOAM
 	call Func_681b
 	call Func_6659
-	call Func_1225
+	call CopyOAMDirect
 	ret
 
 Func_6659:
@@ -3325,8 +3488,8 @@ Func_6794:
 	call SetPendingVBlankMode
 	call RequestVBlankMode
 	call WaitForVBlank
-	ld a, $01
-	ld [$cea1], a
+	ld a, STAGE_START_DUEL
+	ld [wCampaignStage], a
 	ld a, $01
 	pop hl
 	pop bc
@@ -3337,14 +3500,14 @@ Func_67ae:
 	call SetPendingVBlankMode
 	call RequestVBlankMode
 	call WaitForVBlank
-	ld a, $00
-	ld [$cea1], a
+	ld a, STAGE_EXIT
+	ld [wCampaignStage], a
 	ld a, $01
 	ret
 
 Func_67c1:
 	call Func_685f
-	ld a, $04
+	ld a, VBLANK_04
 	call SetPendingVBlankMode
 	call Func_681b
 	call RequestVBlankMode
@@ -3354,7 +3517,7 @@ Func_67c1:
 
 Func_67d4:
 	call Func_6843
-	ld a, $04
+	ld a, VBLANK_04
 	call SetPendingVBlankMode
 	call Func_681b
 	call RequestVBlankMode
@@ -3370,8 +3533,8 @@ Func_67e7:
 	call Func_2958
 	cp $01
 	jr c, .asm_6802
-	ld a, $03
-	ld [$cea1], a
+	ld a, STAGE_DUEL_KINGDOM
+	ld [wCampaignStage], a
 	ld a, $01
 	jr .asm_6803
 .asm_6802
@@ -3488,7 +3651,7 @@ Func_689e:
 	call Func_101d
 	call DisableLCD
 	ld hl, $68c1
-	call Func_10d9
+	call SetScreenConfig
 	farcall LoadFontToVTiles2
 	farcall Func_3000e
 	call Func_68cb
@@ -3506,7 +3669,7 @@ Func_68cb:
 	call ClearOAM
 	call Func_68d8
 	call Func_6a73
-	call Func_1225
+	call CopyOAMDirect
 	ret
 
 Func_68d8:
@@ -3541,18 +3704,30 @@ Func_69b5:
 	push bc
 	push de
 	push hl
+.loop
 	call Func_69de
 	ld b, $00
 	ld c, a
-	ld hl, $69d4
+	ld hl, .Jumptable
 	add hl, bc
 	ld a, [hli]
 	ld h, [hl]
 	ld l, a
 	call_hl
-; 0x69cb
+	cp $01
+	jr nz, .loop
+	pop hl
+	pop de
+	pop bc
+	pop af
+	ret
 
-SECTION "Bank 1@69de", ROMX[$69de], BANK[$1]
+.Jumptable:
+	dw Func_6a04
+	dw Func_6a11
+	dw Func_6a2b
+	dw Func_6a3e
+	dw Func_6a5b
 
 Func_69de:
 	push bc
@@ -3579,13 +3754,74 @@ Func_69de:
 	ret
 ; 0x69fc
 
-SECTION "Bank 1@6a6e", ROMX[$6a6e], BANK[$1]
+SECTION "Bank 1@6a04", ROMX[$6a04], BANK[$1]
+
+Func_6a04:
+	ld a, VBLANK_02
+	call SetPendingVBlankMode
+	call RequestVBlankMode
+	call WaitForVBlank
+	xor a
+	ret
+
+Func_6a11:
+	push bc
+	push hl
+	call Func_6a6f
+	ld a, VBLANK_04
+	call SetPendingVBlankMode
+	call RequestVBlankMode
+	call WaitForVBlank
+	ld a, $01
+	ld [wCampaignStage], a
+	ld a, $01
+	pop hl
+	pop bc
+	ret
+
+Func_6a2b:
+	ld a, VBLANK_02
+	call SetPendingVBlankMode
+	call RequestVBlankMode
+	call WaitForVBlank
+	ld a, $00
+	ld [wCampaignStage], a
+	ld a, $01
+	ret
+
+Func_6a3e:
+	ld a, VBLANK_02
+	call SetPendingVBlankMode
+	call RequestVBlankMode
+	call WaitForVBlank
+	call Func_2958
+	cp $03
+	jr c, .asm_6a59
+	ld a, $05
+	ld [wCampaignStage], a
+	ld a, $01
+	jr .asm_6a5a
+.asm_6a59
+	xor a
+.asm_6a5a
+	ret
+
+Func_6a5b:
+	ld a, VBLANK_02
+	call SetPendingVBlankMode
+	call RequestVBlankMode
+	call WaitForVBlank
+	ld a, $03
+	ld [wCampaignStage], a
+	ld a, $01
+	ret
 
 Func_6a6e:
 	ret
-; 0x6a6f
 
-SECTION "Bank 1@6a73", ROMX[$6a73], BANK[$1]
+Func_6a6f:
+	call Func_234c
+	ret
 
 Func_6a73:
 	push af
@@ -3616,7 +3852,7 @@ Func_6a97:
 	call Func_101d
 	call DisableLCD
 	ld hl, $6aba
-	call Func_10d9
+	call SetScreenConfig
 	farcall LoadFontToVTiles2
 	farcall Func_3115d
 	call Func_6ac4
@@ -3634,7 +3870,7 @@ Func_6ac4:
 	call ClearOAM
 	call Func_6ad1
 	call Func_6c6c
-	call Func_1225
+	call CopyOAMDirect
 	ret
 
 Func_6ad1:
@@ -3669,18 +3905,30 @@ Func_6bae:
 	push bc
 	push de
 	push hl
+.loop
 	call Func_6bd7
 	ld b, $00
 	ld c, a
-	ld hl, $6bcd
+	ld hl, .Jumptable
 	add hl, bc
 	ld a, [hli]
 	ld h, [hl]
 	ld l, a
 	call_hl
-; 0x6bc4
+	cp $01
+	jr nz, .loop
+	pop hl
+	pop de
+	pop bc
+	pop af
+	ret
 
-SECTION "Bank 1@6bd7", ROMX[$6bd7], BANK[$1]
+.Jumptable:
+	dw Func_6bfd
+	dw Func_6c0a
+	dw Func_6c24
+	dw Func_6c37
+	dw Func_6c54
 
 Func_6bd7:
 	push bc
@@ -3707,13 +3955,74 @@ Func_6bd7:
 	ret
 ; 0x6bf5
 
-SECTION "Bank 1@6c67", ROMX[$6c67], BANK[$1]
+SECTION "Bank 1@6bfd", ROMX[$6bfd], BANK[$1]
+
+Func_6bfd:
+	ld a, VBLANK_02
+	call SetPendingVBlankMode
+	call RequestVBlankMode
+	call WaitForVBlank
+	xor a
+	ret
+
+Func_6c0a:
+	push bc
+	push hl
+	call Func_6c68
+	ld a, VBLANK_04
+	call SetPendingVBlankMode
+	call RequestVBlankMode
+	call WaitForVBlank
+	ld a, $01
+	ld [wCampaignStage], a
+	ld a, $01
+	pop hl
+	pop bc
+	ret
+
+Func_6c24:
+	ld a, VBLANK_02
+	call SetPendingVBlankMode
+	call RequestVBlankMode
+	call WaitForVBlank
+	ld a, $00
+	ld [wCampaignStage], a
+	ld a, $01
+	ret
+
+Func_6c37:
+	ld a, VBLANK_02
+	call SetPendingVBlankMode
+	call RequestVBlankMode
+	call WaitForVBlank
+	call Func_2958
+	cp $04
+	jr c, .asm_6c52
+	ld a, $06
+	ld [wCampaignStage], a
+	ld a, $01
+	jr .asm_6c53
+.asm_6c52
+	xor a
+.asm_6c53
+	ret
+
+Func_6c54:
+	ld a, VBLANK_02
+	call SetPendingVBlankMode
+	call RequestVBlankMode
+	call WaitForVBlank
+	ld a, $04
+	ld [wCampaignStage], a
+	ld a, $01
+	ret
 
 Func_6c67:
 	ret
-; 0x6c68
 
-SECTION "Bank 1@6c6c", ROMX[$6c6c], BANK[$1]
+Func_6c68:
+	call Func_2354
+	ret
 
 Func_6c6c:
 	push af
@@ -3744,7 +4053,7 @@ Func_6c90:
 	call Func_101d
 	call DisableLCD
 	ld hl, $6cb3
-	call Func_10d9
+	call SetScreenConfig
 	farcall LoadFontToVTiles2
 	farcall Func_3230c
 	call Func_6cbd
@@ -3762,7 +4071,7 @@ Func_6cbd:
 	call ClearOAM
 	call Func_6cca
 	call Func_6e46
-	call Func_1225
+	call CopyOAMDirect
 	ret
 
 Func_6cca:
@@ -3797,18 +4106,29 @@ Func_6da7:
 	push bc
 	push de
 	push hl
+.loop
 	call Func_6dce
 	ld b, $00
 	ld c, a
-	ld hl, $6dc6
+	ld hl, .Jumptable
 	add hl, bc
 	ld a, [hli]
 	ld h, [hl]
 	ld l, a
 	call_hl
-; 0x6dbd
+	cp $01
+	jr nz, .loop
+	pop hl
+	pop de
+	pop bc
+	pop af
+	ret
 
-SECTION "Bank 1@6dce", ROMX[$6dce], BANK[$1]
+.Jumptable:
+	dw Func_6df4
+	dw Func_6e01
+	dw Func_6e1b
+	dw Func_6e2e
 
 Func_6dce:
 	push bc
@@ -3835,13 +4155,57 @@ Func_6dce:
 	ret
 ; 0x6dec
 
-SECTION "Bank 1@6e41", ROMX[$6e41], BANK[$1]
+SECTION "Bank 1@6df4", ROMX[$6df4], BANK[$1]
+
+Func_6df4:
+	ld a, VBLANK_02
+	call SetPendingVBlankMode
+	call RequestVBlankMode
+	call WaitForVBlank
+	xor a
+	ret
+
+Func_6e01:
+	push bc
+	push hl
+	call Func_6e42
+	ld a, VBLANK_04
+	call SetPendingVBlankMode
+	call RequestVBlankMode
+	call WaitForVBlank
+	ld a, $01
+	ld [wCampaignStage], a
+	ld a, $01
+	pop hl
+	pop bc
+	ret
+
+Func_6e1b:
+	ld a, VBLANK_02
+	call SetPendingVBlankMode
+	call RequestVBlankMode
+	call WaitForVBlank
+	ld a, $00
+	ld [wCampaignStage], a
+	ld a, $01
+	ret
+
+Func_6e2e:
+	ld a, VBLANK_02
+	call SetPendingVBlankMode
+	call RequestVBlankMode
+	call WaitForVBlank
+	ld a, $05
+	ld [wCampaignStage], a
+	ld a, $01
+	ret
 
 Func_6e41:
 	ret
-; 0x6e42
 
-SECTION "Bank 1@6e46", ROMX[$6e46], BANK[$1]
+Func_6e42:
+	call Func_235c
+	ret
 
 Func_6e46:
 	push af

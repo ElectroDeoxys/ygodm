@@ -60,7 +60,7 @@ Func_38039:
 	ld b, a
 	call Func_380c9
 .asm_3805d
-	ld a, $02
+	ld a, VBLANK_02
 	call SetPendingVBlankMode
 	call RequestVBlankMode
 	call WaitForVBlank
@@ -104,7 +104,7 @@ Func_38089:
 	ld b, a
 	call Func_3824c
 .asm_380ad
-	ld a, $02
+	ld a, VBLANK_02
 	call SetPendingVBlankMode
 	call RequestVBlankMode
 	call WaitForVBlank
@@ -126,7 +126,7 @@ Func_380c9:
 	push bc
 	push de
 	push hl
-	ld a, $04
+	ld a, VBLANK_04
 	call SetPendingVBlankMode
 	ld a, [hli]
 	ld h, [hl]
@@ -160,7 +160,7 @@ Func_3824c:
 	push bc
 	push de
 	push hl
-	ld a, $04
+	ld a, VBLANK_04
 	call SetPendingVBlankMode
 	ld a, [hli]
 	ld h, [hl]
@@ -196,7 +196,7 @@ Func_38274:
 	ld hl, $42a7
 	ld e, $10
 .asm_38280
-	ld a, $08
+	ld a, VBLANK_08
 	call SetPendingVBlankMode
 	call AddWordToVBlankStruct
 	push hl
@@ -233,7 +233,7 @@ Func_38aa7:
 	ld hl, $4ada
 	ld e, $10
 .asm_38ab3
-	ld a, $08
+	ld a, VBLANK_08
 	call SetPendingVBlankMode
 	call AddWordToVBlankStruct
 	push hl
@@ -285,7 +285,7 @@ Func_392da:
 	ld b, a
 	call Func_39392
 .asm_392fe
-	ld a, $02
+	ld a, VBLANK_02
 	call SetPendingVBlankMode
 	call RequestVBlankMode
 	call WaitForVBlank
@@ -294,7 +294,7 @@ Func_392da:
 	inc c
 	jr nz, .asm_392e9
 .asm_3930f
-	ld a, $0a
+	ld a, VBLANK_0A
 	call SetPendingVBlankMode
 	farcall Func_602b
 	call RequestVBlankMode
@@ -334,7 +334,7 @@ Func_39344:
 	ld b, a
 	call Func_397c1
 .asm_39368
-	ld a, $02
+	ld a, VBLANK_02
 	call SetPendingVBlankMode
 	call RequestVBlankMode
 	call WaitForVBlank
@@ -343,7 +343,7 @@ Func_39344:
 	inc c
 	jr nz, .asm_39353
 .asm_39379
-	ld a, $0a
+	ld a, VBLANK_0A
 	call SetPendingVBlankMode
 	farcall Func_6034
 	call RequestVBlankMode
@@ -361,7 +361,7 @@ Func_39392:
 	push bc
 	push de
 	push hl
-	ld a, $04
+	ld a, VBLANK_04
 	call SetPendingVBlankMode
 	ld a, [hli]
 	ld h, [hl]
@@ -395,7 +395,7 @@ Func_397c1:
 	push bc
 	push de
 	push hl
-	ld a, $04
+	ld a, VBLANK_04
 	call SetPendingVBlankMode
 	ld a, [hli]
 	ld h, [hl]
@@ -427,7 +427,7 @@ Func_397e9:
 	push bc
 	push de
 	push hl
-	ld a, $04
+	ld a, VBLANK_04
 	call SetPendingVBlankMode
 	ld e, $28
 .asm_397f4

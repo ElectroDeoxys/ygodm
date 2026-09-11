@@ -195,11 +195,11 @@ Func_2d717:
 	push bc
 	push de
 	push hl
-	ld hl, $575e
+	ld hl, Gfx_2d75e
 	ld de, vTiles2
-	ld b, $80
+	ld b, $80 ; tiles
 .asm_2d723
-	ld c, $10
+	ld c, TILE_SIZE
 .asm_2d725
 	ld a, [hli]
 	ld [de], a
@@ -209,9 +209,9 @@ Func_2d717:
 	dec b
 	jr nz, .asm_2d723
 	ld de, vTiles1
-	ld b, $80
+	ld b, $80 ; tiles
 .asm_2d733
-	ld c, $10
+	ld c, TILE_SIZE
 .asm_2d735
 	ld a, [hli]
 	ld [de], a
@@ -244,4 +244,5 @@ Func_2d717:
 	pop bc
 	pop af
 	ret
-; 0x2d75e
+
+Gfx_2d75e: INCBIN "gfx/gfx_2d75e.2bpp"

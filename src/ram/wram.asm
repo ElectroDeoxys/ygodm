@@ -98,7 +98,7 @@ wOppDuelDeck:: ds DECK_SIZE * $2 ; ccac
 	ds $1
 
 wccfd:: db ; ccfd
-wBeatGame:: db ; ccfe
+wBeatCampaign:: db ; ccfe
 
 	ds $cd0f - $ccff
 
@@ -171,7 +171,11 @@ wRandRangeStart:: db ; ce9d
 wRandRangeEnd:: db ; ce9e
 wRandNum:: db ; ce9f
 
-	ds $cecb - $cea0
+wMainMenuSelection:: db ; cea0
+
+wCampaignStage:: db ; cea1
+
+	ds $cecb - $cea2
 
 wMaterial1CardID:: dw ; cecb
 wMaterial2CardID:: dw ; cecd

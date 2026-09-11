@@ -1564,7 +1564,7 @@ EnableLCD::
 ; - rOBP1
 ; - rWY
 ; - rWX
-Func_10d9::
+SetScreenConfig::
 	push af
 	push bc
 	push de
@@ -1814,7 +1814,7 @@ ClearOAM::
 
 ; copy wVirtualOAM directly to OAM
 ; this must be done during V-Blank or H-Blank
-Func_1225::
+CopyOAMDirect::
 	push af
 	push bc
 	push de
@@ -1882,7 +1882,7 @@ Func_1256::
 	dec c
 	jr nz, .asm_126f
 	call Func_12a4
-	call Func_1225
+	call CopyOAMDirect
 	pop hl
 	pop de
 	pop bc
@@ -1949,7 +1949,7 @@ Func_12a4:
 
 Func_12d2::
 	call ClearOAM
-	call Func_1225
+	call CopyOAMDirect
 	ret
 
 Func_12d9::
@@ -1986,7 +1986,7 @@ Func_12d9::
 
 Func_12fb::
 	call ClearOAM
-	call Func_1225
+	call CopyOAMDirect
 	ret
 
 Add4x4OAM::
@@ -4094,7 +4094,7 @@ Func_1d67::
 	cp FALSE
 	jr nz, .asm_1d7f
 	ld e, $d0
-	jr .asm_1da2
+	jr .got_tile
 .asm_1d7f
 	call Func_2203
 	cp $00
@@ -4116,7 +4116,7 @@ Func_1d67::
 	ld c, a
 	add hl, bc
 	ld e, [hl]
-.asm_1da2
+.got_tile
 	ld a, e
 	pop hl
 	pop de
@@ -5034,17 +5034,39 @@ Func_232e::
 	ret
 ; 0x2339
 
-SECTION "Bank 0@2344", ROM0[$2344]
+SECTION "Bank 0@2340", ROM0[$2340]
+
+SetNPCDuelist::
+	ld [wNPCDuelist], a
+	ret
 
 Func_2344::
 	push af
-	add $09
+	add IN_THE_SHIP_DUELISTS
 	ld [wNPCDuelist], a
 	pop af
 	ret
-; 0x234c
 
-SECTION "Bank 0@2364", ROM0[$2364]
+Func_234c::
+	push af
+	ld a, DUELIST_SIMON
+	ld [wNPCDuelist], a
+	pop af
+	ret
+
+Func_2354::
+	push af
+	ld a, DUELIST_MAXIMILLION
+	ld [wNPCDuelist], a
+	pop af
+	ret
+
+Func_235c::
+	push af
+	ld a, DUELIST_YAMI_YUGI
+	ld [wNPCDuelist], a
+	pop af
+	ret
 
 Func_2364:
 	push bc
@@ -5806,19 +5828,19 @@ Func_287e:
 	push bc
 	push de
 	push hl
-	ld e, $01
+	ld e, FALSE
 	ld b, $00
 	ld c, a
 	sla c
 	ld hl, wDuelistWinCounts
 	add hl, bc
 	ld a, [hli]
-	cp $05
+	cp LOW($5)
 	jr nc, .asm_2898
 	ld a, [hl]
-	cp $00
+	cp HIGH($0)
 	jr nz, .asm_2898
-	ld e, $00
+	ld e, TRUE
 .asm_2898
 	ld a, e
 	pop hl
@@ -5922,23 +5944,24 @@ IncrementDuelistWinCount:
 
 	; did we just beat Maximillion?
 	cp DUELIST_MAXIMILLION
-	jr nz, .asm_2933
+	jr nz, .done
 	; yes, is the win count at least 5?
 	ld a, b
 	cp HIGH($5)
-	jr nz, .asm_292e
+	jr nz, .beat_campaign
 	ld a, c
 	cp LOW($5)
 	jr c, .less_than_5
 	; 5 or more, show credits
 	ld a, $01
-	ld [wBeatGame], a
+	ld [wBeatCampaign], a
 .less_than_5
-	jr .asm_2933
-.asm_292e
+	jr .done
+.beat_campaign
 	ld a, $01
-	ld [wBeatGame], a
-.asm_2933
+	ld [wBeatCampaign], a
+
+.done
 	pop hl
 	pop de
 	pop bc
@@ -5995,15 +6018,15 @@ Func_2982:
 	push bc
 	push de
 	push hl
-	ld e, $01
-	ld hl, $299e
-	ld c, $04
+	ld e, FALSE
+	ld hl, .Duelists
+	ld c, NUM_IN_THE_SHIP_DUELISTS
 .asm_298c
 	ld a, [hli]
 	call Func_287e
-	cp $00
+	cp TRUE
 	jr nz, .asm_2996
-	ld e, $00
+	ld e, TRUE
 .asm_2996
 	dec c
 	jr nz, .asm_298c
@@ -6012,23 +6035,26 @@ Func_2982:
 	pop de
 	pop bc
 	ret
-; 0x299e
 
-SECTION "Bank 0@29a2", ROM0[$29a2]
+.Duelists:
+	db DUELIST_YUGI
+	db DUELIST_TRISTAN
+	db DUELIST_JOEY
+	db DUELIST_BAKURA
 
 Func_29a2:
 	push bc
 	push de
 	push hl
-	ld e, $01
-	ld hl, $29be
-	ld c, $09
+	ld e, FALSE
+	ld hl, .Duelists
+	ld c, NUM_DUEL_KINGDOM_DUELISTS
 .asm_29ac
 	ld a, [hli]
 	call Func_287e
-	cp $00
+	cp TRUE
 	jr nz, .asm_29b6
-	ld e, $00
+	ld e, TRUE
 .asm_29b6
 	dec c
 	jr nz, .asm_29ac
@@ -6037,20 +6063,28 @@ Func_29a2:
 	pop de
 	pop bc
 	ret
-; 0x29be
 
-SECTION "Bank 0@29c7", ROM0[$29c7]
+.Duelists:
+	db DUELIST_WEEVIL
+	db DUELIST_MAI
+	db DUELIST_REX
+	db DUELIST_MAKO
+	db DUELIST_SETO_KAIBA
+	db DUELIST_MOKUBA
+	db DUELIST_PUPPETEER
+	db DUELIST_PANIK
+	db DUELIST_BANDIT_KEITH
 
 Func_29c7:
 	push bc
 	push de
 	push hl
-	ld e, $01
-	ld a, $0d
+	ld e, FALSE
+	ld a, DUELIST_SIMON
 	call Func_287e
-	cp $00
+	cp TRUE
 	jr nz, .asm_29d7
-	ld e, $00
+	ld e, TRUE
 .asm_29d7
 	ld a, e
 	pop hl
@@ -6062,12 +6096,12 @@ Func_29dc:
 	push bc
 	push de
 	push hl
-	ld e, $01
-	ld a, $0e
+	ld e, FALSE
+	ld a, DUELIST_MAXIMILLION
 	call Func_287e
-	cp $00
+	cp TRUE
 	jr nz, .asm_29ec
-	ld e, $00
+	ld e, TRUE
 .asm_29ec
 	ld a, e
 	pop hl
@@ -6075,12 +6109,12 @@ Func_29dc:
 	pop bc
 	ret
 
-Func_29f1:
+PlaySound:
 	push af
 	push bc
 	push de
 	push hl
-	farcall Func_f8076
+	farcall _PlaySound
 	pop hl
 	pop de
 	pop bc
@@ -6090,7 +6124,7 @@ Func_29f1:
 Func_29fd::
 	push af
 	ld a, $00
-	call Func_29f1
+	call PlaySound
 	call WaitForVBlank
 	pop af
 	ret
@@ -6098,7 +6132,7 @@ Func_29fd::
 Func_2a08::
 	push af
 	ld a, $01
-	call Func_29f1
+	call PlaySound
 	call WaitForVBlank
 	pop af
 	ret
@@ -6106,7 +6140,7 @@ Func_2a08::
 Func_2a13::
 	push af
 	ld a, $02
-	call Func_29f1
+	call PlaySound
 	call WaitForVBlank
 	pop af
 	ret
@@ -6114,7 +6148,7 @@ Func_2a13::
 Func_2a1e:
 	push af
 	ld a, $04
-	call Func_29f1
+	call PlaySound
 	call WaitForVBlank
 	pop af
 	ret
@@ -6122,7 +6156,7 @@ Func_2a1e:
 Func_2a29:
 	push af
 	ld a, $05
-	call Func_29f1
+	call PlaySound
 	call WaitForVBlank
 	pop af
 	ret
@@ -6130,7 +6164,7 @@ Func_2a29:
 Func_2a34:
 	push af
 	ld a, $03
-	call Func_29f1
+	call PlaySound
 	call WaitForVBlank
 	pop af
 	ret
@@ -6138,7 +6172,7 @@ Func_2a34:
 Func_2a3f::
 	push af
 	ld a, $07
-	call Func_29f1
+	call PlaySound
 	call WaitForVBlank
 	pop af
 	ret
@@ -6146,7 +6180,7 @@ Func_2a3f::
 Func_2a4a:
 	push af
 	ld a, $10
-	call Func_29f1
+	call PlaySound
 	call WaitForVBlank
 	pop af
 	ret
@@ -6154,7 +6188,7 @@ Func_2a4a:
 Func_2a55::
 	push af
 	ld a, $06
-	call Func_29f1
+	call PlaySound
 	call WaitForVBlank
 	pop af
 	ret
@@ -6162,7 +6196,7 @@ Func_2a55::
 Func_2a60::
 	push af
 	ld a, $09
-	call Func_29f1
+	call PlaySound
 	call WaitForVBlank
 	pop af
 	ret
@@ -6170,7 +6204,7 @@ Func_2a60::
 Func_2a6b::
 	push af
 	ld a, $0a
-	call Func_29f1
+	call PlaySound
 	call WaitForVBlank
 	pop af
 	ret
@@ -6178,7 +6212,7 @@ Func_2a6b::
 Func_2a76::
 	push af
 	ld a, $0c
-	call Func_29f1
+	call PlaySound
 	call WaitForVBlank
 	pop af
 	ret
@@ -6186,7 +6220,7 @@ Func_2a76::
 Func_2a81::
 	push af
 	ld a, $0d
-	call Func_29f1
+	call PlaySound
 	call WaitForVBlank
 	pop af
 	ret
@@ -6194,7 +6228,7 @@ Func_2a81::
 Func_2a8c::
 	push af
 	ld a, $0b
-	call Func_29f1
+	call PlaySound
 	call WaitForVBlank
 	pop af
 	ret
@@ -6245,7 +6279,7 @@ Func_2abe::
 Func_2ad9::
 	push af
 	ld a, $9a
-	call Func_29f1
+	call PlaySound
 	call WaitForVBlank
 	pop af
 	ret
@@ -6253,7 +6287,7 @@ Func_2ad9::
 Func_2ae4::
 	push af
 	ld a, $99
-	call Func_29f1
+	call PlaySound
 	call WaitForVBlank
 	pop af
 	ret
@@ -6261,7 +6295,7 @@ Func_2ae4::
 Func_2aef::
 	push af
 	ld a, $98
-	call Func_29f1
+	call PlaySound
 	call WaitForVBlank
 	pop af
 	ret
@@ -6269,7 +6303,7 @@ Func_2aef::
 Func_2afa::
 	push af
 	ld a, $95
-	call Func_29f1
+	call PlaySound
 	call WaitForVBlank
 	pop af
 	ret
@@ -6277,7 +6311,7 @@ Func_2afa::
 Func_2b05::
 	push af
 	ld a, $9b
-	call Func_29f1
+	call PlaySound
 	call WaitForVBlank
 	pop af
 	ret
@@ -6285,7 +6319,7 @@ Func_2b05::
 Func_2b10::
 	push af
 	ld a, $96
-	call Func_29f1
+	call PlaySound
 	call WaitForVBlank
 	pop af
 	ret
@@ -6293,7 +6327,7 @@ Func_2b10::
 Func_2b1b::
 	push af
 	ld a, $9c
-	call Func_29f1
+	call PlaySound
 	call WaitForVBlank
 	pop af
 	ret
@@ -6301,7 +6335,7 @@ Func_2b1b::
 Func_2b26::
 	push af
 	ld a, $9d
-	call Func_29f1
+	call PlaySound
 	call WaitForVBlank
 	pop af
 	ret
@@ -6309,7 +6343,7 @@ Func_2b26::
 Func_2b31::
 	push af
 	ld a, $93
-	call Func_29f1
+	call PlaySound
 	call WaitForVBlank
 	pop af
 	ret
@@ -6317,7 +6351,7 @@ Func_2b31::
 Func_2b3c::
 	push af
 	ld a, $9f
-	call Func_29f1
+	call PlaySound
 	call WaitForVBlank
 	pop af
 	ret
@@ -6325,7 +6359,7 @@ Func_2b3c::
 Func_2b47::
 	push af
 	ld a, $98
-	call Func_29f1
+	call PlaySound
 	call WaitForVBlank
 	pop af
 	ret
@@ -6333,7 +6367,7 @@ Func_2b47::
 Func_2b52::
 	push af
 	ld a, $a2
-	call Func_29f1
+	call PlaySound
 	call WaitForVBlank
 	pop af
 	ret
@@ -6341,7 +6375,7 @@ Func_2b52::
 Func_2b5d::
 	push af
 	ld a, $a3
-	call Func_29f1
+	call PlaySound
 	call WaitForVBlank
 	pop af
 	ret
@@ -6349,7 +6383,7 @@ Func_2b5d::
 Func_2b68::
 	push af
 	ld a, $94
-	call Func_29f1
+	call PlaySound
 	call WaitForVBlank
 	pop af
 	ret
@@ -6357,7 +6391,7 @@ Func_2b68::
 Func_2b73::
 	push af
 	ld a, $92
-	call Func_29f1
+	call PlaySound
 	call WaitForVBlank
 	pop af
 	ret
@@ -6365,7 +6399,7 @@ Func_2b73::
 Func_2b7e::
 	push af
 	ld a, $a1
-	call Func_29f1
+	call PlaySound
 	call WaitForVBlank
 	pop af
 	ret
@@ -6373,7 +6407,7 @@ Func_2b7e::
 Func_2b89::
 	push af
 	ld a, $0f
-	call Func_29f1
+	call PlaySound
 	call WaitForVBlank
 	pop af
 	ret
@@ -6664,11 +6698,10 @@ Func_2d1f:
 
 Func_2d2e:
 	di
-	bankswitch BANK(Func_f8076)
+	bankswitch BANK(_PlaySound)
 	ei
 	ld a, [$cfef]
-	call Func_f8076
-
+	call _PlaySound
 	di
 	bankswitch BANK(Func_f4002)
 	ei
