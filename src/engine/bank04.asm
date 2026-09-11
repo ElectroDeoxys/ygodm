@@ -181,7 +181,7 @@ Func_10124:
 
 VersusMenu:
 	push af
-	ldh a, [$ffde]
+	ldh a, [hffde]
 	cp $03
 	jr nz, .asm_1014c
 	farcall Func_b916
@@ -230,7 +230,7 @@ Func_1016d:
 
 TradeMenu:
 	push af
-	ldh a, [$ffde]
+	ldh a, [hffde]
 	cp $03
 	jr nz, .asm_10199
 	farcall Func_b916

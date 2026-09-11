@@ -5661,11 +5661,11 @@ Func_e626:
 	ld a, e
 	cp $82
 	jr nz, .done
-	ldh a, [$ffde]
+	ldh a, [hffde]
 	cp $03
 	jr nz, .asm_e681
 	ld a, $02
-	ldh [$ffde], a
+	ldh [hffde], a
 .asm_e681
 	call Func_2b26
 	ld e, $00

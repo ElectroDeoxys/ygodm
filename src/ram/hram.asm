@@ -9,7 +9,7 @@ hDecompressBufferSize:: db ; ff86
 
 hBootUpA:: db ; ffdd
 
-	ds $1
+hffde:: db ; ffde
 
 hCurJob:: db ; ffdf
 

@@ -5,24 +5,24 @@ _Start:
 	ld hl, wStackBottom
 	ld sp, hl
 
-	call Func_1090
+	call SetBankingMode
 	farcall Func_10477
-	ld a, $00
-	farcall Func_fc004
+	ld a, SGBFUNC_0
+	farcall ExecuteSGBFunction
 	farcall InitAudio
 	call InitTransferVirtualOAM
 	call Func_396
 	call Func_dd8
 	call Func_19f
 
-	ld a, $02
-	farcall Func_fc004
+	ld a, SGBFUNC_2
+	farcall ExecuteSGBFunction
 	farcall Func_6595
-	ld a, $04
-	farcall Func_fc004
+	ld a, SGBFUNC_4
+	farcall ExecuteSGBFunction
 	farcall Func_65c4
-	ld a, $06
-	farcall Func_fc004
+	ld a, SGBFUNC_6
+	farcall ExecuteSGBFunction
 	call Func_40c
 	farcall Func_65f3
 
@@ -1495,7 +1495,7 @@ Func_1071:
 	pop af
 	ret
 
-Func_1090:
+SetBankingMode:
 	push af
 	push hl
 	ld hl, rRAMG + $1000
@@ -5222,7 +5222,7 @@ SECTION "Home@2473", ROM0[$2473]
 
 FadeIn::
 	push af
-	ldh a, [$ffde]
+	ldh a, [hffde]
 	cp $00
 	jr nz, .asm_247f
 	call DMGFadeIn
@@ -5235,7 +5235,7 @@ FadeIn::
 
 FadeOut::
 	push af
-	ldh a, [$ffde]
+	ldh a, [hffde]
 	cp $00
 	jr nz, .asm_2490
 	call DMGFadeOut

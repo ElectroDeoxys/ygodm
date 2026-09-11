@@ -55,4 +55,4 @@ SECTION "Bank 3d", ROMX
 INCLUDE "engine/bank3d.asm"
 
 SECTION "Bank 3f", ROMX
-INCLUDE "engine/bank3f.asm"
+INCLUDE "engine/sgb.asm"
