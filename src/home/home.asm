@@ -1361,9 +1361,8 @@ AudioJob:
 	db $80, LOW(hAudioJobFlags)
 	jr z, .wait
 	jr .loop
-; 0xfef
 
-SECTION "Bank 0@ff0", ROM0[$ff0]
+	ret ; stray ret
 
 Func_ff0::
 	push af
@@ -1624,9 +1623,14 @@ EnableObjects::
 	set B_LCDC_OBJS, [hl]
 	pop hl
 	ret
-; 0x110c
 
-SECTION "Home@1114", ROM0[$1114]
+; unreferenced
+Func_110c:
+	push hl
+	ld hl, rLCDC
+	res B_LCDC_OBJS, [hl]
+	pop hl
+	ret
 
 Func_1114::
 	push af
@@ -2090,9 +2094,52 @@ DDividedByB::
 	pop bc
 	pop af
 	ret
-; 0x135e
 
-SECTION "Bank 0@1391", ROM0[$1391]
+; unreferenced
+Func_135e:
+	push af
+	push bc
+	push hl
+	ld hl, $0
+	ld a, $10
+.asm_1366
+	push af
+	sla e
+	rl d
+	rl l
+	rl h
+	ld a, h
+	cp b
+	jr c, .asm_1387
+	ld a, h
+	cp b
+	jr nz, .asm_1382
+	ld a, l
+	cp c
+	jr c, .asm_1380
+	sub c
+	ld l, a
+	ld a, h
+	sbc b
+	ld h, a
+.asm_1380
+	jr .asm_1387
+.asm_1382
+	sub c
+	ld l, a
+	ld a, h
+	sbc b
+	ld h, a
+.asm_1387
+	pop af
+	dec a
+	jr nz, .asm_1366
+	ld d, h
+	ld e, l
+	pop hl
+	pop bc
+	pop af
+	ret
 
 ; outputs hl = d * e
 BTimesE::
@@ -2556,9 +2603,27 @@ SetInitialJobStates:
 	pop bc
 	pop af
 	ret
-; 0x1601
 
-SECTION "Home@161a", ROM0[$161a]
+; unreferenced
+Func_1601:
+	push af
+	push bc
+	push hl
+	ld c, LOW(hJobStates)
+	ld hl, InitialJobStates
+	ld a, JOBSTATE_INACTIVE
+	ld b, NUM_JOBS
+.loop
+	ld [$ff00+c], a
+	inc c
+	dec b
+	jr nz, .loop
+	ld a, JOB_MAIN
+	ldh [hCurJob], a
+	pop hl
+	pop bc
+	pop af
+	ret
 
 Timer:
 	push hl
@@ -2643,9 +2708,8 @@ Timer:
 	set B_IE_TIMER, [hl]
 	pop hl
 	reti
-; 0x168e
 
-SECTION "Home@168f", ROM0[$168f]
+	ret ; stray ret
 
 YieldJob::
 	push hl
@@ -2734,9 +2798,8 @@ YieldJob::
 	set B_IE_TIMER, [hl]
 	pop hl
 	reti
-; 0x1704
 
-SECTION "Home@1705", ROM0[$1705]
+	ret ; stray ret
 
 ActivateJob::
 	push af
@@ -2773,16 +2836,14 @@ Func_1724:
 	ld hl, rIE
 	res B_IE_TIMER, [hl]
 	reti
-; 0x172b
 
-SECTION "Home@172c", ROM0[$172c]
+	ret ; stray ret
 
 Func_172c:
 .loop
 	jr .loop
-; 0x172e
 
-SECTION "Home@172f", ROM0[$172f]
+	ret ; stray ret
 
 InitJobFlags:
 	push af
@@ -2893,9 +2954,8 @@ ResetJobFlag::
 	pop bc
 	pop af
 	reti
-; 0x179a
 
-SECTION "Home@179b", ROM0[$179b]
+	ret ; stray ret
 
 Func_179b:
 	push af
@@ -3811,7 +3871,38 @@ Decompress:
 	pop de
 	pop bc
 	ret
-; 0x1be4
+
+; unreferenced
+Func_1be4:
+	push af
+	ld a, c
+	ld [$cd19], a
+	ld a, b
+	ld [$cd1a], a
+	pop af
+	ret
+
+; unreferenced
+Func_1bef:
+	push af
+	push bc
+	push de
+	push hl
+	ld hl, $cd1b
+	ld de, $1c06
+	ld c, $04
+.asm_1bfb
+	ld a, [de]
+	ld [hli], a
+	inc de
+	dec c
+	jr nz, .asm_1bfb
+	pop hl
+	pop de
+	pop bc
+	pop af
+	ret
+; 0x1c06
 
 SECTION "Bank 0@1c0a", ROM0[$1c0a]
 
@@ -4421,9 +4512,13 @@ Func_1f43:
 .asm_1f50
 	pop af
 	ret
-; 0x1f52
 
-SECTION "Home@1f57", ROM0[$1f57]
+; unreferenced
+Func_1f52:
+	push af
+	ld c, $00
+	pop af
+	ret
 
 Func_1f57::
 	push af
@@ -4476,9 +4571,14 @@ Func_1f81::
 .asm_1f9e
 	pop af
 	ret
-; 0x1fa0
 
-SECTION "Home@1fa8", ROM0[$1fa8]
+; unreferenced
+Func_1fa0:
+	push af
+	ld a, $00
+	ld [wce00], a
+	pop af
+	ret
 
 Func_1fa8::
 	push af
@@ -4549,9 +4649,19 @@ Func_1fe6::
 	pop bc
 	pop af
 	ret
-; 0x1fff
 
-SECTION "Bank 0@200e", ROM0[$200e]
+; unreferenced
+Func_1fff:
+	push af
+	and $0f
+	ld b, a
+	swap b
+	ld a, c
+	and $0f
+	or b
+	call Func_2025
+	pop af
+	ret
 
 Func_200e::
 	push af
@@ -4595,9 +4705,20 @@ Func_2025:
 	pop hl
 	pop bc
 	ret
-; 0x2041
 
-SECTION "Bank 0@2051", ROM0[$2051]
+; unreferenced
+Func_2041:
+	push af
+	call Func_2062
+	ld b, a
+	and $0f
+	ld c, a
+	ld a, b
+	and $0f
+	ld b, a
+	swap b
+	pop af
+	ret
 
 Func_2051::
 	push bc
@@ -4848,9 +4969,16 @@ Func_21b4::
 	ld [$cdf4], a
 	pop af
 	ret
-; 0x21bf
 
-SECTION "Bank 0@21cc", ROM0[$21cc]
+; unreferenced
+Func_21bf:
+	push af
+	ld a, [$cdf4]
+	and $f8
+	or $00
+	ld [$cdf4], a
+	pop af
+	ret
 
 Func_21cc::
 	push af
@@ -4899,9 +5027,15 @@ Func_2203::
 	ld a, $01
 .asm_220c
 	ret
-; 0x220d
 
-SECTION "Bank 0@2217", ROM0[$2217]
+; unreferenced
+Func_220d:
+	ld a, [$cdf4]
+	and $10
+	jr z, .asm_2216
+	ld a, $01
+.asm_2216
+	ret
 
 Func_2217::
 	push af
@@ -5026,9 +5160,42 @@ Func_22d6::
 	ld [$cedc], a
 	pop af
 	ret
-; 0x22e1
 
-SECTION "Bank 0@230d", ROM0[$230d]
+; unreferenced
+Func_22e1:
+	push af
+	ld a, [$ced1]
+	or $08
+	ld [$ced1], a
+	pop af
+	ret
+
+; unreferenced
+Func_22ec:
+	push af
+	ld a, [$ced1]
+	and $f7
+	ld [$ced1], a
+	pop af
+	ret
+
+; unreferenced
+Func_22f7:
+	push af
+	ld a, [$cedc]
+	or $08
+	ld [$cedc], a
+	pop af
+	ret
+
+; unreferenced
+Func_2302:
+	push af
+	ld a, [$cedc]
+	and $f7
+	ld [$cedc], a
+	pop af
+	ret
 
 Func_230d::
 	push af
@@ -5061,9 +5228,14 @@ Func_232e::
 	ld [$cedc], a
 	pop af
 	ret
-; 0x2339
 
-SECTION "Bank 0@2340", ROM0[$2340]
+; unreferenced
+Func_2339:
+	push af
+	xor a
+	ld [wNPCDuelist], a
+	pop af
+	ret
 
 SetNPCDuelist::
 	ld [wNPCDuelist], a
@@ -5245,9 +5417,46 @@ PlayerLostDuel::
 	ld a, FALSE
 .ok
 	ret
-; 0x2435
 
-SECTION "Home@2473", ROM0[$2473]
+; unreferenced
+Func_2435:
+	ld a, [wce00]
+	cp $01
+	jr nz, .asm_244a
+	ld a, [$cf02]
+	cp $03
+	jr nz, .asm_2446
+	xor a
+	jr .asm_2448
+.asm_2446
+	ld a, $01
+.asm_2448
+	jr .asm_2472
+.asm_244a
+	ld a, [$cf02]
+	cp $03
+	jr nz, .asm_2454
+	xor a
+	jr .asm_2472
+.asm_2454
+	ld a, [$cf02]
+	cp $02
+	jr nz, .asm_245f
+	ld a, $01
+	jr .asm_2472
+.asm_245f
+	ld a, [$cf03]
+	cp $03
+	jr nz, .asm_246a
+	ld a, $01
+	jr .asm_2472
+.asm_246a
+	ld a, [$cf03]
+	cp $03
+	jr nz, .asm_2472
+	xor a
+.asm_2472
+	ret
 
 FadeIn::
 	push af
@@ -5283,9 +5492,18 @@ SetDefaultPalettes:
 	ldh [rOBP1], a
 	pop af
 	ret
-; 0x24a0
 
-SECTION "Home@24af", ROM0[$24af]
+; unreferenced
+Func_24a0:
+	push af
+	ld a, $1b
+	ldh [rBGP], a
+	ld a, $e4
+	ldh [rOBP0], a
+	ld a, $1b
+	ldh [rOBP1], a
+	pop af
+	ret
 
 SetBlackPalettes:
 	push af
@@ -5509,16 +5727,56 @@ Func_25d4::
 	jr nz, .asm_261f
 	pop af
 	ret
-; 0x2627
 
-SECTION "Bank 0@2639", ROM0[$2639]
+; unreferenced
+Func_2627:
+	push af
+	ld a, [$cf02]
+	cp $03
+	jr nz, .asm_2634
+	call Func_2648
+	jr .asm_2637
+.asm_2634
+	call Func_265b
+.asm_2637
+	pop af
+	ret
 
 Func_2639::
 	ld [$cf19], a
 	ret
-; 0x263d
 
-SECTION "Home@2666", ROM0[$2666]
+; unreferenced
+Func_263d:
+	push af
+	ld a, c
+	ld [$cf1a], a
+	ld a, b
+	ld [$cf1b], a
+	pop af
+	ret
+
+Func_2648:
+	push af
+	push bc
+	ld a, [$cf1a]
+	ld c, a
+	ld a, [$cf1b]
+	ld b, a
+	farcall Func_5af2
+	farcall GiveCard
+	pop bc
+	pop af
+	ret
+
+Func_265b:
+	push af
+	push bc
+	ld a, [$cf19]
+	farcall RemoveCardFromPlayerDeck
+	pop bc
+	pop af
+	ret
 
 GenerateStartingDeck::
 	call GenerateStartingDeckMonsterCards
@@ -6448,9 +6706,15 @@ Func_2b94::
 	ld [$cfbf], a
 	pop af
 	ret
-; 0x2b9e
 
-SECTION "Bank 0@2ba9", ROM0[$2ba9]
+; unreferenced
+Func_2b9e:
+	push af
+	ld a, [$cfbe]
+	or $01
+	ld [$cfbe], a
+	pop af
+	ret
 
 Func_2ba9::
 	push af

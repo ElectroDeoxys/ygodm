@@ -891,7 +891,7 @@ Func_c618:
 	pop bc
 	ret
 
-RemoveCardFromPlayerDeck:
+RemoveCardFromPlayerDeck::
 	push af
 	push bc
 	push de
