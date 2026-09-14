@@ -15,3 +15,12 @@ MACRO? save_data_struct
 	ds $6c2
 \1Checksum::          dw
 ENDM
+
+MACRO? audio_config_struct
+\1Unk0:: db
+\1PolyDiv:: db
+\1Unk2:: db
+\1Unk3:: db
+\1Unk4:: db
+\1Sweep:: db
+ENDM

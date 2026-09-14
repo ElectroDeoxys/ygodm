@@ -1,0 +1,99 @@
+MACRO? note
+	ASSERT \2 <= $1f
+	ASSERT \3 <= $7
+	db \1 ; note
+	db \2 | (\3 << 5) ; duration & volume
+ENDM
+
+MACRO? rest
+	ASSERT \1 <= $1f
+	db $6f
+	db \1 ; duration
+ENDM
+
+DEF AUDIOCMD_LOOP_START EQU $d0
+MACRO? audio_loop
+	ASSERT \1 <= $3
+	db AUDIOCMD_LOOP_START | \1
+	db \2
+ENDM
+
+DEF AUDIOCMD_LOOP_END EQU $d4
+MACRO? audio_loop_end
+	ASSERT \1 <= $3
+	db AUDIOCMD_LOOP_END | \1
+	dw \2
+ENDM
+
+DEF AUDIOCMD_PAN EQU $d8
+MACRO? pan
+	db AUDIOCMD_PAN | \1
+ENDM
+
+DEF AUDIOCMD_POLY_DIV EQU $e0
+MACRO? poly_div
+	ASSERT \1 <= $7
+	db AUDIOCMD_POLY_DIV | \1
+ENDM
+
+DEF AUDIOCMD_DEF_ENVELOPE EQU $e8
+MACRO? def_envelope
+	ASSERT \1 <= $7
+	db AUDIOCMD_DEF_ENVELOPE | \1
+	db (\2 << 4) | \3 | \4
+ENDM
+
+DEF AUDIOCMD_DUTY_CYCLE EQU $f0
+MACRO? duty_cycle
+	db AUDIOCMD_DUTY_CYCLE | \1
+ENDM
+
+DEF AUDIOCMD_RESET_SWEEP EQU $f7
+MACRO? reset_sweep
+	ASSERT \1 <= $7
+	ASSERT \3 <= $7
+	db AUDIOCMD_RESET_SWEEP
+	db (\1 << 4) | \2 | \3
+ENDM
+
+DEF AUDIOCMD_SWEEP EQU $f7
+MACRO? sweep
+	ASSERT \1 <= $7
+	ASSERT \3 <= $7
+	db AUDIOCMD_SWEEP
+	db (\1 << 4) | \2 | \3
+ENDM
+
+DEF AUDIOCMD_BASE_NOTE EQU $f8
+MACRO? base_note
+	db AUDIOCMD_BASE_NOTE
+	db \1
+ENDM
+
+DEF AUDIOCMD_F9 EQU $f9
+MACRO? audio_unkf9
+	db AUDIOCMD_F9
+	db \1
+ENDM
+
+DEF AUDIOCMD_CALL EQU $fc
+MACRO? audio_call
+	db AUDIOCMD_CALL
+	dw \1
+ENDM
+
+DEF AUDIOCMD_JUMP EQU $fd
+MACRO? audio_jp
+	db AUDIOCMD_JUMP
+	dw \1
+ENDM
+
+DEF AUDIOCMD_RET EQU $fe
+MACRO? audio_ret
+	db AUDIOCMD_RET
+ENDM
+
+DEF AUDIOCMD_DONE EQU $ff
+MACRO? audio_done
+	db AUDIOCMD_DONE
+ENDM

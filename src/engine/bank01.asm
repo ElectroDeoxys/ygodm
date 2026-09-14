@@ -2157,7 +2157,7 @@ Func_5d76:
 	ld a, [wcad6]
 	cp $00
 	jr nz, .asm_5d8f
-	ld a, [$ce00]
+	ld a, [wce00]
 	cp $03
 	jr z, .asm_5d8a
 	call Func_5da0
@@ -2167,7 +2167,7 @@ Func_5d76:
 .asm_5d8d
 	jr .asm_5d9e
 .asm_5d8f
-	ld a, [$ce00]
+	ld a, [wce00]
 	cp $03
 	jr z, .asm_5d9b
 	call Func_5e1c

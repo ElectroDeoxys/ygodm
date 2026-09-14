@@ -119,7 +119,7 @@ ROMX $3c
 ROMX $3d
 	"Bank 3d"
 ROMX $3e
-	"Bank 3e"
+	"Audio"
 ROMX $3f
 	"Bank 3f"
 VRAM

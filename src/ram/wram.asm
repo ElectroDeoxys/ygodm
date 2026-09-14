@@ -22,7 +22,37 @@ wc600:: ; c600
 
 SECTION "WRAM Audio", WRAM0
 
-	ds $221
+wChannels::
+wMusicChannels::
+wChannel1:: ds CHANNEL_STRUCT_SIZE ; c700
+wChannel2:: ds CHANNEL_STRUCT_SIZE ; c740
+wChannel3:: ds CHANNEL_STRUCT_SIZE ; c780
+wChannel4:: ds CHANNEL_STRUCT_SIZE ; c7c0
+wSFXChannels::
+wChannel5:: ds CHANNEL_STRUCT_SIZE ; c800
+wChannel6:: ds CHANNEL_STRUCT_SIZE ; c840
+wChannel7:: ds CHANNEL_STRUCT_SIZE ; c880
+wChannel8:: ds CHANNEL_STRUCT_SIZE ; c8c0
+
+wAudioChannel:: db ; c900
+wAudioRegister:: db ; c901
+
+wc902:: ds NUM_MUSIC_CHANNELS ; aka NUM_SFX_CHANNELS c902
+wc906:: db ; c906
+wc907:: db ; c907
+wc908:: db ; c908
+	ds $1
+wVolume:: db ; c90a
+wChannelMixer:: db ; c90b
+
+wCurAudioConfig::   audio_config_struct wCurAudioConfig
+wSFXAudioConfig::   audio_config_struct wSFXAudioConfig
+wMusicAudioConfig:: audio_config_struct wMusicAudioConfig
+
+wc91e:: db ; c91e
+wc91f:: db ; c91f
+
+wPendingSound:: db ; c920
 
 SECTION "WRAM Virtual OAM", WRAM0
 
@@ -149,7 +179,11 @@ wCardLocationIndex:: db ; cdf0
 wCardLocation:: db ; cdf1
 wTempCardID:: dw ; cdf2
 
-	ds $ce0a - $cdf4
+	ds $ce00 - $cdf4
+
+wce00:: db ; ce00
+
+	ds $ce0a - $ce01
 
 wHealLPAmount:: dw ; ce0a
 	ds $2

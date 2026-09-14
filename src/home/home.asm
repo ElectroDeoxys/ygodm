@@ -4459,28 +4459,28 @@ SECTION "Home@1fa8", ROM0[$1fa8]
 Func_1fa8::
 	push af
 	ld a, $01
-	ld [$ce00], a
+	ld [wce00], a
 	pop af
 	ret
 
 Func_1fb0::
 	push af
 	ld a, $02
-	ld [$ce00], a
+	ld [wce00], a
 	pop af
 	ret
 
 Func_1fb8::
 	push af
 	ld a, $03
-	ld [$ce00], a
+	ld [wce00], a
 	pop af
 	ret
 
 Func_1fc0::
 	push af
 	ld a, $04
-	ld [$ce00], a
+	ld [wce00], a
 	pop af
 	ret
 
@@ -5137,7 +5137,7 @@ Func_23a8::
 ; FALSE if a win condition has been reached
 IsDuelOngoing::
 	push bc
-	ld a, [$ce00]
+	ld a, [wce00]
 	cp $01
 	jr nz, .asm_23ce
 	ld c, TRUE
@@ -5179,7 +5179,7 @@ IsDuelOngoing::
 	ret
 
 PlayerLostDuel::
-	ld a, [$ce00]
+	ld a, [wce00]
 	cp $01
 	jr nz, .asm_240c
 	ld a, [$cf02]
@@ -6123,7 +6123,7 @@ PlaySound:
 
 Func_29fd::
 	push af
-	ld a, $00
+	ld a, MUSIC_NONE
 	call PlaySound
 	call WaitForVBlank
 	pop af
@@ -6131,7 +6131,7 @@ Func_29fd::
 
 Func_2a08::
 	push af
-	ld a, $01
+	ld a, MUSIC_MAIN_MENU
 	call PlaySound
 	call WaitForVBlank
 	pop af
@@ -6139,7 +6139,7 @@ Func_2a08::
 
 Func_2a13::
 	push af
-	ld a, $02
+	ld a, MUSIC_DUEL1
 	call PlaySound
 	call WaitForVBlank
 	pop af
@@ -6147,7 +6147,7 @@ Func_2a13::
 
 Func_2a1e:
 	push af
-	ld a, $04
+	ld a, MUSIC_DUEL3
 	call PlaySound
 	call WaitForVBlank
 	pop af
@@ -6155,7 +6155,7 @@ Func_2a1e:
 
 Func_2a29:
 	push af
-	ld a, $05
+	ld a, MUSIC_DUEL4
 	call PlaySound
 	call WaitForVBlank
 	pop af
@@ -6163,7 +6163,7 @@ Func_2a29:
 
 Func_2a34:
 	push af
-	ld a, $03
+	ld a, MUSIC_DUEL2
 	call PlaySound
 	call WaitForVBlank
 	pop af
@@ -6171,7 +6171,7 @@ Func_2a34:
 
 Func_2a3f::
 	push af
-	ld a, $07
+	ld a, MUSIC_07
 	call PlaySound
 	call WaitForVBlank
 	pop af
@@ -6179,7 +6179,7 @@ Func_2a3f::
 
 Func_2a4a:
 	push af
-	ld a, $10
+	ld a, MUSIC_10
 	call PlaySound
 	call WaitForVBlank
 	pop af
@@ -6187,7 +6187,7 @@ Func_2a4a:
 
 Func_2a55::
 	push af
-	ld a, $06
+	ld a, MUSIC_CAMPAIGN
 	call PlaySound
 	call WaitForVBlank
 	pop af
@@ -6195,7 +6195,7 @@ Func_2a55::
 
 Func_2a60::
 	push af
-	ld a, $09
+	ld a, MUSIC_09
 	call PlaySound
 	call WaitForVBlank
 	pop af
@@ -6203,7 +6203,7 @@ Func_2a60::
 
 Func_2a6b::
 	push af
-	ld a, $0a
+	ld a, MUSIC_0A
 	call PlaySound
 	call WaitForVBlank
 	pop af
@@ -6211,7 +6211,7 @@ Func_2a6b::
 
 Func_2a76::
 	push af
-	ld a, $0c
+	ld a, MUSIC_DUEL_WIN
 	call PlaySound
 	call WaitForVBlank
 	pop af
@@ -6219,7 +6219,7 @@ Func_2a76::
 
 Func_2a81::
 	push af
-	ld a, $0d
+	ld a, MUSIC_DUEL_LOSS
 	call PlaySound
 	call WaitForVBlank
 	pop af
@@ -6227,7 +6227,7 @@ Func_2a81::
 
 Func_2a8c::
 	push af
-	ld a, $0b
+	ld a, MUSIC_0B
 	call PlaySound
 	call WaitForVBlank
 	pop af
@@ -6235,7 +6235,7 @@ Func_2a8c::
 
 Func_2a97::
 	push af
-	ld a, [$ce00]
+	ld a, [wce00]
 	cp $01
 	jr nz, .asm_2ab9
 	call Func_2364
@@ -6278,7 +6278,7 @@ Func_2abe::
 
 Func_2ad9::
 	push af
-	ld a, $9a
+	ld a, SFX_9A
 	call PlaySound
 	call WaitForVBlank
 	pop af
@@ -6286,7 +6286,7 @@ Func_2ad9::
 
 Func_2ae4::
 	push af
-	ld a, $99
+	ld a, SFX_99
 	call PlaySound
 	call WaitForVBlank
 	pop af
@@ -6294,7 +6294,7 @@ Func_2ae4::
 
 Func_2aef::
 	push af
-	ld a, $98
+	ld a, SFX_98
 	call PlaySound
 	call WaitForVBlank
 	pop af
@@ -6302,7 +6302,7 @@ Func_2aef::
 
 Func_2afa::
 	push af
-	ld a, $95
+	ld a, SFX_95
 	call PlaySound
 	call WaitForVBlank
 	pop af
@@ -6310,7 +6310,7 @@ Func_2afa::
 
 Func_2b05::
 	push af
-	ld a, $9b
+	ld a, SFX_9B
 	call PlaySound
 	call WaitForVBlank
 	pop af
@@ -6318,7 +6318,7 @@ Func_2b05::
 
 Func_2b10::
 	push af
-	ld a, $96
+	ld a, SFX_96
 	call PlaySound
 	call WaitForVBlank
 	pop af
@@ -6326,7 +6326,7 @@ Func_2b10::
 
 Func_2b1b::
 	push af
-	ld a, $9c
+	ld a, SFX_9C
 	call PlaySound
 	call WaitForVBlank
 	pop af
@@ -6334,7 +6334,7 @@ Func_2b1b::
 
 Func_2b26::
 	push af
-	ld a, $9d
+	ld a, SFX_9D
 	call PlaySound
 	call WaitForVBlank
 	pop af
@@ -6342,7 +6342,7 @@ Func_2b26::
 
 Func_2b31::
 	push af
-	ld a, $93
+	ld a, SFX_93
 	call PlaySound
 	call WaitForVBlank
 	pop af
@@ -6350,7 +6350,7 @@ Func_2b31::
 
 Func_2b3c::
 	push af
-	ld a, $9f
+	ld a, SFX_9F
 	call PlaySound
 	call WaitForVBlank
 	pop af
@@ -6358,7 +6358,7 @@ Func_2b3c::
 
 Func_2b47::
 	push af
-	ld a, $98
+	ld a, SFX_98
 	call PlaySound
 	call WaitForVBlank
 	pop af
@@ -6366,7 +6366,7 @@ Func_2b47::
 
 Func_2b52::
 	push af
-	ld a, $a2
+	ld a, SFX_A2
 	call PlaySound
 	call WaitForVBlank
 	pop af
@@ -6374,7 +6374,7 @@ Func_2b52::
 
 Func_2b5d::
 	push af
-	ld a, $a3
+	ld a, SFX_A3
 	call PlaySound
 	call WaitForVBlank
 	pop af
@@ -6382,7 +6382,7 @@ Func_2b5d::
 
 Func_2b68::
 	push af
-	ld a, $94
+	ld a, SFX_94
 	call PlaySound
 	call WaitForVBlank
 	pop af
@@ -6390,7 +6390,7 @@ Func_2b68::
 
 Func_2b73::
 	push af
-	ld a, $92
+	ld a, SFX_92
 	call PlaySound
 	call WaitForVBlank
 	pop af
@@ -6398,7 +6398,7 @@ Func_2b73::
 
 Func_2b7e::
 	push af
-	ld a, $a1
+	ld a, SFX_A1
 	call PlaySound
 	call WaitForVBlank
 	pop af
@@ -6406,7 +6406,7 @@ Func_2b7e::
 
 Func_2b89::
 	push af
-	ld a, $0f
+	ld a, MUSIC_EXODIA
 	call PlaySound
 	call WaitForVBlank
 	pop af

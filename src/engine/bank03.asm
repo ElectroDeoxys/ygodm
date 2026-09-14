@@ -1557,7 +1557,7 @@ Func_c9df:
 
 Func_ca6f:
 	push af
-	ld a, [$ce00]
+	ld a, [wce00]
 	cp $03
 	jr z, .asm_ca88
 	ld a, [$cc54]
@@ -1938,7 +1938,7 @@ Func_ccbd:
 	call Func_c6a8
 	cp $00
 	jr nz, .asm_cd1f
-	ld a, [$ce00]
+	ld a, [wce00]
 	cp $02
 	jr nz, .asm_cd1d
 	call Func_24f
@@ -5145,7 +5145,7 @@ SetDamageLPAmount:
 
 Func_e2f8:
 	push af
-	ld a, [$ce00]
+	ld a, [wce00]
 	cp $02
 	jr nz, .asm_e305
 	call Func_e352
