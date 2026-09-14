@@ -1390,7 +1390,7 @@ Func_1501f:
 
 Func_15032:
 	push af
-	ld a, [$cdff]
+	ld a, [wcdff]
 	cp $02
 	jr nz, .asm_15047
 	ld a, $00

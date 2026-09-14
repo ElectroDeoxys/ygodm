@@ -1379,7 +1379,7 @@ Func_b62d:
 	jr nz, .asm_b675
 	call Func_29fd
 	farcall Func_18008
-	call Func_2a8c
+	call PlayMusic_Tea
 	call Func_884a
 .asm_b675
 	pop de
@@ -1416,7 +1416,7 @@ Func_b679:
 	jr nz, .asm_b6c1
 	call Func_29fd
 	farcall Func_18008
-	call Func_2a8c
+	call PlayMusic_Tea
 	call Func_884a
 .asm_b6c1
 	pop de
@@ -1453,7 +1453,7 @@ Func_b6c5:
 	jr nz, .asm_b70d
 	call Func_29fd
 	farcall Func_18008
-	call Func_2a8c
+	call PlayMusic_Tea
 	call Func_884a
 .asm_b70d
 	pop de
@@ -1657,7 +1657,7 @@ Func_b7ee:
 	lddlg a, Text_3cf94
 	ld [wDialogueID], a
 	farcall Func_18008
-	call Func_2a8c
+	call PlayMusic_Tea
 	call Func_884a
 	pop af
 	ret
@@ -1807,7 +1807,7 @@ Func_b916:
 	lddlg a, Text_3d217
 	ld [wDialogueID], a
 	farcall Func_18008
-	call Func_2a8c
+	call PlayMusic_Tea
 	call Func_884a
 	pop af
 	ret

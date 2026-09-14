@@ -17,7 +17,7 @@ SoundHeaders:
 	db $20, $21, $22, $23 ; MUSIC_08
 	db $24, $25, $26, $27 ; MUSIC_09
 	db $28, $29, $2a, $2b ; MUSIC_0A
-	db $2c, $2d, $2e, $2f ; MUSIC_0B
+	db $2c, $2d, $2e, $2f ; MUSIC_TEA
 	db $30, $31, $32, $33 ; MUSIC_DUEL_WIN
 	db $34, $35, $36, $37 ; MUSIC_DUEL_LOSS
 	db $38, $39, $3a, $3b ; MUSIC_0E

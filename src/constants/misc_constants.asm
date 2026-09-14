@@ -9,6 +9,14 @@ DEF DE_SMALLER_THAN_BC EQU $0
 DEF DE_EQUAL_TO_BC     EQU $1
 DEF DE_LARGER_THAN_BC  EQU $2
 
+; hConsole constants
+	const_def
+	const CONSOLE_DMG  ; $0
+	const CONSOLE_UNK  ; $1
+	const CONSOLE_SGB1 ; $2
+	const CONSOLE_SGB2 ; $3
+
+
 ; V-Blank modes
 	const_def 0, 2
 	const VBLANK_00 ; $00

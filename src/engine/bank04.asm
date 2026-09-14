@@ -33,7 +33,7 @@ GameLoop::
 	jr z, .break
 	farcall ResetMainMenuSelection
 	farcall LoadMainMenu
-	call Func_2a08
+	call PlayMusic_MainMenu
 	farcall Func_e4fb
 	jr .loop
 .break
@@ -103,7 +103,7 @@ DuelAgainstAIOpponent:
 	farcall Func_cb87
 	call Func_2a60
 
-	farcall Func_cc4c
+	farcall DuelPrepMenu
 	ld c, 10
 .wait
 	call WaitForVBlank
@@ -181,48 +181,49 @@ Func_10124:
 
 VersusMenu:
 	push af
-	ldh a, [hffde]
-	cp $03
-	jr nz, .asm_1014c
+	ldh a, [hConsole]
+	cp CONSOLE_SGB2
+	jr nz, .not_sgb2
 	farcall Func_b916
 	jr .asm_1016b
-.asm_1014c
-	call Func_1016d
-	cp $00
-	jr z, .asm_10158
+.not_sgb2
+	call .CheckPlayerCards
+	cp TRUE
+	jr z, .has_enough_cards
 	farcall Func_b7ee
 	jr .asm_1016b
-.asm_10158
+.has_enough_cards
 	farcall Func_cbe9
 	farcall Func_cb87
 	call Func_2a60
-	farcall Func_cc4c
+	farcall DuelPrepMenu
 	cp $00
 	jr nz, .asm_1016b
-	farcall Func_d249
+	farcall DuelAgainstLinkOpponent
 .asm_1016b
 	pop af
 	ret
 
-Func_1016d:
+; returns TRUE if the player has at least 50 total cards
+.CheckPlayerCards:
 	push bc
 	push de
-	ld e, $00
+	ld e, TRUE
 	farcall GetTrunkTotalCardCount
 	farcall GetPlayerDeckCardCount
 	add c
 	ld c, a
-	ld a, $00
+	ld a, 0
 	adc b
 	ld b, a
 	ld a, b
-	cp $00
-	jr nz, .asm_10189
+	cp HIGH(DECK_SIZE + 10)
+	jr nz, .true
 	ld a, c
-	cp $32
-	jr nc, .asm_10189
-	ld e, $01
-.asm_10189
+	cp LOW(DECK_SIZE + 10)
+	jr nc, .true
+	ld e, FALSE
+.true
 	ld a, e
 	pop de
 	pop bc
@@ -230,14 +231,14 @@ Func_1016d:
 
 TradeMenu:
 	push af
-	ldh a, [hffde]
-	cp $03
-	jr nz, .asm_10199
+	ldh a, [hConsole]
+	cp CONSOLE_SGB2
+	jr nz, .not_sgb2
 	farcall Func_b916
 	jr .asm_101bb
-.asm_10199
-	call Func_101d8
-	cp $00
+.not_sgb2
+	call .CheckPlayerCards
+	cp TRUE
 	jr z, .asm_101a5
 	farcall Func_b7ee
 	jr .asm_101bb
@@ -249,12 +250,12 @@ TradeMenu:
 	farcall Func_e84e
 	cp $00
 	jr nz, .asm_101bb
-	call Func_101bd
+	call .Func_101bd
 .asm_101bb
 	pop af
 	ret
 
-Func_101bd:
+.Func_101bd:
 	push af
 	farcall Func_ee30
 	cp $00
@@ -270,25 +271,26 @@ Func_101bd:
 	pop af
 	ret
 
-Func_101d8:
+; returns TRUE if the player has at least 50 total cards
+.CheckPlayerCards:
 	push bc
 	push de
-	ld e, $00
+	ld e, TRUE
 	farcall GetTrunkTotalCardCount
 	farcall GetPlayerDeckCardCount
 	add c
 	ld c, a
-	ld a, $00
+	ld a, 0
 	adc b
 	ld b, a
 	ld a, b
-	cp $00
-	jr nz, .asm_101f4
+	cp HIGH(DECK_SIZE + 10)
+	jr nz, .true
 	ld a, c
-	cp $32
-	jr nc, .asm_101f4
-	ld e, $01
-.asm_101f4
+	cp LOW(DECK_SIZE + 10)
+	jr nc, .true
+	ld e, FALSE
+.true
 	ld a, e
 	pop de
 	pop bc

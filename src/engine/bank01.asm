@@ -338,7 +338,7 @@ Func_42a7:
 
 Func_42ae:
 	push af
-	ld a, [$cdff]
+	ld a, [wcdff]
 	cp $02
 	jr nz, .asm_42c3
 	ld a, 0 + WX_OFS

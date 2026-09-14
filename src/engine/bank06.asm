@@ -722,7 +722,7 @@ Func_195a4:
 	ld a, [$ced7]
 	ld [$cdf9], a
 	ld a, $00
-	ld [$cdfa], a
+	ld [wcdfa], a
 	call Func_1d2a
 	cp FALSE
 	jr z, .asm_1962a
@@ -839,7 +839,7 @@ Func_19678:
 	ld a, [$cee2]
 	ld [$cdf9], a
 	ld a, $00
-	ld [$cdfa], a
+	ld [wcdfa], a
 	call Func_1d2a
 	cp $01
 	jr z, .asm_196fe

@@ -11,7 +11,7 @@
 	farfunc Func_cbe9 ; $11
 	farfunc Func_cb87 ; $13
 	farfunc Func_e7eb ; $15
-	farfunc Func_cc4c ; $17
+	farfunc DuelPrepMenu ; $17
 	farfunc Func_e84e ; $19
 	farfunc Func_c618 ; $1b
 	farfunc Func_c664 ; $1d
@@ -22,7 +22,7 @@
 	farfunc Func_e747 ; $27
 	farfunc Func_e773 ; $29
 	farfunc $4d55 ; $2b
-	farfunc Func_d249 ; $2d
+	farfunc DuelAgainstLinkOpponent ; $2d
 	farfunc SetupDuel ; $2f
 	farfunc Func_cefb ; $31
 	farfunc Func_cfe1 ; $33
@@ -985,15 +985,15 @@ GetPlayerDeckCardCount:
 	pop bc
 	ret
 
-Func_c6a8:
+DoesPlayerHaveEnoughDeckCards:
 	call GetPlayerDeckCardCount
-	cp $28
-	jr nz, .asm_c6b2
-	xor a
-	jr .asm_c6b4
-.asm_c6b2
-	ld a, $01
-.asm_c6b4
+	cp DECK_SIZE
+	jr nz, .false
+	xor a ; TRUE
+	jr .true
+.false
+	ld a, FALSE
+.true
 	ret
 ; 0xc6b5
 
@@ -1760,7 +1760,7 @@ SECTION "Bank 03@4be9", ROMX[$4be9], BANK[$03]
 Func_cbe9:
 	push af
 	ld a, $00
-	ld [wccfd], a
+	ld [wDuelPrepSelection], a
 	pop af
 	ret
 
@@ -1772,12 +1772,12 @@ SECTION "Bank 3@4bf6", ROMX[$4bf6], BANK[$3]
 
 Func_cbf6:
 	push af
-	ld a, [wccfd]
+	ld a, [wDuelPrepSelection]
 	cp $02
 	jr z, .asm_cc08
-	ld a, [wccfd]
+	ld a, [wDuelPrepSelection]
 	inc a
-	ld [wccfd], a
+	ld [wDuelPrepSelection], a
 	call Func_2aef
 .asm_cc08
 	pop af
@@ -1785,12 +1785,12 @@ Func_cbf6:
 
 Func_cc0a:
 	push af
-	ld a, [wccfd]
+	ld a, [wDuelPrepSelection]
 	cp $00
 	jr z, .asm_cc1c
-	ld a, [wccfd]
+	ld a, [wDuelPrepSelection]
 	dec a
-	ld [wccfd], a
+	ld [wDuelPrepSelection], a
 	call Func_2aef
 .asm_cc1c
 	pop af
@@ -1802,7 +1802,7 @@ Func_cc1e:
 	push de
 	push hl
 	ld bc, $2
-	ld a, [wccfd]
+	ld a, [wDuelPrepSelection]
 	call Func_cc35
 	ld d, $20
 	call Func_123c
@@ -1827,7 +1827,7 @@ Func_cc35:
 
 SECTION "Bank 03@4c4c", ROMX[$4c4c], BANK[$03]
 
-Func_cc4c:
+DuelPrepMenu:
 	push bc
 	push de
 	push hl
@@ -1863,7 +1863,7 @@ Func_cc76:
 	push hl
 	ld d, $00
 	ld a, [wJoypadPressed]
-	and $ff
+	and PAD_A | PAD_B | PAD_SELECT | PAD_START | PAD_RIGHT | PAD_LEFT | PAD_UP | PAD_DOWN
 	jr z, .asm_cc8f
 	ld c, $08
 .asm_cc84
@@ -1913,7 +1913,7 @@ Func_ccbd:
 	call Func_cc1e
 	call RequestVBlankMode
 	call WaitForVBlank
-	ld a, [wccfd]
+	ld a, [wDuelPrepSelection]
 	cp $00
 	jr nz, .asm_cce8
 	farcall Func_56e0
@@ -1923,6 +1923,7 @@ Func_ccbd:
 	call Func_cb87
 	xor a
 	jr .asm_cd28
+
 .asm_cce8
 	cp $01
 	jr nz, .asm_ccfe
@@ -1933,16 +1934,17 @@ Func_ccbd:
 	call Func_cb87
 	xor a
 	jr .asm_cd28
+
 .asm_ccfe
 	ld c, $01
-	call Func_c6a8
-	cp $00
+	call DoesPlayerHaveEnoughDeckCards
+	cp TRUE
 	jr nz, .asm_cd1f
 	ld a, [wce00]
 	cp $02
 	jr nz, .asm_cd1d
 	call Func_24f
-	cp $00
+	cp TRUE
 	jr z, .asm_cd1d
 	call Func_2afa
 	farcall Func_150ad
@@ -2759,7 +2761,7 @@ SetupDuel:
 	call Func_cd55
 	ret
 
-Func_d249:
+DuelAgainstLinkOpponent:
 	push af
 	call Func_1f5f
 	call SetupDuel
@@ -2781,7 +2783,7 @@ Func_d267:
 	farcall Func_4068
 	call Func_2a13
 .asm_d270
-	ld a, [$cdff]
+	ld a, [wcdff]
 	cp $01
 	jr nz, .asm_d290
 	call Func_d014
@@ -4143,21 +4145,21 @@ Func_db4c:
 
 Func_db63:
 	push af
-	ld a, [$cdff]
+	ld a, [wcdff]
 	cp $01
 	jr nz, .asm_db7d
 	ld a, $02
-	ld [$cdfd], a
+	ld [wcdfd], a
 	ld a, $00
-	ld [$cdfe], a
+	ld [wcdfe], a
 	call Func_dbf9
 	call Func_1e70
 	jr .asm_db91
 .asm_db7d
 	ld a, $04
-	ld [$cdfd], a
+	ld [wcdfd], a
 	ld a, $00
-	ld [$cdfe], a
+	ld [wcdfe], a
 	call Func_1e70
 	call Func_dc5b
 	cp $00
@@ -4169,26 +4171,26 @@ Func_db63:
 
 Func_db96:
 	ld a, $01
-	ld [$cdfd], a
+	ld [wcdfd], a
 	ld a, $00
-	ld [$cdfe], a
-	ld a, [$cdff]
+	ld [wcdfe], a
+	ld a, [wcdff]
 	cp $01
 	jr nz, .asm_dbbb
 	call Func_dc14
 	call Func_1e70
-	call Func_318
+	call SwitchToSerialExternalClock
 	call Func_1e70
 	call Func_dc9e
-	call Func_305
+	call SwitchToSerialInternalClock
 	jr .asm_dbcd
 .asm_dbbb
 	call Func_1e70
 	call Func_dc9e
-	call Func_305
+	call SwitchToSerialInternalClock
 	call Func_dc14
 	call Func_1e70
-	call Func_318
+	call SwitchToSerialExternalClock
 .asm_dbcd
 	call Func_dbe7
 	ret
@@ -4196,9 +4198,9 @@ Func_db96:
 Func_dbd1:
 	push af
 	ld a, $04
-	ld [$cdfd], a
+	ld [wcdfd], a
 	ld a, $00
-	ld [$cdfe], a
+	ld [wcdfe], a
 	call Func_dc25
 	call Func_1e70
 	call Func_dbe7
@@ -4207,9 +4209,9 @@ Func_dbd1:
 
 Func_dbe7:
 	push bc
-	ld a, [$cdfe]
+	ld a, [wcdfe]
 	ld c, a
-	ld a, [$cdfd]
+	ld a, [wcdfd]
 	cp c
 	jr nz, .asm_dbf5
 	xor a
@@ -4224,11 +4226,11 @@ Func_dbf9:
 	push af
 	call Func_1fe6
 	call Func_dda8
-	ld a, $03
+	ld a, CARD_LOCATION_PLAYER_HAND
 	call Func_dc2f
-	ld a, $02
+	ld a, CARD_LOCATION_PLAYER_FIELD
 	call Func_dc2f
-	ld a, $01
+	ld a, CARD_LOCATION_OPP_FIELD
 	call Func_dc2f
 	call Func_dcdc
 	pop af
@@ -4239,7 +4241,7 @@ Func_dc14:
 	call Func_1fe6
 	call Func_dda8
 	call Func_dd5a
-	ld a, $03
+	ld a, CARD_LOCATION_PLAYER_HAND
 	call Func_dc2f
 	pop af
 	ret
@@ -4256,8 +4258,8 @@ Func_dc2f:
 	push de
 	ld e, a
 	ld d, $00
-	ld c, $05
-.asm_dc37
+	ld c, FIELD_SIZE
+.loop
 	push bc
 	ld b, d
 	ld c, e
@@ -4272,7 +4274,7 @@ Func_dc2f:
 	call Func_200e
 	inc d
 	dec c
-	jr nz, .asm_dc37
+	jr nz, .loop
 	pop de
 	pop bc
 	pop af
@@ -4281,7 +4283,7 @@ Func_dc2f:
 Func_dc5b:
 	push bc
 	call Func_ddb1
-	ld a, [$cdfe]
+	ld a, [wcdfe]
 	cp $02
 	jr nz, .asm_dc6d
 	call Func_dc89
@@ -4291,7 +4293,7 @@ Func_dc5b:
 	call Func_de01
 	call Func_e39e
 	ld a, $00
-	ld [$cdfe], a
+	ld [wcdfe], a
 	call Func_1e70
 	call Func_ddb1
 	call Func_dc89
@@ -4440,14 +4442,14 @@ Func_dd81:
 
 Func_dda8:
 	push af
-	ld a, [$cdfd]
+	ld a, [wcdfd]
 	call Func_200e
 	pop af
 	ret
 
 Func_ddb1:
 	call Func_2051
-	ld [$cdfe], a
+	ld [wcdfe], a
 	call Func_dbe7
 	ret
 
@@ -5215,7 +5217,7 @@ Func_e352:
 	farcall Func_4068
 	call Func_2a97
 .asm_e38b
-	ld a, [$cdff]
+	ld a, [wcdff]
 	cp $01
 	jr nz, .asm_e39b
 	call Func_c142
@@ -5661,11 +5663,11 @@ Func_e626:
 	ld a, e
 	cp $82
 	jr nz, .done
-	ldh a, [hffde]
-	cp $03
+	ldh a, [hConsole]
+	cp CONSOLE_SGB2
 	jr nz, .asm_e681
-	ld a, $02
-	ldh [hffde], a
+	ld a, CONSOLE_SGB1
+	ldh [hConsole], a
 .asm_e681
 	call Func_2b26
 	ld e, $00
@@ -6062,7 +6064,7 @@ Func_e8c6:
 	call Func_cc1e
 	call RequestVBlankMode
 	call WaitForVBlank
-	ld a, [wccfd]
+	ld a, [wDuelPrepSelection]
 	cp $00
 	jr nz, .asm_e8ed
 	farcall Func_56e0
@@ -6089,7 +6091,7 @@ Func_e8c6:
 	jr .asm_e91e
 .asm_e90c
 	call Func_24f
-	cp $00
+	cp TRUE
 	jr nz, .asm_e917
 	ld a, $01
 	jr .asm_e91e
@@ -6867,11 +6869,11 @@ SECTION "Bank 3@6e30", ROMX[$6e30], BANK[$3]
 Func_ee30:
 	push hl
 	ld a, $03
-	ld [$cdfd], a
+	ld [wcdfd], a
 	ld a, $00
-	ld [$cdfe], a
+	ld [wcdfe], a
 	call Func_1f5f
-	ld a, [$cdff]
+	ld a, [wcdff]
 	cp $01
 	jr nz, .asm_ee56
 	call Func_ee6a

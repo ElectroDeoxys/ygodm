@@ -61,11 +61,11 @@ wVirtualOAM:: ; ca00
 
 SECTION "WRAM 2", WRAM0
 
-wcaa0:: db ; caa0
+wSerialWaiting:: db ; caa0
 wcaa1:: db ; caa1
-wcaa2:: db ; caa2
+wSerialReceive:: db ; caa2
 wcaa3:: db ; caa3
-wcaa4:: db ; caa4
+wSerialConnection:: db ; caa4
 
 wJoypadDown::    db ; caa5
 wJoypadPressed:: db ; caa6
@@ -78,8 +78,7 @@ wVBlankStructSize:: db ; caaa
 wPendingVBlankMode:: db ; caab
 wVBlankMode:: db ; caac
 
-wcaad:: db ; caad
-wcaae:: db ; caae
+wSerialTimeOut:: dw ; caad
 wcaaf:: db ; caaf
 
 wPlayerLP:: dw ; cab0
@@ -127,7 +126,7 @@ wOppDuelDeck:: ds DECK_SIZE * $2 ; ccac
 
 	ds $1
 
-wccfd:: db ; ccfd
+wDuelPrepSelection:: db ; ccfd
 wBeatCampaign:: db ; ccfe
 
 	ds $cd0f - $ccff
@@ -179,8 +178,14 @@ wCardLocationIndex:: db ; cdf0
 wCardLocation:: db ; cdf1
 wTempCardID:: dw ; cdf2
 
-	ds $ce00 - $cdf4
+	ds $cdfa - $cdf4
 
+wcdfa:: db ; cdfa
+wcdfb:: db ; cdfb
+wcdfc:: db ; cdfc
+wcdfd:: db ; cdfd
+wcdfe:: db ; cdfe
+wcdff:: db ; cdff
 wce00:: db ; ce00
 
 	ds $ce0a - $ce01

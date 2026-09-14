@@ -10,7 +10,7 @@
 	const MUSIC_08 ; $08 unused?
 	const MUSIC_09 ; $09
 	const MUSIC_0A ; $0a
-	const MUSIC_0B ; $0b
+	const MUSIC_TEA ; $0b
 	const MUSIC_DUEL_WIN ; $0c
 	const MUSIC_DUEL_LOSS ; $0d
 	const MUSIC_0E ; $0e unused?

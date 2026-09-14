@@ -22,13 +22,13 @@ ExecuteSGBFunction::
 
 	call DetectSGB
 	push af
-	ldh a, [hffde]
-	cp $00
+	ldh a, [hConsole]
+	cp CONSOLE_DMG
 	jr nz, .asm_fc01f
 	add sp, $04
 	jr .skip
 .asm_fc01f
-	cp $01
+	cp CONSOLE_UNK
 	jr nz, .asm_fc027
 	add sp, $04
 	jr .skip
@@ -143,11 +143,11 @@ DetectSGB:
 	jr nz, .no_sgb2
 	ld c, $01
 .no_sgb2
-	ld hl, .data
+	ld hl, .Consoles
 	add hl, de
 	add hl, bc
 	ld a, [hl]
-	ldh [hffde], a
+	ldh [hConsole], a
 .skip
 	pop hl
 	pop de
@@ -155,10 +155,10 @@ DetectSGB:
 	pop af
 	ret
 
-.data
-	; SGB2  no, yes
-	db     $00, $01 ; SGB not detected
-	db     $02, $03 ; SGB detected
+.Consoles:
+	; SGB2 no,           yes
+	db     CONSOLE_DMG,  CONSOLE_UNK  ; SGB not detected
+	db     CONSOLE_SGB1, CONSOLE_SGB2 ; SGB detected
 
 PrepareForVRAMTransfer:
 	push af
