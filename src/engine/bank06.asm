@@ -176,15 +176,15 @@ SECTION "Bank 6@51fd", ROMX[$51fd], BANK[$6]
 Func_191fd:
 	push af
 	push bc
-	ld a, [$ced2]
+	ld a, [wced2]
 	ld c, a
-	ld a, [$ced3]
+	ld a, [wced3]
 	ld b, a
 	farcall Func_5af2
 	farcall SetCardAsSeen
-	ld a, [$cedd]
+	ld a, [wcedd]
 	ld c, a
-	ld a, [$cede]
+	ld a, [wcede]
 	ld b, a
 	farcall Func_5af2
 	farcall SetCardAsSeen
@@ -199,9 +199,9 @@ Func_1921e:
 	push hl
 	ld a, TEXTLOAD_0A
 	farcall SetTextLoadMode
-	ld a, [$ced4]
+	ld a, [wced4]
 	ld c, a
-	ld a, [$ced5]
+	ld a, [wced5]
 	ld b, a
 	farcall SetTextArg
 	farcall LoadText
@@ -227,9 +227,9 @@ Func_19248:
 	push hl
 	ld a, TEXTLOAD_0A
 	farcall SetTextLoadMode
-	ld a, [$cedf]
+	ld a, [wcedf]
 	ld c, a
-	ld a, [$cee0]
+	ld a, [wcee0]
 	ld b, a
 	farcall SetTextArg
 	farcall LoadText
@@ -257,7 +257,7 @@ Func_19272:
 
 Func_1927f:
 	push af
-	ld a, [$ced1]
+	ld a, [wced1]
 	and $01
 	jr z, .asm_19298
 	call Func_1929a
@@ -277,13 +277,13 @@ Func_1929a:
 	push bc
 	push de
 	call Func_1c0a
-	ld bc, $c038
+	ld bc, wDecompressLookbackBuffer + $38
 	call Func_1c1d
 	ld bc, $1000
 	call Func_1c12
-	ld a, [$ced2]
+	ld a, [wced2]
 	ld c, a
-	ld a, [$ced3]
+	ld a, [wced3]
 	ld b, a
 	farcall LoadCardData
 	farcall Func_5eb3
@@ -304,7 +304,7 @@ Func_1929a:
 	farcall Func_603d
 	call RequestVBlankMode
 	call WaitForVBlank
-	ld bc, $c038
+	ld bc, wDecompressLookbackBuffer + $38
 	call Func_1c1d
 	ld a, VBLANK_04
 	call SetPendingVBlankMode
@@ -332,7 +332,7 @@ Func_19310:
 	ld a, VBLANK_14
 	call SetPendingVBlankMode
 	call Func_19330
-	ld a, [$ced1]
+	ld a, [wced1]
 	and $02
 	jr z, .asm_19325
 	call Func_19379
@@ -351,9 +351,9 @@ Func_19330:
 	push de
 	push hl
 	call Func_1134
-	ld a, [$ced2]
+	ld a, [wced2]
 	ld c, a
-	ld a, [$ced3]
+	ld a, [wced3]
 	ld b, a
 	call Func_1508
 	bcbgcoord 1, 0
@@ -393,9 +393,9 @@ Func_19379:
 	push hl
 	ld a, TEXTLOAD_0A
 	farcall SetTextLoadMode
-	ld a, [$ced8]
+	ld a, [wced8]
 	ld c, a
-	ld a, [$ced9]
+	ld a, [wced9]
 	ld b, a
 	farcall SetTextArg
 	farcall LoadText
@@ -436,9 +436,9 @@ Func_193bf:
 	push hl
 	ld a, TEXTLOAD_0A
 	farcall SetTextLoadMode
-	ld a, [$ceda]
+	ld a, [wceda]
 	ld c, a
-	ld a, [$cedb]
+	ld a, [wcedb]
 	ld b, a
 	farcall SetTextArg
 	farcall LoadText
@@ -474,7 +474,7 @@ SECTION "Bank 6@5405", ROMX[$5405], BANK[$6]
 
 Func_19405:
 	push af
-	ld a, [$cedc]
+	ld a, [wcedc]
 	and $01
 	jr z, .asm_1941e
 	call Func_19420
@@ -494,13 +494,13 @@ Func_19420:
 	push bc
 	push de
 	call Func_1c0a
-	ld bc, $b038
+	lb bc, $b0, $38
 	call Func_1c1d
 	ld bc, $f000
 	call Func_1c12
-	ld a, [$cedd]
+	ld a, [wcedd]
 	ld c, a
-	ld a, [$cede]
+	ld a, [wcede]
 	ld b, a
 	farcall LoadCardData
 	farcall Func_5eb3
@@ -521,7 +521,7 @@ Func_19420:
 	farcall Func_6046
 	call RequestVBlankMode
 	call WaitForVBlank
-	ld bc, $b038
+	lb bc, $b0, $38
 	call Func_1c1d
 	ld a, VBLANK_04
 	call SetPendingVBlankMode
@@ -549,7 +549,7 @@ Func_19496:
 	ld a, VBLANK_14
 	call SetPendingVBlankMode
 	call Func_194b6
-	ld a, [$cedc]
+	ld a, [wcedc]
 	and $02
 	jr z, .asm_194ab
 	call Func_194ff
@@ -568,9 +568,9 @@ Func_194b6:
 	push de
 	push hl
 	call Func_1134
-	ld a, [$cedd]
+	ld a, [wcedd]
 	ld c, a
-	ld a, [$cede]
+	ld a, [wcede]
 	ld b, a
 	call Func_1508
 	bcbgcoord 11, 0
@@ -610,9 +610,9 @@ Func_194ff:
 	push hl
 	ld a, TEXTLOAD_0A
 	farcall SetTextLoadMode
-	ld a, [$cee3]
+	ld a, [wcee3]
 	ld c, a
-	ld a, [$cee4]
+	ld a, [wcee4]
 	ld b, a
 	farcall SetTextArg
 	farcall LoadText
@@ -653,9 +653,9 @@ Func_19545:
 	push hl
 	ld a, TEXTLOAD_0A
 	farcall SetTextLoadMode
-	ld a, [$cee5]
+	ld a, [wcee5]
 	ld c, a
-	ld a, [$cee6]
+	ld a, [wcee6]
 	ld b, a
 	farcall SetTextArg
 	farcall LoadText
@@ -711,34 +711,34 @@ Func_195a4:
 	push bc
 	push de
 	push hl
-	ld a, [$ced4]
-	ld [$cdf5], a
-	ld a, [$ced5]
-	ld [$cdf6], a
+	ld a, [wced4]
+	ld [wcdf5], a
+	ld a, [wced5]
+	ld [wcdf6], a
 	ld a, $00
-	ld [$cdf7], a
-	ld a, [$ced6]
-	ld [$cdf8], a
-	ld a, [$ced7]
-	ld [$cdf9], a
+	ld [wcdf7], a
+	ld a, [wced6]
+	ld [wcdf8], a
+	ld a, [wced7]
+	ld [wcdf9], a
 	ld a, $00
 	ld [wcdfa], a
 	call Func_1d2a
 	cp FALSE
 	jr z, .asm_1962a
 	call Func_2b52
-	ld a, [$ced4]
+	ld a, [wced4]
 	ld c, a
-	ld a, [$ced5]
+	ld a, [wced5]
 	ld b, a
 	ld d, $00
 .asm_195de
 	ld e, $0a
 .asm_195e0
 	ld a, c
-	ld [$cdf5], a
+	ld [wcdf5], a
 	ld a, b
-	ld [$cdf6], a
+	ld [wcdf6], a
 	call Func_1d2a
 	cp TRUE
 	jr z, .asm_195f1
@@ -752,13 +752,13 @@ Func_195a4:
 	ld a, $00
 	ld [wHexNumber + 1], a
 	ld a, $00
-	ld [$cade], a
+	ld [wcade], a
 	ld a, c
-	ld [$cadf], a
+	ld [wcadf], a
 	ld a, b
-	ld [$cae0], a
+	ld [wcae0], a
 	ld a, $00
-	ld [$cae1], a
+	ld [wcae1], a
 	push de
 	call Func_13db
 	pop de
@@ -828,34 +828,34 @@ Func_19678:
 	push bc
 	push de
 	push hl
-	ld a, [$cedf]
-	ld [$cdf5], a
-	ld a, [$cee0]
-	ld [$cdf6], a
+	ld a, [wcedf]
+	ld [wcdf5], a
+	ld a, [wcee0]
+	ld [wcdf6], a
 	ld a, $00
-	ld [$cdf7], a
-	ld a, [$cee1]
-	ld [$cdf8], a
-	ld a, [$cee2]
-	ld [$cdf9], a
+	ld [wcdf7], a
+	ld a, [wcee1]
+	ld [wcdf8], a
+	ld a, [wcee2]
+	ld [wcdf9], a
 	ld a, $00
 	ld [wcdfa], a
 	call Func_1d2a
 	cp $01
 	jr z, .asm_196fe
 	call Func_2b52
-	ld a, [$cedf]
+	ld a, [wcedf]
 	ld c, a
-	ld a, [$cee0]
+	ld a, [wcee0]
 	ld b, a
 	ld d, $00
 .asm_196b2
 	ld e, $0a
 .asm_196b4
 	ld a, c
-	ld [$cdf5], a
+	ld [wcdf5], a
 	ld a, b
-	ld [$cdf6], a
+	ld [wcdf6], a
 	call Func_1d2a
 	cp TRUE
 	jr z, .asm_196c5
@@ -869,13 +869,13 @@ Func_19678:
 	ld a, $00
 	ld [wHexNumber + 1], a
 	ld a, $00
-	ld [$cade], a
+	ld [wcade], a
 	ld a, c
-	ld [$cadf], a
+	ld [wcadf], a
 	ld a, b
-	ld [$cae0], a
+	ld [wcae0], a
 	ld a, $00
-	ld [$cae1], a
+	ld [wcae1], a
 	push de
 	call Func_13db
 	pop de

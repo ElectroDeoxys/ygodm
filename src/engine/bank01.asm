@@ -847,7 +847,7 @@ Func_54ef:
 	call ClearTextBuffer
 
 	ld de, wTextBuffer
-	ld hl, $cf99
+	ld hl, wcf99
 	ld c, $08
 .loop_copy
 	ld a, [hli]
@@ -1762,9 +1762,9 @@ Func_5b29:
 	push de
 	push hl
 	ld d, $00
-	ld a, [wCardID_cae2]
+	ld a, [wCardID_cae2 + 0]
 	ld c, a
-	ld a, [$cae3]
+	ld a, [wCardID_cae2 + 1]
 	ld b, a
 	ld hl, wTrunk
 	add hl, bc
@@ -1845,9 +1845,9 @@ Func_5b92:
 	push bc
 	push de
 	ld e, $01
-	ld a, [wCardID_cae2]
+	ld a, [wCardID_cae2 + 0]
 	ld c, a
-	ld a, [$cae3]
+	ld a, [wCardID_cae2 + 1]
 	ld b, a
 	push bc
 	farcall Func_c664
@@ -1889,9 +1889,9 @@ Func_5bea:
 	push bc
 	push de
 	ld e, $01
-	ld a, [wCardID_cae2]
+	ld a, [wCardID_cae2 + 0]
 	ld c, a
-	ld a, [$cae3]
+	ld a, [wCardID_cae2 + 1]
 	ld b, a
 	push bc
 	farcall Func_e7a7
@@ -2157,8 +2157,8 @@ Func_5d76:
 	ld a, [wcad6]
 	cp $00
 	jr nz, .asm_5d8f
-	ld a, [wce00]
-	cp $03
+	ld a, [wGameMode]
+	cp GAMEMODE_TRADE
 	jr z, .asm_5d8a
 	call Func_5da0
 	jr .asm_5d8d
@@ -2167,8 +2167,8 @@ Func_5d76:
 .asm_5d8d
 	jr .asm_5d9e
 .asm_5d8f
-	ld a, [wce00]
-	cp $03
+	ld a, [wGameMode]
+	cp GAMEMODE_TRADE
 	jr z, .asm_5d9b
 	call Func_5e1c
 	jr .asm_5d9e
@@ -2341,7 +2341,7 @@ Func_5eb3:
 	ld a, [wLoadedCardID + 1]
 	call Func_1842
 	call SetJobFlag
-	ld bc, $cde6
+	lb bc, $cd, LOW(hDecompressJobFlags)
 	dec b
 	rla
 	ld [$ff00+c], a
@@ -2415,7 +2415,7 @@ Func_5f37:
 	ld a, [wLoadedCardID + 1]
 	call Func_1842
 	call SetJobFlag
-	ld bc, $cde6
+	lb bc, $cd, LOW(hDecompressJobFlags)
 	dec b
 	rla
 	ld [$ff00+c], a
@@ -2452,7 +2452,7 @@ Func_5f79:
 	ld a, [wLoadedCardID + 1]
 	call Func_1842
 	call SetJobFlag
-	ld bc, $cde6
+	lb bc, $cd, LOW(hDecompressJobFlags)
 	dec b
 	rla
 	ld [$ff00+c], a
@@ -2830,9 +2830,9 @@ Func_61c0:
 	push hl
 	call Func_58a3
 	ld a, [wcada + 0]
-	ld [$cea2], a
+	ld [wcea2], a
 	ld a, [wcada + 1]
-	ld [$cea3], a
+	ld [wcea3], a
 	ld d, $05
 	ld a, [wcad8]
 	ld c, a
@@ -2853,12 +2853,12 @@ Func_61c0:
 	call Func_624d
 	call Func_6298
 	inc e
-	ld a, [$cea2]
+	ld a, [wcea2]
 	add $01
-	ld [$cea2], a
-	ld a, [$cea3]
+	ld [wcea2], a
+	ld a, [wcea3]
 	adc $00
-	ld [$cea3], a
+	ld [wcea3], a
 	jr .asm_61e6
 .asm_6207
 	pop hl
@@ -2881,10 +2881,10 @@ Func_620c:
 	add hl, de
 	ld a, TEXTLOAD_NUMBER
 	call SetTextLoadMode
-	ld a, [$cea2]
+	ld a, [wcea2]
 	add $01
 	ld [wHexNumber + 0], a
-	ld a, [$cea3]
+	ld a, [wcea3]
 	adc $00
 	ld [wHexNumber + 1], a
 	call ConvertToDecimalRepresentation
@@ -2914,9 +2914,9 @@ Func_624d:
 	rl d
 	hlbgcoord 6, 2
 	add hl, de
-	ld a, [$cea2]
+	ld a, [wcea2]
 	ld c, a
-	ld a, [$cea3]
+	ld a, [wcea3]
 	ld b, a
 	call Func_1508
 	call Func_111c
@@ -2960,9 +2960,9 @@ Func_6298:
 	rl d
 	hlbgcoord 15, 3
 	add hl, de
-	ld a, [$cea2]
+	ld a, [wcea2]
 	ld c, a
-	ld a, [$cea3]
+	ld a, [wcea3]
 	ld b, a
 	call Func_1542
 	ld a, [wTextBuffer + $2]
@@ -3170,12 +3170,12 @@ Func_64b5:
 	push af
 	push bc
 	ld a, DUELIST_WEEVIL
-	ld [$cf04], a
+	ld [wcf04], a
 	call Func_653f
 	ld a, b
-	ld [$cf05], a
+	ld [wcf05], a
 	ld a, c
-	ld [$cf06], a
+	ld [wcf06], a
 	pop bc
 	pop af
 	ret
@@ -3184,9 +3184,9 @@ Func_64ca:
 	push af
 	push bc
 	push de
-	ld a, [$cf05]
+	ld a, [wcf05]
 	ld b, a
-	ld a, [$cf06]
+	ld a, [wcf06]
 	ld c, a
 	ld d, $00
 	ld e, $00
@@ -3213,18 +3213,18 @@ Func_64ca:
 Func_64fd:
 	push af
 	push bc
-	ld a, [$cf04]
+	ld a, [wcf04]
 	inc a
 	cp IN_THE_SHIP_DUELISTS
 	jr nz, .asm_6508
 	xor a
 .asm_6508
-	ld [$cf04], a
+	ld [wcf04], a
 	call Func_653f
 	ld a, b
-	ld [$cf05], a
+	ld [wcf05], a
 	ld a, c
-	ld [$cf06], a
+	ld [wcf06], a
 	pop bc
 	pop af
 	ret
@@ -3232,25 +3232,25 @@ Func_64fd:
 Func_6519:
 	push af
 	push bc
-	ld a, [$cf04]
+	ld a, [wcf04]
 	dec a
 	cp -1
 	jr nz, .asm_6525
 	ld a, NUM_DUEL_KINGDOM_DUELISTS - 1
 .asm_6525
-	ld [$cf04], a
+	ld [wcf04], a
 	call Func_653f
 	ld a, b
-	ld [$cf05], a
+	ld [wcf05], a
 	ld a, c
-	ld [$cf06], a
+	ld [wcf06], a
 	pop bc
 	pop af
 	ret
 
 Func_6536:
 	push af
-	ld a, [$cf04]
+	ld a, [wcf04]
 	call SetNPCDuelist
 	pop af
 	ret
@@ -3546,13 +3546,13 @@ Func_6804:
 	push af
 	push bc
 	ld a, $00
-	ld [$cf92], a
+	ld [wcf92], a
 	ld a, $00
 	call Func_6885
 	ld a, b
-	ld [$cf93], a
+	ld [wcf93], a
 	ld a, c
-	ld [$cf94], a
+	ld [wcf94], a
 	pop bc
 	pop af
 	ret
@@ -3563,9 +3563,9 @@ Func_681b:
 	push de
 	ld d, $00
 	ld e, $00
-	ld a, [$cf93]
+	ld a, [wcf93]
 	ld b, a
-	ld a, [$cf94]
+	ld a, [wcf94]
 	ld c, a
 	call Add4x4OAM
 	call Func_2958
@@ -3585,18 +3585,18 @@ Func_681b:
 Func_6843:
 	push af
 	push bc
-	ld a, [$cf92]
+	ld a, [wcf92]
 	inc a
 	cp $04
 	jr nz, .asm_684e
 	xor a
 .asm_684e
-	ld [$cf92], a
+	ld [wcf92], a
 	call Func_6885
 	ld a, b
-	ld [$cf93], a
+	ld [wcf93], a
 	ld a, c
-	ld [$cf94], a
+	ld [wcf94], a
 	pop bc
 	pop af
 	ret
@@ -3604,25 +3604,25 @@ Func_6843:
 Func_685f:
 	push af
 	push bc
-	ld a, [$cf92]
+	ld a, [wcf92]
 	dec a
 	cp $ff
 	jr nz, .asm_686b
 	ld a, $03
 .asm_686b
-	ld [$cf92], a
+	ld [wcf92], a
 	call Func_6885
 	ld a, b
-	ld [$cf93], a
+	ld [wcf93], a
 	ld a, c
-	ld [$cf94], a
+	ld [wcf94], a
 	pop bc
 	pop af
 	ret
 
 Func_687c:
 	push af
-	ld a, [$cf92]
+	ld a, [wcf92]
 	call Func_2344
 	pop af
 	ret

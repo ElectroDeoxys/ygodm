@@ -30,7 +30,7 @@ ENDM
 
 MACRO? bankswitch
 	ld a, \1
-	ld [$cfe1], a
+	ld [wcfe1], a
 	ld a, (\1) >> 5
 	ld [$4100], a
 	ld a, (\1) & $1f

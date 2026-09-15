@@ -26,7 +26,7 @@ substrings = [
 	(r"; 0x([a-f0-9]+)\n\nFunc_\1:", lambda m: "\nFunc_{}:".format(m[1])),
 	(r"(; 0x[a-f0-9]+)\n\nFunc_([a-f0-9]+):", insert_section),
 
-	(r"ld a, \$(..)\n\tld \[\$cfe1\], a\n\tld a, \$..\n\tld \[\$4100\], a\n\tld a, \$..\n\tld \[\$2100\], a", lambda m: "bankswitch ${:0x}".format(int(m[1], 16))),
+	(r"ld a, \$(..)\n\tld \[\wcfe1\], a\n\tld a, \$..\n\tld \[\$4100\], a\n\tld a, \$..\n\tld \[\$2100\], a", lambda m: "bankswitch ${:0x}".format(int(m[1], 16))),
 ]
 
 def process(body):

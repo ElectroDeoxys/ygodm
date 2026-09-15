@@ -1057,16 +1057,16 @@ SetPendingVBlankMode::
 	ld [hl], $c5
 
 	; bug, should be ld hl instead
-	ld bc, $c516
+	ld bc, wVBlankStruct + $16
 	ld a, $18
 	ld [hli], a
 	ld [hl], $c5
 
-	ld hl, $c52c
+	ld hl, wVBlankStruct + $2c
 	ld a, $2e
 	ld [hli], a
 	ld [hl], $c5
-	ld hl, $c542
+	ld hl, wVBlankStruct + $42
 	ld a, $42
 	ld [hli], a
 	ld [hl], $c5
@@ -1095,11 +1095,11 @@ SetPendingVBlankMode::
 	ld a, $02
 	ld [hli], a
 	ld [hl], $c5
-	ld hl, $c514
+	ld hl, wVBlankStruct + $14
 	ld a, $16
 	ld [hli], a
 	ld [hl], $c5
-	ld hl, $c528
+	ld hl, wVBlankStruct + $28
 	ld a, $2a
 	ld [hli], a
 	ld [hl], $c5
@@ -1114,35 +1114,35 @@ SetPendingVBlankMode::
 	ld a, $02
 	ld [hli], a
 	ld [hl], $c5
-	ld hl, $c50a
+	ld hl, wVBlankStruct + $0a
 	ld a, $0c
 	ld [hli], a
 	ld [hl], $c5
-	ld hl, $c514
+	ld hl, wVBlankStruct + $14
 	ld a, $16
 	ld [hli], a
 	ld [hl], $c5
-	ld hl, $c51a
+	ld hl, wVBlankStruct + $1a
 	ld a, $1c
 	ld [hli], a
 	ld [hl], $c5
-	ld hl, $c520
+	ld hl, wVBlankStruct + $20
 	ld a, $22
 	ld [hli], a
 	ld [hl], $c5
-	ld hl, $c526
+	ld hl, wVBlankStruct + $26
 	ld a, $28
 	ld [hli], a
 	ld [hl], $c5
-	ld hl, $c52c
+	ld hl, wVBlankStruct + $2c
 	ld a, $2e
 	ld [hli], a
 	ld [hl], $c5
-	ld hl, $c536
+	ld hl, wVBlankStruct + $36
 	ld a, $38
 	ld [hli], a
 	ld [hl], $c5
-	ld hl, $c540
+	ld hl, wVBlankStruct + $40
 	ld a, $42
 	ld [hli], a
 	ld [hl], $c5
@@ -1157,19 +1157,19 @@ SetPendingVBlankMode::
 	ld a, $02
 	ld [hli], a
 	ld [hl], $c5
-	ld hl, $c514
+	ld hl, wVBlankStruct + $14
 	ld a, $16
 	ld [hli], a
 	ld [hl], $c5
-	ld hl, $c528
+	ld hl, wVBlankStruct + $28
 	ld a, $2a
 	ld [hli], a
 	ld [hl], $c5
-	ld hl, $c53c
+	ld hl, wVBlankStruct + $3c
 	ld a, $3e
 	ld [hli], a
 	ld [hl], $c5
-	ld hl, $c550
+	ld hl, wVBlankStruct + $50
 	ld a, $52
 	ld [hli], a
 	ld [hl], $c5
@@ -1184,19 +1184,19 @@ SetPendingVBlankMode::
 	ld a, $de
 	ld [hli], a
 	ld [hl], $c5
-	ld hl, $c506
+	ld hl, wVBlankStruct + $06
 	ld a, $de
 	ld [hli], a
 	ld [hl], $c5
-	ld hl, $c50c
+	ld hl, wVBlankStruct + $0c
 	ld a, $de
 	ld [hli], a
 	ld [hl], $c5
-	ld hl, $c512
+	ld hl, wVBlankStruct + $12
 	ld a, $de
 	ld [hli], a
 	ld [hl], $c5
-	ld hl, $c518
+	ld hl, wVBlankStruct + $18
 	ld a, $de
 	ld [hli], a
 	ld [hl], $c5
@@ -1211,11 +1211,11 @@ SetPendingVBlankMode::
 	ld a, $02
 	ld [hli], a
 	ld [hl], $c5
-	ld hl, $c50a
+	ld hl, wVBlankStruct + $0a
 	ld a, $0c
 	ld [hli], a
 	ld [hl], $c5
-	ld hl, $c58a
+	ld hl, wVBlankStruct + $8a
 	ld a, $8c
 	ld [hli], a
 	ld [hl], $c5
@@ -1888,17 +1888,17 @@ Func_1256::
 	push de
 	push hl
 	ld a, $b0
-	ld [$cd1c], a
+	ld [wcd1c], a
 	ld a, $b0
-	ld [$cd1b], a
-	ld hl, $ca02
+	ld [wcd1b], a
+	ld hl, wVirtualOAM + OAMA_TILEID
 	ld a, $00
-	ld de, $3
-	ld bc, $228
+	ld de, OBJ_SIZE - 1
+	lb bc, $2, OAM_COUNT
 .asm_126f
-	ld [hli], a
+	ld [hli], a ; tile ID
 	add b
-	ld [hl], $00
+	ld [hl], $00 ; attributes
 	add hl, de
 	dec c
 	jr nz, .asm_126f
@@ -1918,16 +1918,16 @@ Func_1282::
 Func_1289:
 	push af
 	push bc
-	ld a, [$cd1d]
+	ld a, [wcd1d]
 	ld b, a
-	ld a, [$cd1b]
+	ld a, [wcd1b]
 	add b
-	ld [$cd1b], a
-	ld a, [$cd1e]
+	ld [wcd1b], a
+	ld a, [wcd1e]
 	ld b, a
-	ld a, [$cd1c]
+	ld a, [wcd1c]
 	add b
-	ld [$cd1c], a
+	ld [wcd1c], a
 	pop bc
 	pop af
 	ret
@@ -1944,10 +1944,10 @@ Func_12a4:
 	ld e, $00
 	ld c, $08
 .asm_12b3
-	ld a, [$cd1b]
+	ld a, [wcd1b]
 	add d
 	ld [hli], a
-	ld a, [$cd1c]
+	ld a, [wcd1c]
 	add e
 	ld [hli], a
 	inc hl
@@ -2235,36 +2235,36 @@ Func_13db::
 	ld b, a
 	ld a, [wHexNumber + 1]
 	ld c, a
-	ld a, [$cade]
+	ld a, [wcade]
 	ld d, a
-	ld a, [$cadf]
+	ld a, [wcadf]
 	cp b
 	jr nz, .asm_140a
-	ld a, [$cae0]
+	ld a, [wcae0]
 	cp c
 	jr nz, .asm_140a
-	ld a, [$cae1]
+	ld a, [wcae1]
 	cp d
 	jr nz, .asm_140a
 	xor a
 	ld [wHexNumber + 0], a
 	ld [wHexNumber + 1], a
-	ld [$cade], a
+	ld [wcade], a
 	ld e, $01
 	jr .asm_1428
 .asm_140a
-	ld a, [$cadf]
+	ld a, [wcadf]
 	sub b
 	daa
 	ld [wHexNumber + 0], a
-	ld a, [$cae0]
+	ld a, [wcae0]
 	sbc c
 	daa
 	ld [wHexNumber + 1], a
-	ld a, [$cae1]
+	ld a, [wcae1]
 	sbc d
 	daa
-	ld [$cade], a
+	ld [wcade], a
 	ld e, $02
 	jr nc, .asm_1428
 	ld e, $00
@@ -2960,10 +2960,10 @@ ResetJobFlag::
 Func_179b:
 	push af
 	xor a
-	ld [$ccff], a
-	ld [$cd00], a
-	ld [$cd09], a
-	ld [$cd0a], a
+	ld [wccff], a
+	ld [wcd00], a
+	ld [wcd09], a
+	ld [wcd0a], a
 	pop af
 	ret
 
@@ -2971,10 +2971,10 @@ Func_17ab::
 	push af
 	push bc
 	push de
-	ld a, [$ccff]
+	ld a, [wccff]
 	ld e, a
 .asm_17b2
-	ld a, [$cd00]
+	ld a, [wcd00]
 	cp e
 	jr nz, .asm_17c9
 	call SetJobFlag
@@ -2994,7 +2994,7 @@ Func_17ab::
 	dec c
 	jr nz, .asm_17cd
 	ld a, e
-	ld [$ccff], a
+	ld [wccff], a
 	pop de
 	pop bc
 	pop af
@@ -3004,13 +3004,13 @@ Func_17db:
 	push af
 	push bc
 	push de
-	ld a, [$cd00]
+	ld a, [wcd00]
 	ld e, a
 	ld a, $80
 	add e
 	ld c, a
 .loop
-	ld a, [$ccff]
+	ld a, [wccff]
 	cp c
 	jr nz, .asm_17fd
 	call SetJobFlag
@@ -3030,7 +3030,7 @@ Func_17db:
 	dec c
 	jr nz, .asm_1801
 	ld a, e
-	ld [$cd00], a
+	ld [wcd00], a
 	pop de
 	pop bc
 	pop af
@@ -3039,10 +3039,10 @@ Func_17db:
 Func_180f::
 	push de
 	push hl
-	ld a, [$cd09]
+	ld a, [wcd09]
 	ld e, a
 .loop
-	ld a, [$cd0a]
+	ld a, [wcd0a]
 	cp e
 	jr nz, .asm_182c
 	call SetJobFlag
@@ -3055,7 +3055,7 @@ Func_180f::
 
 .asm_182c
 	ld d, $00
-	ld hl, $cd01
+	ld hl, wcd01
 	add hl, de
 	inc e
 	ld a, e
@@ -3064,7 +3064,7 @@ Func_180f::
 	ld e, $00
 .asm_183a
 	ld a, e
-	ld [$cd09], a
+	ld [wcd09], a
 	ld a, [hli]
 	pop hl
 	pop de
@@ -3077,9 +3077,9 @@ Func_1842::
 	push hl
 	push af
 	ld d, $00
-	ld a, [$cd0a]
+	ld a, [wcd0a]
 	ld e, a
-	ld hl, $cd01
+	ld hl, wcd01
 	add hl, de
 	inc e
 	ld a, e
@@ -3087,7 +3087,7 @@ Func_1842::
 	jr nz, .asm_1859
 	ld e, $00
 .asm_1859
-	ld a, [$cd09]
+	ld a, [wcd09]
 	cp e
 	jr nz, .asm_1870
 	call SetJobFlag
@@ -3101,7 +3101,7 @@ Func_1842::
 	pop af
 	ld [hli], a
 	ld a, e
-	ld [$cd0a], a
+	ld [wcd0a], a
 	pop hl
 	pop de
 	pop bc
@@ -3111,11 +3111,11 @@ Func_1842::
 Func_187b::
 	push af
 	ld a, d
-	ld [$cd0b], a
+	ld [wcd0b], a
 	ld a, c
-	ld [$cd0c], a
+	ld [wcd0c], a
 	ld a, b
-	ld [$cd0d], a
+	ld [wcd0d], a
 	pop af
 	ret
 
@@ -3126,7 +3126,7 @@ Func_188a::
 	ld a, [rRAMB]
 	push af
 	ld b, $00
-	ld a, [$cd0b]
+	ld a, [wcd0b]
 	ld c, a
 	sla c
 	ld hl, .Jumptable
@@ -3159,11 +3159,11 @@ Func_18b8:
 	call Func_1aaf
 	ld a, BANK(Func_40002)
 	call Bankswitch1
-	ld a, [$cd0c]
+	ld a, [wcd0c]
 	ld c, a
-	ld a, [$cd0d]
+	ld a, [wcd0d]
 	ld b, a
-	ld a, [$cd0b]
+	ld a, [wcd0b]
 	ld d, a
 	push bc
 	call Func_40002
@@ -3564,11 +3564,11 @@ Func_1a65:
 	call Func_1aaf
 	ld a, BANK(Func_40002)
 	call Bankswitch1
-	ld a, [$cd0c]
+	ld a, [wcd0c]
 	ld c, a
-	ld a, [$cd0d]
+	ld a, [wcd0d]
 	ld b, a
-	ld a, [$cd0b]
+	ld a, [wcd0b]
 	ld d, a
 	push bc
 	call Func_40002
@@ -3682,12 +3682,12 @@ SetDecompressLength:
 	ret
 
 Func_1af9:
-	ld [$cd0e], a
+	ld [wcd0e], a
 	ret
 
 Func_1afd:
 	push af
-	ld a, [$cd0e]
+	ld a, [wcd0e]
 	dec a
 	jr nz, .asm_1b09
 	call Decompress
@@ -3876,9 +3876,9 @@ Decompress:
 Func_1be4:
 	push af
 	ld a, c
-	ld [$cd19], a
+	ld [wcd19], a
 	ld a, b
-	ld [$cd1a], a
+	ld [wcd1a], a
 	pop af
 	ret
 
@@ -3888,7 +3888,7 @@ Func_1bef:
 	push bc
 	push de
 	push hl
-	ld hl, $cd1b
+	ld hl, wcd1b
 	ld de, $1c06
 	ld c, $04
 .asm_1bfb
@@ -3909,25 +3909,25 @@ SECTION "Bank 0@1c0a", ROM0[$1c0a]
 Func_1c0a::
 	push af
 	ld a, $b0
-	ld [$cd1c], a
+	ld [wcd1c], a
 	pop af
 	ret
 
 Func_1c12::
 	push af
 	ld a, b
-	ld [$cd1e], a
+	ld [wcd1e], a
 	ld a, c
-	ld [$cd1d], a
+	ld [wcd1d], a
 	pop af
 	ret
 
 Func_1c1d::
 	push af
 	ld a, b
-	ld [$cd1c], a
+	ld [wcd1c], a
 	ld a, c
-	ld [$cd1b], a
+	ld [wcd1b], a
 	pop af
 	ret
 
@@ -4013,7 +4013,7 @@ OverwriteTargetCard::
 	ld [hli], a
 	ld a, [wTempCardID + 1]
 	ld [hli], a
-	ld a, [$cdf4]
+	ld a, [wcdf4]
 	ld [hli], a
 	pop hl
 	pop bc
@@ -4032,7 +4032,7 @@ LoadTargetCard::
 	ld a, [hli]
 	ld [wTempCardID + 1], a
 	ld a, [hli]
-	ld [$cdf4], a
+	ld [wcdf4], a
 	pop hl
 	pop bc
 	pop af
@@ -4161,18 +4161,18 @@ Func_1d2a::
 	push de
 	push hl
 	ld l, $02
-	ld a, [$cdf5]
+	ld a, [wcdf5]
 	ld [wHexNumber + 0], a
-	ld a, [$cdf6]
+	ld a, [wcdf6]
 	ld [wHexNumber + 1], a
-	ld a, [$cdf7]
-	ld [$cade], a
-	ld a, [$cdf8]
-	ld [$cadf], a
-	ld a, [$cdf9]
-	ld [$cae0], a
+	ld a, [wcdf7]
+	ld [wcade], a
+	ld a, [wcdf8]
+	ld [wcadf], a
+	ld a, [wcdf9]
+	ld [wcae0], a
 	ld a, [wcdfa]
-	ld [$cae1], a
+	ld [wcae1], a
 	call Func_13db
 	ld a, e
 	cp $01
@@ -4239,7 +4239,7 @@ Func_1daf:
 	push de
 	push hl
 	ld b, $00
-	ld a, [$cd5c]
+	ld a, [wcd5c]
 	ld c, a
 	sla c
 	ld hl, .PtrTable
@@ -4575,36 +4575,36 @@ Func_1f81::
 ; unreferenced
 Func_1fa0:
 	push af
-	ld a, $00
-	ld [wce00], a
+	ld a, GAMEMODE_UNK0
+	ld [wGameMode], a
 	pop af
 	ret
 
-Func_1fa8::
+SetGameMode_DuelAIOpponent::
 	push af
-	ld a, $01
-	ld [wce00], a
+	ld a, GAMEMODE_DUEL_AI_OPP
+	ld [wGameMode], a
 	pop af
 	ret
 
-Func_1fb0::
+SetGameMode_DuelLinkOpponent::
 	push af
-	ld a, $02
-	ld [wce00], a
+	ld a, GAMEMODE_DUEL_LINK_OPP
+	ld [wGameMode], a
 	pop af
 	ret
 
-Func_1fb8::
+SetGameMode_Trade::
 	push af
-	ld a, $03
-	ld [wce00], a
+	ld a, GAMEMODE_TRADE
+	ld [wGameMode], a
 	pop af
 	ret
 
-Func_1fc0::
+SetGameMode_Records::
 	push af
-	ld a, $04
-	ld [wce00], a
+	ld a, GAMEMODE_RECORDS
+	ld [wGameMode], a
 	pop af
 	ret
 
@@ -4881,17 +4881,17 @@ Func_213a::
 	push af
 	push bc
 	push hl
-	ld a, [$cdf4]
+	ld a, [wcdf4]
 	and $30
 	ld c, a
 	swap c
 	ld b, $00
 	ld hl, $2158
 	add hl, bc
-	ld a, [$cdf4]
+	ld a, [wcdf4]
 	and $cf
 	or [hl]
-	ld [$cdf4], a
+	ld [wcdf4], a
 	pop hl
 	pop bc
 	pop af
@@ -4904,17 +4904,17 @@ Func_215c::
 	push af
 	push bc
 	push hl
-	ld a, [$cdf4]
+	ld a, [wcdf4]
 	and $30
 	ld c, a
 	swap c
 	ld b, $00
 	ld hl, $217a
 	add hl, bc
-	ld a, [$cdf4]
+	ld a, [wcdf4]
 	and $cf
 	or [hl]
-	ld [$cdf4], a
+	ld [wcdf4], a
 	pop hl
 	pop bc
 	pop af
@@ -4925,95 +4925,95 @@ SECTION "Bank 0@217e", ROM0[$217e]
 
 Func_217e::
 	push af
-	ld a, [$cdf4]
+	ld a, [wcdf4]
 	and $cf
 	or $10
-	ld [$cdf4], a
+	ld [wcdf4], a
 	pop af
 	ret
 
 GetCardLevel::
-	ld a, [$cdf4]
+	ld a, [wcdf4]
 	and $30
 	swap a
 	ret
 
 Func_2193::
 	push af
-	ld a, [$cdf4]
+	ld a, [wcdf4]
 	or $40
-	ld [$cdf4], a
+	ld [wcdf4], a
 	pop af
 	ret
 
 Func_219e::
 	push af
-	ld a, [$cdf4]
+	ld a, [wcdf4]
 	and $bf
-	ld [$cdf4], a
+	ld [wcdf4], a
 	pop af
 	ret
 
 Func_21a9::
 	push af
-	ld a, [$cdf4]
+	ld a, [wcdf4]
 	or $08
-	ld [$cdf4], a
+	ld [wcdf4], a
 	pop af
 	ret
 
 Func_21b4::
 	push af
-	ld a, [$cdf4]
+	ld a, [wcdf4]
 	and $f7
-	ld [$cdf4], a
+	ld [wcdf4], a
 	pop af
 	ret
 
 ; unreferenced
 Func_21bf:
 	push af
-	ld a, [$cdf4]
+	ld a, [wcdf4]
 	and $f8
 	or $00
-	ld [$cdf4], a
+	ld [wcdf4], a
 	pop af
 	ret
 
 Func_21cc::
 	push af
-	ld a, [$cdf4]
+	ld a, [wcdf4]
 	and $f8
 	or $01
-	ld [$cdf4], a
+	ld [wcdf4], a
 	pop af
 	ret
 
 Func_21d9::
 	push af
-	ld a, [$cdf4]
+	ld a, [wcdf4]
 	and $f8
 	or $02
-	ld [$cdf4], a
+	ld [wcdf4], a
 	pop af
 	ret
 
 Func_21e6::
 	push af
-	ld a, [$cdf4]
+	ld a, [wcdf4]
 	and $f8
 	or $03
-	ld [$cdf4], a
+	ld [wcdf4], a
 	pop af
 	ret
 
 Func_21f3::
-	ld a, [$cdf4]
+	ld a, [wcdf4]
 	and $07
 	ret
 
 Func_21f9::
-	ld a, [$cdf4]
+	ld a, [wcdf4]
 	and $40
 	jr z, .asm_2202
 	ld a, $01
@@ -5021,7 +5021,7 @@ Func_21f9::
 	ret
 
 Func_2203::
-	ld a, [$cdf4]
+	ld a, [wcdf4]
 	and $08
 	jr z, .asm_220c
 	ld a, $01
@@ -5030,7 +5030,7 @@ Func_2203::
 
 ; unreferenced
 Func_220d:
-	ld a, [$cdf4]
+	ld a, [wcdf4]
 	and $10
 	jr z, .asm_2216
 	ld a, $01
@@ -5040,192 +5040,192 @@ Func_220d:
 Func_2217::
 	push af
 	xor a
-	ld [$ced1], a
-	ld [$ced2], a
-	ld [$ced3], a
-	ld [$ced4], a
-	ld [$ced5], a
-	ld [$ced6], a
-	ld [$ced7], a
-	ld [$ced8], a
-	ld [$ced9], a
-	ld [$ceda], a
-	ld [$cedb], a
-	ld [$cedc], a
-	ld [$cedd], a
-	ld [$cede], a
-	ld [$cedf], a
-	ld [$cee0], a
-	ld [$cee1], a
-	ld [$cee2], a
-	ld [$cee3], a
-	ld [$cee4], a
-	ld [$cee5], a
-	ld [$cee6], a
+	ld [wced1], a
+	ld [wced2], a
+	ld [wced3], a
+	ld [wced4], a
+	ld [wced5], a
+	ld [wced6], a
+	ld [wced7], a
+	ld [wced8], a
+	ld [wced9], a
+	ld [wceda], a
+	ld [wcedb], a
+	ld [wcedc], a
+	ld [wcedd], a
+	ld [wcede], a
+	ld [wcedf], a
+	ld [wcee0], a
+	ld [wcee1], a
+	ld [wcee2], a
+	ld [wcee3], a
+	ld [wcee4], a
+	ld [wcee5], a
+	ld [wcee6], a
 	pop af
 	ret
 
 Func_225d::
 	push af
-	ld a, [$ced1]
+	ld a, [wced1]
 	or $01
-	ld [$ced1], a
+	ld [wced1], a
 	pop af
 	ret
 
 Func_2268::
 	push af
-	ld a, [$ced1]
+	ld a, [wced1]
 	and $fe
-	ld [$ced1], a
+	ld [wced1], a
 	pop af
 	ret
 
 Func_2273::
 	push af
-	ld a, [$cedc]
+	ld a, [wcedc]
 	or $01
-	ld [$cedc], a
+	ld [wcedc], a
 	pop af
 	ret
 
 Func_227e::
 	push af
-	ld a, [$cedc]
+	ld a, [wcedc]
 	and $fe
-	ld [$cedc], a
+	ld [wcedc], a
 	pop af
 	ret
 
 Func_2289::
 	push af
-	ld a, [$ced1]
+	ld a, [wced1]
 	or $02
-	ld [$ced1], a
+	ld [wced1], a
 	pop af
 	ret
 
 Func_2294::
 	push af
-	ld a, [$ced1]
+	ld a, [wced1]
 	and $fd
-	ld [$ced1], a
+	ld [wced1], a
 	pop af
 	ret
 
 Func_229f::
 	push af
-	ld a, [$cedc]
+	ld a, [wcedc]
 	or $02
-	ld [$cedc], a
+	ld [wcedc], a
 	pop af
 	ret
 
 Func_22aa::
 	push af
-	ld a, [$cedc]
+	ld a, [wcedc]
 	and $fd
-	ld [$cedc], a
+	ld [wcedc], a
 	pop af
 	ret
 
 Func_22b5::
 	push af
-	ld a, [$ced1]
+	ld a, [wced1]
 	or $04
-	ld [$ced1], a
+	ld [wced1], a
 	pop af
 	ret
 
 Func_22c0::
 	push af
-	ld a, [$ced1]
+	ld a, [wced1]
 	and $fb
-	ld [$ced1], a
+	ld [wced1], a
 	pop af
 	ret
 
 Func_22cb::
 	push af
-	ld a, [$cedc]
+	ld a, [wcedc]
 	or $04
-	ld [$cedc], a
+	ld [wcedc], a
 	pop af
 	ret
 
 Func_22d6::
 	push af
-	ld a, [$cedc]
+	ld a, [wcedc]
 	and $fb
-	ld [$cedc], a
+	ld [wcedc], a
 	pop af
 	ret
 
 ; unreferenced
 Func_22e1:
 	push af
-	ld a, [$ced1]
+	ld a, [wced1]
 	or $08
-	ld [$ced1], a
+	ld [wced1], a
 	pop af
 	ret
 
 ; unreferenced
 Func_22ec:
 	push af
-	ld a, [$ced1]
+	ld a, [wced1]
 	and $f7
-	ld [$ced1], a
+	ld [wced1], a
 	pop af
 	ret
 
 ; unreferenced
 Func_22f7:
 	push af
-	ld a, [$cedc]
+	ld a, [wcedc]
 	or $08
-	ld [$cedc], a
+	ld [wcedc], a
 	pop af
 	ret
 
 ; unreferenced
 Func_2302:
 	push af
-	ld a, [$cedc]
+	ld a, [wcedc]
 	and $f7
-	ld [$cedc], a
+	ld [wcedc], a
 	pop af
 	ret
 
 Func_230d::
 	push af
-	ld a, [$ced1]
+	ld a, [wced1]
 	or $10
-	ld [$ced1], a
+	ld [wced1], a
 	pop af
 	ret
 
 Func_2318::
 	push af
-	ld a, [$ced1]
+	ld a, [wced1]
 	and $ef
-	ld [$ced1], a
+	ld [wced1], a
 	pop af
 	ret
 
 Func_2323::
 	push af
-	ld a, [$cedc]
+	ld a, [wcedc]
 	or $10
-	ld [$cedc], a
+	ld [wcedc], a
 	pop af
 	ret
 
 Func_232e::
 	push af
-	ld a, [$cedc]
+	ld a, [wcedc]
 	and $ef
-	ld [$cedc], a
+	ld [wcedc], a
 	pop af
 	ret
 
@@ -5269,68 +5269,68 @@ Func_235c::
 	pop af
 	ret
 
-Func_2364:
+GetDuelistClass:
 	push bc
 	push hl
 	ld b, $00
 	ld a, [wNPCDuelist]
 	ld c, a
-	ld hl, .Categories
+	ld hl, .Classes
 	add hl, bc
 	ld a, [hl]
 	pop hl
 	pop bc
 	ret
 
-.Categories:
-	db $01 ; DUELIST_WEEVIL
-	db $01 ; DUELIST_MAI
-	db $01 ; DUELIST_REX
-	db $01 ; DUELIST_MAKO
-	db $01 ; DUELIST_SETO_KAIBA
-	db $01 ; DUELIST_MOKUBA
-	db $01 ; DUELIST_PUPPETEER
-	db $01 ; DUELIST_PANIK
-	db $01 ; DUELIST_BANDIT_KEITH
-	db $00 ; DUELIST_YUGI
-	db $00 ; DUELIST_TRISTAN
-	db $00 ; DUELIST_JOEY
-	db $00 ; DUELIST_BAKURA
-	db $01 ; DUELIST_SIMON
-	db $02 ; DUELIST_MAXIMILLION
-	db $01 ; DUELIST_YAMI_YUGI
+.Classes:
+	db DUELISTCLASS_1 ; DUELIST_WEEVIL
+	db DUELISTCLASS_1 ; DUELIST_MAI
+	db DUELISTCLASS_1 ; DUELIST_REX
+	db DUELISTCLASS_1 ; DUELIST_MAKO
+	db DUELISTCLASS_1 ; DUELIST_SETO_KAIBA
+	db DUELISTCLASS_1 ; DUELIST_MOKUBA
+	db DUELISTCLASS_1 ; DUELIST_PUPPETEER
+	db DUELISTCLASS_1 ; DUELIST_PANIK
+	db DUELISTCLASS_1 ; DUELIST_BANDIT_KEITH
+	db DUELISTCLASS_0 ; DUELIST_YUGI
+	db DUELISTCLASS_0 ; DUELIST_TRISTAN
+	db DUELISTCLASS_0 ; DUELIST_JOEY
+	db DUELISTCLASS_0 ; DUELIST_BAKURA
+	db DUELISTCLASS_1 ; DUELIST_SIMON
+	db DUELISTCLASS_2 ; DUELIST_MAXIMILLION
+	db DUELISTCLASS_1 ; DUELIST_YAMI_YUGI
 
 Func_2384::
 	push af
-	ld a, $00
-	ld [$cf02], a
-	ld a, $00
-	ld [$cf03], a
+	ld a, DUELSTATUS_0
+	ld [wDuelStatus], a
+	ld a, DUELSTATUS_0
+	ld [wOtherDuelStatus], a
 	pop af
 	ret
 
 Func_2391::
 	push af
-	ld a, [$cf02]
-	cp $00
+	ld a, [wDuelStatus]
+	cp DUELSTATUS_0
 	jr nz, .asm_239e
-	ld a, $01
-	ld [$cf02], a
+	ld a, DUELSTATUS_1
+	ld [wDuelStatus], a
 .asm_239e
 	pop af
 	ret
 
-Func_23a0::
+SetDuelStatus_PlayerLoss::
 	push af
-	ld a, $02
-	ld [$cf02], a
+	ld a, DUELSTATUS_PLAYER_LOSS
+	ld [wDuelStatus], a
 	pop af
 	ret
 
-Func_23a8::
+SetDuelStatus_PlayerWin::
 	push af
-	ld a, $03
-	ld [$cf02], a
+	ld a, DUELSTATUS_PLAYER_WIN
+	ld [wDuelStatus], a
 	pop af
 	ret
 
@@ -5338,93 +5338,102 @@ Func_23a8::
 ; FALSE if a win condition has been reached
 IsDuelOngoing::
 	push bc
-	ld a, [wce00]
-	cp $01
-	jr nz, .asm_23ce
+	ld a, [wGameMode]
+	cp GAMEMODE_DUEL_AI_OPP
+	jr nz, .link_opp
+
+; ai opp
 	ld c, TRUE
-	ld a, [$cf02]
-	cp $02
+	ld a, [wDuelStatus]
+	cp DUELSTATUS_PLAYER_LOSS
 	jr nz, .asm_23c3
 	ld c, FALSE
 .asm_23c3
-	ld a, [$cf02]
-	cp $03
+	ld a, [wDuelStatus]
+	cp DUELSTATUS_PLAYER_WIN
 	jr nz, .asm_23cc
 	ld c, FALSE
 .asm_23cc
-	jr .asm_23f4
-.asm_23ce
+	jr .got_result
+
+.link_opp
 	ld c, TRUE
-	ld a, [$cf02]
-	cp $02
+	ld a, [wDuelStatus]
+	cp DUELSTATUS_PLAYER_LOSS
 	jr nz, .asm_23d9
 	ld c, FALSE
 .asm_23d9
-	ld a, [$cf02]
-	cp $03
+	ld a, [wDuelStatus]
+	cp DUELSTATUS_PLAYER_WIN
 	jr nz, .asm_23e2
 	ld c, FALSE
 .asm_23e2
-	ld a, [$cf03]
-	cp $02
+	ld a, [wOtherDuelStatus]
+	cp DUELSTATUS_PLAYER_LOSS
 	jr nz, .asm_23eb
 	ld c, FALSE
 .asm_23eb
-	ld a, [$cf03]
-	cp $03
-	jr nz, .asm_23f4
+	ld a, [wOtherDuelStatus]
+	cp DUELSTATUS_PLAYER_WIN
+	jr nz, .got_result
 	ld c, FALSE
-.asm_23f4
+.got_result
 	ld a, c
 	pop bc
 	ret
 
-PlayerLostDuel::
-	ld a, [wce00]
-	cp $01
-	jr nz, .asm_240c
-	ld a, [$cf02]
-	cp $02
+DidPlayerLoseDuel::
+	ld a, [wGameMode]
+	cp GAMEMODE_DUEL_AI_OPP
+	jr nz, .link_opp
+
+; ai opp
+	ld a, [wDuelStatus]
+	cp DUELSTATUS_PLAYER_LOSS
 	jr nz, .asm_2408
 	xor a ; TRUE
 	jr .asm_240a
 .asm_2408
 	ld a, FALSE
 .asm_240a
-	jr .ok
-.asm_240c
-	ld a, [$cf02]
-	cp $03
+	jr .done
+
+.link_opp
+	ld a, [wDuelStatus]
+	cp DUELSTATUS_PLAYER_WIN
 	jr nz, .asm_2417
 	ld a, FALSE
-	jr .ok
+	jr .done
 .asm_2417
-	ld a, [$cf02]
-	cp $02
+	ld a, [wDuelStatus]
+	cp DUELSTATUS_PLAYER_LOSS
 	jr nz, .asm_2421
 	xor a ; TRUE
-	jr .ok
+	jr .done
 .asm_2421
-	ld a, [$cf03]
-	cp $03
+	ld a, [wOtherDuelStatus]
+	cp DUELSTATUS_PLAYER_WIN
 	jr nz, .asm_242b
 	xor a ; TRUE
-	jr .ok
+	jr .done
 .asm_242b
-	ld a, [$cf03]
-	cp $03
-	jr nz, .ok
+	ld a, [wOtherDuelStatus]
+	; bug, this should be cp DUELSTATUS_PLAYER_LOSS
+	cp DUELSTATUS_PLAYER_WIN
+	jr nz, .done
 	ld a, FALSE
-.ok
+.done
 	ret
 
 ; unreferenced
 Func_2435:
-	ld a, [wce00]
-	cp $01
-	jr nz, .asm_244a
-	ld a, [$cf02]
-	cp $03
+	ld a, [wGameMode]
+	cp GAMEMODE_DUEL_AI_OPP
+	jr nz, .link_opp
+
+; ai opp
+	ld a, [wDuelStatus]
+	cp DUELSTATUS_PLAYER_WIN
 	jr nz, .asm_2446
 	xor a
 	jr .asm_2448
@@ -5432,27 +5441,29 @@ Func_2435:
 	ld a, $01
 .asm_2448
 	jr .asm_2472
-.asm_244a
-	ld a, [$cf02]
-	cp $03
+
+.link_opp
+	ld a, [wDuelStatus]
+	cp DUELSTATUS_PLAYER_WIN
 	jr nz, .asm_2454
 	xor a
 	jr .asm_2472
 .asm_2454
-	ld a, [$cf02]
-	cp $02
+	ld a, [wDuelStatus]
+	cp DUELSTATUS_PLAYER_LOSS
 	jr nz, .asm_245f
 	ld a, $01
 	jr .asm_2472
 .asm_245f
-	ld a, [$cf03]
-	cp $03
+	ld a, [wOtherDuelStatus]
+	cp DUELSTATUS_PLAYER_WIN
 	jr nz, .asm_246a
 	ld a, $01
 	jr .asm_2472
 .asm_246a
-	ld a, [$cf03]
-	cp $03
+	ld a, [wOtherDuelStatus]
+	; bug, this should be cp DUELSTATUS_PLAYER_LOSS
+	cp DUELSTATUS_PLAYER_WIN
 	jr nz, .asm_2472
 	xor a
 .asm_2472
@@ -5731,8 +5742,8 @@ Func_25d4::
 ; unreferenced
 Func_2627:
 	push af
-	ld a, [$cf02]
-	cp $03
+	ld a, [wDuelStatus]
+	cp DUELSTATUS_PLAYER_WIN
 	jr nz, .asm_2634
 	call Func_2648
 	jr .asm_2637
@@ -5743,25 +5754,25 @@ Func_2627:
 	ret
 
 Func_2639::
-	ld [$cf19], a
+	ld [wcf19], a
 	ret
 
 ; unreferenced
 Func_263d:
 	push af
 	ld a, c
-	ld [$cf1a], a
+	ld [wcf1a + 0], a
 	ld a, b
-	ld [$cf1b], a
+	ld [wcf1a + 1], a
 	pop af
 	ret
 
 Func_2648:
 	push af
 	push bc
-	ld a, [$cf1a]
+	ld a, [wcf1a + 0]
 	ld c, a
-	ld a, [$cf1b]
+	ld a, [wcf1a + 1]
 	ld b, a
 	farcall Func_5af2
 	farcall GiveCard
@@ -5772,7 +5783,7 @@ Func_2648:
 Func_265b:
 	push af
 	push bc
-	ld a, [$cf19]
+	ld a, [wcf19]
 	farcall RemoveCardFromPlayerDeck
 	pop bc
 	pop af
@@ -6138,15 +6149,15 @@ Func_287e:
 Func_289d:
 	push af
 	push bc
-	ld a, [$cf6e]
+	ld a, [wcf6e + 0]
 	ld c, a
-	ld a, [$cf6f]
+	ld a, [wcf6e + 1]
 	ld b, a
 	call IncrementBCWithMaximum9999
 	ld a, c
-	ld [$cf6e], a
+	ld [wcf6e + 0], a
 	ld a, b
-	ld [$cf6f], a
+	ld [wcf6e + 1], a
 	pop bc
 	pop af
 	ret
@@ -6154,15 +6165,15 @@ Func_289d:
 Func_28b5:
 	push af
 	push bc
-	ld a, [$cf90]
+	ld a, [wcf90 + 0]
 	ld c, a
-	ld a, [$cf91]
+	ld a, [wcf90 + 1]
 	ld b, a
 	call IncrementBCWithMaximum9999
 	ld a, c
-	ld [$cf90], a
+	ld [wcf90 + 0], a
 	ld a, b
-	ld [$cf91], a
+	ld [wcf90 + 1], a
 	pop bc
 	pop af
 	ret
@@ -6258,7 +6269,7 @@ IncrementDuelistWinCount:
 Func_2938::
 	push af
 	call Func_289d
-	call PlayerLostDuel
+	call DidPlayerLoseDuel
 	cp TRUE
 	jr z, .asm_2946
 	call Func_28b5
@@ -6269,7 +6280,7 @@ Func_2938::
 IncrementDuelistDuelAndWinCounts::
 	push af
 	call IncrementDuelistDuelCount
-	call PlayerLostDuel
+	call DidPlayerLoseDuel
 	cp TRUE
 	jr z, .lost
 	call IncrementDuelistWinCount
@@ -6408,7 +6419,7 @@ PlaySound:
 	pop af
 	ret
 
-Func_29fd::
+StopMusic::
 	push af
 	ld a, MUSIC_NONE
 	call PlaySound
@@ -6424,7 +6435,7 @@ PlayMusic_MainMenu::
 	pop af
 	ret
 
-Func_2a13::
+PlayMusic_Duel1::
 	push af
 	ld a, MUSIC_DUEL1
 	call PlaySound
@@ -6432,7 +6443,15 @@ Func_2a13::
 	pop af
 	ret
 
-Func_2a1e:
+PlayMusic_Duel2:
+	push af
+	ld a, MUSIC_DUEL2
+	call PlaySound
+	call WaitForVBlank
+	pop af
+	ret
+
+PlayMusic_Duel3:
 	push af
 	ld a, MUSIC_DUEL3
 	call PlaySound
@@ -6440,17 +6459,9 @@ Func_2a1e:
 	pop af
 	ret
 
-Func_2a29:
-	push af
-	ld a, MUSIC_DUEL4
-	call PlaySound
-	call WaitForVBlank
-	pop af
-	ret
-
 Func_2a34:
 	push af
-	ld a, MUSIC_DUEL2
+	ld a, MUSIC_03
 	call PlaySound
 	call WaitForVBlank
 	pop af
@@ -6472,7 +6483,7 @@ Func_2a4a:
 	pop af
 	ret
 
-Func_2a55::
+PlayMusic_Campaign::
 	push af
 	ld a, MUSIC_CAMPAIGN
 	call PlaySound
@@ -6480,23 +6491,23 @@ Func_2a55::
 	pop af
 	ret
 
-Func_2a60::
+PlayMusic_DuelPrep::
 	push af
-	ld a, MUSIC_09
+	ld a, MUSIC_DUEL_PREP
 	call PlaySound
 	call WaitForVBlank
 	pop af
 	ret
 
-Func_2a6b::
+PlayMusic_Battle::
 	push af
-	ld a, MUSIC_0A
+	ld a, MUSIC_BATTLE
 	call PlaySound
 	call WaitForVBlank
 	pop af
 	ret
 
-Func_2a76::
+PlayMusic_DuelWin::
 	push af
 	ld a, MUSIC_DUEL_WIN
 	call PlaySound
@@ -6504,7 +6515,7 @@ Func_2a76::
 	pop af
 	ret
 
-Func_2a81::
+PlayMusic_DuelLoss::
 	push af
 	ld a, MUSIC_DUEL_LOSS
 	call PlaySound
@@ -6520,46 +6531,54 @@ PlayMusic_Tea::
 	pop af
 	ret
 
-Func_2a97::
+PlayDuelMusic::
 	push af
-	ld a, [wce00]
-	cp $01
-	jr nz, .asm_2ab9
-	call Func_2364
-	cp $00
-	jr nz, .asm_2aab
-	call Func_2a13
-	jr .asm_2ab7
-.asm_2aab
-	cp $01
-	jr nz, .asm_2ab4
-	call Func_2a1e
-	jr .asm_2ab7
-.asm_2ab4
-	call Func_2a29
-.asm_2ab7
-	jr .asm_2abc
-.asm_2ab9
-	call Func_2a13
-.asm_2abc
+	ld a, [wGameMode]
+	cp GAMEMODE_DUEL_AI_OPP
+	jr nz, .link_opp
+
+; ai opp
+	call GetDuelistClass
+	cp DUELISTCLASS_0
+	jr nz, .check_class_1
+; class 0
+	call PlayMusic_Duel1
+	jr .got_music
+.check_class_1
+	cp DUELISTCLASS_1
+	jr nz, .class_2
+; class 1
+	call PlayMusic_Duel2
+	jr .got_music
+.class_2
+	call PlayMusic_Duel3
+.got_music
+	jr .done
+
+.link_opp
+	call PlayMusic_Duel1
+
+.done
 	pop af
 	ret
 
-Func_2abe::
+PlayDialogueMusic::
 	push af
-	call Func_2364
-	cp $00
-	jr nz, .asm_2acb
+	call GetDuelistClass
+	cp DUELISTCLASS_0
+	jr nz, .check_class_1
+; class 0
 	call Func_2a34
-	jr .asm_2ad7
-.asm_2acb
-	cp $01
-	jr nz, .asm_2ad4
+	jr .done
+.check_class_1
+	cp DUELISTCLASS_1
+	jr nz, .class_2
+; class 1
 	call Func_2a3f
-	jr .asm_2ad7
-.asm_2ad4
+	jr .done
+.class_2
 	call Func_2a4a
-.asm_2ad7
+.done
 	pop af
 	ret
 
@@ -6702,46 +6721,46 @@ Func_2b89::
 Func_2b94::
 	push af
 	xor a
-	ld [$cfbe], a
-	ld [$cfbf], a
+	ld [wcfbe], a
+	ld [wcfbf], a
 	pop af
 	ret
 
 ; unreferenced
 Func_2b9e:
 	push af
-	ld a, [$cfbe]
+	ld a, [wcfbe]
 	or $01
-	ld [$cfbe], a
+	ld [wcfbe], a
 	pop af
 	ret
 
 Func_2ba9::
 	push af
-	ld a, [$cfbe]
+	ld a, [wcfbe]
 	and $fe
-	ld [$cfbe], a
+	ld [wcfbe], a
 	pop af
 	ret
 
 Func_2bb4::
 	push af
-	ld a, [$cfbf]
+	ld a, [wcfbf]
 	or $01
-	ld [$cfbf], a
+	ld [wcfbf], a
 	pop af
 	ret
 
 Func_2bbf::
 	push af
-	ld a, [$cfbf]
+	ld a, [wcfbf]
 	and $fe
-	ld [$cfbf], a
+	ld [wcfbf], a
 	pop af
 	ret
 
 Func_2bca::
-	ld a, [$cfbe]
+	ld a, [wcfbe]
 	and $01
 	jr z, .asm_2bd3
 	ld a, $01
@@ -6749,7 +6768,7 @@ Func_2bca::
 	ret
 
 Func_2bd4::
-	ld a, [$cfbf]
+	ld a, [wcfbf]
 	and $01
 	jr z, .asm_2bdd
 	ld a, $01
@@ -6759,36 +6778,36 @@ Func_2bd4::
 Func_2bde::
 	push af
 	xor a
-	ld [$cfc0], a
-	ld [$cfc1], a
+	ld [wcfc0], a
+	ld [wcfc1], a
 	pop af
 	ret
 
 Func_2be8::
 	push af
 	ld a, $04
-	ld [$cfc1], a
+	ld [wcfc1], a
 	pop af
 	ret
 
 Func_2bf0::
 	push af
-	ld a, [$cfc0]
+	ld a, [wcfc0]
 	cp $00
 	jr z, .asm_2bfc
 	dec a
-	ld [$cfc0], a
+	ld [wcfc0], a
 .asm_2bfc
 	pop af
 	ret
 
 Func_2bfe::
 	push af
-	ld a, [$cfc1]
+	ld a, [wcfc1]
 	cp $00
 	jr z, .asm_2c0a
 	dec a
-	ld [$cfc1], a
+	ld [wcfc1], a
 .asm_2c0a
 	pop af
 	ret
@@ -6797,7 +6816,7 @@ Func_2c0c::
 	push bc
 	push hl
 	ld b, $00
-	ld a, [$cfc0]
+	ld a, [wcfc0]
 	ld c, a
 	ld hl, Data_2c2c
 	add hl, bc
@@ -6810,7 +6829,7 @@ Func_2c1c::
 	push bc
 	push hl
 	ld b, $00
-	ld a, [$cfc1]
+	ld a, [wcfc1]
 	ld c, a
 	ld hl, Data_2c2c
 	add hl, bc
@@ -6845,17 +6864,17 @@ Func_2c4a::
 	push de
 	push hl
 	xor a
-	ld [$cfc2], a
-	ld [$cfd6], a
-	ld [$cfd7], a
-	ld [$cfd8], a
-	ld [$cfd9], a
-	ld [$cfda], a
-	ld [$cfdb], a
-	ld [$cfdc], a
-	ld [$cfdd], a
-	ld [$cfde], a
-	ld hl, $cfc4
+	ld [wcfc2], a
+	ld [wcfd6], a
+	ld [wcfd7], a
+	ld [wcfd8], a
+	ld [wcfd9], a
+	ld [wcfda], a
+	ld [wcfdb], a
+	ld [wcfdc], a
+	ld [wcfdd], a
+	ld [wcfde], a
+	ld hl, wcfc4
 	ld a, $ff
 	ld c, $12
 .asm_2c74
@@ -6872,7 +6891,7 @@ Func_2c7d::
 	push de
 	push hl
 	ld b, $00
-	ld a, [$cfc3]
+	ld a, [wcfc3]
 	ld c, a
 	sla c
 	ld hl, $2cbd
@@ -6880,7 +6899,7 @@ Func_2c7d::
 	ld a, [hli]
 	ld h, [hl]
 	ld l, a
-	ld a, [$cfc2]
+	ld a, [wcfc2]
 	cp $00
 	jr nz, .asm_2c9d
 	ld a, [hli]
@@ -6891,15 +6910,15 @@ Func_2c7d::
 	call Func_2cc3
 .asm_2c9d
 	ld b, $00
-	ld a, [$cfc2]
+	ld a, [wcfc2]
 	ld c, a
 	inc a
-	ld [$cfc2], a
-	ld hl, $cfc4
+	ld [wcfc2], a
+	ld hl, wcfc4
 	add hl, bc
 	ld a, [hli]
 	ld c, a
-	ld a, [$cfc2]
+	ld a, [wcfc2]
 	ld e, a
 	ld a, [wTextLength]
 	cp e
@@ -6923,7 +6942,7 @@ Func_2cc3:
 	farcall SetTextLoadMode
 	farcall SetTextArg
 	farcall LoadText
-	ld hl, $cfc4
+	ld hl, wcfc4
 	ld de, wTextBuffer
 	ld c, $12
 .asm_2cd9
@@ -6933,7 +6952,7 @@ Func_2cc3:
 	dec c
 	jr nz, .asm_2cd9
 	xor a
-	ld [$cfc2], a
+	ld [wcfc2], a
 	pop hl
 	pop de
 	pop bc
@@ -6942,58 +6961,58 @@ Func_2cc3:
 
 Func_2ce8::
 	push af
-	ld [$cfc3], a
+	ld [wcfc3], a
 	xor a
-	ld [$cfc2], a
+	ld [wcfc2], a
 	pop af
 	ret
 
 Func_2cf2::
 	push af
 	ld a, c
-	ld [$cfd6], a
+	ld [wcfd6], a
 	ld a, b
-	ld [$cfd7], a
+	ld [wcfd7], a
 	ld a, e
-	ld [$cfd8], a
+	ld [wcfd8], a
 	pop af
 	ret
 
 Func_2d01::
 	push af
 	ld a, c
-	ld [$cfd9], a
+	ld [wcfd9], a
 	ld a, b
-	ld [$cfda], a
+	ld [wcfda], a
 	ld a, e
-	ld [$cfdb], a
+	ld [wcfdb], a
 	pop af
 	ret
 
 Func_2d10::
 	push af
 	ld a, c
-	ld [$cfdc], a
+	ld [wcfdc], a
 	ld a, b
-	ld [$cfdd], a
+	ld [wcfdd], a
 	ld a, e
-	ld [$cfde], a
+	ld [wcfde], a
 	pop af
 	ret
 
 Func_2d1f:
 	ld a, $08
-	ld [$cfef], a
+	ld [wcfef], a
 	call Func_2d2e
 	xor a
-	ld [$cfef], a
+	ld [wcfef], a
 	jp Func_f4002
 
 Func_2d2e:
 	di
 	bankswitch BANK(_PlaySound)
 	ei
-	ld a, [$cfef]
+	ld a, [wcfef]
 	call _PlaySound
 	di
 	bankswitch BANK(Func_f4002)
@@ -7008,7 +7027,7 @@ VBlank16:
 	bankswitch $3d
 	ei
 	ld a, $01
-	ld [$cfe2], a
+	ld [wcfe2], a
 	pop de
 	pop bc
 	pop hl

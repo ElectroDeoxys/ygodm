@@ -8,22 +8,22 @@ SECTION "Bank e@4004", ROMX[$4004], BANK[$e]
 Func_38004:
 	push af
 	call Func_38032
-	ld a, [$ced1]
+	ld a, [wced1]
 	and $10
 	jr z, .asm_38012
 	call Func_38039
 .asm_38012
-	ld a, [$ced1]
+	ld a, [wced1]
 	and $04
 	jr z, .asm_3801c
 	call Func_392da
 .asm_3801c
-	ld a, [$cedc]
+	ld a, [wcedc]
 	and $10
 	jr z, .asm_38026
 	call Func_38089
 .asm_38026
-	ld a, [$cedc]
+	ld a, [wcedc]
 	and $04
 	jr z, .asm_38030
 	call Func_39344

@@ -9,14 +9,14 @@ SoundHeaders:
 	sound Sound_None_Ch1, Sound_None_Ch2, Sound_None_Ch3, Sound_None_Ch4 ; MUSIC_NONE
 	sound Music_MainMenu_Ch1, Music_MainMenu_Ch2, Music_MainMenu_Ch3, Music_MainMenu_Ch4 ; MUSIC_MAIN_MENU
 	db $08, $09, $0a, $0b ; MUSIC_DUEL1
-	db $0c, $0d, $0e, $0f ; MUSIC_DUEL2
-	db $10, $11, $12, $13 ; MUSIC_DUEL3
-	db $14, $15, $16, $17 ; MUSIC_DUEL4
+	db $0c, $0d, $0e, $0f ; MUSIC_03
+	db $10, $11, $12, $13 ; MUSIC_DUEL2
+	db $14, $15, $16, $17 ; MUSIC_DUEL3
 	db $18, $19, $1a, $1b ; MUSIC_CAMPAIGN
 	db $1c, $1d, $1e, $1f ; MUSIC_07
 	db $20, $21, $22, $23 ; MUSIC_08
-	db $24, $25, $26, $27 ; MUSIC_09
-	db $28, $29, $2a, $2b ; MUSIC_0A
+	db $24, $25, $26, $27 ; MUSIC_DUEL_PREP
+	db $28, $29, $2a, $2b ; MUSIC_BATTLE
 	db $2c, $2d, $2e, $2f ; MUSIC_TEA
 	db $30, $31, $32, $33 ; MUSIC_DUEL_WIN
 	db $34, $35, $36, $37 ; MUSIC_DUEL_LOSS

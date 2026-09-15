@@ -43,7 +43,7 @@ CampaignMenu:
 	push af
 	ld a, STAGE_IN_THE_SHIP
 	ld [wCampaignStage], a
-	call Func_2a55
+	call PlayMusic_Campaign
 .loop
 	ld a, [wCampaignStage]
 	cp STAGE_IN_THE_SHIP
@@ -101,7 +101,7 @@ DuelAgainstAIOpponent:
 	farcall Func_b52c
 	farcall Func_cbe9
 	farcall Func_cb87
-	call Func_2a60
+	call PlayMusic_DuelPrep
 
 	farcall DuelPrepMenu
 	ld c, 10
@@ -126,7 +126,7 @@ DoDuel:
 	farcall GenerateAIOpponentDeck
 	farcall AIOppDrawInitialHand
 	farcall Func_4068
-	call Func_2a97
+	call PlayDuelMusic
 
 .loop
 	; player's turn
@@ -164,15 +164,15 @@ DoDuel:
 
 Func_10124:
 	push af
-	ld a, [$cf02]
-	cp $03
+	ld a, [wDuelStatus]
+	cp DUELSTATUS_PLAYER_WIN
 	jr nz, .asm_10137
 	farcall Func_b547
 	farcall Func_b62d
 	farcall Func_b679
 	jr .asm_1013e
 .asm_10137
-	cp $02
+	cp DUELSTATUS_PLAYER_LOSS
 	jr nz, .asm_1013e
 	farcall Func_b562
 .asm_1013e
@@ -195,7 +195,7 @@ VersusMenu:
 .has_enough_cards
 	farcall Func_cbe9
 	farcall Func_cb87
-	call Func_2a60
+	call PlayMusic_DuelPrep
 	farcall DuelPrepMenu
 	cp $00
 	jr nz, .asm_1016b
@@ -246,7 +246,7 @@ TradeMenu:
 	farcall Func_cbe9
 	farcall Func_e711
 	farcall Func_e7eb
-	call Func_2a60
+	call PlayMusic_DuelPrep
 	farcall Func_e84e
 	cp $00
 	jr nz, .asm_101bb
@@ -1121,20 +1121,20 @@ Func_106b2:
 	ret
 
 SRAMToWRAMMap:
-	dwb $ce99, $04 ; sUnk_ce99
+	dwb wce99, $04 ; sUnk_ce99
 	dwb wcfaf, $04 ; sUnk_cfaf
-	dwb $cfb7, $01 ; sUnk_cfb7
-	dwb $cfdf, $02 ; sUnk_cfdf
+	dwb wcfb7, $01 ; sUnk_cfb7
+	dwb wcfdf, $02 ; sUnk_cfdf
 	dwb wPlayerDeck, DECK_SIZE * $2 ; sPlayerDeck
 	dwb wTrunk, $ff ; sTrunk
 	dwb wTrunk + $ff, LOW(NUM_CARDS - $ff)
 	dwb wDuelistDuelCounts, NUM_DUELISTS * $2 ; sDuelistDuelCounts
 	dwb wDuelistWinCounts, NUM_DUELISTS * $2 ; sDuelistWinCounts
-	dwb $cf99, $08 ; sUnk_cf99
-	dwb $b800, $c8 ; sUnk_b800
-	dwb $b8c8, $c8 ; sUnk_b8c8
-	dwb $b990, $c8 ; sUnk_b990
-	dwb $ba58, $c8 ; sUnk_ba58
+	dwb wcf99, $08 ; sUnk_cf99
+	dwb sb800, $c8 ; sUnk_b800
+	dwb sb8c8, $c8 ; sUnk_b8c8
+	dwb sb990, $c8 ; sUnk_b990
+	dwb sba58, $c8 ; sUnk_ba58
 	dw NULL
 
 SECTION "Bank 4@4709", ROMX[$4709], BANK[$4]
@@ -1144,12 +1144,12 @@ Func_10709:
 	push bc
 	push hl
 	ld b, $00
-	ld a, [$cf95]
+	ld a, [wcf95]
 	ld c, a
 	ld hl, $471e
 	add hl, bc
 	ld a, [hl]
-	ld [$cf96], a
+	ld [wcf96], a
 	pop hl
 	pop bc
 	pop af
@@ -1159,7 +1159,7 @@ Func_10709:
 SECTION "Bank 4@4741", ROMX[$4741], BANK[$4]
 
 Func_10741:
-	ld [$cf95], a
+	ld [wcf95], a
 	call Func_10709
 	call Func_1074e
 	call Func_108d1
@@ -1172,7 +1172,7 @@ Func_1074e:
 	ld a, VBLANK_10
 	call SetPendingVBlankMode
 	ld b, $00
-	ld a, [$cf95]
+	ld a, [wcf95]
 	ld c, a
 	sla c
 	ld hl, $478e
@@ -1249,7 +1249,7 @@ Func_108d1:
 	push bc
 	push hl
 	ld b, $00
-	ld a, [$cf95]
+	ld a, [wcf95]
 	ld c, a
 	ld hl, $48ec
 	add hl, bc
@@ -1280,7 +1280,7 @@ Func_108f0:
 
 Func_10901:
 	push af
-	ld a, [$cf95]
+	ld a, [wcf95]
 	cp $01
 	jr z, .asm_10917
 	ld a, VBLANK_04
@@ -1294,7 +1294,7 @@ Func_10901:
 
 RecordsMenu:
 	call Func_112cb
-	call Func_2a55
+	call PlayMusic_Campaign
 	call Func_11554
 	ret
 ; 0x10923
@@ -1354,34 +1354,34 @@ Func_10976:
 	push hl
 	ld c, $00
 	ld hl, wce99
-	ld a, [$cf99]
+	ld a, [wcf99]
 	add [hl]
 	ld b, a
-	ld a, [$cf9d]
+	ld a, [wcf9d]
 	adc b
 	ld [hli], a
 	jr z, .asm_1098b
 	inc c
 .asm_1098b
-	ld a, [$cf9a]
+	ld a, [wcf9a]
 	add [hl]
 	ld b, a
-	ld a, [$cf9e]
+	ld a, [wcf9e]
 	adc b
 	ld [hli], a
 	jr z, .asm_10998
 	inc c
 .asm_10998
-	ld a, [$cf9b]
+	ld a, [wcf9b]
 	add [hl]
 	ld b, a
-	ld a, [$cf9f]
+	ld a, [wcf9f]
 	adc b
 	ld [hli], a
 	jr z, .asm_109a5
 	inc c
 .asm_109a5
-	ld a, [$cf9c]
+	ld a, [wcf9c]
 	add [hl]
 	ld b, a
 	ld a, [wcfa0]
@@ -1406,7 +1406,7 @@ Func_109c0:
 	push bc
 	push de
 	push hl
-	ld hl, $cf99
+	ld hl, wcf99
 	ld de, wcfa1
 	ld c, $08
 .loop
@@ -1453,7 +1453,7 @@ Func_109f2:
 	call Func_10b1f
 	farcall Func_b823
 	ld a, $00
-	ld [$cf98], a
+	ld [wcf98], a
 .loop
 	ld a, [wcfa9]
 	cp $03
@@ -1473,7 +1473,7 @@ Func_10a1b:
 	call Func_10b1f
 	farcall Func_b840
 	ld a, $01
-	ld [$cf98], a
+	ld [wcf98], a
 .asm_10a2a
 	ld a, [wcfa9]
 	cp $03
@@ -2358,7 +2358,7 @@ Func_1116c:
 	inc de
 	dec c
 	jr nz, .asm_11178
-	ld hl, $b800
+	ld hl, sb800
 	xor a
 	ld b, $04
 .asm_11184
@@ -2370,7 +2370,7 @@ Func_1116c:
 	dec b
 	jr nz, .asm_11184
 	xor a
-	ld [$cfb7], a
+	ld [wcfb7], a
 	pop hl
 	pop de
 	pop bc
@@ -2396,7 +2396,7 @@ Func_11196:
 Func_111ad:
 	push bc
 	push hl
-	ld hl, $cfb3
+	ld hl, wcfb3
 	xor a
 	ld c, $04
 .asm_111b5
@@ -2404,7 +2404,7 @@ Func_111ad:
 	dec c
 	jr nz, .asm_111b5
 	ld c, $c8
-	ld a, [$cfb7]
+	ld a, [wcfb7]
 	cp $00
 	jr nz, .asm_111c5
 	call Func_1123b
@@ -2451,9 +2451,9 @@ Func_111ee:
 	rl b
 	sla c
 	rl b
-	ld hl, $b800
+	ld hl, sb800
 	add hl, bc
-	ld de, $cfb3
+	ld de, wcfb3
 	ld c, $04
 .asm_11207
 	ld a, [de]
@@ -2464,7 +2464,7 @@ Func_111ee:
 	pop af
 	cp $c7
 	jr nz, .asm_11215
-	ld hl, $b800
+	ld hl, sb800
 .asm_11215
 	xor a
 	ld c, $04
@@ -2486,12 +2486,12 @@ Func_11221:
 	ld a, c
 	cp $c7
 	jr nz, .asm_11237
-	ld a, [$cfb7]
+	ld a, [wcfb7]
 	inc a
 	jr nz, .asm_11234
 	ld a, $ff
 .asm_11234
-	ld [$cfb7], a
+	ld [wcfb7], a
 .asm_11237
 	pop hl
 	pop de
@@ -2502,7 +2502,7 @@ Func_1123b:
 	push af
 	push de
 	push hl
-	ld hl, $b800
+	ld hl, sb800
 	ld c, $00
 .asm_11243
 	ld a, c
@@ -2514,7 +2514,7 @@ Func_1123b:
 	cp $00
 	jr z, .asm_11268
 	inc b
-	ld de, $cfb3
+	ld de, wcfb3
 	call Func_11270
 	cp $00
 	jr z, .asm_11268
@@ -2829,7 +2829,7 @@ Func_114e9:
 	ld h, b
 	ld l, c
 	push hl
-	ld hl, $cf6e
+	ld hl, wcf6e
 	ld a, [hli]
 	ld c, a
 	ld a, [hli]
@@ -2850,7 +2850,7 @@ Func_114e9:
 	ld a, $38
 	ld [hli], a
 	push hl
-	ld hl, $cf90
+	ld hl, wcf90
 	ld a, [hli]
 	ld c, a
 	ld a, [hli]
@@ -2880,7 +2880,7 @@ Func_114e9:
 Func_1154c:
 	push af
 	ld a, $00
-	ld [$cfbd], a
+	ld [wcfbd], a
 	pop af
 	ret
 
@@ -2983,7 +2983,7 @@ Func_115dc:
 	ld hl, $55f7
 	add hl, bc
 	ld c, [hl]
-	ld a, [$cfbd]
+	ld a, [wcfbd]
 	cp c
 	jr nc, .asm_115f2
 	xor a
@@ -3003,9 +3003,9 @@ Func_115fc:
 	call Func_115dc
 	cp $00
 	jr nz, .asm_1160e
-	ld a, [$cfbd]
+	ld a, [wcfbd]
 	inc a
-	ld [$cfbd], a
+	ld [wcfbd], a
 	call Func_11621
 .asm_1160e
 	pop af
@@ -3013,11 +3013,11 @@ Func_115fc:
 
 Func_11610:
 	push af
-	ld a, [$cfbd]
+	ld a, [wcfbd]
 	cp $00
 	jr z, .asm_1161f
 	dec a
-	ld [$cfbd], a
+	ld [wcfbd], a
 	call Func_11621
 .asm_1161f
 	pop af
@@ -3025,7 +3025,7 @@ Func_11610:
 
 Func_11621:
 	push af
-	ld a, [$cfbd]
+	ld a, [wcfbd]
 	cp $04
 	jr nz, .asm_11642
 	call Func_2958
@@ -3338,9 +3338,9 @@ Func_11850:
 	farcall SetTextLoadMode
 	pop af
 	call Func_111ad
-	ld [wHexNumber], a
+	ld [wHexNumber + 0], a
 	ld a, $00
-	ld [$cadd], a
+	ld [wHexNumber + 1], a
 	call ConvertToDecimalRepresentation
 	farcall SetTextArg
 	farcall LoadText

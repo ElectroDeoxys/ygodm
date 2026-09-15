@@ -4,6 +4,13 @@ DEF FIELD_SIZE EQU  5
 
 DEF INITIAL_LP EQU $8000
 
+; wDuelStatus and wOtherDuelStatus constants
+	const_def
+	const DUELSTATUS_0           ; $0
+	const DUELSTATUS_1           ; $1
+	const DUELSTATUS_PLAYER_LOSS ; $2
+	const DUELSTATUS_PLAYER_WIN  ; $3
+
 	const_def
 	const CARD_LOCATION_OPP_HAND     ; $0
 	const CARD_LOCATION_OPP_FIELD    ; $1

@@ -10,7 +10,7 @@
 GiveVictoryAwardCard:
 	push af
 	push bc
-	call PlayerLostDuel
+	call DidPlayerLoseDuel
 	cp TRUE
 	jr z, .lost
 	call .GenerateCard
@@ -730,11 +730,11 @@ GiveVictoryAwardCard:
 Func_36e34:
 	push af
 	push bc
-	call PlayerLostDuel
+	call DidPlayerLoseDuel
 	cp TRUE
 	jr nz, .won
 ; lost
-	ld a, [$cfb8]
+	ld a, [wcfb8]
 	farcall SetPlayerDeckIndex
 	farcall GetPlayerDeckCard
 	farcall Func_b894
@@ -752,9 +752,9 @@ Func_36e34:
 
 Func_36e5d:
 	push af
-	ld a, [$cfbb]
+	ld a, [wcfbb]
 	ld c, a
-	ld a, [$cfbc]
+	ld a, [wcfbc]
 	ld b, a
 	pop af
 	ret
@@ -768,13 +768,13 @@ ChoosePlayerAnteCard:
 	ld [wRandRangeEnd], a
 	call RandomRange
 	ld a, [wRandNum]
-	ld [$cfb8], a
+	ld [wcfb8], a
 	farcall SetPlayerDeckIndex
 	farcall GetPlayerDeckCard
 	ld a, c
-	ld [$cfb9], a
+	ld [wcfb9], a
 	ld a, b
-	ld [$cfba], a
+	ld [wcfba], a
 	pop bc
 	pop af
 	ret
@@ -1104,9 +1104,9 @@ VictoryBonusCards:
 Func_3708e:
 	push af
 	ld a, $00
-	ld [$cfdf], a
+	ld [wcfdf], a
 	ld a, $00
-	ld [$cfe0], a
+	ld [wcfe0], a
 	pop af
 	ret
 
@@ -1121,14 +1121,14 @@ Func_3709b:
 	ld a, c
 	cp $08
 	jr nc, .asm_370b3
-	ld a, [$cfdf]
+	ld a, [wcfdf]
 	or [hl]
-	ld [$cfdf], a
+	ld [wcfdf], a
 	jr .asm_370ba
 .asm_370b3
-	ld a, [$cfe0]
+	ld a, [wcfe0]
 	or [hl]
-	ld [$cfe0], a
+	ld [wcfe0], a
 .asm_370ba
 	pop hl
 	pop bc
@@ -1148,11 +1148,11 @@ Func_370c7:
 	ld a, c
 	cp $08
 	jr nc, .asm_370db
-	ld a, [$cfdf]
+	ld a, [wcfdf]
 	and [hl]
 	jr .asm_370df
 .asm_370db
-	ld a, [$cfe0]
+	ld a, [wcfe0]
 	and [hl]
 .asm_370df
 	jr z, .asm_370e3

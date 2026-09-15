@@ -2,14 +2,14 @@
 	const MUSIC_NONE ; $00
 	const MUSIC_MAIN_MENU ; $01
 	const MUSIC_DUEL1 ; $02
-	const MUSIC_DUEL2 ; $03
-	const MUSIC_DUEL3 ; $04
-	const MUSIC_DUEL4 ; $05
+	const MUSIC_03 ; $03
+	const MUSIC_DUEL2 ; $04
+	const MUSIC_DUEL3 ; $05
 	const MUSIC_CAMPAIGN ; $06
 	const MUSIC_07 ; $07
 	const MUSIC_08 ; $08 unused?
-	const MUSIC_09 ; $09
-	const MUSIC_0A ; $0a
+	const MUSIC_DUEL_PREP ; $09
+	const MUSIC_BATTLE ; $0a
 	const MUSIC_TEA ; $0b
 	const MUSIC_DUEL_WIN ; $0c
 	const MUSIC_DUEL_LOSS ; $0d

@@ -284,26 +284,26 @@ Func_141db:
 Func_141e9:
 	push af
 	ld a, $6d
-	ld [$ceb5], a
+	ld [wceb5], a
 	ld a, $01
-	ld [$ceb6], a
+	ld [wceb6], a
 	pop af
 	ret
 
 Func_141f6:
 	push af
 	ld a, c
-	ld [$ceb5], a
+	ld [wceb5], a
 	ld a, b
-	ld [$ceb6], a
+	ld [wceb6], a
 	pop af
 	ret
 
 Func_14201:
 	push af
-	ld a, [$ceb5]
+	ld a, [wceb5]
 	ld c, a
-	ld a, [$ceb6]
+	ld a, [wceb6]
 	ld b, a
 	pop af
 	ret
@@ -319,7 +319,7 @@ Func_14216:
 	push bc
 	push de
 	push hl
-	ld hl, $ceb7
+	ld hl, wceb7
 	ld e, $05
 .asm_1421f
 	ld a, [hli]
@@ -345,7 +345,7 @@ Func_14238:
 	push bc
 	push de
 	push hl
-	ld hl, $cea5
+	ld hl, wcea5
 	ld e, $05
 .asm_14241
 	ld a, [hli]
@@ -370,7 +370,7 @@ Func_1425a:
 	push af
 	push bc
 	push hl
-	ld hl, $ceb7
+	ld hl, wceb7
 	ld c, $05
 .asm_14262
 	call Func_2051
@@ -388,8 +388,8 @@ Func_14271:
 	push bc
 	push de
 	push hl
-	ld hl, $ceb7
-	ld de, $cec1
+	ld hl, wceb7
+	ld de, wcec1
 	ld b, $00
 	ld c, $0a
 .asm_1427e
@@ -465,8 +465,8 @@ Func_1430f:
 	push bc
 	push de
 	push hl
-	ld hl, $ceb7
-	ld de, $cec1
+	ld hl, wceb7
+	ld de, wcec1
 	ld c, $0a
 .asm_1431b
 	ld a, [de]
@@ -474,7 +474,7 @@ Func_1430f:
 	inc de
 	dec c
 	jr nz, .asm_1431b
-	ld hl, $ceb7
+	ld hl, wceb7
 	ld a, [hli]
 	ld c, a
 	ld b, [hl]
@@ -538,7 +538,7 @@ HandleExodiaWinCondition:
 	cp TRUE
 	jr nz, .skip
 	farcall Func_b807
-	call Func_23a8
+	call SetDuelStatus_PlayerWin
 .skip
 	pop bc
 	pop af
@@ -773,17 +773,17 @@ Func_1467e:
 Func_14686:
 	push af
 	ld a, $01
-	ld [$cf41], a
+	ld [wcf41], a
 	ld a, $00
-	ld [$cf43], a
+	ld [wcf43], a
 	ld a, $00
-	ld [$cf44], a
+	ld [wcf44], a
 	ld a, $00
-	ld [$cf45], a
+	ld [wcf45], a
 	ld a, $00
-	ld [$cf46], a
+	ld [wcf46], a
 	ld a, $00
-	ld [$cf1c], a
+	ld [wcf1c], a
 	call Func_14830
 	pop af
 	ret
@@ -801,9 +801,9 @@ Func_146b6:
 	ld a, VBLANK_10
 	call SetPendingVBlankMode
 	ld a, $00
-	ld [$cf45], a
+	ld [wcf45], a
 	ld a, $00
-	ld [$cf46], a
+	ld [wcf46], a
 	call Func_14830
 	call Func_146ef
 	call RequestVBlankMode
@@ -811,9 +811,9 @@ Func_146b6:
 	ld a, VBLANK_10
 	call SetPendingVBlankMode
 	ld a, $00
-	ld [$cf45], a
+	ld [wcf45], a
 	ld a, $01
-	ld [$cf46], a
+	ld [wcf46], a
 	call Func_14830
 	call Func_146ef
 	call RequestVBlankMode
@@ -827,7 +827,7 @@ Func_146ef:
 	push de
 	push hl
 	ld b, $00
-	ld a, [$cf46]
+	ld a, [wcf46]
 	ld c, a
 	sla c
 	ld hl, $472b
@@ -836,7 +836,7 @@ Func_146ef:
 	ld b, [hl]
 	ld c, a
 	call AddWordToVBlankStruct
-	ld hl, $cf1d
+	ld hl, wcf1d
 	ld e, $12
 .asm_1470a
 	ld a, [hli]
@@ -848,7 +848,7 @@ Func_146ef:
 	ld b, h
 	ld c, l
 	call AddWordToVBlankStruct
-	ld hl, $cf2f
+	ld hl, wcf2f
 	ld e, $12
 .asm_1471f
 	ld a, [hli]
@@ -868,7 +868,7 @@ Func_14731:
 	push af
 	push bc
 	push hl
-	ld a, [$cf42]
+	ld a, [wcf42]
 	cp $b0
 	jr nc, .asm_14740
 	call Func_14761
@@ -902,22 +902,22 @@ Func_14761:
 	push bc
 	push de
 	push hl
-	ld a, [$cf41]
+	ld a, [wcf41]
 	cp $01
 	jr nz, .asm_14795
 	call Func_14854
-	ld a, [$cf42]
+	ld a, [wcf42]
 	call ProcessChar
 	ld b, $00
-	ld a, [$cf45]
+	ld a, [wcf45]
 	ld c, a
-	ld hl, $cf1d
+	ld hl, wcf1d
 	add hl, bc
 	ld a, [wCharHeadTile]
 	ld [hl], a
-	ld a, [$cf45]
+	ld a, [wcf45]
 	ld c, a
-	ld hl, $cf2f
+	ld hl, wcf2f
 	add hl, bc
 	ld a, [wCharTile]
 	ld [hl], a
@@ -932,56 +932,56 @@ Func_14761:
 
 Func_1479a:
 	push af
-	ld a, [$cf45]
+	ld a, [wcf45]
 	inc a
-	ld [$cf45], a
+	ld [wcf45], a
 	cp $12
 	jr c, .asm_147ae
 	call Func_147b0
 	ld a, $01
-	ld [$cf1c], a
+	ld [wcf1c], a
 .asm_147ae
 	pop af
 	ret
 
 Func_147b0:
 	push af
-	ld a, [$cf1c]
+	ld a, [wcf1c]
 	cp $00
 	jr nz, .asm_147cd
 	ld a, $00
-	ld [$cf45], a
-	ld a, [$cf46]
+	ld [wcf45], a
+	ld a, [wcf46]
 	cp $02
 	jr nc, .asm_147c5
 	inc a
 .asm_147c5
-	ld [$cf46], a
+	ld [wcf46], a
 	call Func_14830
 	jr .asm_147d2
 .asm_147cd
 	ld a, $00
-	ld [$cf1c], a
+	ld [wcf1c], a
 .asm_147d2
 	pop af
 	ret
 
 Func_147d4:
 	push af
-	ld a, [$cf41]
+	ld a, [wcf41]
 	cp $01
 	jr nz, .asm_147e6
 	ld a, $00
-	ld [$cf1c], a
+	ld [wcf1c], a
 	call Func_14f90
 	jr .asm_14810
 .asm_147e6
 	cp $13
 	jr nz, .asm_147fc
 	ld a, $00
-	ld [$cf45], a
+	ld [wcf45], a
 	ld a, $01
-	ld [$cf46], a
+	ld [wcf46], a
 	call Func_14830
 	call Func_146ef
 	jr .asm_14810
@@ -989,9 +989,9 @@ Func_147d4:
 	cp $12
 	jr nz, .asm_14810
 	ld a, $00
-	ld [$cf45], a
+	ld [wcf45], a
 	ld a, $00
-	ld [$cf46], a
+	ld [wcf46], a
 	call Func_14830
 	call Func_146ef
 .asm_14810
@@ -1001,17 +1001,17 @@ Func_147d4:
 Func_14812:
 	push af
 	ld a, $00
-	ld [$cf1c], a
+	ld [wcf1c], a
 	pop af
 	ret
 
 Func_1481a:
 	push af
-	ld a, [$cf41]
+	ld a, [wcf41]
 	cp $01
 	jr nz, .asm_1482a
 	ld a, $00
-	ld [$cf1c], a
+	ld [wcf1c], a
 	call Func_14f9d
 .asm_1482a
 	pop af
@@ -1029,7 +1029,7 @@ Func_14830:
 	ld a, $00
 	call ProcessChar
 	ld a, [wCharHeadTile]
-	ld hl, $cf1d
+	ld hl, wcf1d
 	ld c, $12
 .asm_14843
 	ld [hli], a
@@ -1048,10 +1048,10 @@ Func_14830:
 
 Func_14854:
 	push af
-	ld a, [$cf18]
+	ld a, [wcf18]
 	cp $00
 	jr nz, .asm_1486d
-	ld a, [$cf46]
+	ld a, [wcf46]
 	cp $00
 	jr nz, .asm_14868
 	call Func_1114
@@ -1061,7 +1061,7 @@ Func_14854:
 .asm_1486b
 	jr .asm_1487c
 .asm_1486d
-	ld a, [$cf46]
+	ld a, [wcf46]
 	cp $00
 	jr nz, .asm_14879
 	call Func_1134
@@ -1076,15 +1076,15 @@ Func_1487e:
 	push af
 	push bc
 	push hl
-	ld a, [$cf41]
+	ld a, [wcf41]
 	dec a
-	ld [$cf41], a
+	ld [wcf41], a
 	jr nz, .asm_148a5
-	ld a, [$cf42]
+	ld a, [wcf42]
 	cp $b0
 	jr nc, .asm_14898
 	ld a, $02
-	ld [$cf41], a
+	ld [wcf41], a
 	jr .asm_148a5
 .asm_14898
 	ld b, $00
@@ -1093,7 +1093,7 @@ Func_1487e:
 	ld hl, $48a9
 	add hl, bc
 	ld a, [hl]
-	ld [$cf41], a
+	ld [wcf41], a
 .asm_148a5
 	pop hl
 	pop bc
@@ -1107,13 +1107,13 @@ Func_148b6:
 	push af
 	push bc
 	ld a, $00
-	ld [$cf48], a
+	ld [wcf48], a
 	call Func_14686
 .asm_148c0
 	ld a, VBLANK_10
 	call SetPendingVBlankMode
 	call Func_14f5a
-	ld a, [$cf48]
+	ld a, [wcf48]
 	cp $00
 	jr nz, .asm_148d4
 	call Func_146aa
@@ -1123,7 +1123,7 @@ Func_148b6:
 .asm_148d7
 	call RequestVBlankMode
 	call WaitForVBlank
-	ld a, [$cf48]
+	ld a, [wcf48]
 	cp $05
 	jr z, .asm_148e6
 	jr .asm_148c0
@@ -1135,14 +1135,14 @@ Func_148b6:
 Func_148e9:
 	push af
 	ld a, $00
-	ld [$cf4c], a
+	ld [wcf4c], a
 	pop af
 	ret
 
 Func_148f1:
 	push af
 	ld a, $01
-	ld [$cf4c], a
+	ld [wcf4c], a
 	pop af
 	ret
 
@@ -1150,7 +1150,7 @@ Func_148f9:
 	push af
 	push bc
 	push hl
-	ld a, [$cf41]
+	ld a, [wcf41]
 	cp $01
 	jr nz, .asm_14906
 	call Func_1490a
@@ -1163,21 +1163,21 @@ Func_148f9:
 Func_1490a:
 	push bc
 	push hl
-	ld a, [$cf4c]
+	ld a, [wcf4c]
 	cp $01
 	jr nz, .asm_1491b
 	call Func_14970
-	ld [$cf42], a
+	ld [wcf42], a
 	jr .asm_14931
 .asm_1491b
 	call Func_14934
-	ld [$cf42], a
+	ld [wcf42], a
 	call Func_14961
 	cp $00
 	jr nz, .asm_14931
 	call Func_148f1
 	call Func_14970
-	ld [$cf42], a
+	ld [wcf42], a
 .asm_14931
 	pop hl
 	pop bc
@@ -1187,7 +1187,7 @@ Func_14934:
 	push bc
 	push hl
 	ld b, $00
-	ld a, [$cf47]
+	ld a, [wcf47]
 	ld c, a
 	sla c
 	rl b
@@ -1196,16 +1196,16 @@ Func_14934:
 	ld a, [hli]
 	ld h, [hl]
 	ld l, a
-	ld a, [$cf44]
+	ld a, [wcf44]
 	ld b, a
-	ld a, [$cf43]
+	ld a, [wcf43]
 	ld c, a
 	inc a
-	ld [$cf43], a
+	ld [wcf43], a
 	jr nz, .asm_1495c
-	ld a, [$cf44]
+	ld a, [wcf44]
 	inc a
-	ld [$cf44], a
+	ld [wcf44], a
 .asm_1495c
 	add hl, bc
 	ld a, [hl]
@@ -1261,12 +1261,12 @@ Func_14f5a:
 	ld d, [hl]
 .asm_14f74
 	ld a, $01
-	ld [$cf49], a
+	ld [wcf49], a
 	ld a, d
 	cp $02
 	jr nz, .asm_14f83
 	ld a, $00
-	ld [$cf48], a
+	ld [wcf48], a
 .asm_14f83
 	pop hl
 	pop de
@@ -1280,25 +1280,25 @@ SECTION "Bank 5@4f90", ROMX[$4f90], BANK[$5]
 Func_14f90:
 	push af
 	ld a, $04
-	ld [$cf48], a
+	ld [wcf48], a
 	ld a, $01
-	ld [$cf4d], a
+	ld [wcf4d], a
 	pop af
 	ret
 
 Func_14f9d:
 	push af
 	ld a, $02
-	ld [$cf48], a
+	ld [wcf48], a
 	ld a, $01
-	ld [$cf4d], a
+	ld [wcf4d], a
 	pop af
 	ret
 
 Func_14faa:
 	push af
 	ld a, $05
-	ld [$cf48], a
+	ld [wcf48], a
 	pop af
 	ret
 
@@ -1311,19 +1311,19 @@ Func_14fb9:
 	push af
 	push bc
 	push hl
-	ld a, [$cf4d]
+	ld a, [wcf4d]
 	dec a
-	ld [$cf4d], a
+	ld [wcf4d], a
 	jr nz, .asm_14fd8
 	ld a, $14
-	ld [$cf4d], a
+	ld [wcf4d], a
 	ld b, $00
-	ld a, [$cf48]
+	ld a, [wcf48]
 	ld c, a
 	ld hl, $4fdc
 	add hl, bc
 	ld a, [hl]
-	ld [$cf48], a
+	ld [wcf48], a
 .asm_14fd8
 	pop hl
 	pop bc
@@ -1344,16 +1344,16 @@ Func_14fe8:
 	push de
 	push hl
 	ld b, $00
-	ld a, [$cf48]
+	ld a, [wcf48]
 	ld c, a
 	dec c
 	ld hl, $5008
 	add hl, bc
 	ld d, h
 	ld e, l
-	ld a, [$cf45]
+	ld a, [wcf45]
 	ld c, a
-	ld hl, $cf2f
+	ld hl, wcf2f
 	add hl, bc
 	ld a, [de]
 	ld [hli], a
@@ -1370,9 +1370,9 @@ Func_1500c:
 	push af
 	call Func_2b68
 	ld a, $00
-	ld [$cf18], a
+	ld [wcf18], a
 	ld a, $00
-	ld [$cf47], a
+	ld [wcf47], a
 	call Func_145fd
 	pop af
 	ret
@@ -1381,9 +1381,9 @@ Func_1501f:
 	push af
 	call Func_2b68
 	ld a, $00
-	ld [$cf18], a
+	ld [wcf18], a
 	ld a, $01
-	ld [$cf47], a
+	ld [wcf47], a
 	call Func_145cd
 	pop af
 	ret
@@ -1394,9 +1394,9 @@ Func_15032:
 	cp $02
 	jr nz, .asm_15047
 	ld a, $00
-	ld [$cf18], a
+	ld [wcf18], a
 	ld a, $08
-	ld [$cf47], a
+	ld [wcf47], a
 	call Func_145e8
 .asm_15047
 	pop af
@@ -1409,9 +1409,9 @@ Func_15059:
 	push af
 	push bc
 	ld a, $01
-	ld [$cf18], a
+	ld [wcf18], a
 	ld a, $07
-	ld [$cf47], a
+	ld [wcf47], a
 	call Func_145cd
 	call Func_2c4a
 	call Func_14201
@@ -1421,9 +1421,9 @@ Func_15059:
 	ld e, $04
 	call Func_2cf2
 	ld a, $01
-	ld [$cf18], a
+	ld [wcf18], a
 	ld a, $09
-	ld [$cf47], a
+	ld [wcf47], a
 	call Func_145cd
 .asm_15087
 	pop bc
@@ -1437,9 +1437,9 @@ Func_1509a:
 	push af
 	call Func_2b68
 	ld a, $00
-	ld [$cf18], a
+	ld [wcf18], a
 	ld a, $04
-	ld [$cf47], a
+	ld [wcf47], a
 	call Func_145cd
 	pop af
 	ret
@@ -1447,9 +1447,9 @@ Func_1509a:
 Func_150ad:
 	push af
 	ld a, $01
-	ld [$cf18], a
+	ld [wcf18], a
 	ld a, $05
-	ld [$cf47], a
+	ld [wcf47], a
 	call Func_145cd
 	pop af
 	ret
@@ -1457,9 +1457,9 @@ Func_150ad:
 Func_150bd:
 	push af
 	ld a, $01
-	ld [$cf18], a
+	ld [wcf18], a
 	ld a, $06
-	ld [$cf47], a
+	ld [wcf47], a
 	call Func_145cd
 	pop af
 	ret
@@ -1474,12 +1474,12 @@ Func_150dd:
 	push hl
 	ld e, a
 	ld a, $00
-	ld [$cf18], a
+	ld [wcf18], a
 	ld d, $00
 	ld hl, $5118
 	add hl, de
 	ld a, [hl]
-	ld [$cf47], a
+	ld [wcf47], a
 	call Func_2c4a
 	sla e
 	ld hl, $511c
@@ -1514,12 +1514,12 @@ Func_1512c::
 	push hl
 	ld c, a
 	ld a, $00
-	ld [$cf18], a
+	ld [wcf18], a
 	ld b, $00
 	ld hl, $5146
 	add hl, bc
 	ld a, [hl]
-	ld [$cf47], a
+	ld [wcf47], a
 	call Func_145cd
 	pop hl
 	pop bc
@@ -1535,12 +1535,12 @@ Func_15148:
 	push hl
 	ld c, a
 	ld a, $00
-	ld [$cf18], a
+	ld [wcf18], a
 	ld b, $00
 	ld hl, $5162
 	add hl, bc
 	ld a, [hl]
-	ld [$cf47], a
+	ld [wcf47], a
 	call Func_145cd
 	pop hl
 	pop bc
@@ -1556,9 +1556,9 @@ Func_15194:
 	push de
 	push hl
 	ld a, $00
-	ld [$cf18], a
+	ld [wcf18], a
 	ld a, $2a
-	ld [$cf47], a
+	ld [wcf47], a
 	call Func_2c4a
 	ld e, $04
 	ld a, [wMaterial1CardID + 0]
@@ -1594,9 +1594,9 @@ Func_151db:
 	push bc
 	push de
 	ld a, $00
-	ld [$cf18], a
+	ld [wcf18], a
 	ld a, $2b
-	ld [$cf47], a
+	ld [wcf47], a
 	call Func_2c4a
 	ld e, $04
 	call Func_2cf2
@@ -1617,9 +1617,9 @@ Func_15204:
 	push bc
 	push de
 	ld a, $00
-	ld [$cf18], a
+	ld [wcf18], a
 	ld a, $11
-	ld [$cf47], a
+	ld [wcf47], a
 	call Func_2c4a
 	ld e, $04
 	ld bc, ELEGANT_EGOTIST
@@ -1647,11 +1647,11 @@ HandleEmptyHandWinCondition:
 	cp TRUE
 	jr nz, .player_has_less_lp
 	; player LP >= opp LP
-	call Func_23a8
+	call SetDuelStatus_PlayerWin
 	jr .done
 .player_has_less_lp
 	; player LP < opp LP
-	call Func_23a0
+	call SetDuelStatus_PlayerLoss
 .done
 	pop af
 	ret

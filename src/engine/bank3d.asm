@@ -13,19 +13,19 @@ Func_f4002::
 
 	call Func_f40c8
 
-	ld hl, $cfe1
-	ld de, $cff1
+	ld hl, wcfe1
+	ld de, wcff1
 	ld b, $00
 	call FillMemFromHLToDE
 
 	ld a, $60
-	ld [$cfe8], a
+	ld [wcfe8], a
 	ld a, $02
-	ld [$cfe9], a
+	ld [wcfe9], a
 	ld a, $b8
-	ld [$cfec], a
+	ld [wcfec], a
 	ld a, $44
-	ld [$cfed], a
+	ld [wcfed], a
 
 	ld hl, vBGMap0
 	debgcoord 31, 31
@@ -46,12 +46,12 @@ Func_f4002::
 	ldh [rOBP1], a
 .asm_f4058
 	xor a
-	ld [$cfe2], a
+	ld [wcfe2], a
 .asm_f405c
-	ld a, [$cfe2]
+	ld a, [wcfe2]
 	or a
 	jr z, .asm_f405c
-	ld a, [$cfee]
+	ld a, [wcfee]
 	or a
 	jr z, .asm_f406a
 	debug_loop
@@ -60,9 +60,9 @@ Func_f4002::
 
 	call ReadJoypad_Credits
 
-	ld a, [$cff1]
+	ld a, [wcff1]
 	ld b, a
-	ld a, [$cff0]
+	ld a, [wcff0]
 	bit B_PAD_A, a
 	jr nz, .a_btn
 	bit B_PAD_B, a
@@ -74,19 +74,19 @@ Func_f4002::
 .b_btn
 	ld de, NULL
 .asm_f4089
-	ld a, [$cfe4]
+	ld a, [wcfe4]
 	add e
-	ld [$cfe4], a
-	ld a, [$cfe5]
+	ld [wcfe4], a
+	ld a, [wcfe5]
 	adc d
-	ld [$cfe5], a
+	ld [wcfe5], a
 	ldh [rSCY], a
-	ld a, [$cfea]
+	ld a, [wcfea]
 	add e
-	ld [$cfea], a
-	ld a, [$cfeb]
+	ld [wcfea], a
+	ld a, [wcfeb]
 	adc d
-	ld [$cfeb], a
+	ld [wcfeb], a
 	jr .asm_f4058
 
 ; fills memory values from hl to de (inclusive)
@@ -125,7 +125,7 @@ Func_f40c8:
 	bit B_LCDC_ENABLE, a
 	ret z ; LCD off
 	ldh a, [rIE]
-	ld [$cfe3], a
+	ld [wcfe3], a
 	res B_IE_VBLANK, a
 	ldh [rIE], a
 .asm_f40d6
@@ -135,7 +135,7 @@ Func_f40c8:
 	ldh a, [rLCDC]
 	and ~LCDC_ON
 	ldh [rLCDC], a
-	ld a, [$cfe3]
+	ld a, [wcfe3]
 	ldh [rIE], a
 	ret
 
@@ -145,28 +145,28 @@ SECTION "Bank 3d@6e5d", ROMX[$6e5d], BANK[$3d]
 
 Func_f6e5d::
 .asm_f6e5d
-	ld a, [$cfeb]
+	ld a, [wcfeb]
 	cp $08
 	ret c
 	sub $08
-	ld [$cfeb], a
+	ld [wcfeb], a
 	ld b, SCREEN_WIDTH
-	ld a, [$cfe8]
+	ld a, [wcfe8]
 	add TILEMAP_WIDTH
 	ld e, a
-	ld [$cfe8], a
-	ld a, [$cfe9]
+	ld [wcfe8], a
+	ld a, [wcfe9]
 	adc $00
 	and $03
 	ld d, a
-	ld [$cfe9], a
+	ld [wcfe9], a
 	ld hl, vBGMap0
 	add hl, de
 	ld e, l
 	ld d, h
-	ld a, [$cfec]
+	ld a, [wcfec]
 	ld l, a
-	ld a, [$cfed]
+	ld a, [wcfed]
 	ld h, a
 .asm_f6e8c
 	ld a, b
@@ -181,13 +181,13 @@ Func_f6e5d::
 	jr .asm_f6e8c
 .asm_f6e9a
 	ld a, l
-	ld [$cfec], a
+	ld [wcfec], a
 	ld a, h
-	ld [$cfed], a
+	ld [wcfed], a
 	jr .asm_f6e5d
 .asm_f6ea4
 	ld a, $01
-	ld [$cfee], a
+	ld [wcfee], a
 	ret
 
 ReadJoypad_Credits:
@@ -217,12 +217,12 @@ ReadJoypad_Credits:
 	ld c, a
 	; c holds all input of current frame
 
-	ld a, [$cff0] ; keys that were already down
+	ld a, [wcff0] ; keys that were already down
 	xor c
 	and c
-	ld [$cff1], a ; key that are pressed on this frame
+	ld [wcff1], a ; key that are pressed on this frame
 	ld a, c
-	ld [$cff0], a ; update keys down
+	ld [wcff0], a ; update keys down
 
 	ld a, JOYP_GET_NONE
 	ldh [rJOYP], a

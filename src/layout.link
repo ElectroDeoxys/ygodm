@@ -133,6 +133,8 @@ WRAM0
 	org $ca00
 	"WRAM Virtual OAM"
 	"WRAM 2"
+	org $d9fe
+	"WRAM Stacks"
 HRAM
 	"HRAM"
 	org $fff5

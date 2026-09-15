@@ -213,7 +213,7 @@ Func_8511:
 	ld b, [hl]
 	ld c, a
 	call AddWordToVBlankStruct
-	ld hl, $cd20
+	ld hl, wcd20
 	ld e, $12
 .asm_852c
 	ld a, [hli]
@@ -226,7 +226,7 @@ Func_8511:
 	ld b, h
 	ld c, l
 	call AddWordToVBlankStruct
-	ld hl, $cd32
+	ld hl, wcd32
 	ld e, $12
 .asm_8541
 	ld a, [hli]
@@ -302,18 +302,18 @@ Func_8593:
 	call Func_85e3
 	push af
 	ld a, $01
-	ld [$cd53], a
+	ld [wcd53], a
 	pop af
 	cp $00
 	jr nz, .asm_85b2
 	ld a, $00
-	ld [$cd53], a
+	ld [wcd53], a
 	jr .asm_85bb
 .asm_85b2
 	cp $59
 	jr nz, .asm_85bb
 	ld a, $00
-	ld [$cd53], a
+	ld [wcd53], a
 .asm_85bb
 	jr .asm_85d5
 .asm_85bd
@@ -328,7 +328,7 @@ Func_8593:
 	ld l, a
 	call_hl
 	ld a, $00
-	ld [$cd53], a
+	ld [wcd53], a
 .asm_85d5
 	pop hl
 	pop bc
@@ -358,7 +358,7 @@ Func_85e3:
 	ld b, $00
 	ld a, [wcd48 + 1]
 	ld c, a
-	ld hl, $cd20
+	ld hl, wcd20
 	add hl, bc
 	ld a, [wCharHeadTile]
 	ld [hl], a
@@ -402,7 +402,7 @@ Func_8631:
 	ld e, a
 	ld a, [wcd48 + 1]
 	ld c, a
-	ld hl, $cd32
+	ld hl, wcd32
 	add hl, bc
 	ld [hl], e
 	pop hl
@@ -454,7 +454,7 @@ Func_867a:
 	cp $14
 	jr nz, .asm_86a2
 	ld a, $00
-	ld [$cd49], a
+	ld [wcd48 + 1], a
 	; set last line
 	ld a, LINE_3
 	ld [wTextLine], a
@@ -465,7 +465,7 @@ Func_867a:
 	cp $13
 	jr nz, .asm_86b8
 	ld a, $00
-	ld [$cd49], a
+	ld [wcd48 + 1], a
 	; set second line
 	ld a, LINE_2
 	ld [wTextLine], a
@@ -476,7 +476,7 @@ Func_867a:
 	cp $12
 	jr nz, .asm_86cc
 	ld a, $00
-	ld [$cd49], a
+	ld [wcd48 + 1], a
 	; set first line
 	ld a, LINE_1
 	ld [wTextLine], a
@@ -517,7 +517,7 @@ Func_86ec:
 	ld a, ' '
 	call ProcessChar
 	ld a, [wCharHeadTile]
-	ld hl, $cd20
+	ld hl, wcd20
 	ld c, $12
 .asm_86ff
 	ld [hli], a
@@ -598,12 +598,12 @@ Func_8752:
 	ld d, [hl]
 .asm_876c
 	ld a, $01
-	ld [$cd54], a
+	ld [wcd54], a
 	ld a, d
 	cp $02
 	jr nz, .asm_877b
 	ld a, $00
-	ld [$cd52], a
+	ld [wcd52], a
 .asm_877b
 	pop hl
 	pop de
@@ -617,7 +617,7 @@ SECTION "Bank 2@4788", ROMX[$4788], BANK[$2]
 Func_8788:
 	push af
 	ld a, $04
-	ld [$cd52], a
+	ld [wcd52], a
 	ld a, $01
 	ld [wcd4b], a
 	pop af
@@ -626,7 +626,7 @@ Func_8788:
 Func_8795:
 	push af
 	ld a, $02
-	ld [$cd52], a
+	ld [wcd52], a
 	ld a, $01
 	ld [wcd4b], a
 	pop af
@@ -635,7 +635,7 @@ Func_8795:
 Func_87a2:
 	push af
 	ld a, $05
-	ld [$cd52], a
+	ld [wcd52], a
 	pop af
 	ret
 
@@ -655,12 +655,12 @@ Func_87b1:
 	ld a, $14
 	ld [wcd4b], a
 	ld b, $00
-	ld a, [$cd52]
+	ld a, [wcd52]
 	ld c, a
 	ld hl, $47d4
 	add hl, bc
 	ld a, [hl]
-	ld [$cd52], a
+	ld [wcd52], a
 .asm_87d0
 	pop hl
 	pop bc
@@ -682,7 +682,7 @@ Func_87e3:
 	push hl
 	call Func_8565
 	ld b, $00
-	ld a, [$cd52]
+	ld a, [wcd52]
 	dec a
 	rlca
 	ld c, a
@@ -726,9 +726,9 @@ Func_884a:
 	ld a, $01
 	ld [wcd4f], a
 	ld a, $00
-	ld [$cd53], a
+	ld [wcd53], a
 	ld a, $00
-	ld [$cd52], a
+	ld [wcd52], a
 	call Func_84e1
 .loop
 	call Random
@@ -737,7 +737,7 @@ Func_884a:
 	call Func_8752
 	call Func_889f
 	call Func_8945
-	ld a, [$cd52]
+	ld a, [wcd52]
 	cp $00
 	jr nz, .asm_888a
 	call Func_8505
@@ -747,7 +747,7 @@ Func_884a:
 .asm_888d
 	call RequestVBlankMode
 	call WaitForVBlank
-	ld a, [$cd52]
+	ld a, [wcd52]
 	cp $05
 	jr z, .asm_889c
 	jr .loop
@@ -831,7 +831,7 @@ Func_8945:
 	push bc
 	push de
 	push hl
-	ld a, [$cd53]
+	ld a, [wcd53]
 	cp $00
 	jr nz, .asm_895f
 	call Func_89e4
@@ -924,7 +924,7 @@ Func_8a1d:
 	push de
 	push hl
 	ld b, $00
-	ld a, [$cd59]
+	ld a, [wcd59]
 	ld c, a
 	sla c
 	push bc
@@ -944,19 +944,19 @@ Func_8a1d:
 	ld a, c
 	cp $04
 	jr z, .asm_8a49
-	ld a, [$cd5a]
+	ld a, [wcd5a]
 	ld c, a
 	jr .asm_8a4d
 .asm_8a49
-	ld a, [$cd5b]
+	ld a, [wcd5b]
 	ld c, a
 .asm_8a4d
 	sla c
 	add hl, bc
 	ld a, [hli]
-	ld [$cd55], a
+	ld [wcd55], a
 	ld a, [hl]
-	ld [$cd56], a
+	ld [wcd56], a
 	pop hl
 	pop de
 	pop bc
@@ -1033,7 +1033,7 @@ Func_8ba7:
 	push bc
 	push hl
 	ld b, $00
-	ld a, [$cd59]
+	ld a, [wcd59]
 	ld c, a
 	ld hl, $4bca
 	add hl, bc
@@ -1049,7 +1049,7 @@ Func_8ba7:
 	rlca
 	rlca
 	add [hl]
-	ld [$cd57], a
+	ld [wcd57], a
 	pop hl
 	pop bc
 	pop af
@@ -1059,15 +1059,15 @@ Func_8ba7:
 SECTION "Bank 2@4bd6", ROMX[$4bd6], BANK[$2]
 
 Func_8bd6:
-	ld [$cd59], a
+	ld [wcd59], a
 	ret
 
 Func_8bda:
 	push af
 	ld a, $00
-	ld [$cd5a], a
+	ld [wcd5a], a
 	ld a, $00
-	ld [$cd5b], a
+	ld [wcd5b], a
 	pop af
 	ret
 
@@ -1075,15 +1075,15 @@ Func_8be7:
 	push af
 	push bc
 	ld c, a
-	ld a, [$cd59]
+	ld a, [wcd59]
 	cp $02
 	jr z, .asm_8bf7
 	ld a, c
-	ld [$cd5a], a
+	ld [wcd5a], a
 	jr .asm_8bfb
 .asm_8bf7
 	ld a, c
-	ld [$cd5b], a
+	ld [wcd5b], a
 .asm_8bfb
 	pop bc
 	pop af
@@ -1120,27 +1120,27 @@ Func_8c2b:
 	push bc
 	push hl
 	ld b, $00
-	ld a, [$cd59]
+	ld a, [wcd59]
 	rlca
 	rlca
 	rlca
 	ld c, a
 	ld hl, wVirtualOAM
 	add hl, bc
-	ld a, [$cd56]
+	ld a, [wcd56]
 	ld [hli], a ; y
-	ld a, [$cd55]
+	ld a, [wcd55]
 	ld [hli], a ; x
-	ld a, [$cd57]
+	ld a, [wcd57]
 	ld [hli], a ; tile ID
 	ld a, $00
 	ld [hli], a ; attributes
-	ld a, [$cd56]
+	ld a, [wcd56]
 	ld [hli], a ; y
-	ld a, [$cd55]
+	ld a, [wcd55]
 	add $08
 	ld [hli], a ; x
-	ld a, [$cd57]
+	ld a, [wcd57]
 	add $02
 	ld [hli], a ; tile ID
 	ld [hl], $00 ; attributes
@@ -1224,46 +1224,46 @@ ExodiaOAMGfx:      INCBIN "gfx/characters/exodia_oam.2bpp"
 
 Func_b52c:
 	push af
-	call Func_29fd
+	call StopMusic
 	call ConvertNPCDuelistToCharacter
 	ld [wNPCCharacter], a
 	call GetDuelistPreDuelDialogueID
 	ld [wDialogueID], a
 	farcall Func_18008
-	call Func_2abe
+	call PlayDialogueMusic
 	call Func_884a
 	pop af
 	ret
 
 Func_b547:
 	push af
-	call Func_29fd
+	call StopMusic
 	call ConvertNPCDuelistToCharacter
 	ld [wNPCCharacter], a
 	call GetDuelistLossDialogueID
 	ld [wDialogueID], a
 	farcall Func_18008
-	call Func_2a76
+	call PlayMusic_DuelWin
 	call Func_884a
 	pop af
 	ret
 
 Func_b562:
 	push af
-	call Func_29fd
+	call StopMusic
 	call ConvertNPCDuelistToCharacter
 	ld [wNPCCharacter], a
 	call GetDuelistWinDialogueID
 	ld [wDialogueID], a
 	farcall Func_18008
-	call Func_2a81
+	call PlayMusic_DuelLoss
 	call Func_884a
 	pop af
 	ret
 
 Func_b57d:
 	push af
-	call PlayerLostDuel
+	call DidPlayerLoseDuel
 	cp TRUE
 	jr z, .asm_b58d
 	call Func_b595
@@ -1286,26 +1286,26 @@ Func_b595:
 	ld [wDialogueID], a
 	call Func_2c4a
 	ld e, $00
-	ld a, [$cf14]
+	ld a, [wcf14]
 	add $01
 	ld [wHexNumber + 0], a
-	ld a, [$cf15]
+	ld a, [wcf15]
 	adc $00
 	ld [wHexNumber + 1], a
 	call ConvertToDecimalRepresentation
 	call Func_2cf2
 	ld e, $04
-	ld a, [$cf14]
+	ld a, [wcf14]
 	ld c, a
-	ld a, [$cf15]
+	ld a, [wcf15]
 	ld b, a
 	call Func_2d01
 	call IsValidCard
 	cp TRUE
 	jr nz, .asm_b5dd
-	call Func_29fd
+	call StopMusic
 	farcall Func_18008
-	call Func_2a76
+	call PlayMusic_DuelWin
 	call Func_884a
 .asm_b5dd
 	pop de
@@ -1323,26 +1323,26 @@ Func_b5e1:
 	ld [wDialogueID], a
 	call Func_2c4a
 	ld e, $00
-	ld a, [$cf14]
+	ld a, [wcf14]
 	add $01
 	ld [wHexNumber + 0], a
-	ld a, [$cf15]
+	ld a, [wcf15]
 	adc $00
 	ld [wHexNumber + 1], a
 	call ConvertToDecimalRepresentation
 	call Func_2cf2
 	ld e, $04
-	ld a, [$cf14]
+	ld a, [wcf14]
 	ld c, a
-	ld a, [$cf15]
+	ld a, [wcf15]
 	ld b, a
 	call Func_2d01
 	call IsValidCard
 	cp TRUE
 	jr nz, .asm_b629
-	call Func_29fd
+	call StopMusic
 	farcall Func_18008
-	call Func_2a81
+	call PlayMusic_DuelLoss
 	call Func_884a
 .asm_b629
 	pop de
@@ -1360,24 +1360,24 @@ Func_b62d:
 	ld [wDialogueID], a
 	call Func_2c4a
 	ld e, $00
-	ld a, [$cf10]
+	ld a, [wcf10]
 	add $01
 	ld [wHexNumber + 0], a
-	ld a, [$cf11]
+	ld a, [wcf11]
 	adc $00
 	ld [wHexNumber + 1], a
 	call ConvertToDecimalRepresentation
 	call Func_2cf2
 	ld e, $04
-	ld a, [$cf10]
+	ld a, [wcf10]
 	ld c, a
-	ld a, [$cf11]
+	ld a, [wcf11]
 	ld b, a
 	call Func_2d01
 	call IsValidCard
 	cp TRUE
 	jr nz, .asm_b675
-	call Func_29fd
+	call StopMusic
 	farcall Func_18008
 	call PlayMusic_Tea
 	call Func_884a
@@ -1397,24 +1397,24 @@ Func_b679:
 	ld [wDialogueID], a
 	call Func_2c4a
 	ld e, $00
-	ld a, [$cf12]
+	ld a, [wcf12]
 	add $01
 	ld [wHexNumber + 0], a
-	ld a, [$cf13]
+	ld a, [wcf13]
 	adc $00
 	ld [wHexNumber + 1], a
 	call ConvertToDecimalRepresentation
 	call Func_2cf2
 	ld e, $04
-	ld a, [$cf12]
+	ld a, [wcf12]
 	ld c, a
-	ld a, [$cf13]
+	ld a, [wcf13]
 	ld b, a
 	call Func_2d01
 	call IsValidCard
 	cp TRUE
 	jr nz, .asm_b6c1
-	call Func_29fd
+	call StopMusic
 	farcall Func_18008
 	call PlayMusic_Tea
 	call Func_884a
@@ -1434,24 +1434,24 @@ Func_b6c5:
 	ld [wDialogueID], a
 	call Func_2c4a
 	ld e, $00
-	ld a, [$cf12]
+	ld a, [wcf12]
 	add $01
 	ld [wHexNumber + 0], a
-	ld a, [$cf13]
+	ld a, [wcf13]
 	adc $00
 	ld [wHexNumber + 1], a
 	call ConvertToDecimalRepresentation
 	call Func_2cf2
 	ld e, $04
-	ld a, [$cf12]
+	ld a, [wcf12]
 	ld c, a
-	ld a, [$cf13]
+	ld a, [wcf13]
 	ld b, a
 	call Func_2d01
 	call IsValidCard
 	cp TRUE
 	jr nz, .asm_b70d
-	call Func_29fd
+	call StopMusic
 	farcall Func_18008
 	call PlayMusic_Tea
 	call Func_884a
@@ -1651,7 +1651,7 @@ GetDuelistWinDialogueID:
 
 Func_b7ee:
 	push af
-	call Func_29fd
+	call StopMusic
 	ld a, TEA
 	ld [wNPCCharacter], a
 	lddlg a, Text_3cf94
@@ -1664,7 +1664,7 @@ Func_b7ee:
 
 Func_b807:
 	push af
-	call Func_29fd
+	call StopMusic
 	ld a, EXODIA
 	ld [wNPCCharacter], a
 	lddlg a, Text_3cfca
@@ -1680,7 +1680,7 @@ Func_b823:
 	push af
 	push bc
 	push de
-	call Func_29fd
+	call StopMusic
 	ld a, YAMI_YUGI
 	ld [wNPCCharacter], a
 	lddlg a, Text_3cffb
@@ -1697,7 +1697,7 @@ Func_b840:
 	push af
 	push bc
 	push de
-	call Func_29fd
+	call StopMusic
 	ld a, YAMI_YUGI
 	ld [wNPCCharacter], a
 	lddlg a, Text_3d074
@@ -1713,44 +1713,44 @@ Func_b840:
 Func_b85d:
 	push af
 	ld a, LOW(INVALID_CARD)
-	ld [$cf10], a
+	ld [wcf10], a
 	ld a, HIGH(INVALID_CARD)
-	ld [$cf11], a
+	ld [wcf11], a
 	ld a, LOW(INVALID_CARD)
-	ld [$cf12], a
+	ld [wcf12], a
 	ld a, HIGH(INVALID_CARD)
-	ld [$cf13], a
+	ld [wcf13], a
 	ld a, LOW(INVALID_CARD)
-	ld [$cf14], a
+	ld [wcf14], a
 	ld a, HIGH(INVALID_CARD)
-	ld [$cf15], a
+	ld [wcf15], a
 	pop af
 	ret
 
 Func_b87e:
 	push af
 	ld a, c
-	ld [$cf10], a
+	ld [wcf10], a
 	ld a, b
-	ld [$cf11], a
+	ld [wcf11], a
 	pop af
 	ret
 
 Func_b889:
 	push af
 	ld a, c
-	ld [$cf12], a
+	ld [wcf12], a
 	ld a, b
-	ld [$cf13], a
+	ld [wcf13], a
 	pop af
 	ret
 
 Func_b894:
 	push af
 	ld a, c
-	ld [$cf14], a
+	ld [wcf14], a
 	ld a, b
-	ld [$cf15], a
+	ld [wcf15], a
 	pop af
 	ret
 ; 0xb89f
@@ -1759,7 +1759,7 @@ SECTION "Bank 2@78b2", ROMX[$78b2], BANK[$2]
 
 Func_b8b2:
 	push af
-	call Func_29fd
+	call StopMusic
 	ld a, YAMI_YUGI
 	ld [wNPCCharacter], a
 	lddlg a, Text_3d0bc
@@ -1772,7 +1772,7 @@ Func_b8b2:
 
 Func_b8cb:
 	push af
-	call Func_29fd
+	call StopMusic
 	ld a, YAMI_YUGI
 	ld [wNPCCharacter], a
 	lddlg a, Text_3d0db
@@ -1785,7 +1785,7 @@ Func_b8cb:
 
 Func_b8e4:
 	push af
-	call Func_29fd
+	call StopMusic
 	ld a, YAMI_YUGI
 	ld [wNPCCharacter], a
 	lddlg a, Text_3d106
@@ -1801,7 +1801,7 @@ SECTION "Bank 2@7916", ROMX[$7916], BANK[$2]
 
 Func_b916:
 	push af
-	call Func_29fd
+	call StopMusic
 	ld a, TEA
 	ld [wNPCCharacter], a
 	lddlg a, Text_3d217

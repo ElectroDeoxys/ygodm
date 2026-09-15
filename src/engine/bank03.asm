@@ -368,7 +368,7 @@ Func_c2c9:
 	hlbgcoord 12, 1
 	ld a, TEXTLOAD_NUMBER
 	farcall SetTextLoadMode
-	ld a, [$cc56]
+	ld a, [wcc56]
 	add $01
 	ld [wHexNumber + 0], a
 	ld a, $00
@@ -383,7 +383,7 @@ Func_c2c9:
 	ld a, [wTextBuffer + $3]
 	ld [hli], a
 	inc hl
-	ld a, [$cc57]
+	ld a, [wcc57]
 	add $01
 	ld [wHexNumber + 0], a
 	ld a, $00
@@ -405,15 +405,15 @@ Func_c316:
 	push de
 	push hl
 	call Func_c5b2
-	ld a, [$cc58]
-	ld [$cc51], a
+	ld a, [wcc58]
+	ld [wcc51], a
 	ld d, $05
-	ld a, [$cc56]
+	ld a, [wcc56]
 	ld c, a
-	ld a, [$cc57]
+	ld a, [wcc57]
 	cp c
 	jr nz, .asm_c334
-	ld a, [$cc55]
+	ld a, [wcc55]
 	ld d, a
 	inc d
 .asm_c334
@@ -426,9 +426,9 @@ Func_c316:
 	call Func_c351
 	call Func_c397
 	inc e
-	ld a, [$cc51]
+	ld a, [wcc51]
 	add $01
-	ld [$cc51], a
+	ld [wcc51], a
 	jr .asm_c336
 .asm_c34c
 	pop hl
@@ -451,7 +451,7 @@ Func_c351:
 	add hl, de
 	ld a, TEXTLOAD_NUMBER
 	farcall SetTextLoadMode
-	ld a, [$cc51]
+	ld a, [wcc51]
 	call SetPlayerDeckIndex
 	call GetPlayerDeckCard
 	ld a, c
@@ -487,7 +487,7 @@ Func_c397:
 	rl d
 	hlbgcoord 6, 2
 	add hl, de
-	ld a, [$cc51]
+	ld a, [wcc51]
 	call SetPlayerDeckIndex
 	call GetPlayerDeckCard
 	call Func_1508
@@ -523,17 +523,17 @@ Func_c397:
 Func_c3e3:
 	push af
 	ld a, $00
-	ld [$cc52], a
+	ld [wcc52], a
 	ld a, $00
-	ld [$cc53], a
+	ld [wcc53], a
 	ld a, $00
-	ld [$cc54], a
+	ld [wcc54], a
 	ld a, $04
-	ld [$cc55], a
+	ld [wcc55], a
 	ld a, $00
-	ld [$cc56], a
+	ld [wcc56], a
 	ld a, $00
-	ld [$cc57], a
+	ld [wcc57], a
 	call Func_c407
 	pop af
 	ret
@@ -548,9 +548,9 @@ Func_c407:
 	ld b, $05
 	call DDividedByB
 	ld a, d
-	ld [$cc57], a
+	ld [wcc57], a
 	ld a, e
-	ld [$cc55], a
+	ld [wcc55], a
 	pop de
 	pop bc
 	pop af
@@ -559,14 +559,14 @@ Func_c407:
 Func_c420:
 	push af
 	push bc
-	ld a, [$cc52]
+	ld a, [wcc52]
 	cp $00
 	jr nz, .asm_c446
 	call Func_2ae4
 	ld a, $01
-	ld [$cc52], a
+	ld [wcc52], a
 	ld a, $00
-	ld [$cc54], a
+	ld [wcc54], a
 	ld a, VBLANK_04
 	call SetPendingVBlankMode
 	call Func_c52e
@@ -584,24 +584,24 @@ Func_c44c:
 	push af
 	call Func_2ad9
 	ld a, $00
-	ld [$cc52], a
+	ld [wcc52], a
 	pop af
 	ret
 
 Func_c457:
 	push af
 	push bc
-	ld a, [$cc52]
+	ld a, [wcc52]
 	cp $00
 	jr nz, .asm_c488
-	ld a, [$cc57]
+	ld a, [wcc57]
 	ld c, a
-	ld a, [$cc56]
+	ld a, [wcc56]
 	cp c
 	jr nz, .asm_c47a
-	ld a, [$cc55]
+	ld a, [wcc55]
 	ld b, a
-	ld a, [$cc53]
+	ld a, [wcc53]
 	cp b
 	jr z, .asm_c478
 	inc a
@@ -609,24 +609,24 @@ Func_c457:
 .asm_c478
 	jr .asm_c485
 .asm_c47a
-	ld a, [$cc53]
+	ld a, [wcc53]
 	cp $04
 	jr z, .asm_c485
 	inc a
 	call Func_2aef
 .asm_c485
-	ld [$cc53], a
+	ld [wcc53], a
 .asm_c488
-	ld a, [$cc52]
+	ld a, [wcc52]
 	cp $01
 	jr nz, .asm_c49d
-	ld a, [$cc54]
+	ld a, [wcc54]
 	cp $00
 	jr nz, .asm_c49a
 	inc a
 	call Func_2aef
 .asm_c49a
-	ld [$cc54], a
+	ld [wcc54], a
 .asm_c49d
 	pop bc
 	pop af
@@ -634,27 +634,27 @@ Func_c457:
 
 Func_c4a0:
 	push af
-	ld a, [$cc52]
+	ld a, [wcc52]
 	cp $00
 	jr nz, .asm_c4b6
-	ld a, [$cc53]
+	ld a, [wcc53]
 	cp $00
 	jr z, .asm_c4b3
 	dec a
 	call Func_2aef
 .asm_c4b3
-	ld [$cc53], a
+	ld [wcc53], a
 .asm_c4b6
-	ld a, [$cc52]
+	ld a, [wcc52]
 	cp $01
 	jr nz, .asm_c4cb
-	ld a, [$cc54]
+	ld a, [wcc54]
 	cp $01
 	jr nz, .asm_c4c8
 	dec a
 	call Func_2aef
 .asm_c4c8
-	ld [$cc54], a
+	ld [wcc54], a
 .asm_c4cb
 	pop af
 	ret
@@ -663,32 +663,32 @@ Func_c4cd:
 	push af
 	push bc
 	push de
-	ld a, [$cc52]
+	ld a, [wcc52]
 	cp $00
 	jr nz, .asm_c509
-	ld a, [$cc57]
+	ld a, [wcc57]
 	ld c, a
-	ld a, [$cc56]
+	ld a, [wcc56]
 	cp c
 	jr z, .asm_c509
 	inc a
-	ld [$cc56], a
+	ld [wcc56], a
 	call Func_2aef
 	cp c
 	jr nz, .asm_c4f9
-	ld a, [$cc55]
+	ld a, [wcc55]
 	ld d, a
-	ld a, [$cc53]
+	ld a, [wcc53]
 	cp d
 	jr c, .asm_c4f9
 	ld a, d
-	ld [$cc53], a
+	ld [wcc53], a
 .asm_c4f9
 	ld e, $05
-	ld a, [$cc56]
+	ld a, [wcc56]
 	cp c
 	jr nz, .asm_c506
-	ld a, [$cc55]
+	ld a, [wcc55]
 	ld e, a
 	inc e
 .asm_c506
@@ -703,14 +703,14 @@ Func_c50d:
 	push af
 	push bc
 	push de
-	ld a, [$cc52]
+	ld a, [wcc52]
 	cp $00
 	jr nz, .asm_c52a
-	ld a, [$cc56]
+	ld a, [wcc56]
 	cp $00
 	jr z, .asm_c52a
 	dec a
-	ld [$cc56], a
+	ld [wcc56], a
 	call Func_2aef
 	ld e, $05
 	call Func_c86e
@@ -725,7 +725,7 @@ Func_c52e:
 	push bc
 	push de
 	push hl
-	ld a, [$cc52]
+	ld a, [wcc52]
 	cp $00
 	jr nz, .asm_c559
 	ld c, $00
@@ -737,12 +737,12 @@ Func_c52e:
 	ld d, $10
 	call Func_123c
 	ld bc, $2
-	ld a, [$cc53]
+	ld a, [wcc53]
 	call Func_c59c
 	ld d, $10
 	call Func_123c
 .asm_c559
-	ld a, [$cc52]
+	ld a, [wcc52]
 	cp $01
 	jr nz, .asm_c597
 	ld c, $00
@@ -750,7 +750,7 @@ Func_c52e:
 	ld d, $10
 	call Func_123c
 	ld bc, $1
-	ld a, [$cc54]
+	ld a, [wcc54]
 	cp $02
 	jr z, .asm_c57f
 	add $05
@@ -765,7 +765,7 @@ Func_c52e:
 	call Func_123c
 .asm_c589
 	ld bc, $102
-	ld a, [$cc53]
+	ld a, [wcc53]
 	call Func_c59c
 	ld d, $10
 	call Func_123c
@@ -796,14 +796,14 @@ Func_c5b2:
 	push bc
 	push de
 	push hl
-	ld a, [$cc56]
+	ld a, [wcc56]
 	ld e, a
 	ld b, $05
 	call BTimesE
 	ld a, l
-	ld [$cc58], a
+	ld [wcc58], a
 	ld a, h
-	ld [$cc59], a
+	ld [wcc59], a
 	pop hl
 	pop de
 	pop bc
@@ -1228,7 +1228,7 @@ Func_c7ff:
 	ld a, VBLANK_04
 	call SetPendingVBlankMode
 	ld b, $00
-	ld a, [$cc52]
+	ld a, [wcc52]
 	ld c, a
 	ld hl, $4820
 	add hl, bc
@@ -1316,12 +1316,12 @@ Func_c86e:
 	add hl, bc
 	ld b, h
 	ld c, l
-	ld a, [$cc58]
+	ld a, [wcc58]
 	add $01
-	ld [$cc58], a
-	ld a, [$cc59]
+	ld [wcc58], a
+	ld a, [wcc59]
 	adc $00
-	ld [$cc59], a
+	ld [wcc59], a
 	ld a, e
 	and $01
 	jr nz, .asm_c8bf
@@ -1404,7 +1404,7 @@ Func_c927:
 	push bc
 	push de
 	push hl
-	ld a, [$cc58]
+	ld a, [wcc58]
 	call SetPlayerDeckIndex
 	call GetPlayerDeckCard
 	call Func_1508
@@ -1433,23 +1433,23 @@ Func_c952:
 	call AddByteToVBlankStruct
 	ld a, TEXTLOAD_NUMBER
 	farcall SetTextLoadMode
-	ld a, [$cc58]
+	ld a, [wcc58]
 	call SetPlayerDeckIndex
 	call GetPlayerDeckCard
 	ld a, c
 	add $01
-	ld [wHexNumber], a
+	ld [wHexNumber + 0], a
 	ld a, b
 	adc $00
-	ld [$cadd], a
+	ld [wHexNumber + 1], a
 	call ConvertToDecimalRepresentation
 	farcall SetTextArg
 	farcall LoadText
-	ld a, [$caba]
+	ld a, [wTextBuffer + $1]
 	call AddByteToVBlankStruct
-	ld a, [$cabb]
+	ld a, [wTextBuffer + $2]
 	call AddByteToVBlankStruct
-	ld a, [$cabc]
+	ld a, [wTextBuffer + $3]
 	call AddByteToVBlankStruct
 	ld a, $80
 	call AddByteToVBlankStruct
@@ -1465,7 +1465,7 @@ Func_c99c:
 	push hl
 	ld a, TEXTLOAD_CARD_NAME
 	farcall SetTextLoadMode
-	ld a, [$cc58]
+	ld a, [wcc58]
 	call SetPlayerDeckIndex
 	call GetPlayerDeckCard
 	call Func_1508
@@ -1517,33 +1517,33 @@ Func_c9df:
 	jr nz, .asm_ca06
 	ld a, TEXTLOAD_NUMBER
 	farcall SetTextLoadMode
-	ld a, [$cc56]
+	ld a, [wcc56]
 	add $01
-	ld [wHexNumber], a
+	ld [wHexNumber + 0], a
 	ld a, $00
-	ld [$cadd], a
+	ld [wHexNumber + 1], a
 	call ConvertToDecimalRepresentation
 	farcall SetTextArg
 	farcall LoadText
-	ld a, [$caba]
+	ld a, [wTextBuffer + $1]
 	call AddByteToVBlankStruct
-	ld a, [$cabb]
+	ld a, [wTextBuffer + $2]
 	call AddByteToVBlankStruct
-	ld a, [$cabc]
+	ld a, [wTextBuffer + $3]
 	call AddByteToVBlankStruct
 	ld a, $81
 	call AddByteToVBlankStruct
-	ld a, [$cc57]
+	ld a, [wcc57]
 	add $01
-	ld [wHexNumber], a
+	ld [wHexNumber + 0], a
 	ld a, $00
-	ld [$cadd], a
+	ld [wHexNumber + 1], a
 	call ConvertToDecimalRepresentation
 	farcall SetTextArg
 	farcall LoadText
-	ld a, [$cabb]
+	ld a, [wTextBuffer + $2]
 	call AddByteToVBlankStruct
-	ld a, [$cabc]
+	ld a, [wTextBuffer + $3]
 	call AddByteToVBlankStruct
 	ld a, $80
 	call AddByteToVBlankStruct
@@ -1557,10 +1557,10 @@ Func_c9df:
 
 Func_ca6f:
 	push af
-	ld a, [wce00]
-	cp $03
+	ld a, [wGameMode]
+	cp GAMEMODE_TRADE
 	jr z, .asm_ca88
-	ld a, [$cc54]
+	ld a, [wcc54]
 	cp $00
 	jr nz, .asm_ca83
 	call Func_ca99
@@ -1570,7 +1570,7 @@ Func_ca6f:
 .asm_ca86
 	jr .asm_ca97
 .asm_ca88
-	ld a, [$ceb3]
+	ld a, [wceb3]
 	cp $00
 	jr nz, .asm_ca94
 	call Func_cac0
@@ -1584,10 +1584,10 @@ Func_ca6f:
 Func_ca99:
 	push af
 	push bc
-	ld a, [$cc53]
+	ld a, [wcc53]
 	ld c, a
 	call Func_c5b2
-	ld a, [$cc58]
+	ld a, [wcc58]
 	add c
 	call SetPlayerDeckIndex
 	call GetPlayerDeckCard
@@ -1595,7 +1595,7 @@ Func_ca99:
 	farcall Func_14036
 	farcall Func_14185
 	ld a, $00
-	ld [$cc52], a
+	ld [wcc52], a
 	call Func_c25e
 	pop bc
 	pop af
@@ -1604,7 +1604,7 @@ Func_ca99:
 Func_cac0:
 	push af
 	push bc
-	ld a, [$ceb2]
+	ld a, [wceb2]
 	ld c, a
 	call Func_e72b
 	call Func_e747
@@ -1612,7 +1612,7 @@ Func_cac0:
 	farcall Func_14036
 	farcall Func_14185
 	ld a, $00
-	ld [$ceb1], a
+	ld [wceb1], a
 	call Func_e96d
 	pop bc
 	pop af
@@ -1623,37 +1623,37 @@ Func_cae0:
 	push bc
 	push de
 	push hl
-	ld a, [$cc56]
+	ld a, [wcc56]
 	ld b, a
 	ld e, $05
 	call BTimesE
-	ld a, [$cc53]
+	ld a, [wcc53]
 	add l
 	call SetPlayerDeckIndex
 	farcall Func_5bb8
 	call Func_2ae4
 	call Func_c407
 	ld a, $00
-	ld [$cc52], a
+	ld [wcc52], a
 	ld a, $00
-	ld [$cc54], a
-	ld a, [$cc57]
+	ld [wcc54], a
+	ld a, [wcc57]
 	cp b
 	jr nc, .asm_cb0e
 	dec b
 .asm_cb0e
 	ld a, b
-	ld [$cc56], a
+	ld [wcc56], a
 	ld e, $05
-	ld a, [$cc57]
+	ld a, [wcc57]
 	cp b
 	jr nz, .asm_cb2c
-	ld a, [$cc55]
+	ld a, [wcc55]
 	ld e, a
 	inc e
-	ld a, [$cc53]
+	ld a, [wcc53]
 	ld c, a
-	ld a, [$cc55]
+	ld a, [wcc55]
 	cp c
 	jr nc, .asm_cb2c
 	call Func_c4a0
@@ -1676,20 +1676,20 @@ Func_cb42:
 	push de
 	push hl
 	call Func_2ae4
-	ld a, [$ceb2]
+	ld a, [wceb2]
 	call Func_e72b
 	farcall Func_5c10
 	call Func_eaac
 	ld a, $00
-	ld [$ceb1], a
+	ld [wceb1], a
 	ld a, $00
-	ld [$ceb3], a
-	ld a, [$ceb4]
+	ld [wceb3], a
+	ld a, [wceb4]
 	ld e, a
 	inc e
-	ld a, [$ceb2]
+	ld a, [wceb2]
 	ld c, a
-	ld a, [$ceb4]
+	ld a, [wceb4]
 	cp c
 	jr nc, .asm_cb71
 	call Func_eb20
@@ -1940,8 +1940,8 @@ Func_ccbd:
 	call DoesPlayerHaveEnoughDeckCards
 	cp TRUE
 	jr nz, .asm_cd1f
-	ld a, [wce00]
-	cp $02
+	ld a, [wGameMode]
+	cp GAMEMODE_DUEL_LINK_OPP
 	jr nz, .asm_cd1d
 	call Func_24f
 	cp TRUE
@@ -1993,9 +1993,9 @@ Func_cd55:
 	ld a, CARD_LOCATION_PLAYER_HAND
 	ld [wcd5f], a
 	ld a, $00
-	ld [$cd60], a
+	ld [wcd60], a
 	ld a, $02
-	ld [$cd61], a
+	ld [wcd61], a
 	call Func_cd72
 	call Func_cefb
 	pop af
@@ -2004,35 +2004,35 @@ Func_cd55:
 Func_cd72:
 	push af
 	ld a, $00
-	ld [$cd5c], a
+	ld [wcd5c], a
 	pop af
 	ret
 
 Func_cd7a:
 	push af
 	ld a, $01
-	ld [$cd5c], a
+	ld [wcd5c], a
 	pop af
 	ret
 
 Func_cd82:
 	push af
 	ld a, $02
-	ld [$cd5c], a
+	ld [wcd5c], a
 	pop af
 	ret
 
 Func_cd8a:
 	push af
 	ld a, $03
-	ld [$cd5c], a
+	ld [wcd5c], a
 	pop af
 	ret
 
 Func_cd92:
 	push af
 	ld a, $04
-	ld [$cd5c], a
+	ld [wcd5c], a
 	pop af
 	ret
 
@@ -2056,7 +2056,7 @@ SECTION "Bank 3@4db3", ROMX[$4db3], BANK[$3]
 Func_cdb3:
 	push bc
 	ld b, $01
-	ld a, [$cd5c]
+	ld a, [wcd5c]
 	cp $03
 	jr nz, .asm_cdc2
 	call Func_cff6
@@ -2079,7 +2079,7 @@ Func_cdb3:
 Func_cdd8:
 	push bc
 	ld b, $01
-	ld a, [$cd5c]
+	ld a, [wcd5c]
 	cp $03
 	jr nz, .asm_cde7
 	call Func_cff6
@@ -2102,7 +2102,7 @@ Func_cdd8:
 Func_cdfd:
 	push bc
 	ld b, $01
-	ld a, [$cd5c]
+	ld a, [wcd5c]
 	cp $03
 	jr nz, .asm_ce0c
 	call Func_cff6
@@ -2125,7 +2125,7 @@ Func_cdfd:
 Func_ce22:
 	push bc
 	ld b, $01
-	ld a, [$cd5c]
+	ld a, [wcd5c]
 	cp $03
 	jr nz, .asm_ce31
 	call Func_cff6
@@ -2148,7 +2148,7 @@ Func_ce22:
 Func_ce47:
 	push af
 	push bc
-	ld a, [$cd62]
+	ld a, [wcd62]
 	cp $01
 	jr nz, .asm_ce66
 	ld a, $00
@@ -2156,12 +2156,12 @@ Func_ce47:
 	ld a, $03
 	ld [wcd5f], a
 	ld a, $00
-	ld [$cd60], a
+	ld [wcd60], a
 	ld a, $03
-	ld [$cd61], a
+	ld [wcd61], a
 	jr .asm_ced0
 .asm_ce66
-	ld a, [$cd5c]
+	ld a, [wcd5c]
 	cp $00
 	jr nz, .asm_ce77
 	ld a, $02
@@ -2169,19 +2169,19 @@ Func_ce47:
 	ld a, $03
 	ld [wcd5f], a
 .asm_ce77
-	ld a, [$cd5c]
+	ld a, [wcd5c]
 	cp $01
 	jr nz, .asm_ce95
 	ld a, [wcd5e]
-	ld [$cd60], a
+	ld [wcd60], a
 	ld a, [wcd5f]
-	ld [$cd61], a
+	ld [wcd61], a
 	call Func_da8f
 	ld [wcd5e], a
 	ld a, $02
 	ld [wcd5f], a
 .asm_ce95
-	ld a, [$cd5c]
+	ld a, [wcd5c]
 	cp $02
 	jr nz, .asm_ceac
 	call Func_dabc
@@ -2193,13 +2193,13 @@ Func_ce47:
 	ld a, $02
 	ld [wcd5f], a
 .asm_ceac
-	ld a, [$cd5c]
+	ld a, [wcd5c]
 	cp $04
 	jr nz, .asm_ced0
 	ld a, [wcd5e]
-	ld [$cd60], a
+	ld [wcd60], a
 	ld a, [wcd5f]
-	ld [$cd61], a
+	ld [wcd61], a
 	ld c, $01
 	call Func_daf3
 	ld b, a
@@ -2215,20 +2215,20 @@ Func_ce47:
 
 Func_ced3:
 	push af
-	ld a, [$cd5c]
+	ld a, [wcd5c]
 	cp $01
 	jr nz, .asm_cee9
-	ld a, [$cd60]
+	ld a, [wcd60]
 	ld [wcd5e], a
-	ld a, [$cd61]
+	ld a, [wcd61]
 	ld [wcd5f], a
 	jr .asm_cef9
 .asm_cee9
 	cp $04
 	jr nz, .asm_cef9
-	ld a, [$cd60]
+	ld a, [wcd60]
 	ld [wcd5e], a
-	ld a, [$cd61]
+	ld a, [wcd61]
 	ld [wcd5f], a
 .asm_cef9
 	pop af
@@ -2236,32 +2236,32 @@ Func_ced3:
 
 Func_cefb:
 	push af
-	ld a, [$cd5c]
+	ld a, [wcd5c]
 	cp $00
 	jr nz, .asm_cf09
 	call Func_cf93
 	call Func_cf45
 .asm_cf09
-	ld a, [$cd5c]
+	ld a, [wcd5c]
 	cp $01
 	jr nz, .asm_cf19
 	call Func_cf93
 	call Func_cf45
 	call Func_cf5e
 .asm_cf19
-	ld a, [$cd5c]
+	ld a, [wcd5c]
 	cp $02
 	jr nz, .asm_cf26
 	call Func_cf93
 	call Func_cf45
 .asm_cf26
-	ld a, [$cd5c]
+	ld a, [wcd5c]
 	cp $03
 	jr nz, .asm_cf33
 	call Func_cf93
 	call Func_cf77
 .asm_cf33
-	ld a, [$cd5c]
+	ld a, [wcd5c]
 	cp $04
 	jr nz, .asm_cf43
 	call Func_cf93
@@ -2292,9 +2292,9 @@ Func_cf5e:
 	push af
 	push bc
 	push de
-	ld a, [$cd60]
+	ld a, [wcd60]
 	ld b, a
-	ld a, [$cd61]
+	ld a, [wcd61]
 	ld c, a
 	call Func_cfbe
 	ld d, $54
@@ -2418,7 +2418,7 @@ Func_d014:
 	push de
 	push hl
 	xor a
-	ld [$cd62], a
+	ld [wcd62], a
 
 	farcall HandleExodiaWinCondition
 	call IsDuelOngoing
@@ -2445,7 +2445,7 @@ Func_d014:
 	call IsDuelOngoing
 	cp FALSE
 	jr z, .asm_d056
-	ld a, [$cd62]
+	ld a, [wcd62]
 	cp $01
 	jr nz, .asm_d036
 .asm_d056
@@ -2779,9 +2779,9 @@ DuelAgainstLinkOpponent:
 	ret
 
 Func_d267:
-	call Func_29fd
+	call StopMusic
 	farcall Func_4068
-	call Func_2a13
+	call PlayMusic_Duel1
 .asm_d270
 	ld a, [wcdff]
 	cp $01
@@ -2819,7 +2819,7 @@ Func_d267:
 
 Func_d2b8:
 	push af
-	ld a, [$cd5c]
+	ld a, [wcd5c]
 	cp $00
 	jr nz, .asm_d2c5
 	call Func_d6ae
@@ -2849,7 +2849,7 @@ Func_d2b8:
 
 Func_d2e9:
 	push af
-	ld a, [$cd5c]
+	ld a, [wcd5c]
 	cp $00
 	jr nz, .asm_d309
 	call Func_d366
@@ -3426,7 +3426,7 @@ Func_d6d4:
 	ld a, [wTempCardID + 1]
 	ld b, a
 	farcall SetMaterial1Card
-	ld a, [$cd60]
+	ld a, [wcd60]
 	ld b, a
 	ld c, CARD_LOCATION_PLAYER_HAND
 	call SetTargetCard
@@ -3552,7 +3552,7 @@ Func_d7cd:
 	ld b, a
 	ld c, $01
 	call Func_e228
-	ld a, [$cd60]
+	ld a, [wcd60]
 	ld b, a
 	ld c, CARD_LOCATION_PLAYER_FIELD
 	call SetTargetCard
@@ -3574,7 +3574,7 @@ Func_d804:
 	cp TRUE
 	jr z, .skip
 	ld a, $01
-	ld [$cd62], a
+	ld [wcd62], a
 .skip
 	pop af
 	ret
@@ -3741,7 +3741,7 @@ Func_d8ee:
 Func_d900:
 	push af
 	push bc
-	ld a, [$cd5c]
+	ld a, [wcd5c]
 	cp $03
 	jr nz, .asm_d91e
 	call Func_d8ee
@@ -4270,7 +4270,7 @@ Func_dc2f:
 	call Func_200e
 	ld a, [wTempCardID + 1]
 	call Func_200e
-	ld a, [$cdf4]
+	ld a, [wcdf4]
 	call Func_200e
 	inc d
 	dec c
@@ -4341,7 +4341,7 @@ Func_dcb0:
 	call Func_2051
 	ld [wTempCardID + 1], a
 	call Func_2051
-	ld [$cdf4], a
+	ld [wcdf4], a
 	push bc
 	ld b, d
 	ld c, e
@@ -4368,15 +4368,15 @@ Func_dcdc:
 	call Func_200e
 	ld a, [wActiveField]
 	call Func_200e
-	ld a, [$cf02]
+	ld a, [wDuelStatus]
 	call Func_200e
-	ld a, [$cfbe]
+	ld a, [wcfbe]
 	call Func_200e
-	ld a, [$cfbf]
+	ld a, [wcfbf]
 	call Func_200e
-	ld a, [$cfc0]
+	ld a, [wcfc0]
 	call Func_200e
-	ld a, [$cfc1]
+	ld a, [wcfc1]
 	call Func_200e
 	pop af
 	ret
@@ -4394,31 +4394,31 @@ Func_dd1b:
 	call Func_2051
 	ld [wActiveField], a
 	call Func_2051
-	ld [$cf03], a
+	ld [wOtherDuelStatus], a
 	call Func_2051
-	ld [$cfbf], a
+	ld [wcfbf], a
 	call Func_2051
-	ld [$cfbe], a
+	ld [wcfbe], a
 	call Func_2051
-	ld [$cfc1], a
+	ld [wcfc1], a
 	call Func_2051
-	ld [$cfc0], a
+	ld [wcfc0], a
 	pop af
 	ret
 
 Func_dd5a:
 	push af
-	ld a, [$cfb9]
+	ld a, [wcfb9]
 	call Func_200e
-	ld a, [$cfba]
+	ld a, [wcfba]
 	call Func_200e
 	ld a, [wcfaf]
 	call Func_200e
-	ld a, [$cfb0]
+	ld a, [wcfb0]
 	call Func_200e
-	ld a, [$cfb1]
+	ld a, [wcfb1]
 	call Func_200e
-	ld a, [$cfb2]
+	ld a, [wcfb2]
 	call Func_200e
 	pop af
 	ret
@@ -4426,17 +4426,17 @@ Func_dd5a:
 Func_dd81:
 	push af
 	call Func_2051
-	ld [$cfbb], a
+	ld [wcfbb], a
 	call Func_2051
-	ld [$cfbc], a
+	ld [wcfbc], a
 	call Func_2051
-	ld [$cfb3], a
+	ld [wcfb3], a
 	call Func_2051
-	ld [$cfb4], a
+	ld [wcfb4], a
 	call Func_2051
-	ld [$cfb5], a
+	ld [wcfb5], a
 	call Func_2051
-	ld [$cfb6], a
+	ld [wcfb6], a
 	pop af
 	ret
 
@@ -4506,9 +4506,9 @@ Func_de81:
 	push bc
 	push hl
 	ld a, $00
-	ld [$ce12], a
+	ld [wce12], a
 	ld b, $00
-	ld a, [$ce01]
+	ld a, [wce01]
 	ld c, a
 	sla c
 	ld hl, .Jumptable
@@ -4612,9 +4612,9 @@ Func_df31:
 	ld c, a
 	ld a, [wHealLPAmount + 1]
 	ld b, a
-	ld a, [$ce10]
+	ld a, [wce10 + 0]
 	ld e, a
-	ld a, [$ce11]
+	ld a, [wce10 + 1]
 	ld d, a
 	call Func_e06b
 	ld a, e
@@ -4662,9 +4662,9 @@ Func_df8d:
 	ld e, a
 	ld a, [wDamageLPAmount + 1]
 	ld d, a
-	ld a, [$ce0c]
+	ld a, [wce0c + 0]
 	ld c, a
-	ld a, [$ce0d]
+	ld a, [wce0c + 1]
 	ld b, a
 	call Func_e06b
 	ld a, e
@@ -4794,28 +4794,28 @@ Func_e06b:
 	ret
 
 Func_e08a:
-	ld [$ce01], a
+	ld [wce01], a
 	ret
 
 Func_e08e:
 	push af
 	ld a, [wPlayerLP + 0]
-	ld [$ce06], a
-	ld [$ced4], a
+	ld [wce06], a
+	ld [wced4], a
 	ld a, [wPlayerLP + 1]
-	ld [$ce07], a
-	ld [$ced5], a
+	ld [wce07], a
+	ld [wced5], a
 	pop af
 	ret
 
 Func_e0a3:
 	push af
 	ld a, [wOppLP + 0]
-	ld [$ce08], a
-	ld [$cedf], a
+	ld [wce08], a
+	ld [wcedf], a
 	ld a, [wOppLP + 1]
-	ld [$ce09], a
-	ld [$cee0], a
+	ld [wce09], a
+	ld [wcee0], a
 	pop af
 	ret
 
@@ -4828,9 +4828,9 @@ Func_e0b8:
 	ld a, [wLoadedCardAtk + 1]
 	ld [wHealLPAmount + 1], a
 	ld a, [wLoadedCardDef + 0]
-	ld [$ce0c], a
+	ld [wce0c + 0], a
 	ld a, [wLoadedCardDef + 1]
-	ld [$ce0d], a
+	ld [wce0c + 1], a
 	pop bc
 	pop af
 	ret
@@ -4844,105 +4844,105 @@ Func_e0d8:
 	ld a, [wLoadedCardAtk + 1]
 	ld [wDamageLPAmount + 1], a
 	ld a, [wLoadedCardDef + 0]
-	ld [$ce10], a
+	ld [wce10 + 0], a
 	ld a, [wLoadedCardDef + 1]
-	ld [$ce11], a
+	ld [wce10 + 1], a
 	pop bc
 	pop af
 	ret
 
 Func_e0f8:
 	push af
-	ld a, [$ce12]
+	ld a, [wce12]
 	or $01
-	ld [$ce12], a
+	ld [wce12], a
 	pop af
 	ret
 
 Func_e103:
 	push af
-	ld a, [$ce12]
+	ld a, [wce12]
 	or $02
-	ld [$ce12], a
+	ld [wce12], a
 	pop af
 	ret
 
 Func_e10e:
 	push af
-	ld a, [$ce12]
+	ld a, [wce12]
 	or $04
-	ld [$ce12], a
+	ld [wce12], a
 	pop af
 	ret
 
 Func_e119:
 	push af
-	ld a, [$ce12]
+	ld a, [wce12]
 	or $08
-	ld [$ce12], a
+	ld [wce12], a
 	pop af
 	ret
 
 Func_e124:
 	push af
-	ld a, [$ce06]
-	ld [wPlayerLP], a
-	ld [$ced6], a
-	ld a, [$ce07]
-	ld [$cab1], a
-	ld [$ced7], a
-	ld a, [$ce08]
-	ld [wOppLP], a
-	ld [$cee1], a
-	ld a, [$ce09]
-	ld [$cab4], a
-	ld [$cee2], a
+	ld a, [wce06]
+	ld [wPlayerLP + 0], a
+	ld [wced6], a
+	ld a, [wce07]
+	ld [wPlayerLP + 1], a
+	ld [wced7], a
+	ld a, [wce08]
+	ld [wOppLP + 0], a
+	ld [wcee1], a
+	ld a, [wce09]
+	ld [wOppLP + 1], a
+	ld [wcee2], a
 	pop af
 	ret
 
 Func_e14b:
 	push af
-	ld a, [$ce02]
-	ld [$ced2], a
-	ld a, [$ce03]
-	ld [$ced3], a
+	ld a, [wce02]
+	ld [wced2], a
+	ld a, [wce03]
+	ld [wced3], a
 	ld a, [wHealLPAmount + 0]
-	ld [$ced8], a
+	ld [wced8], a
 	ld a, [wHealLPAmount + 1]
-	ld [$ced9], a
-	ld a, [$ce0c]
-	ld [$ceda], a
-	ld a, [$ce0d]
-	ld [$cedb], a
-	ld a, [$ce04]
-	ld [$cedd], a
-	ld a, [$ce05]
-	ld [$cede], a
+	ld [wced9], a
+	ld a, [wce0c + 0]
+	ld [wceda], a
+	ld a, [wce0c + 1]
+	ld [wcedb], a
+	ld a, [wce04]
+	ld [wcedd], a
+	ld a, [wce05]
+	ld [wcede], a
 	ld a, [wDamageLPAmount + 0]
-	ld [$cee3], a
+	ld [wcee3], a
 	ld a, [wDamageLPAmount + 1]
-	ld [$cee4], a
-	ld a, [$ce10]
-	ld [$cee5], a
-	ld a, [$ce11]
-	ld [$cee6], a
+	ld [wcee4], a
+	ld a, [wce10 + 0]
+	ld [wcee5], a
+	ld a, [wce10 + 1]
+	ld [wcee6], a
 	pop af
 	ret
 
-; adds bc to $ce06
+; adds bc to wce06
 Func_e196:
 	push af
 	push bc
 	push de
-	ld a, [$ce06]
+	ld a, [wce06]
 	ld e, a
-	ld a, [$ce07]
+	ld a, [wce07]
 	ld d, a
 	call DecimalAddBCAndDE
 	ld a, c
-	ld [$ce06], a
+	ld [wce06], a
 	ld a, b
-	ld [$ce07], a
+	ld [wce07], a
 	pop de
 	pop bc
 	pop af
@@ -4951,9 +4951,9 @@ Func_e196:
 Func_e1b0:
 	push bc
 	push de
-	ld a, [$ce06]
+	ld a, [wce06]
 	ld e, a
-	ld a, [$ce07]
+	ld a, [wce07]
 	ld d, a
 	call Func_13bb
 	ld a, e
@@ -4962,9 +4962,9 @@ Func_e1b0:
 	ld bc, NULL
 .asm_e1c5
 	ld a, c
-	ld [$ce06], a
+	ld [wce06], a
 	ld a, b
-	ld [$ce07], a
+	ld [wce07], a
 	ld a, e
 	pop de
 	pop bc
@@ -4973,9 +4973,9 @@ Func_e1b0:
 Func_e1d1:
 	push bc
 	push de
-	ld a, [$ce08]
+	ld a, [wce08]
 	ld e, a
-	ld a, [$ce09]
+	ld a, [wce09]
 	ld d, a
 	call Func_13bb
 	ld a, e
@@ -4984,9 +4984,9 @@ Func_e1d1:
 	ld bc, NULL
 .asm_e1e6
 	ld a, c
-	ld [$ce08], a
+	ld [wce08], a
 	ld a, b
-	ld [$ce09], a
+	ld [wce09], a
 	ld a, e
 	pop de
 	pop bc
@@ -5005,15 +5005,15 @@ Func_e200:
 	push af
 	call Func_cfe1
 	ld a, b
-	ld [$ce13], a
+	ld [wce13], a
 	ld a, c
-	ld [$ce14], a
+	ld [wce14], a
 	call SetTargetCard
 	call LoadTargetCard
 	ld a, [wTempCardID + 0]
-	ld [$ce02], a
+	ld [wce02], a
 	ld a, [wTempCardID + 1]
-	ld [$ce03], a
+	ld [wce03], a
 	call Func_e0b8
 	ld a, $04
 	call Func_e08a
@@ -5025,17 +5025,17 @@ Func_e228:
 	push bc
 	call Func_cfe1
 	ld a, b
-	ld [$ce15], a
+	ld [wce15], a
 	ld a, c
-	ld [$ce16], a
+	ld [wce16], a
 	call SetTargetCard
 	call LoadTargetCard
 	call Func_da4a
 	call OverwriteTargetCard
 	ld a, [wTempCardID + 0]
-	ld [$ce04], a
+	ld [wce04], a
 	ld a, [wTempCardID + 1]
-	ld [$ce05], a
+	ld [wce05], a
 	call Func_e0d8
 	call Func_21f3
 	call Func_e259
@@ -5083,17 +5083,17 @@ Func_e285:
 	push af
 	push bc
 	ld a, b
-	ld [$ce15], a
+	ld [wce15], a
 	ld a, c
-	ld [$ce16], a
+	ld [wce16], a
 	call SetTargetCard
 	call LoadTargetCard
 	call Func_da4a
 	call OverwriteTargetCard
 	ld a, [wTempCardID + 0]
-	ld [$ce04], a
+	ld [wce04], a
 	ld a, [wTempCardID + 1]
-	ld [$ce05], a
+	ld [wce05], a
 	call Func_e0d8
 	ld a, $06
 	call Func_e08a
@@ -5104,15 +5104,15 @@ Func_e285:
 Func_e2b2:
 	push af
 	ld a, b
-	ld [$ce13], a
+	ld [wce13], a
 	ld a, c
-	ld [$ce14], a
+	ld [wce14], a
 	call SetTargetCard
 	call LoadTargetCard
 	ld a, [wTempCardID + 0]
-	ld [$ce02], a
+	ld [wce02], a
 	ld a, [wTempCardID + 1]
-	ld [$ce03], a
+	ld [wce03], a
 	call Func_e0b8
 	call Func_21f3
 	call Func_e26f
@@ -5147,8 +5147,8 @@ SetDamageLPAmount:
 
 Func_e2f8:
 	push af
-	ld a, [wce00]
-	cp $02
+	ld a, [wGameMode]
+	cp GAMEMODE_DUEL_LINK_OPP
 	jr nz, .asm_e305
 	call Func_e352
 	jr .asm_e308
@@ -5169,20 +5169,20 @@ Func_e30a:
 	call EnableObjects
 	jr .asm_e34f
 .asm_e31e
-	ld a, [$cf02]
-	cp $00
+	ld a, [wDuelStatus]
+	cp DUELSTATUS_0
 	jr z, .asm_e346
 	call Func_de81
 	call Func_e3bc
 	call Func_f86
 	call Func_f86
 	call Func_f86
-	call Func_29fd
+	call StopMusic
 	farcall Func_191c5
-	call Func_2a6b
+	call PlayMusic_Battle
 	farcall Func_19272
 	farcall Func_4068
-	call Func_2a97
+	call PlayDuelMusic
 .asm_e346
 	call Func_c142
 	call Func_d3ec
@@ -5203,19 +5203,19 @@ Func_e352:
 	call EnableObjects
 	jr .asm_e39b
 .asm_e366
-	ld a, [$cf02]
-	cp $00
+	ld a, [wDuelStatus]
+	cp DUELSTATUS_0
 	jr z, .asm_e38b
 	call Func_de81
 	call Func_e3bc
 	call Func_dbd1
-	call Func_29fd
+	call StopMusic
 	farcall Func_191c5
-	call Func_2a6b
+	call PlayMusic_Battle
 	farcall Func_19272
 	call Func_db63
 	farcall Func_4068
-	call Func_2a97
+	call PlayDuelMusic
 .asm_e38b
 	ld a, [wcdff]
 	cp $01
@@ -5229,15 +5229,15 @@ Func_e352:
 	ret
 
 Func_e39e:
-	call Func_29fd
+	call StopMusic
 	farcall Func_191c5
-	call Func_2a6b
+	call PlayMusic_Battle
 	farcall Func_19272
 	ret
 
 Func_e3ab:
 	farcall Func_4068
-	call Func_2a97
+	call PlayDuelMusic
 	ret
 
 Func_e3b2:
@@ -5248,39 +5248,39 @@ Func_e3b2:
 
 Func_e3bc:
 	push af
-	ld a, [$ce12]
+	ld a, [wce12]
 	and $01
 	jr z, .asm_e3d2
-	ld a, [$ce13]
+	ld a, [wce13]
 	ld b, a
-	ld a, [$ce14]
+	ld a, [wce14]
 	ld c, a
 	call SetTargetCard
 	call RemoveTargetCard
 .asm_e3d2
-	ld a, [$ce12]
+	ld a, [wce12]
 	and $02
 	jr z, .asm_e3e7
-	ld a, [$ce15]
+	ld a, [wce15]
 	ld b, a
-	ld a, [$ce16]
+	ld a, [wce16]
 	ld c, a
 	call SetTargetCard
 	call RemoveTargetCard
 .asm_e3e7
-	ld a, [$ce12]
+	ld a, [wce12]
 	and $04
 	jr z, .asm_e3f6
-	call Func_23a0
+	call SetDuelStatus_PlayerLoss
 	ld a, $01
-	ld [$cd62], a
+	ld [wcd62], a
 .asm_e3f6
-	ld a, [$ce12]
+	ld a, [wce12]
 	and $08
 	jr z, .asm_e405
-	call Func_23a8
+	call SetDuelStatus_PlayerWin
 	ld a, $01
-	ld [$cd62], a
+	ld [wcd62], a
 .asm_e405
 	pop af
 	ret
@@ -5290,20 +5290,20 @@ Func_e407:
 	call Func_2c1c
 	cp $00
 	jr z, .asm_e445
-	ld a, [$cf02]
-	cp $00
+	ld a, [wDuelStatus]
+	cp DUELSTATUS_0
 	jr z, .asm_e43f
 	call Func_de81
 	call Func_e3bc
 	call Func_f86
 	call Func_f86
 	call Func_f86
-	call Func_29fd
+	call StopMusic
 	farcall Func_191c5
-	call Func_2a6b
+	call PlayMusic_Battle
 	farcall Func_19272
 	farcall Func_4068
-	call Func_2a97
+	call PlayDuelMusic
 	ld c, $64
 .asm_e439
 	call WaitForVBlank
@@ -5533,7 +5533,7 @@ Func_e575:
 	cp MAINMENU_CAMPAIGN
 	jr nz, .check_versus
 ; campaign
-	call Func_1fa8
+	call SetGameMode_DuelAIOpponent
 	farcall CampaignMenu
 	call ResetMainMenuSelection
 	call LoadMainMenu
@@ -5541,7 +5541,7 @@ Func_e575:
 .check_versus
 	cp MAINMENU_VERSUS
 	jr nz, .check_trade
-	call Func_1fb0
+	call SetGameMode_DuelLinkOpponent
 	farcall VersusMenu
 	call ResetMainMenuSelection
 	call LoadMainMenu
@@ -5549,7 +5549,7 @@ Func_e575:
 .check_trade
 	cp MAINMENU_TRADE
 	jr nz, .check_records
-	call Func_1fb8
+	call SetGameMode_Trade
 	farcall TradeMenu
 	call ResetMainMenuSelection
 	call LoadMainMenu
@@ -5557,7 +5557,7 @@ Func_e575:
 .check_records
 	cp MAINMENU_RECORDS
 	jr nz, .done
-	call Func_1fc0
+	call SetGameMode_Records
 	farcall RecordsMenu
 	call ResetMainMenuSelection
 	call LoadMainMenu
@@ -5757,8 +5757,8 @@ Func_e711:
 	push bc
 	push hl
 	ld a, $00
-	ld [$cea4], a
-	ld hl, $cea5
+	ld [wcea4], a
+	ld hl, wcea5
 	ld c, $05
 .asm_e71e
 	ld a, LOW(INVALID_CARD)
@@ -5773,7 +5773,7 @@ Func_e711:
 	ret
 
 Func_e72b:
-	ld [$cea4], a
+	ld [wcea4], a
 	ret
 
 Func_e72f:
@@ -5782,10 +5782,10 @@ Func_e72f:
 	push de
 	push hl
 	ld d, $00
-	ld a, [$cea4]
+	ld a, [wcea4]
 	ld e, a
 	sla e
-	ld hl, $cea5
+	ld hl, wcea5
 	add hl, de
 	ld a, c
 	ld [hli], a
@@ -5800,10 +5800,10 @@ Func_e747:
 	push af
 	push hl
 	ld b, $00
-	ld a, [$cea4]
+	ld a, [wcea4]
 	ld c, a
 	sla c
-	ld hl, $cea5
+	ld hl, wcea5
 	add hl, bc
 	ld a, [hli]
 	ld b, [hl]
@@ -5836,7 +5836,7 @@ Func_e773:
 	push bc
 	push de
 	push hl
-	ld a, [$cea4]
+	ld a, [wcea4]
 	ld l, a
 	ld d, $00
 	ld e, $00
@@ -5870,7 +5870,7 @@ Func_e7a7:
 	push af
 	push de
 	push hl
-	ld hl, $cea5
+	ld hl, wcea5
 	ld e, $00
 .asm_e7af
 	ld a, [hli]
@@ -5900,7 +5900,7 @@ Func_e7a7:
 Func_e7cd:
 	push bc
 	push hl
-	ld hl, $cea5
+	ld hl, wcea5
 	ld c, $00
 .asm_e7d4
 	ld a, [hli]
@@ -6077,7 +6077,7 @@ Func_e8c6:
 	cp $01
 	jr nz, .asm_e90c
 	call Func_ea92
-	ld a, [$ceb4]
+	ld a, [wceb4]
 	cp $ff
 	jr z, .asm_e906
 	call Func_e96d
@@ -6210,8 +6210,8 @@ Func_e9d5:
 	push de
 	push hl
 	ld a, $00
-	ld [$ceb0], a
-	ld a, [$ceb4]
+	ld [wceb0], a
+	ld a, [wceb4]
 	ld d, a
 	inc d
 	ld e, $00
@@ -6223,9 +6223,9 @@ Func_e9d5:
 	call Func_ea00
 	call Func_ea46
 	inc e
-	ld a, [$ceb0]
+	ld a, [wceb0]
 	add $01
-	ld [$ceb0], a
+	ld [wceb0], a
 	jr .asm_e9e5
 .asm_e9fb
 	pop hl
@@ -6248,23 +6248,23 @@ Func_ea00:
 	add hl, de
 	ld a, TEXTLOAD_NUMBER
 	farcall SetTextLoadMode
-	ld a, [$ceb0]
+	ld a, [wceb0]
 	call Func_e72b
 	call Func_e747
 	ld a, c
 	add $01
-	ld [wHexNumber], a
+	ld [wHexNumber + 0], a
 	ld a, b
 	adc $00
-	ld [$cadd], a
+	ld [wHexNumber + 1], a
 	call ConvertToDecimalRepresentation
 	farcall SetTextArg
 	farcall LoadText
-	ld a, [$caba]
+	ld a, [wTextBuffer + $1]
 	ld [hli], a
-	ld a, [$cabb]
+	ld a, [wTextBuffer + $2]
 	ld [hli], a
-	ld a, [$cabc]
+	ld a, [wTextBuffer + $3]
 	ld [hli], a
 	pop hl
 	pop de
@@ -6284,7 +6284,7 @@ Func_ea46:
 	rl d
 	hlbgcoord 6, 2
 	add hl, de
-	ld a, [$ceb0]
+	ld a, [wceb0]
 	call Func_e72b
 	call Func_e747
 	call Func_1508
@@ -6320,13 +6320,13 @@ Func_ea46:
 Func_ea92:
 	push af
 	ld a, $00
-	ld [$ceb1], a
+	ld [wceb1], a
 	ld a, $00
-	ld [$ceb2], a
+	ld [wceb2], a
 	ld a, $00
-	ld [$ceb3], a
+	ld [wceb3], a
 	ld a, $04
-	ld [$ceb4], a
+	ld [wceb4], a
 	call Func_eaac
 	pop af
 	ret
@@ -6335,21 +6335,21 @@ Func_eaac:
 	push af
 	call Func_e7cd
 	dec a
-	ld [$ceb4], a
+	ld [wceb4], a
 	pop af
 	ret
 
 Func_eab6:
 	push af
 	push bc
-	ld a, [$ceb1]
+	ld a, [wceb1]
 	cp $00
 	jr nz, .asm_eadc
 	call Func_2ae4
 	ld a, $01
-	ld [$ceb1], a
+	ld [wceb1], a
 	ld a, $00
-	ld [$ceb3], a
+	ld [wceb3], a
 	ld a, VBLANK_04
 	call SetPendingVBlankMode
 	call Func_eb4d
@@ -6367,7 +6367,7 @@ Func_eae2:
 	push af
 	call Func_2ad9
 	ld a, $00
-	ld [$ceb1], a
+	ld [wceb1], a
 	pop af
 	ret
 
@@ -6375,29 +6375,29 @@ Func_eaed:
 	push bc
 	push de
 	ld e, $01
-	ld a, [$ceb1]
+	ld a, [wceb1]
 	cp $00
 	jr nz, .asm_eb08
-	ld a, [$ceb4]
+	ld a, [wceb4]
 	ld b, a
-	ld a, [$ceb2]
+	ld a, [wceb2]
 	cp b
 	jr z, .asm_eb05
 	inc a
 	ld e, $00
 .asm_eb05
-	ld [$ceb2], a
+	ld [wceb2], a
 .asm_eb08
-	ld a, [$ceb1]
+	ld a, [wceb1]
 	cp $01
 	jr nz, .asm_eb1c
-	ld a, [$ceb3]
+	ld a, [wceb3]
 	cp $00
 	jr nz, .asm_eb19
 	inc a
 	ld e, $00
 .asm_eb19
-	ld [$ceb3], a
+	ld [wceb3], a
 .asm_eb1c
 	ld a, e
 	pop de
@@ -6407,27 +6407,27 @@ Func_eaed:
 Func_eb20:
 	push de
 	ld e, $01
-	ld a, [$ceb1]
+	ld a, [wceb1]
 	cp $00
 	jr nz, .asm_eb37
-	ld a, [$ceb2]
+	ld a, [wceb2]
 	cp $00
 	jr z, .asm_eb34
 	dec a
 	ld e, $00
 .asm_eb34
-	ld [$ceb2], a
+	ld [wceb2], a
 .asm_eb37
-	ld a, [$ceb1]
+	ld a, [wceb1]
 	cp $01
 	jr nz, .asm_eb4b
-	ld a, [$ceb3]
+	ld a, [wceb3]
 	cp $01
 	jr nz, .asm_eb48
 	dec a
 	ld e, $00
 .asm_eb48
-	ld [$ceb3], a
+	ld [wceb3], a
 .asm_eb4b
 	pop de
 	ret
@@ -6437,7 +6437,7 @@ Func_eb4d:
 	push bc
 	push de
 	push hl
-	ld a, [$ceb1]
+	ld a, [wceb1]
 	cp $00
 	jr nz, .asm_eb78
 	ld c, $00
@@ -6449,12 +6449,12 @@ Func_eb4d:
 	ld d, $10
 	call Func_123c
 	ld bc, $2
-	ld a, [$ceb2]
+	ld a, [wceb2]
 	call Func_ebbb
 	ld d, $10
 	call Func_123c
 .asm_eb78
-	ld a, [$ceb1]
+	ld a, [wceb1]
 	cp $01
 	jr nz, .asm_ebb6
 	ld c, $00
@@ -6462,7 +6462,7 @@ Func_eb4d:
 	ld d, $10
 	call Func_123c
 	ld bc, $1
-	ld a, [$ceb3]
+	ld a, [wceb3]
 	cp $02
 	jr z, .asm_eb9e
 	add $05
@@ -6477,7 +6477,7 @@ Func_eb4d:
 	call Func_123c
 .asm_eba8
 	ld bc, $102
-	ld a, [$ceb2]
+	ld a, [wceb2]
 	call Func_ebbb
 	ld d, $10
 	call Func_123c
@@ -6570,7 +6570,7 @@ Func_ec21:
 
 Func_ec2e:
 	call Func_eab6
-	ld a, [$ceb4]
+	ld a, [wceb4]
 	cp $ff
 	jr z, .asm_ec3b
 	xor a
@@ -6586,7 +6586,7 @@ Func_ec3e:
 	ld a, VBLANK_04
 	call SetPendingVBlankMode
 	ld b, $00
-	ld a, [$ceb1]
+	ld a, [wceb1]
 	ld c, a
 	ld hl, $6c5f
 	add hl, bc
@@ -6632,7 +6632,7 @@ Func_ec7b:
 
 Func_ec95:
 	push af
-	ld a, [$ceb4]
+	ld a, [wceb4]
 	cp $ff
 	jr z, .asm_eca0
 	call Func_eca2
@@ -6646,7 +6646,7 @@ Func_eca2:
 	push de
 	push hl
 	call Func_edfe
-	ld a, [$ceb4]
+	ld a, [wceb4]
 	ld d, a
 	inc d
 	bcbgcoord 0, 2
@@ -6789,18 +6789,18 @@ Func_ed75:
 	call Func_e747
 	ld a, c
 	add $01
-	ld [wHexNumber], a
+	ld [wHexNumber + 0], a
 	ld a, b
 	adc $00
-	ld [$cadd], a
+	ld [wHexNumber + 1], a
 	call ConvertToDecimalRepresentation
 	farcall SetTextArg
 	farcall LoadText
-	ld a, [$caba]
+	ld a, [wTextBuffer + $1]
 	call AddByteToVBlankStruct
-	ld a, [$cabb]
+	ld a, [wTextBuffer + $2]
 	call AddByteToVBlankStruct
-	ld a, [$cabc]
+	ld a, [wTextBuffer + $3]
 	call AddByteToVBlankStruct
 	ld a, $80
 	call AddByteToVBlankStruct
@@ -6899,7 +6899,7 @@ Func_ee6a:
 	push hl
 	call Func_207c
 	call Func_dda8
-	ld hl, $cea5
+	ld hl, wcea5
 	ld c, $0a
 .asm_ee78
 	ld a, [hli]
@@ -6925,7 +6925,7 @@ Func_ee83:
 Func_ee93:
 	push af
 	push bc
-	ld a, [$cd60]
+	ld a, [wcd60]
 	ld b, a
 	ld c, CARD_LOCATION_PLAYER_HAND
 	call SetTargetCard
@@ -6936,7 +6936,7 @@ Func_ee93:
 	call SetTargetCard
 	call Func_21d9
 	call OverwriteTargetCard
-	ld a, [$cd60]
+	ld a, [wcd60]
 	ld b, a
 	ld c, CARD_LOCATION_PLAYER_HAND
 	call SetTargetCard
@@ -6983,7 +6983,7 @@ Func_eeee:
 	call Func_21d9
 	call Func_da4a
 	call Func_1caa
-	ld a, [$cd60]
+	ld a, [wcd60]
 	ld b, a
 	ld c, CARD_LOCATION_PLAYER_HAND
 	call SetTargetCard
@@ -7265,7 +7265,7 @@ Func_f0cf:
 Func_f0e6:
 	push af
 	push bc
-	ld a, [$cd60]
+	ld a, [wcd60]
 	ld b, a
 	ld c, CARD_LOCATION_PLAYER_HAND
 	call SetTargetCard
