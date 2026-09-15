@@ -4,16 +4,16 @@
 	farfunc LoadFontToVTiles2 ; $03
 	farfunc LoadDigitTiles ; $05
 	farfunc Func_883d ; $07
-	farfunc $484a ; $09
+	farfunc Func_884a ; $09
 	farfunc LoadCharacterOAMGfx ; $0b
 	farfunc Func_8bfe ; $0d
-	farfunc $4074 ; $0f
+	farfunc LoadCharTile ; $0f
 	farfunc LoadCharTileToVBlankStruct ; $11
 	farfunc Func_b52c ; $13
 	farfunc Func_b547 ; $15
 	farfunc Func_b562 ; $17
 	farfunc ConvertNPCDuelistToCharacter ; $19
-	farfunc $7711 ; $1b
+	farfunc Func_b711 ; $1b
 	farfunc Func_b7ee ; $1d
 	farfunc Func_b807 ; $1f
 	farfunc Func_b823 ; $21
@@ -25,11 +25,11 @@
 	farfunc Func_b894 ; $2d
 	farfunc Func_b62d ; $2f
 	farfunc Func_b679 ; $31
-	farfunc $789f ; $33
+	farfunc Func_b89f ; $33
 	farfunc Func_b8b2 ; $35
 	farfunc Func_b8cb ; $37
 	farfunc Func_b8e4 ; $39
-	farfunc $78fd ; $3b
+	farfunc Func_b8fd ; $3b
 	farfunc Func_b916 ; $3d
 
 LoadFontToVTiles2:
@@ -90,7 +90,7 @@ LoadCharTile:
 	add hl, hl
 	add hl, hl
 	add hl, hl ; *8
-	ld de, Gfx_80d9
+	ld de, FontGfx
 	add hl, de
 	ld d, h
 	ld e, l
@@ -114,7 +114,7 @@ LoadCharTile:
 	add hl, hl
 	add hl, hl
 	add hl, hl
-	ld de, $44c1
+	ld de, FontGfx + $7d * TILE_1BPP_SIZE
 	add hl, de
 	ld d, h
 	ld e, l
@@ -146,7 +146,7 @@ LoadCharTileToVBlankStruct:
 	add hl, hl
 	add hl, hl
 	add hl, hl ; *8
-	ld de, Gfx_80d9
+	ld de, FontGfx
 	add hl, de
 	ld d, h
 	ld e, l
@@ -166,9 +166,7 @@ LoadCharTileToVBlankStruct:
 	pop af
 	ret
 
-Gfx_80d9: INCBIN "gfx/gfx_80d9.1bpp"
-
-SECTION "Bank 2@44e1", ROMX[$44e1], BANK[$2]
+FontGfx: INCBIN "gfx/font.1bpp"
 
 Func_84e1:
 	push af
@@ -267,7 +265,7 @@ Func_8565:
 	ld a, [wTextLine]
 	ld c, a
 	sla c
-	ld hl, $458d
+	ld hl, .VRAMAddresses
 	add hl, bc
 	ld a, [hli]
 	ld d, [hl]
@@ -288,9 +286,11 @@ Func_8565:
 	pop bc
 	pop af
 	ret
-; 0x858d
 
-SECTION "Bank 2@4593", ROMX[$4593], BANK[$2]
+.VRAMAddresses:
+	dw vTiles1 tile $4a
+	dw vTiles1 tile $5c
+	dw vTiles1 tile $6e
 
 Func_8593:
 	push af
@@ -395,7 +395,7 @@ Func_8631:
 	ld b, $00
 	ld a, [wTextLine]
 	ld c, a
-	ld hl, $4652
+	ld hl, .data
 	add hl, bc
 	ld a, [wcd48 + 1]
 	add [hl]
@@ -410,9 +410,9 @@ Func_8631:
 	pop bc
 	pop af
 	ret
-; 0x8652
 
-SECTION "Bank 2@4655", ROMX[$4655], BANK[$2]
+.data
+	db $ca, $dc, $ee
 
 Func_8655:
 	push af
@@ -565,7 +565,7 @@ Func_8722:
 	ld b, $00
 	sub $b0
 	ld c, a
-	ld hl, $474d
+	ld hl, .data
 	add hl, bc
 	ld a, [hl]
 	ld [wcd45], a
@@ -574,9 +574,9 @@ Func_8722:
 	pop bc
 	pop af
 	ret
-; 0x874d
 
-SECTION "Bank 2@4752", ROMX[$4752], BANK[$2]
+.data
+	db $01, $14, $10, $03, $01
 
 Func_8752:
 	push af
@@ -593,7 +593,7 @@ Func_8752:
 	rlca
 	jr nc, .asm_8761
 	ld b, $00
-	ld hl, $4780
+	ld hl, .data
 	add hl, bc
 	ld d, [hl]
 .asm_876c
@@ -610,9 +610,9 @@ Func_8752:
 	pop bc
 	pop af
 	ret
-; 0x8780
 
-SECTION "Bank 2@4788", ROMX[$4788], BANK[$2]
+.data
+	db $02, $02, $00, $00, $00, $00, $00, $00
 
 Func_8788:
 	push af
@@ -657,7 +657,7 @@ Func_87b1:
 	ld b, $00
 	ld a, [wcd52]
 	ld c, a
-	ld hl, $47d4
+	ld hl, .data
 	add hl, bc
 	ld a, [hl]
 	ld [wcd52], a
@@ -666,9 +666,9 @@ Func_87b1:
 	pop bc
 	pop af
 	ret
-; 0x87d4
 
-SECTION "Bank 2@47d9", ROMX[$47d9], BANK[$2]
+.data
+	db $00, $02, $01, $04, $03
 
 Func_87d9:
 	call Func_8631
@@ -686,7 +686,7 @@ Func_87e3:
 	dec a
 	rlca
 	ld c, a
-	ld hl, $4805
+	ld hl, .Tiles
 	add hl, bc
 	ld a, [hli]
 	ld h, [hl]
@@ -701,9 +701,14 @@ Func_87e3:
 	pop bc
 	pop af
 	ret
-; 0x8805
 
-SECTION "Bank 02@483d", ROMX[$483d], BANK[$02]
+.Tiles:
+	dw Gfx_880d tile $1
+	dw Gfx_880d tile $0
+	dw Gfx_880d tile $2
+	dw Gfx_880d tile $0
+
+Gfx_880d: INCBIN "gfx/gfx_880d.2bpp"
 
 Func_883d:
 	push af
@@ -768,7 +773,7 @@ Func_889f:
 	ld b, $00
 	ld a, [wcd4c]
 	ld c, a
-	ld hl, $48cd
+	ld hl, .data
 	add hl, bc
 	ld a, [hl]
 	ld [wcd4d], a
@@ -786,9 +791,12 @@ Func_889f:
 	pop bc
 	pop af
 	ret
-; 0x88cd
 
-SECTION "Bank 2@4909", ROMX[$4909], BANK[$2]
+.data
+	db $64, $04, $04, $a0, $04, $04, $04, $04, $04, $78, $04, $04, $8c, $04, $04, $64
+	db $04, $04, $64, $04, $04, $78, $04, $04, $8c, $04, $04, $82, $04, $04, $00, $01
+	db $02, $00, $01, $02, $00, $01, $02, $00, $01, $02, $00, $01, $02, $00, $01, $02
+	db $00, $01, $02, $00, $01, $02, $00, $01, $02, $00, $01, $02
 
 Func_8909:
 	push af
@@ -848,7 +856,7 @@ Func_8945:
 	ld b, $00
 	ld a, [wcd4e]
 	ld c, a
-	ld hl, $4989
+	ld hl, .data
 	add hl, bc
 	ld a, [hl]
 	ld [wcd4f], a
@@ -866,9 +874,11 @@ Func_8945:
 	pop bc
 	pop af
 	ret
-; 0x8989
 
-SECTION "Bank 2@49ad", ROMX[$49ad], BANK[$2]
+.data
+	db $06, $06, $06, $06, $06, $06, $06, $06, $06, $06, $06, $06, $06, $06, $06, $06
+	db $06, $06, $00, $01, $02, $01, $02, $01, $00, $02, $00, $01, $02, $01, $02, $00
+	db $02, $01, $00, $02
 
 Func_89ad:
 	push af
@@ -914,9 +924,32 @@ Func_89e4:
 	call Func_8c1e
 	pop af
 	ret
-; 0x89f6
 
-SECTION "Bank 2@4a1d", ROMX[$4a1d], BANK[$2]
+; unreferenced
+Func_89f6:
+	push af
+	ld a, $00
+	ld [wcd55], a
+	ld a, $00
+	ld [wcd56], a
+	ld a, $00
+	ld [wcd57], a
+	ld a, $00
+	ld [wcd58], a
+	ld a, $00
+	ld [wcd59], a
+	pop af
+	ret
+
+; unreferenced
+Func_8a12:
+	push af
+	ld a, b
+	ld [wcd55], a
+	ld a, c
+	ld [wcd56], a
+	pop af
+	ret
 
 Func_8a1d:
 	push af
@@ -1035,11 +1068,11 @@ Func_8ba7:
 	ld b, $00
 	ld a, [wcd59]
 	ld c, a
-	ld hl, $4bca
+	ld hl, .data
 	add hl, bc
 	push hl
 	sla c
-	ld hl, $4bd0
+	ld hl, .ptrs
 	add hl, bc
 	ld a, [hli]
 	ld b, [hl]
@@ -1054,9 +1087,12 @@ Func_8ba7:
 	pop bc
 	pop af
 	ret
-; 0x8bca
 
-SECTION "Bank 2@4bd6", ROMX[$4bd6], BANK[$2]
+.data
+	db $00, $0c, $18, $24, $28, $2c
+
+.ptrs
+	dw wcd5a, wcd5a, wcd5b
 
 Func_8bd6:
 	ld [wcd59], a
@@ -1104,9 +1140,14 @@ Func_8bfe:
 	pop bc
 	pop af
 	ret
-; 0x8c17
 
-SECTION "Bank 2@4c1e", ROMX[$4c1e], BANK[$2]
+; unreferenced
+Func_8c17:
+	push af
+	ld a, a
+	ld [wcd58], a
+	pop af
+	ret
 
 Func_8c1e:
 	call Func_8bd6
@@ -1460,9 +1501,18 @@ Func_b6c5:
 	pop bc
 	pop af
 	ret
-; 0xb711
 
-SECTION "Bank 2@7724", ROMX[$7724], BANK[$2]
+; unreferenced
+Func_b711:
+	push af
+	ld a, TEA
+	ld [wNPCCharacter], a
+	lddlg a, Text_3c15d
+	ld [wDialogueID], a
+	farcall Func_18008
+	call Func_884a
+	pop af
+	ret
 
 ; converts wNPCDuelist DUELIST_* constant
 ; to corresponding character constant
@@ -1753,9 +1803,18 @@ Func_b894:
 	ld [wcf15], a
 	pop af
 	ret
-; 0xb89f
 
-SECTION "Bank 2@78b2", ROMX[$78b2], BANK[$2]
+; unreferenced
+Func_b89f:
+	push af
+	ld a, YUGI
+	ld [wNPCCharacter], a
+	lddlg a, Text_3d23a
+	ld [wDialogueID], a
+	farcall Func_18008
+	call Func_884a
+	pop af
+	ret
 
 Func_b8b2:
 	push af
@@ -1795,9 +1854,20 @@ Func_b8e4:
 	call Func_884a
 	pop af
 	ret
-; 0xb8fd
 
-SECTION "Bank 2@7916", ROMX[$7916], BANK[$2]
+; unreferenced
+Func_b8fd:
+	push af
+	call StopMusic
+	ld a, YAMI_YUGI
+	ld [wNPCCharacter], a
+	lddlg a, Text_3d12f
+	ld [wDialogueID], a
+	farcall Func_18008
+	call Func_2a3f
+	call Func_884a
+	pop af
+	ret
 
 Func_b916:
 	push af
@@ -1811,4 +1881,3 @@ Func_b916:
 	call Func_884a
 	pop af
 	ret
-; 0xb92f

@@ -2920,9 +2920,8 @@ TestJobFlag::
 	pop de
 	pop bc
 	reti
-; 0x177a
 
-SECTION "Home@177b", ROM0[$177b]
+	ret ; stray ret
 
 ResetJobFlag::
 	push af
@@ -3889,7 +3888,7 @@ Func_1bef:
 	push de
 	push hl
 	ld hl, wcd1b
-	ld de, $1c06
+	ld de, .data
 	ld c, $04
 .asm_1bfb
 	ld a, [de]
@@ -3902,9 +3901,9 @@ Func_1bef:
 	pop bc
 	pop af
 	ret
-; 0x1c06
 
-SECTION "Bank 0@1c0a", ROM0[$1c0a]
+.data
+	db $30, $38, $00, $00
 
 Func_1c0a::
 	push af
@@ -4210,14 +4209,14 @@ Func_1d67::
 	call Func_1daf
 	cp $00
 	jr nz, .asm_1d92
-	ld hl, $1da7
+	ld hl, .Tiles_1
 	jr .asm_1d95
 .asm_1d92
-	ld hl, $1dab
+	ld hl, .Tiles_2
 .asm_1d95
 	jr .asm_1d9a
 .asm_1d97
-	ld hl, $1dab
+	ld hl, .Tiles_2
 .asm_1d9a
 	call Func_21f3
 	ld b, $00
@@ -4230,9 +4229,11 @@ Func_1d67::
 	pop de
 	pop bc
 	ret
-; 0x1da7
 
-SECTION "Bank 0@1daf", ROM0[$1daf]
+.Tiles_1:
+	db $d0, $dd, $dd, $e1
+.Tiles_2:
+	db $d0, $e5, $e5, $e9
 
 Func_1daf:
 	push bc
@@ -4886,7 +4887,7 @@ Func_213a::
 	ld c, a
 	swap c
 	ld b, $00
-	ld hl, $2158
+	ld hl, .data
 	add hl, bc
 	ld a, [wcdf4]
 	and $cf
@@ -4896,9 +4897,9 @@ Func_213a::
 	pop bc
 	pop af
 	ret
-; 0x2158
 
-SECTION "Bank 0@215c", ROM0[$215c]
+.data
+	db $10, $20, $30, $30
 
 Func_215c::
 	push af
@@ -4909,7 +4910,7 @@ Func_215c::
 	ld c, a
 	swap c
 	ld b, $00
-	ld hl, $217a
+	ld hl, .data
 	add hl, bc
 	ld a, [wcdf4]
 	and $cf
@@ -4919,9 +4920,9 @@ Func_215c::
 	pop bc
 	pop af
 	ret
-; 0x217a
 
-SECTION "Bank 0@217e", ROM0[$217e]
+.data
+	db $00, $00, $10, $20
 
 Func_217e::
 	push af
@@ -6894,7 +6895,7 @@ Func_2c7d::
 	ld a, [wcfc3]
 	ld c, a
 	sla c
-	ld hl, $2cbd
+	ld hl, .data
 	add hl, bc
 	ld a, [hli]
 	ld h, [hl]
@@ -6929,9 +6930,11 @@ Func_2c7d::
 	pop hl
 	pop de
 	ret
-; 0x2cbd
 
-SECTION "Bank 0@2cc3", ROM0[$2cc3]
+.data
+	dw wcfd6
+	dw wcfd9
+	dw wcfdc
 
 Func_2cc3:
 	push af
@@ -7033,4 +7036,3 @@ VBlank16:
 	pop hl
 	pop af
 	reti
-; 0x2d87

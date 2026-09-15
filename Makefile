@@ -107,6 +107,12 @@ $(rom): $(ygodm_obj) src/layout.link
 
 ### Special sprite rules
 
+src/gfx/font.1bpp: tools/gfx += --remove-whitespace
+
+src/gfx/gfx_630b.2bpp: tools/gfx += --interleave --png=$<
+src/gfx/gfx_6675.2bpp: tools/gfx += --interleave --png=$<
+src/gfx/gfx_68f4.2bpp: tools/gfx += --interleave --png=$<
+src/gfx/gfx_6ce6.2bpp: tools/gfx += --interleave --png=$<
 src/gfx/characters/%.2bpp: tools/gfx += --interleave --png=$<
 
 ### Catch-all graphics rules

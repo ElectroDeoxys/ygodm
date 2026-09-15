@@ -32,7 +32,7 @@ Func_f4002::
 	ld b, $00
 	call FillMemFromHLToDE
 
-	ld hl, FontGfx
+	ld hl, Ffx_f40e8
 	ld de, vTiles0
 	ld bc, $80 tiles
 	call Copy1bpp
@@ -139,7 +139,7 @@ Func_f40c8:
 	ldh [rIE], a
 	ret
 
-FontGfx: INCBIN "gfx/gfx_f40e8.1bpp"
+Ffx_f40e8: INCBIN "gfx/gfx_f40e8.1bpp"
 
 SECTION "Bank 3d@6e5d", ROMX[$6e5d], BANK[$3d]
 

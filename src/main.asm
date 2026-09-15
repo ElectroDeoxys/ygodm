@@ -1,8 +1,10 @@
 SECTION "Bank 01", ROMX
 INCLUDE "engine/bank01.asm"
+INCBIN "data/bank_fill/bank01.bin"
 
 SECTION "Bank 02", ROMX
 INCLUDE "engine/bank02.asm"
+INCBIN "data/bank_fill/bank02.bin"
 
 SECTION "Bank 03", ROMX
 INCLUDE "engine/bank03.asm"

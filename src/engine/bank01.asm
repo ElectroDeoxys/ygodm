@@ -5,13 +5,13 @@
 	farfunc Func_551f ; $05
 	farfunc InitTrunk ; $07
 	farfunc GetTrunkTotalCardCount ; $09
-	farfunc $5b92 ; $0b
+	farfunc Func_5b92 ; $0b
 	farfunc Func_56e0 ; $0d
 	farfunc Func_5c86 ; $0f
 	farfunc Func_5af2 ; $11
 	farfunc GetCardCountInTrunk ; $13
 	farfunc Func_5bb8 ; $15
-	farfunc $5bd1 ; $17
+	farfunc Func_5bd1 ; $17
 	farfunc Func_5c10 ; $19
 	farfunc SetTextArg ; $1b
 	farfunc SetTextLoadMode ; $1d
@@ -58,7 +58,7 @@ Func_4068:
 	push hl
 	call Func_101d
 	call DisableLCD
-	ld hl, $40a6
+	ld hl, ScreenConfig_40a6
 	call SetScreenConfig
 	farcall Func_cd9a
 	farcall Func_2801e
@@ -78,9 +78,18 @@ Func_4068:
 	pop hl
 	pop af
 	ret
-; 0x40a6
 
-SECTION "Bank 1@40b0", ROMX[$40b0], BANK[$1]
+ScreenConfig_40a6:
+	db LCDC_BG_ON | LCDC_OBJ_OFF | LCDC_OBJ_16 | LCDC_BG_9800 | LCDC_BLOCK21 | LCDC_WIN_ON | LCDC_WIN_9C00 ; LCDC
+	db STAT_LYC ; STAT
+	db   0 ; SCY
+	db   0 ; SCX
+	db  32 ; LYC
+	dbpal SHADE_WHITE, SHADE_WHITE, SHADE_WHITE, SHADE_WHITE ; BGP
+	dbpal SHADE_WHITE, SHADE_WHITE, SHADE_WHITE, SHADE_WHITE ; OBP0
+	dbpal SHADE_WHITE, SHADE_WHITE, SHADE_WHITE, SHADE_WHITE ; OBP1
+	db 143 ; WY
+	db   0 + WX_OFS ; WX
 
 DrawDuelistHands:
 	push af
@@ -883,7 +892,7 @@ Func_551f:
 	push hl
 	call Func_101d
 	call DisableLCD
-	ld hl, $554b
+	ld hl, ScreenConfig_554b
 	call SetScreenConfig
 	farcall LoadFontToVTiles2
 	farcall Func_28392
@@ -897,9 +906,18 @@ Func_551f:
 	pop hl
 	pop af
 	ret
-; 0x554b
 
-SECTION "Bank 1@5555", ROMX[$5555], BANK[$1]
+ScreenConfig_554b:
+	db LCDC_BG_ON | LCDC_OBJ_ON | LCDC_OBJ_8 | LCDC_BG_9800 | LCDC_BLOCK21 | LCDC_WIN_OFF | LCDC_WIN_9800 ; LCDC
+	db STAT_LYC ; STAT
+	db   0 ; SCY
+	db   0 ; SCX
+	db  32 ; LYC
+	dbpal SHADE_WHITE, SHADE_WHITE, SHADE_WHITE, SHADE_WHITE ; BGP
+	dbpal SHADE_WHITE, SHADE_WHITE, SHADE_WHITE, SHADE_WHITE ; OBP0
+	dbpal SHADE_WHITE, SHADE_WHITE, SHADE_WHITE, SHADE_WHITE ; OBP1
+	db 144 ; WY
+	db 159 + WX_OFS ; WX
 
 Func_5555:
 	call ClearOAM
@@ -913,9 +931,9 @@ Func_5562:
 	push bc
 	push de
 	push hl
-	ld de, $557a
+	ld de, Gfx_557a
 	ld hl, vTiles0
-	ld c, $10
+	ld c, 2 * TILE_1BPP_SIZE
 .asm_556e
 	ld a, [de]
 	ld [hli], a
@@ -928,9 +946,8 @@ Func_5562:
 	pop bc
 	pop af
 	ret
-; 0x557a
 
-SECTION "Bank 1@558a", ROMX[$558a], BANK[$1]
+Gfx_557a: INCBIN "gfx/gfx_557a.1bpp"
 
 Func_558a:
 	push af
@@ -1377,15 +1394,15 @@ Func_588d:
 	push hl
 	ld b, $00
 	ld c, a
-	ld hl, $589a
+	ld hl, .data
 	add hl, bc
 	ld a, [hl]
 	pop hl
 	pop bc
 	ret
-; 0x589a
 
-SECTION "Bank 1@58a3", ROMX[$58a3], BANK[$1]
+.data
+	db $28, $38, $48, $58, $68, $78, $88, $98, $a8
 
 Func_58a3:
 	push af
@@ -1881,9 +1898,23 @@ Func_5bb8:
 	pop bc
 	pop af
 	ret
-; 0x5bd1
 
-SECTION "Bank 1@5bea", ROMX[$5bea], BANK[$1]
+; unreferenced
+Func_5bd1:
+	push af
+	push bc
+	farcall Func_c664
+	ld a, c
+	cp $00
+	jr z, .asm_5be7
+	farcall GetPlayerDeckCard
+	call Func_5af2
+	call GiveCard
+	farcall RemoveCardFromPlayerDeck
+.asm_5be7
+	pop bc
+	pop af
+	ret
 
 Func_5bea:
 	push bc
@@ -1998,9 +2029,8 @@ GetTrunkTotalCardCount:
 	pop de
 	pop af
 	ret
-; 0x5c85
 
-SECTION "Bank 1@5c86", ROMX[$5c86], BANK[$1]
+	ret ; stray ret
 
 Func_5c86:
 	push af
@@ -2048,7 +2078,7 @@ Func_5cb3:
 	rlca
 	jr nc, .asm_5cc1
 	ld b, $00
-	ld hl, $5ce5
+	ld hl, .data
 	add hl, bc
 	ld d, [hl]
 .asm_5ccc
@@ -2061,7 +2091,7 @@ Func_5cb3:
 	rlca
 	jr nc, .asm_5cd5
 	ld b, $00
-	ld hl, $5ce5
+	ld hl, .data
 	add hl, bc
 	ld d, [hl]
 .asm_5ce0
@@ -2070,9 +2100,9 @@ Func_5cb3:
 	pop de
 	pop bc
 	ret
-; 0x5ce5
 
-SECTION "Bank 1@5ced", ROMX[$5ced], BANK[$1]
+.data
+	db $02, $04, $00, $00, $0c, $0a, $06, $08
 
 Func_5ced:
 	ld a, VBLANK_02
@@ -2100,7 +2130,7 @@ Func_5d0d:
 	ld b, $00
 	ld a, [wcad4]
 	ld c, a
-	ld hl, $5d2e
+	ld hl, .data
 	add hl, bc
 	ld a, [hl]
 	call Func_573d
@@ -2110,9 +2140,9 @@ Func_5d0d:
 	pop hl
 	pop bc
 	ret
-; 0x5d2e
 
-SECTION "Bank 1@5d30", ROMX[$5d30], BANK[$1]
+.data
+	db $01, $00
 
 Func_5d30:
 	ld a, VBLANK_04
@@ -2733,7 +2763,7 @@ Func_6101:
 	push hl
 	call Func_101d
 	call DisableLCD
-	ld hl, $612d
+	ld hl, ScreenConfig_612d
 	call SetScreenConfig
 	farcall LoadFontToVTiles2
 	farcall Func_285d4
@@ -2747,9 +2777,18 @@ Func_6101:
 	pop hl
 	pop af
 	ret
-; 0x612d
 
-SECTION "Bank 1@6137", ROMX[$6137], BANK[$1]
+ScreenConfig_612d:
+	db LCDC_BG_ON | LCDC_OBJ_ON | LCDC_OBJ_8 | LCDC_BG_9800 | LCDC_BLOCK21 | LCDC_WIN_OFF | LCDC_WIN_9800 ; LCDC
+	db STAT_LYC ; STAT
+	db   0 ; SCY
+	db   0 ; SCX
+	db  32 ; LYC
+	dbpal SHADE_WHITE, SHADE_WHITE, SHADE_WHITE, SHADE_WHITE ; BGP
+	dbpal SHADE_WHITE, SHADE_WHITE, SHADE_WHITE, SHADE_WHITE ; OBP0
+	dbpal SHADE_WHITE, SHADE_WHITE, SHADE_WHITE, SHADE_WHITE ; OBP1
+	db 144 ; WY
+	db 159 + WX_OFS ; WX
 
 Func_6137:
 	call ClearOAM
@@ -2763,9 +2802,9 @@ Func_6144:
 	push bc
 	push de
 	push hl
-	ld de, $615c
+	ld de, Gfx_615c
 	ld hl, vTiles0
-	ld c, $10
+	ld c, 2 * TILE_1BPP_SIZE
 .asm_6150
 	ld a, [de]
 	ld [hli], a
@@ -2778,9 +2817,8 @@ Func_6144:
 	pop bc
 	pop af
 	ret
-; 0x615c
 
-SECTION "Bank 1@616c", ROMX[$616c], BANK[$1]
+Gfx_615c: INCBIN "gfx/gfx_557a.1bpp"
 
 Func_616c:
 	push af
@@ -2980,7 +3018,7 @@ Func_62c2:
 	push hl
 	call Func_101d
 	call DisableLCD
-	ld hl, $62e5
+	ld hl, ScreenConfig_62e5
 	call SetScreenConfig
 	farcall Func_2a813
 	call Func_62ef
@@ -2991,9 +3029,18 @@ Func_62c2:
 	pop hl
 	pop af
 	ret
-; 0x62e5
 
-SECTION "Bank 1@62ef", ROMX[$62ef], BANK[$1]
+ScreenConfig_62e5:
+	db LCDC_BG_ON | LCDC_OBJ_ON | LCDC_OBJ_16 | LCDC_BG_9800 | LCDC_BLOCK21 | LCDC_WIN_OFF | LCDC_WIN_9800 ; LCDC
+	db STAT_LYC ; STAT
+	db   0 ; SCY
+	db   0 ; SCX
+	db  32 ; LYC
+	dbpal SHADE_WHITE, SHADE_WHITE, SHADE_WHITE, SHADE_WHITE ; BGP
+	dbpal SHADE_WHITE, SHADE_WHITE, SHADE_WHITE, SHADE_WHITE ; OBP0
+	dbpal SHADE_WHITE, SHADE_WHITE, SHADE_WHITE, SHADE_WHITE ; OBP1
+	db 144 ; WY
+	db 159 + WX_OFS ; WX
 
 Func_62ef:
 	push af
@@ -3001,35 +3048,33 @@ Func_62ef:
 	push de
 	push hl
 	ld hl, vTiles0
-	ld de, $630b
-	ld b, $0c
-.asm_62fb
-	ld c, $10
-.asm_62fd
+	ld de, Gfx_630b
+	ld b, $0c ; tiles
+.loop_tiles
+	ld c, TILE_SIZE
+.loop_copy
 	ld a, [de]
 	ld [hli], a
 	inc de
 	dec c
-	jr nz, .asm_62fd
+	jr nz, .loop_copy
 	dec b
-	jr nz, .asm_62fb
+	jr nz, .loop_tiles
 	pop hl
 	pop de
 	pop bc
 	pop af
 	ret
-; 0x630b
 
-SECTION "Bank 1@63cb", ROMX[$63cb], BANK[$1]
+Gfx_630b: INCBIN "gfx/gfx_630b.2bpp"
 
 Func_63cb:
 	call Func_12fb
 	call Func_64ca
 	call CopyOAMDirect
 	ret
-; 0x63d5
 
-SECTION "Bank 1@63d6", ROMX[$63d6], BANK[$1]
+	ret ; stray ret
 
 Func_63d6:
 	push af
@@ -3077,7 +3122,7 @@ Func_6403:
 	rlca
 	jr nc, .asm_6411
 	ld b, $00
-	ld hl, $6421
+	ld hl, .data
 	add hl, bc
 	ld d, [hl]
 .asm_641c
@@ -3086,9 +3131,9 @@ Func_6403:
 	pop de
 	pop bc
 	ret
-; 0x6421
 
-SECTION "Bank 1@6429", ROMX[$6429], BANK[$1]
+.data
+	db $02, $04, $00, $00, $0c, $0a, $06, $08
 
 Func_6429:
 	ld a, VBLANK_04
@@ -3261,7 +3306,7 @@ Func_653f:
 	ld b, $00
 	ld c, a
 	sla c
-	ld hl, $6550
+	ld hl, .data
 	add hl, bc
 	ld a, [hli]
 	ld b, a
@@ -3269,16 +3314,74 @@ Func_653f:
 	pop hl
 	pop af
 	ret
-; 0x6550
 
-SECTION "Bank 01@6595", ROMX[$6595], BANK[$01]
+.data
+	db $6b, $57
+	db $4a, $25
+	db $79, $6a
+	db $1f, $1c
+	db $7d, $3c
+	db $4d, $5c
+	db $21, $53
+	db $6f, $24
+	db $2f, $34
+
+; unreferenced
+Func_6562:
+	push af
+	push bc
+	push hl
+	ld hl, $cf07
+	ld c, $09
+.asm_656a
+	ld [hli], a
+	dec c
+	jr nz, .asm_656a
+	pop hl
+	pop bc
+	pop af
+	ret
+
+; unreferenced
+Func_6572:
+	push af
+	push bc
+	push hl
+	ld b, $00
+	ld c, a
+	ld hl, $cf07
+	add hl, bc
+	ld a, [hl]
+	cp $ff
+	jr z, .asm_6582
+	inc [hl]
+.asm_6582
+	pop hl
+	pop bc
+	pop af
+	ret
+
+; unreferenced
+Func_6586:
+	push af
+	push bc
+	push hl
+	ld b, $00
+	ld c, a
+	ld hl, $cf07
+	add hl, bc
+	ld a, [hl]
+	pop hl
+	pop bc
+	pop af
+	ret
 
 Func_6595::
 	push af
 	push hl
 
 	call DisableLCD
-	ld hl, .Config
+	ld hl, ScreenConfig_65ba
 	call SetScreenConfig
 	farcall Func_2c00a
 	call EnableLCD
@@ -3297,23 +3400,23 @@ Func_6595::
 	pop af
 	ret
 
-.Config:
-	db LCDC_BG_ON ; LCDC
+ScreenConfig_65ba:
+	db LCDC_BG_ON | LCDC_OBJ_OFF | LCDC_OBJ_8 | LCDC_BG_9800 | LCDC_BLOCK21 | LCDC_WIN_OFF | LCDC_WIN_9800 ; LCDC
 	db STAT_LYC ; STAT
 	db   0 ; SCY
 	db   0 ; SCX
 	db  32 ; LYC
-	db $00 ; BGP
-	db $00 ; OBP0
-	db $00 ; OBP1
+	dbpal SHADE_WHITE, SHADE_WHITE, SHADE_WHITE, SHADE_WHITE ; BGP
+	dbpal SHADE_WHITE, SHADE_WHITE, SHADE_WHITE, SHADE_WHITE ; OBP0
+	dbpal SHADE_WHITE, SHADE_WHITE, SHADE_WHITE, SHADE_WHITE ; OBP1
 	db 143 ; WY
-	db 166 ; WX
+	db 159 + WX_OFS ; WX
 
 Func_65c4::
 	push af
 	push hl
 	call DisableLCD
-	ld hl, $65e9
+	ld hl, ScreenConfig_65e9
 	call SetScreenConfig
 	farcall Func_2c4c9
 	call EnableLCD
@@ -3331,15 +3434,24 @@ Func_65c4::
 	pop hl
 	pop af
 	ret
-; 0x65e9
 
-SECTION "Bank 01@65f3", ROMX[$65f3], BANK[$01]
+ScreenConfig_65e9:
+	db LCDC_BG_ON | LCDC_OBJ_OFF | LCDC_OBJ_8 | LCDC_BG_9800 | LCDC_BLOCK21 | LCDC_WIN_OFF | LCDC_WIN_9800 ; LCDC
+	db STAT_LYC ; STAT
+	db   0 ; SCY
+	db   0 ; SCX
+	db  32 ; LYC
+	dbpal SHADE_WHITE, SHADE_WHITE, SHADE_WHITE, SHADE_WHITE ; BGP
+	dbpal SHADE_WHITE, SHADE_WHITE, SHADE_WHITE, SHADE_WHITE ; OBP0
+	dbpal SHADE_WHITE, SHADE_WHITE, SHADE_WHITE, SHADE_WHITE ; OBP1
+	db 143 ; WY
+	db 159 + WX_OFS ; WX
 
 Func_65f3::
 	push af
 	push hl
 	call DisableLCD
-	ld hl, $6618
+	ld hl, ScreenConfig_6618
 	call SetScreenConfig
 	farcall Func_2cb88
 	call EnableLCD
@@ -3357,16 +3469,25 @@ Func_65f3::
 	pop hl
 	pop af
 	ret
-; 0x6618
 
-SECTION "Bank 1@6622", ROMX[$6622], BANK[$1]
+ScreenConfig_6618:
+	db LCDC_BG_ON | LCDC_OBJ_OFF | LCDC_OBJ_8 | LCDC_BG_9800 | LCDC_BLOCK21 | LCDC_WIN_OFF | LCDC_WIN_9800 ; LCDC
+	db STAT_LYC ; STAT
+	db   0 ; SCY
+	db   0 ; SCX
+	db  32 ; LYC
+	dbpal SHADE_WHITE, SHADE_WHITE, SHADE_WHITE, SHADE_WHITE ; BGP
+	dbpal SHADE_WHITE, SHADE_WHITE, SHADE_WHITE, SHADE_WHITE ; OBP0
+	dbpal SHADE_WHITE, SHADE_WHITE, SHADE_WHITE, SHADE_WHITE ; OBP1
+	db 143 ; WY
+	db 159 + WX_OFS ; WX
 
 Func_6622:
 	push af
 	push hl
 	call Func_101d
 	call DisableLCD
-	ld hl, $6642
+	ld hl, ScreenConfig_6642
 	call SetScreenConfig
 	farcall Func_2d717
 	call Func_664c
@@ -3376,9 +3497,18 @@ Func_6622:
 	pop hl
 	pop af
 	ret
-; 0x6642
 
-SECTION "Bank 1@664c", ROMX[$664c], BANK[$1]
+ScreenConfig_6642:
+	db LCDC_BG_ON | LCDC_OBJ_ON | LCDC_OBJ_16 | LCDC_BG_9800 | LCDC_BLOCK21 | LCDC_WIN_OFF | LCDC_WIN_9800 ; LCDC
+	db STAT_LYC ; STAT
+	db   0 ; SCY
+	db   0 ; SCX
+	db  32 ; LYC
+	dbpal SHADE_WHITE, SHADE_WHITE, SHADE_WHITE, SHADE_WHITE ; BGP
+	dbpal SHADE_WHITE, SHADE_WHITE, SHADE_WHITE, SHADE_WHITE ; OBP0
+	dbpal SHADE_WHITE, SHADE_WHITE, SHADE_WHITE, SHADE_WHITE ; OBP1
+	db 144 ; WY
+	db 159 + WX_OFS ; WX
 
 Func_664c:
 	call ClearOAM
@@ -3392,11 +3522,11 @@ Func_6659:
 	push bc
 	push de
 	push hl
-	ld de, $6675
+	ld de, Gfx_6675
 	ld hl, vTiles0
-	ld b, $0c
+	ld b, $0c ; tiles
 .asm_6665
-	ld c, $10
+	ld c, TILE_SIZE
 .asm_6667
 	ld a, [de]
 	ld [hli], a
@@ -3410,9 +3540,10 @@ Func_6659:
 	pop bc
 	pop af
 	ret
-; 0x6675
 
-SECTION "Bank 01@6736", ROMX[$6736], BANK[$01]
+Gfx_6675: INCBIN "gfx/gfx_6675.2bpp"
+
+	ret ; stray ret
 
 Func_6736:
 	push af
@@ -3633,7 +3764,7 @@ Func_6885:
 	ld b, $00
 	ld c, a
 	sla c
-	ld hl, $6896
+	ld hl, .data
 	add hl, bc
 	ld a, [hli]
 	ld b, a
@@ -3641,16 +3772,19 @@ Func_6885:
 	pop hl
 	pop af
 	ret
-; 0x6896
 
-SECTION "Bank 1@689e", ROMX[$689e], BANK[$1]
+.data
+	db $30, $60
+	db $70, $10
+	db $80, $50
+	db $20, $20
 
 Func_689e:
 	push af
 	push hl
 	call Func_101d
 	call DisableLCD
-	ld hl, $68c1
+	ld hl, ScreenConfig_68c1
 	call SetScreenConfig
 	farcall LoadFontToVTiles2
 	farcall Func_3000e
@@ -3661,9 +3795,18 @@ Func_689e:
 	pop hl
 	pop af
 	ret
-; 0x68c1
 
-SECTION "Bank 1@68cb", ROMX[$68cb], BANK[$1]
+ScreenConfig_68c1:
+	db LCDC_BG_ON | LCDC_OBJ_ON | LCDC_OBJ_16 | LCDC_BG_9800 | LCDC_BLOCK21 | LCDC_WIN_OFF | LCDC_WIN_9800 ; LCDC
+	db STAT_LYC ; STAT
+	db   0 ; SCY
+	db   0 ; SCX
+	db  32 ; LYC
+	dbpal SHADE_WHITE, SHADE_WHITE, SHADE_WHITE, SHADE_WHITE ; BGP
+	dbpal SHADE_WHITE, SHADE_WHITE, SHADE_WHITE, SHADE_WHITE ; OBP0
+	dbpal SHADE_WHITE, SHADE_WHITE, SHADE_WHITE, SHADE_WHITE ; OBP1
+	db 144 ; WY
+	db 159 + WX_OFS ; WX
 
 Func_68cb:
 	call ClearOAM
@@ -3677,11 +3820,11 @@ Func_68d8:
 	push bc
 	push de
 	push hl
-	ld de, $68f4
+	ld de, Gfx_68f4
 	ld hl, vTiles0
-	ld b, $0c
+	ld b, $0c ; tiles
 .asm_68e4
-	ld c, $10
+	ld c, TILE_SIZE
 .asm_68e6
 	ld a, [de]
 	ld [hli], a
@@ -3695,9 +3838,10 @@ Func_68d8:
 	pop bc
 	pop af
 	ret
-; 0x68f4
 
-SECTION "Bank 1@69b5", ROMX[$69b5], BANK[$1]
+Gfx_68f4: INCBIN "gfx/gfx_68f4.2bpp"
+
+	ret ; stray ret
 
 Func_69b5:
 	push af
@@ -3743,7 +3887,7 @@ Func_69de:
 	rlca
 	jr nc, .asm_69ec
 	ld b, $00
-	ld hl, $69fc
+	ld hl, .data
 	add hl, bc
 	ld d, [hl]
 .asm_69f7
@@ -3752,9 +3896,9 @@ Func_69de:
 	pop de
 	pop bc
 	ret
-; 0x69fc
 
-SECTION "Bank 1@6a04", ROMX[$6a04], BANK[$1]
+.data
+	db $02, $04, $00, $00, $06, $08, $00, $00
 
 Func_6a04:
 	ld a, VBLANK_02
@@ -3851,7 +3995,7 @@ Func_6a97:
 	push hl
 	call Func_101d
 	call DisableLCD
-	ld hl, $6aba
+	ld hl, ScreenConfig_6aba
 	call SetScreenConfig
 	farcall LoadFontToVTiles2
 	farcall Func_3115d
@@ -3862,9 +4006,18 @@ Func_6a97:
 	pop hl
 	pop af
 	ret
-; 0x6aba
 
-SECTION "Bank 1@6ac4", ROMX[$6ac4], BANK[$1]
+ScreenConfig_6aba:
+	db LCDC_BG_ON | LCDC_OBJ_ON | LCDC_OBJ_16 | LCDC_BG_9800 | LCDC_BLOCK21 | LCDC_WIN_OFF | LCDC_WIN_9800 ; LCDC
+	db STAT_LYC ; STAT
+	db   0 ; SCY
+	db   0 ; SCX
+	db  32 ; LYC
+	dbpal SHADE_WHITE, SHADE_WHITE, SHADE_WHITE, SHADE_WHITE ; BGP
+	dbpal SHADE_WHITE, SHADE_WHITE, SHADE_WHITE, SHADE_WHITE ; OBP0
+	dbpal SHADE_WHITE, SHADE_WHITE, SHADE_WHITE, SHADE_WHITE ; OBP1
+	db 144 ; WY
+	db 159 + WX_OFS ; WX
 
 Func_6ac4:
 	call ClearOAM
@@ -3878,11 +4031,11 @@ Func_6ad1:
 	push bc
 	push de
 	push hl
-	ld de, $6aed
+	ld de, Gfx_6aed
 	ld hl, vTiles0
-	ld b, $0c
+	ld b, $0c ; tiles
 .asm_6add
-	ld c, $10
+	ld c, TILE_SIZE
 .asm_6adf
 	ld a, [de]
 	ld [hli], a
@@ -3896,9 +4049,10 @@ Func_6ad1:
 	pop bc
 	pop af
 	ret
-; 0x6aed
 
-SECTION "Bank 1@6bae", ROMX[$6bae], BANK[$1]
+Gfx_6aed: INCBIN "gfx/gfx_68f4.2bpp"
+
+	ret ; stray ret
 
 Func_6bae:
 	push af
@@ -3944,7 +4098,7 @@ Func_6bd7:
 	rlca
 	jr nc, .asm_6be5
 	ld b, $00
-	ld hl, $6bf5
+	ld hl, .data
 	add hl, bc
 	ld d, [hl]
 .asm_6bf0
@@ -3953,9 +4107,9 @@ Func_6bd7:
 	pop de
 	pop bc
 	ret
-; 0x6bf5
 
-SECTION "Bank 1@6bfd", ROMX[$6bfd], BANK[$1]
+.data
+	db $02, $04, $00, $00, $06, $08, $00, $00
 
 Func_6bfd:
 	ld a, VBLANK_02
@@ -4052,7 +4206,7 @@ Func_6c90:
 	push hl
 	call Func_101d
 	call DisableLCD
-	ld hl, $6cb3
+	ld hl, ScreenConfig_6cb3
 	call SetScreenConfig
 	farcall LoadFontToVTiles2
 	farcall Func_3230c
@@ -4063,9 +4217,18 @@ Func_6c90:
 	pop hl
 	pop af
 	ret
-; 0x6cb3
 
-SECTION "Bank 1@6cbd", ROMX[$6cbd], BANK[$1]
+ScreenConfig_6cb3:
+	db LCDC_BG_ON | LCDC_OBJ_ON | LCDC_OBJ_16 | LCDC_BG_9800 | LCDC_BLOCK21 | LCDC_WIN_OFF | LCDC_WIN_9800 ; LCDC
+	db STAT_LYC ; STAT
+	db   0 ; SCY
+	db   0 ; SCX
+	db  32 ; LYC
+	dbpal SHADE_WHITE, SHADE_WHITE, SHADE_WHITE, SHADE_WHITE ; BGP
+	dbpal SHADE_WHITE, SHADE_WHITE, SHADE_WHITE, SHADE_WHITE ; OBP0
+	dbpal SHADE_WHITE, SHADE_WHITE, SHADE_WHITE, SHADE_WHITE ; OBP1
+	db 144 ; WY
+	db 159 + WX_OFS ; WX
 
 Func_6cbd:
 	call ClearOAM
@@ -4079,11 +4242,11 @@ Func_6cca:
 	push bc
 	push de
 	push hl
-	ld de, $6ce6
+	ld de, Gfx_6ce6
 	ld hl, vTiles0
-	ld b, $0c
+	ld b, $0c ; tiles
 .asm_6cd6
-	ld c, $10
+	ld c, TILE_SIZE
 .asm_6cd8
 	ld a, [de]
 	ld [hli], a
@@ -4097,9 +4260,10 @@ Func_6cca:
 	pop bc
 	pop af
 	ret
-; 0x6ce6
 
-SECTION "Bank 1@6da7", ROMX[$6da7], BANK[$1]
+Gfx_6ce6: INCBIN "gfx/gfx_6ce6.2bpp"
+
+	ret ; stray ret
 
 Func_6da7:
 	push af
@@ -4144,7 +4308,7 @@ Func_6dce:
 	rlca
 	jr nc, .asm_6ddc
 	ld b, $00
-	ld hl, $6dec
+	ld hl, .data
 	add hl, bc
 	ld d, [hl]
 .asm_6de7
@@ -4153,9 +4317,9 @@ Func_6dce:
 	pop de
 	pop bc
 	ret
-; 0x6dec
 
-SECTION "Bank 1@6df4", ROMX[$6df4], BANK[$1]
+.data
+	db $02, $04, $00, $00, $00, $06, $00, $00
 
 Func_6df4:
 	ld a, VBLANK_02
@@ -4220,4 +4384,3 @@ Func_6e46:
 	pop bc
 	pop af
 	ret
-; 0x6e58

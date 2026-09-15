@@ -198,7 +198,7 @@ wcd54:: db ; cd54
 wcd55:: db ; cd55
 wcd56:: db ; cd56
 wcd57:: db ; cd57
-	ds $1
+wcd58:: db ; cd58
 wcd59:: db ; cd59
 wcd5a:: db ; cd5a
 wcd5b:: db ; cd5b
@@ -350,7 +350,7 @@ wcf04:: db ; cf04
 wcf05:: db ; cf05
 wcf06:: db ; cf06
 
-	ds $9
+wcf07:: ds $9 ; cf07
 
 wcf10:: db ; cf10
 wcf11:: db ; cf11
