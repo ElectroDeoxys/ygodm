@@ -624,7 +624,7 @@ Func_52a5:
 	push bc
 	push de
 	push hl
-	ld de, $52c8
+	ld de, Text_52c8
 	ld a, [wTextArg + 0]
 	ld l, a
 	ld a, [wTextArg + 1]
@@ -656,7 +656,7 @@ Func_52d8:
 	push bc
 	push de
 	push hl
-	ld de, $52c8
+	ld de, Text_52c8
 	ld a, [wTextArg + 0]
 	ld l, a
 	ld a, [wTextArg + 1]
@@ -716,7 +716,7 @@ Func_5324:
 	ld c, a
 	swap c
 	ld b, $00
-	ld hl, $535d
+	ld hl, Text_535d
 	add hl, bc
 	ld b, h
 	ld c, l
@@ -728,7 +728,7 @@ Func_5324:
 	and $0f
 	ld c, a
 	ld b, $00
-	ld hl, $535d
+	ld hl, Text_535d
 	add hl, bc
 	ld b, h
 	ld c, l
@@ -754,7 +754,7 @@ LoadText_CardType:
 	push bc
 	push de
 	push hl
-	ld de, $538e
+	ld de, Text_538e
 	ld h, $00
 	ld a, [wTextArg + 0]
 	ld l, a
@@ -804,7 +804,7 @@ Func_5436:
 	push bc
 	push de
 	push hl
-	ld de, $5457
+	ld de, Text_5457
 	ld h, $00
 	ld a, [wTextArg + 0]
 	ld l, a

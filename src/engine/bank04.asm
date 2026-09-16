@@ -3,9 +3,9 @@
 	farcall_table_start
 	farfunc GameLoop ; $03
 	farfunc Func_10477 ; $05
-	farfunc $4484 ; $07
+	farfunc Func_10484 ; $07
 	farfunc Func_104f5 ; $09
-	farfunc $4505 ; $0b
+	farfunc Func_10505 ; $0b
 	farfunc CampaignMenu ; $0d
 	farfunc VersusMenu ; $0f
 	farfunc TradeMenu ; $11
@@ -13,8 +13,8 @@
 	farfunc Func_108f0 ; $15
 	farfunc RecordsMenu ; $17
 	farfunc Func_11196 ; $19
-	farfunc $51ad ; $1b
-	farfunc $52cb ; $1d
+	farfunc Func_111ad ; $1b
+	farfunc Func_112cb ; $1d
 	farfunc Func_10a1b ; $1f
 
 GameLoop::
@@ -982,9 +982,34 @@ Func_10618:
 	ld [wcf16], a
 	pop af
 	ret
-; 0x10625
 
-SECTION "Bank 04@4645", ROMX[$4645], BANK[$04]
+; unreferenced
+Func_10625:
+	push af
+	push bc
+	push de
+	push hl
+	call CalculateSaveDataChecksum
+	ld b, $00
+	ld a, [wcf16]
+	ld c, a
+	ld hl, .ChecksumPtrs
+	add hl, bc
+	ld a, [hli]
+	ld h, [hl]
+	ld l, a
+	ld a, e
+	ld [hli], a
+	ld [hl], d
+	pop hl
+	pop de
+	pop bc
+	pop af
+	ret
+
+.ChecksumPtrs:
+	dw sSaveDataChecksum
+	dw sBackupSaveDataChecksum
 
 ; writes magic numbers SaveDataMagic to sMagicNumbers
 WriteSaveDataMagic:
@@ -1137,8 +1162,6 @@ SRAMToWRAMMap:
 	dwb sba58, $c8 ; sUnk_ba58
 	dw NULL
 
-SECTION "Bank 4@4709", ROMX[$4709], BANK[$4]
-
 Func_10709:
 	push af
 	push bc
@@ -1146,7 +1169,7 @@ Func_10709:
 	ld b, $00
 	ld a, [wcf95]
 	ld c, a
-	ld hl, $471e
+	ld hl, .data
 	add hl, bc
 	ld a, [hl]
 	ld [wcf96], a
@@ -1154,9 +1177,35 @@ Func_10709:
 	pop bc
 	pop af
 	ret
-; 0x1071e
 
-SECTION "Bank 4@4741", ROMX[$4741], BANK[$4]
+.data
+	db $00, $01
+
+; unreferenced
+Func_10721:
+	push af
+	ld a, [wcf96]
+	add $01
+	cp $02
+	jr nz, .asm_1072b
+	xor a
+.asm_1072b
+	ld [wcf96], a
+	pop af
+	ret
+
+; unreferenced
+Func_10730:
+	push af
+	ld a, [wcf96]
+	sub $01
+	cp $ff
+	jr nz, .asm_1073c
+	ld a, $01
+.asm_1073c
+	ld [wcf96], a
+	pop af
+	ret
 
 Func_10741:
 	ld [wcf95], a
@@ -1175,7 +1224,7 @@ Func_1074e:
 	ld a, [wcf95]
 	ld c, a
 	sla c
-	ld hl, $478e
+	ld hl, .ptrs
 	add hl, bc
 	ld a, [hli]
 	ld h, [hl]
@@ -1191,7 +1240,7 @@ Func_1074e:
 	dec e
 	jr nz, .asm_1076f
 	push hl
-	ld hl, $20
+	ld hl, TILEMAP_WIDTH
 	add hl, bc
 	ld b, h
 	ld c, l
@@ -1205,9 +1254,24 @@ Func_1074e:
 	pop bc
 	pop af
 	ret
-; 0x1078e
 
-SECTION "Bank 4@4846", ROMX[$4846], BANK[$4]
+.ptrs
+	dw .Tiles1
+	dw .Tiles2
+
+.Tiles1:
+	db $d3, $d3, $d3, $7d, $d3, $d4, $00, $d3, $d3, $d3, $d3, $d3, $d3, $d3, $d3, $d3, $d3, $d3
+	db $00, $14, $0d, $13, $11, $d6, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
+	db $00, $00, $00, $71, $00, $d6, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
+	db $00, $16, $3b, $25, $00, $d6, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
+	db $d8, $d8, $d8, $d8, $d8, $d9, $00, $d8, $d8, $d8, $d8, $d8, $d8, $d8, $d8, $d8, $d8, $d8
+
+.Tiles2:
+	db $d3, $7d, $d3, $d3, $d3, $d3, $d3, $d3, $d3, $d3, $d3, $d3, $d3, $d3, $d3, $d3, $d3, $d3
+	db $03, $1e, $1e, $00, $10, $0e, $31, $34, $29, $18, $38, $00, $00, $00, $00, $24, $0c, $00
+	db $00, $00, $00, $00, $00, $71, $00, $00, $00, $71, $00, $00, $00, $00, $00, $00, $00, $00
+	db $14, $23, $1f, $29, $0e, $1d, $00, $0c, $0c, $1d, $17, $10, $75, $00, $00, $0c, $0c, $0e
+	db $d8, $d8, $d8, $d8, $d8, $d8, $d8, $d8, $d8, $d8, $d8, $d8, $d8, $d8, $d8, $d8, $d8, $d8
 
 Func_10846:
 	push af
@@ -1215,7 +1279,7 @@ Func_10846:
 	push hl
 	ld a, VBLANK_10
 	call SetPendingVBlankMode
-	ld hl, $4877
+	ld hl, .Tiles
 	bcbgcoord 1, 0, vBGMap1
 	ld d, $05
 .asm_10856
@@ -1227,7 +1291,7 @@ Func_10846:
 	dec e
 	jr nz, .asm_1085b
 	push hl
-	ld hl, $20
+	ld hl, TILEMAP_WIDTH
 	add hl, bc
 	ld b, h
 	ld c, l
@@ -1240,9 +1304,13 @@ Func_10846:
 	pop bc
 	pop af
 	ret
-; 0x10877
 
-SECTION "Bank 4@48d1", ROMX[$48d1], BANK[$4]
+.Tiles:
+	db $d3, $d3, $d3, $d3, $d3, $d3, $d3, $d3, $d3, $d3, $d3, $d3, $d3, $d3, $d3, $d3, $d3, $d3
+	db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
+	db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
+	db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
+	db $d8, $d8, $d8, $d8, $d8, $d8, $d8, $d8, $d8, $d8, $d8, $d8, $d8, $d8, $d8, $d8, $d8, $d8
 
 Func_108d1:
 	push af
@@ -1251,11 +1319,11 @@ Func_108d1:
 	ld b, $00
 	ld a, [wcf95]
 	ld c, a
-	ld hl, $48ec
+	ld hl, .XPositions
 	add hl, bc
 	ld a, [hl]
 	ldh [rWY], a
-	ld hl, $48ee
+	ld hl, .YPositions
 	add hl, bc
 	ld a, [hl]
 	ldh [rWX], a
@@ -1263,9 +1331,12 @@ Func_108d1:
 	pop bc
 	pop af
 	ret
-; 0x108ec
 
-SECTION "Bank 4@48f0", ROMX[$48f0], BANK[$4]
+.XPositions:
+	db $67, $67
+
+.YPositions:
+	db $6e, $07
 
 Func_108f0:
 	push af
@@ -1297,9 +1368,27 @@ RecordsMenu:
 	call PlayMusic_Campaign
 	call Func_11554
 	ret
-; 0x10923
 
-SECTION "Bank 04@493a", ROMX[$493a], BANK[$04]
+; unreferenced
+Func_10923:
+	push af
+	push bc
+	push de
+	push hl
+	ld hl, wcf99
+	ld de, Data_1093a
+	ld c, $08
+.asm_1092f
+	ld a, [de]
+	ld [hli], a
+	inc de
+	dec c
+	jr nz, .asm_1092f
+	pop hl
+	pop de
+	pop bc
+	pop af
+	ret
 
 Data_1093a:
 	ds $8, $0
@@ -1491,7 +1580,7 @@ Func_10a3e:
 	push hl
 	call Func_101d
 	call DisableLCD
-	ld hl, $4a70
+	ld hl, ScreenConfig_10a70
 	call SetScreenConfig
 	farcall LoadFontToVTiles2
 	ld a, [wcfa9]
@@ -1510,9 +1599,18 @@ Func_10a3e:
 	pop hl
 	pop af
 	ret
-; 0x10a70
 
-SECTION "Bank 04@4a7a", ROMX[$4a7a], BANK[$04]
+ScreenConfig_10a70:
+	db LCDC_BG_ON | LCDC_OBJ_ON | LCDC_OBJ_8 | LCDC_BG_9800 | LCDC_BLOCK21 | LCDC_WIN_ON | LCDC_WIN_9C00 ; LCDC
+	db STAT_LYC ; STAT
+	db   0 ; SCY
+	db   0 ; SCX
+	db  32 ; LYC
+	dbpal SHADE_WHITE, SHADE_WHITE, SHADE_WHITE, SHADE_WHITE ; BGP
+	dbpal SHADE_WHITE, SHADE_WHITE, SHADE_WHITE, SHADE_WHITE ; OBP0
+	dbpal SHADE_WHITE, SHADE_WHITE, SHADE_WHITE, SHADE_WHITE ; OBP1
+	db 144 ; WY
+	db 159 + WX_OFS ; WX
 
 Func_10a7a:
 	call ClearOAM
@@ -1622,10 +1720,10 @@ Func_10b4a:
 	ld a, [wcfa9]
 	cp $00
 	jr nz, .asm_10b6a
-	ld hl, $4b78
+	ld hl, .data_1
 	jr .asm_10b6d
 .asm_10b6a
-	ld hl, $4bb7
+	ld hl, .data_2
 .asm_10b6d
 	add hl, bc
 	ld a, [hl]
@@ -1634,9 +1732,18 @@ Func_10b4a:
 	pop hl
 	pop bc
 	ret
-; 0x10b78
 
-SECTION "Bank 4@4bf6", ROMX[$4bf6], BANK[$4]
+.data_1
+	db $f1, $f0, $f0, $f0, $f0, $f0, $f0, $f2, $f0, $0b, $10, $15, $1a, $1f, $24, $29
+	db $2e, $31, $0c, $11, $16, $1b, $20, $25, $2a, $2f, $32, $0d, $12, $17, $1c, $21
+	db $26, $2b, $30, $33, $0e, $13, $18, $1d, $22, $27, $2c, $36, $34, $0f, $14, $19
+	db $1e, $23, $28, $2d, $38, $35, $39, $3a, $3b, $3c, $00, $f5, $f6, $f3, $f0
+	
+.data_2
+	db $f4, $f0, $f0, $f0, $f0, $f0, $f0, $f2, $f0, $3d, $42, $47, $4c, $51, $56, $5b
+	db $60, $63, $3e, $43, $48, $4d, $52, $57, $5c, $61, $32, $3f, $44, $49, $4e, $53
+	db $58, $5d, $62, $65, $40, $45, $4a, $4f, $54, $27, $5e, $68, $66, $41, $46, $4b
+	db $50, $55, $5a, $5f, $6a, $67, $6d, $6e, $6f, $70, $73, $f5, $f6, $f0, $f0
 
 Func_10bf6:
 	push bc
@@ -1716,7 +1823,7 @@ Func_10c56:
 	dec c
 	call Func_109e6
 	ld b, a
-	ld hl, $4c97
+	ld hl, .data_1
 .asm_10c6c
 	ld a, [hli]
 	cp $00
@@ -1733,7 +1840,7 @@ Func_10c56:
 	cp $01
 	jr nz, .asm_10c92
 	ld d, $00
-	ld hl, $4cc8
+	ld hl, .data_2
 	add hl, de
 	ld b, [hl]
 	ld a, [wcfac]
@@ -1747,9 +1854,17 @@ Func_10c56:
 	pop de
 	pop bc
 	ret
-; 0x10c97
 
-SECTION "Bank 4@4cf8", ROMX[$4cf8], BANK[$4]
+.data_1
+	db $10, $11, $12, $13, $14, $15, $16, $17, $18, $19, $1a, $1b, $1c, $1d, $1e, $24
+	db $25, $26, $27, $28, $42, $43, $44, $45, $46, $47, $48, $49, $4a, $4b, $4c, $4d
+	db $4e, $4f, $50, $56, $57, $58, $5a, $a6, $a7, $a8, $a9, $aa, $ab, $ac, $ad, $af
+	db $00 ; end
+
+.data_2
+	db $7e, $7f, $80, $81, $82, $83, $84, $85, $86, $87, $88, $89, $8a, $8b, $8c, $8d
+	db $8e, $8f, $90, $91, $92, $93, $94, $95, $96, $97, $98, $99, $9a, $9b, $9c, $9d
+	db $9e, $9f, $a0, $a1, $a2, $a3, $a5, $8d, $8e, $8f, $90, $91, $a1, $a2, $a3, $a5
 
 Func_10cf8:
 	push bc
@@ -1763,7 +1878,7 @@ Func_10cf8:
 	dec c
 	call Func_109e6
 	ld b, a
-	ld hl, $4d39
+	ld hl, .data_1
 .asm_10d0e
 	ld a, [hli]
 	cp $00
@@ -1780,7 +1895,7 @@ Func_10cf8:
 	cp $01
 	jr nz, .asm_10d34
 	ld d, $00
-	ld hl, $4d4c
+	ld hl, .data_2
 	add hl, de
 	ld b, [hl]
 	ld a, [wcfac]
@@ -1794,9 +1909,13 @@ Func_10cf8:
 	pop de
 	pop bc
 	ret
-; 0x10d39
 
-SECTION "Bank 4@4d5e", ROMX[$4d5e], BANK[$4]
+.data_1
+	db $24, $25, $26, $27, $28, $56, $57, $58, $5a, $8d, $8e, $8f, $90, $91, $a1, $a2, $a3, $a5
+	db $00 ; end
+
+.data_2
+	db $a6, $a7, $a8, $a9, $aa, $ab, $ac, $ad, $af, $a6, $a7, $a8, $a9, $aa, $ab, $ac, $ad, $af
 
 Func_10d5e:
 	push bc
@@ -1922,10 +2041,10 @@ Func_10e2a:
 	jr z, .asm_10e6a
 	cp $00
 	jr nz, .asm_10e42
-	ld hl, $4e7d
+	ld hl, .ptrs_1
 	jr .asm_10e45
 .asm_10e42
-	ld hl, $4e8b
+	ld hl, .ptrs_2
 .asm_10e45
 	ld b, $00
 	ld a, [wcfab]
@@ -1962,9 +2081,29 @@ Func_10e2a:
 	pop bc
 	pop af
 	ret
-; 0x10e7d
 
-SECTION "Bank 4@4eab", ROMX[$4eab], BANK[$4]
+.ptrs_1
+	dw .data_1
+	dw .data_1
+	dw .data_1
+	dw .data_1
+	dw .data_1
+	dw .data_2
+	dw .data_2
+
+.ptrs_2
+	dw .data_1
+	dw .data_1
+	dw .data_1
+	dw .data_1
+	dw .data_1
+	dw .data_2
+	dw .data_1
+
+.data_1
+	db $00, $01, $02, $03, $04, $05, $06, $07, $08
+.data_2
+	db $00, $01, $02, $03, $04, $05, $06, $07, $07
 
 Func_10eab:
 	push af
@@ -1980,7 +2119,7 @@ Func_10eab:
 	ld a, [wcfab]
 	ld c, a
 	sla c
-	ld hl, $4ef5
+	ld hl, .ptrs
 	add hl, bc
 	ld a, [hli]
 	ld h, [hl]
@@ -2012,9 +2151,22 @@ Func_10eab:
 	pop bc
 	pop af
 	ret
-; 0x10ef5
 
-SECTION "Bank 4@4f17", ROMX[$4f17], BANK[$4]
+.ptrs
+	dw .data_1
+	dw .data_2
+	dw .data_3
+	dw .data_3
+	dw .data_3
+	dw .data_3
+	dw .data_3
+
+.data_1
+	db $00, $07
+.data_2
+	db $00, $00, $00, $00, $00, $07, $07, $07, $07
+.data_3
+	db $00, $01, $02, $03, $04, $05, $06, $07, $08
 
 Func_10f17:
 	push af
@@ -2028,10 +2180,10 @@ Func_10f17:
 	ld e, a
 	cp $00
 	jr nz, .asm_10f2f
-	ld hl, $4f55
+	ld hl, .ptrs_1
 	jr .asm_10f32
 .asm_10f2f
-	ld hl, $4f63
+	ld hl, .ptrs_2
 .asm_10f32
 	ld b, $00
 	ld a, [wcfab]
@@ -2056,9 +2208,31 @@ Func_10f17:
 	pop bc
 	pop af
 	ret
-; 0x10f55
 
-SECTION "Bank 4@4f8a", ROMX[$4f8a], BANK[$4]
+.ptrs_1
+	dw .data_1
+	dw .data_2
+	dw .data_2
+	dw .data_2
+	dw .data_2
+	dw .data_2
+	dw .data_3
+
+.ptrs_2
+	dw .data_1
+	dw .data_2
+	dw .data_2
+	dw .data_2
+	dw .data_2
+	dw .data_2
+	dw .data_3
+
+.data_1
+	db $07, $00, $00, $00, $00, $00, $00, $07
+.data_2
+	db $01, $02, $03, $04, $05, $06, $07, $08, $08
+.data_3
+	db $01, $02, $03, $04, $05, $06, $07, $07
 
 Func_10f8a:
 	push af
@@ -2071,7 +2245,7 @@ Func_10f8a:
 	ld a, [wcfab]
 	ld c, a
 	sla c
-	ld hl, $4fb9
+	ld hl, .ptrs
 	add hl, bc
 	ld a, [hli]
 	ld h, [hl]
@@ -2088,9 +2262,22 @@ Func_10f8a:
 .asm_10fb7
 	pop af
 	ret
-; 0x10fb9
 
-SECTION "Bank 04@4fe0", ROMX[$4fe0], BANK[$04]
+.ptrs
+	dw .data_1
+	dw .data_2
+	dw .data_2
+	dw .data_2
+	dw .data_2
+	dw .data_2
+	dw .data_3
+
+.data_1
+	db $00, $00, $00, $00, $00, $00, $00, $00
+.data_2
+	db $00, $00, $01, $02, $03, $04, $05, $06, $07
+.data_3
+	db $00, $00, $01, $02, $03, $04, $05, $06
 
 Func_10fe0:
 	push af
@@ -2134,30 +2321,30 @@ Func_11024:
 	push hl
 	ld b, $00
 	ld c, a
-	ld hl, $5031
+	ld hl, .data
 	add hl, bc
 	ld a, [hl]
 	pop hl
 	pop bc
 	ret
-; 0x11031
 
-SECTION "Bank 04@503a", ROMX[$503a], BANK[$04]
+.data
+	db $10, $20, $30, $40, $50, $60, $70, $80, $90
 
 Func_1103a:
 	push bc
 	push hl
 	ld b, $00
 	ld c, a
-	ld hl, $5047
+	ld hl, .data
 	add hl, bc
 	ld a, [hl]
 	pop hl
 	pop bc
 	ret
-; 0x11047
 
-SECTION "Bank 04@504e", ROMX[$504e], BANK[$04]
+.data
+	db $30, $40, $50, $60, $70, $80, $90
 
 Func_1104e:
 	push bc
@@ -2165,15 +2352,15 @@ Func_1104e:
 	ld b, $00
 	ld a, [wcfac]
 	ld c, a
-	ld hl, $505e
+	ld hl, .data
 	add hl, bc
 	ld a, [hl]
 	pop hl
 	pop bc
 	ret
-; 0x1105e
 
-SECTION "Bank 4@5067", ROMX[$5067], BANK[$4]
+.data
+	db $34, $3c, $44, $4c, $54, $5c, $64, $6c, $d0
 
 Func_11067:
 	push af
@@ -2196,9 +2383,8 @@ Func_11075:
 .asm_11081
 	pop af
 	ret
-; 0x11083
 
-SECTION "Bank 04@5084", ROMX[$5084], BANK[$04]
+	ret ; stray ret
 
 Func_11084:
 	push af
@@ -2509,7 +2695,7 @@ Func_1123b:
 	cp $c8
 	jr nc, .asm_11268
 	ld b, $00
-	ld de, $526c
+	ld de, .data
 	call Func_11270
 	cp $00
 	jr z, .asm_11268
@@ -2529,9 +2715,9 @@ Func_1123b:
 	pop de
 	pop af
 	ret
-; 0x1126c
 
-SECTION "Bank 4@5270", ROMX[$5270], BANK[$4]
+.data
+	db $00, $00, $00, $00
 
 Func_11270:
 	push bc
@@ -2607,7 +2793,7 @@ Func_112cb:
 	call Func_1154c
 	call Func_101d
 	call DisableLCD
-	ld hl, $52f7
+	ld hl, ScreenConfig_112f7
 	call SetScreenConfig
 	farcall LoadFontToVTiles2
 	farcall Func_338b9
@@ -2620,9 +2806,18 @@ Func_112cb:
 	pop hl
 	pop af
 	ret
-; 0x112f7
 
-SECTION "Bank 4@5301", ROMX[$5301], BANK[$4]
+ScreenConfig_112f7:
+	db LCDC_BG_ON | LCDC_OBJ_OFF | LCDC_OBJ_8 | LCDC_BG_9800 | LCDC_BLOCK21 | LCDC_WIN_OFF | LCDC_WIN_9800 ; LCDC
+	db STAT_LYC ; STAT
+	db   0 ; SCY
+	db   0 ; SCX
+	db  32 ; LYC
+	dbpal SHADE_WHITE, SHADE_WHITE, SHADE_WHITE, SHADE_WHITE ; BGP
+	dbpal SHADE_WHITE, SHADE_WHITE, SHADE_WHITE, SHADE_WHITE ; OBP0
+	dbpal SHADE_WHITE, SHADE_WHITE, SHADE_WHITE, SHADE_WHITE ; OBP1
+	db 144 ; WY
+	db 159 + WX_OFS ; WX
 
 Func_11301:
 	push af
@@ -2630,10 +2825,10 @@ Func_11301:
 	push de
 	push hl
 	ld hl, vTiles0
-	ld de, $531d
-	ld b, $0c
+	ld de, Gfx_1131d
+	ld b, $0c ; tiles
 .asm_1130d
-	ld c, $10
+	ld c, TILE_SIZE
 .asm_1130f
 	ld a, [de]
 	ld [hli], a
@@ -2647,9 +2842,14 @@ Func_11301:
 	pop bc
 	pop af
 	ret
-; 0x1131d
 
-SECTION "Bank 4@53e4", ROMX[$53e4], BANK[$4]
+Gfx_1131d: INCBIN "gfx/gfx_630b.2bpp"
+
+; unreferenced
+Func_113dd:
+	call Func_12fb
+	call CopyOAMDirect
+	ret
 
 Func_113e4:
 	push af
@@ -2663,7 +2863,7 @@ Func_113e4:
 	push af
 	ld b, $00
 	ld c, a
-	ld hl, $5444
+	ld hl, .data
 	add hl, bc
 	ld d, h
 	ld e, l
@@ -2713,9 +2913,9 @@ Func_113e4:
 	pop bc
 	pop af
 	ret
-; 0x11444
 
-SECTION "Bank 4@5449", ROMX[$5449], BANK[$4]
+.data
+	db $12, $11, $10, $ff, $ff
 
 Func_11449:
 	push af
@@ -2927,7 +3127,7 @@ Func_1157b:
 	rlca
 	jr nc, .asm_11589
 	ld b, $00
-	ld hl, $5599
+	ld hl, .data
 	add hl, bc
 	ld d, [hl]
 .asm_11594
@@ -2936,9 +3136,9 @@ Func_1157b:
 	pop de
 	pop bc
 	ret
-; 0x11599
 
-SECTION "Bank 4@55a1", ROMX[$55a1], BANK[$4]
+.data
+	db $00, $02, $00, $00, $04, $06, $00, $00
 
 Func_115a1:
 	ld a, VBLANK_02
@@ -2980,7 +3180,7 @@ Func_115dc:
 	call Func_2958
 	ld b, $00
 	ld c, a
-	ld hl, $55f7
+	ld hl, .data
 	add hl, bc
 	ld c, [hl]
 	ld a, [wcfbd]
@@ -2994,9 +3194,9 @@ Func_115dc:
 	pop hl
 	pop bc
 	ret
-; 0x115f7
 
-SECTION "Bank 4@55fc", ROMX[$55fc], BANK[$4]
+.data
+	db $03, $03, $04, $04, $04
 
 Func_115fc:
 	push af
@@ -3056,7 +3256,7 @@ Func_11647:
 	ld b, $00
 	ld c, a
 	sla c
-	ld hl, $56c3
+	ld hl, .ptrs
 	add hl, bc
 	ld a, [hli]
 	ld d, [hl]
@@ -3124,9 +3324,30 @@ Func_11647:
 	pop bc
 	pop af
 	ret
-; 0x116c3
 
-SECTION "Bank 4@56f4", ROMX[$56f4], BANK[$4]
+.ptrs
+	dw .data_1
+	dw .data_2
+	dw .data_3
+	dw .data_4
+	dw .data_5
+	dw .data_6
+	dw .data_7
+
+.data_1
+	db $12, $11, $10, $ff, $ff
+.data_2
+	db $09, $0a, $0b, $0c, $ff
+.data_3
+	db $00, $01, $02, $03, $04
+.data_4
+	db $05, $06, $07, $08, $ff
+.data_5
+	db $0d, $ff, $ff, $ff, $ff
+.data_6
+	db $0d, $0e, $ff, $ff, $ff
+.data_7
+	db $0d, $0e, $0f, $ff, $ff
 
 Func_116f4:
 	push af
@@ -3256,9 +3477,49 @@ Func_11784:
 	pop bc
 	pop af
 	ret
-; 0x117bd
 
-SECTION "Bank 4@57f0", ROMX[$57f0], BANK[$4]
+PtrTable_117bd:
+	dw wTextBuffer + $0
+	dw wTextBuffer + $1
+	dw wTextBuffer + $2
+	dw wTextBuffer + $3
+	dw Data_57e9
+	dw Data_57ea
+	dw Data_57ee
+
+PtrTable_117cb:
+	dw wTextBuffer + $0
+	dw wTextBuffer + $1
+	dw wTextBuffer + $2
+	dw wTextBuffer + $3
+	dw Data_57eb
+	dw Data_57ec
+	dw Data_57ed
+	dw Data_57ee
+
+PtrTable_117db:
+	dw wTextBuffer + $0
+	dw wTextBuffer + $1
+	dw wTextBuffer + $2
+	dw wTextBuffer + $3
+	dw Data_57ef
+	dw Data_57ea
+	dw Data_57ee
+
+Data_57e9:
+	db $18
+Data_57ea:
+	db $38
+Data_57eb:
+	db $16
+Data_57ec:
+	db $3c
+Data_57ed:
+	db $0d
+Data_57ee:
+	db $ff
+Data_57ef:
+	db $20
 
 Func_117f0:
 	push af
@@ -3290,7 +3551,7 @@ Func_117fd:
 	farcall SetTextArg
 	farcall LoadText
 	push de
-	ld hl, $57bd
+	ld hl, PtrTable_117bd
 .asm_1181e
 	ld a, [hli]
 	ld c, a
@@ -3310,7 +3571,7 @@ Func_117fd:
 	ld b, [hl]
 	farcall SetTextArg
 	farcall LoadText
-	ld hl, $57cb
+	ld hl, PtrTable_117cb
 .asm_1183d
 	ld a, [hli]
 	ld c, a
@@ -3344,7 +3605,7 @@ Func_11850:
 	call ConvertToDecimalRepresentation
 	farcall SetTextArg
 	farcall LoadText
-	ld hl, $57db
+	ld hl, PtrTable_117db
 .asm_11872
 	ld a, [hli]
 	ld c, a
@@ -3440,7 +3701,7 @@ Func_118f0:
 	push hl
 	ld d, $00
 	ld e, b
-	ld hl, $5908
+	ld hl, .ptrs
 	add hl, de
 	ld a, [hli]
 	ld h, [hl]
@@ -3455,4 +3716,27 @@ Func_118f0:
 	pop de
 	pop af
 	ret
-; 0x11908
+
+.ptrs
+	dw .data_1
+	dw .data_2
+	dw .data_3
+
+.data_1
+	dwcoord  0,  2
+	dwcoord  0,  5
+	dwcoord  0,  8
+	dwcoord  0, 11
+	dwcoord  0, 14
+.data_2
+	dwcoord  5,  4
+	dwcoord  5,  7
+	dwcoord  5, 10
+	dwcoord  5, 13
+	dwcoord  5, 16
+.data_3
+	dwcoord 11,  4
+	dwcoord 11,  7
+	dwcoord 11, 10
+	dwcoord 11, 13
+	dwcoord 11, 16

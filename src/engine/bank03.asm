@@ -1,13 +1,13 @@
 	dw BANK(@)
 
 	farcall_table_start
-	farfunc $406c ; $03
-	farfunc $40b9 ; $05
-	farfunc $425e ; $07
-	farfunc $452e ; $09
+	farfunc SetInitialPlayerLP ; $03
+	farfunc SetInitialOpponentLP ; $05
+	farfunc Func_c25e ; $07
+	farfunc Func_c52e ; $09
 	farfunc ClearPlayerDeck ; $0b
 	farfunc GetPlayerDeckCardCount ; $0d
-	farfunc $4786 ; $0f
+	farfunc Func_c786 ; $0f
 	farfunc Func_cbe9 ; $11
 	farfunc Func_cb87 ; $13
 	farfunc Func_e7eb ; $15
@@ -21,12 +21,12 @@
 	farfunc RemoveCardFromPlayerDeck ; $25
 	farfunc Func_e747 ; $27
 	farfunc Func_e773 ; $29
-	farfunc $4d55 ; $2b
+	farfunc Func_cd55 ; $2b
 	farfunc DuelAgainstLinkOpponent ; $2d
 	farfunc SetupDuel ; $2f
 	farfunc Func_cefb ; $31
 	farfunc Func_cfe1 ; $33
-	farfunc $53ec ; $35
+	farfunc Func_d3ec ; $35
 	farfunc Func_cd9a ; $37
 	farfunc ResetMainMenuSelection ; $39
 	farfunc LoadMainMenu ; $3b
@@ -34,7 +34,7 @@
 	farfunc Func_ee30 ; $3f
 	farfunc AIOppDrawInitialHand ; $41
 	farfunc Func_e1f2 ; $43
-	farfunc $5e81 ; $45
+	farfunc Func_de81 ; $45
 	farfunc Func_e285 ; $47
 	farfunc Func_d974 ; $49
 	farfunc PlayerHasAnyHandCards ; $4b
@@ -50,7 +50,7 @@
 	farfunc AddCardToOpponentDeck ; $5f
 	farfunc SetPlayerDeckIndex ; $61
 	farfunc AddCardToPlayerDeck ; $63
-	farfunc $43e3 ; $65
+	farfunc Func_c3e3 ; $65
 	farfunc HandleOpponentPetitMothEvolution ; $67
 	farfunc Func_d014 ; $69
 	farfunc Func_e711 ; $6b
@@ -65,9 +65,48 @@ SetInitialPlayerLP:
 	ld [wcab2], a
 	pop af
 	ret
-; 0xc07e
 
-SECTION "Bank 3@40b9", ROMX[$40b9], BANK[$3]
+; unreferenced
+Func_c07e:
+	push af
+	push bc
+	push de
+	ld a, [wPlayerLP + 0]
+	ld e, a
+	ld a, [wPlayerLP + 1]
+	ld d, a
+	call DecimalAddBCAndDE
+	ld a, c
+	ld [wPlayerLP + 0], a
+	ld a, b
+	ld [wPlayerLP + 1], a
+	pop de
+	pop bc
+	pop af
+	ret
+
+; unreferenced
+Func_c098:
+	push bc
+	push de
+	ld a, [wPlayerLP + 0]
+	ld e, a
+	ld a, [wPlayerLP + 1]
+	ld d, a
+	call Func_13bb
+	ld a, e
+	cp $00
+	jr nz, .asm_c0ad
+	ld bc, $0
+.asm_c0ad
+	ld a, c
+	ld [wPlayerLP + 0], a
+	ld a, b
+	ld [wPlayerLP + 1], a
+	ld a, e
+	pop de
+	pop bc
+	ret
 
 SetInitialOpponentLP:
 	push af
@@ -79,9 +118,48 @@ SetInitialOpponentLP:
 	ld [wcab5], a
 	pop af
 	ret
-; 0xc0cb
 
-SECTION "Bank 3@4106", ROMX[$4106], BANK[$3]
+; unreferenced
+Func_c0cb:
+	push af
+	push bc
+	push de
+	ld a, [wce08]
+	ld e, a
+	ld a, [wce09]
+	ld d, a
+	call DecimalAddBCAndDE
+	ld a, c
+	ld [wce08], a
+	ld a, b
+	ld [wce09], a
+	pop de
+	pop bc
+	pop af
+	ret
+
+; unreferenced
+Func_c0e5:
+	push bc
+	push de
+	ld a, [wce08]
+	ld e, a
+	ld a, [wce09]
+	ld d, a
+	call Func_13bb
+	ld a, e
+	cp $00
+	jr nz, .asm_c0fa
+	ld bc, $0
+.asm_c0fa
+	ld a, c
+	ld [wce08], a
+	ld a, b
+	ld [wce09], a
+	ld a, e
+	pop de
+	pop bc
+	ret
 
 ClearActiveField:
 	push af
@@ -312,7 +390,7 @@ Func_c25e:
 	push hl
 	call Func_101d
 	call DisableLCD
-	ld hl, $428a
+	ld hl, ScreenConfig_c28a
 	call SetScreenConfig
 	farcall LoadFontToVTiles2
 	farcall Func_28776
@@ -326,9 +404,18 @@ Func_c25e:
 	pop hl
 	pop af
 	ret
-; 0xc28a
 
-SECTION "Bank 3@4294", ROMX[$4294], BANK[$3]
+ScreenConfig_c28a:
+	db LCDC_BG_ON | LCDC_OBJ_ON | LCDC_OBJ_8 | LCDC_BG_9800 | LCDC_BLOCK21 | LCDC_WIN_OFF | LCDC_WIN_9800 ; LCDC
+	db STAT_LYC ; STAT
+	db   0 ; SCY
+	db   0 ; SCX
+	db  32 ; LYC
+	dbpal SHADE_WHITE, SHADE_WHITE, SHADE_WHITE, SHADE_WHITE ; BGP
+	dbpal SHADE_WHITE, SHADE_WHITE, SHADE_WHITE, SHADE_WHITE ; OBP0
+	dbpal SHADE_WHITE, SHADE_WHITE, SHADE_WHITE, SHADE_WHITE ; OBP1
+	db 144 ; WY
+	db 159 + WX_OFS ; WX
 
 Func_c294:
 	call ClearOAM
@@ -342,9 +429,9 @@ Func_c2a1:
 	push bc
 	push de
 	push hl
-	ld de, $42b9
+	ld de, Gfx_c2b9
 	ld hl, vTiles0
-	ld c, $10
+	ld c, 2 * TILE_1BPP_SIZE
 .asm_c2ad
 	ld a, [de]
 	ld [hli], a
@@ -357,9 +444,8 @@ Func_c2a1:
 	pop bc
 	pop af
 	ret
-; 0xc2b9
 
-SECTION "Bank 3@42c9", ROMX[$42c9], BANK[$3]
+Gfx_c2b9: INCBIN "gfx/gfx_557a.1bpp"
 
 Func_c2c9:
 	push af
@@ -781,15 +867,15 @@ Func_c59c:
 	push hl
 	ld b, $00
 	ld c, a
-	ld hl, $45a9
+	ld hl, .data
 	add hl, bc
 	ld a, [hl]
 	pop hl
 	pop bc
 	ret
-; 0xc5a9
 
-SECTION "Bank 3@45b2", ROMX[$45b2], BANK[$3]
+.data
+	db $28, $38, $48, $58, $68, $78, $88, $98, $a8
 
 Func_c5b2:
 	push af
@@ -995,9 +1081,27 @@ DoesPlayerHaveEnoughDeckCards:
 	ld a, FALSE
 .true
 	ret
-; 0xc6b5
 
-SECTION "Bank 3@46cf", ROMX[$46cf], BANK[$3]
+; unreferenced
+Func_c6b5:
+	push af
+	push bc
+	push hl
+	ld a, $00
+	ld [wOppDuelDeckIndex], a
+	ld hl, wOppDuelDeck
+	ld c, DECK_SIZE
+.loop
+	ld a, LOW(INVALID_CARD)
+	ld [hli], a
+	ld a, HIGH(INVALID_CARD)
+	ld [hli], a
+	dec c
+	jr nz, .loop
+	pop hl
+	pop bc
+	pop af
+	ret
 
 SetOppDuelDeckIndex:
 	ld [wOppDuelDeckIndex], a
@@ -1133,9 +1237,12 @@ Func_c772:
 	pop bc
 	pop af
 	ret
-; 0xc783
 
-SECTION "Bank 3@4786", ROMX[$4786], BANK[$3]
+; unreferenced
+Func_c783:
+	push af
+	pop af
+	ret
 
 Func_c786:
 	push af
@@ -1183,7 +1290,7 @@ Func_c7b3:
 	rlca
 	jr nc, .asm_c7c1
 	ld b, $00
-	ld hl, $47e5
+	ld hl, .data
 	add hl, bc
 	ld d, [hl]
 .asm_c7cc
@@ -1196,7 +1303,7 @@ Func_c7b3:
 	rlca
 	jr nc, .asm_c7d5
 	ld b, $00
-	ld hl, $47e5
+	ld hl, .data
 	add hl, bc
 	ld d, [hl]
 .asm_c7e0
@@ -1205,9 +1312,9 @@ Func_c7b3:
 	pop de
 	pop bc
 	ret
-; 0xc7e5
 
-SECTION "Bank 3@47ed", ROMX[$47ed], BANK[$3]
+.data
+	db $02, $04, $00, $00, $0c, $0a, $06, $08
 
 Func_c7ed:
 	ld a, VBLANK_02
@@ -1230,7 +1337,7 @@ Func_c7ff:
 	ld b, $00
 	ld a, [wcc52]
 	ld c, a
-	ld hl, $4820
+	ld hl, .data
 	add hl, bc
 	ld a, [hl]
 	call Func_c44c
@@ -1240,9 +1347,9 @@ Func_c7ff:
 	pop hl
 	pop bc
 	ret
-; 0xc820
 
-SECTION "Bank 3@4822", ROMX[$4822], BANK[$3]
+.data
+	db $01, $00
 
 Func_c822:
 	ld a, VBLANK_04
@@ -1711,7 +1818,7 @@ Func_cb87:
 	push hl
 	call Func_101d
 	call DisableLCD
-	ld hl, $4baa
+	ld hl, ScreenConfig_cbaa
 	call SetScreenConfig
 	farcall LoadFontToVTiles2
 	farcall Func_28b5a
@@ -1722,9 +1829,18 @@ Func_cb87:
 	pop hl
 	pop af
 	ret
-; 0xcbaa
 
-SECTION "Bank 3@4bb4", ROMX[$4bb4], BANK[$3]
+ScreenConfig_cbaa:
+	db LCDC_BG_ON | LCDC_OBJ_ON | LCDC_OBJ_8 | LCDC_BG_9800 | LCDC_BLOCK21 | LCDC_WIN_ON | LCDC_WIN_9C00 ; LCDC
+	db STAT_LYC ; STAT
+	db   0 ; SCY
+	db   0 ; SCX
+	db  32 ; LYC
+	dbpal SHADE_WHITE, SHADE_WHITE, SHADE_WHITE, SHADE_WHITE ; BGP
+	dbpal SHADE_WHITE, SHADE_WHITE, SHADE_WHITE, SHADE_WHITE ; OBP0
+	dbpal SHADE_WHITE, SHADE_WHITE, SHADE_WHITE, SHADE_WHITE ; OBP1
+	db 143 ; WY
+	db   0 + WX_OFS ; WX
 
 Func_cbb4:
 	call ClearOAM
@@ -1738,9 +1854,9 @@ Func_cbc1:
 	push bc
 	push de
 	push hl
-	ld de, $4bd9
+	ld de, Gfx_cbd9
 	ld hl, vTiles0
-	ld c, $10
+	ld c, 2 * TILE_1BPP_SIZE
 .asm_cbcd
 	ld a, [de]
 	ld [hli], a
@@ -1753,9 +1869,8 @@ Func_cbc1:
 	pop bc
 	pop af
 	ret
-; 0xcbd9
 
-SECTION "Bank 03@4be9", ROMX[$4be9], BANK[$03]
+Gfx_cbd9: INCBIN "gfx/gfx_557a.1bpp"
 
 Func_cbe9:
 	push af
@@ -1766,9 +1881,11 @@ Func_cbe9:
 
 Func_cbf1:
 	ret
-; 0xcbf2
 
-SECTION "Bank 3@4bf6", ROMX[$4bf6], BANK[$3]
+; unreferenced
+Func_cbf2:
+	call Func_2ad9
+	ret
 
 Func_cbf6:
 	push af
@@ -1817,15 +1934,15 @@ Func_cc35:
 	push hl
 	ld b, $00
 	ld c, a
-	ld hl, $4c42
+	ld hl, .data
 	add hl, bc
 	ld a, [hl]
 	pop hl
 	pop bc
 	ret
-; 0xcc42
 
-SECTION "Bank 03@4c4c", ROMX[$4c4c], BANK[$03]
+.data
+	db $28, $38, $48, $58, $68, $78, $88, $98, $a8, $c9
 
 DuelPrepMenu:
 	push bc
@@ -1871,7 +1988,7 @@ Func_cc76:
 	rlca
 	jr nc, .asm_cc84
 	ld b, $00
-	ld hl, $4ca8
+	ld hl, .data
 	add hl, bc
 	ld d, [hl]
 .asm_cc8f
@@ -1884,7 +2001,7 @@ Func_cc76:
 	rlca
 	jr nc, .asm_cc98
 	ld b, $00
-	ld hl, $4ca8
+	ld hl, .data
 	add hl, bc
 	ld d, [hl]
 .asm_cca3
@@ -1893,9 +2010,9 @@ Func_cc76:
 	pop de
 	pop bc
 	ret
-; 0xcca8
 
-SECTION "Bank 3@4cb0", ROMX[$4cb0], BANK[$3]
+.data
+	db $02, $04, $00, $00, $00, $00, $06, $08
 
 Func_ccb0:
 	ld a, VBLANK_02
@@ -2050,8 +2167,6 @@ Func_cd9a:
 	pop bc
 	pop af
 	ret
-
-SECTION "Bank 3@4db3", ROMX[$4db3], BANK[$3]
 
 Func_cdb3:
 	push bc
@@ -2309,7 +2424,7 @@ Func_cf77:
 	push af
 	push bc
 	push de
-	ld bc, $580a
+	lb bc, $58, $0a
 	ld d, $77
 	call Func_d8ee
 	cp $02
@@ -2343,7 +2458,7 @@ Func_cf93:
 	ld d, $54
 	ld e, $08
 	call Func_12d9
-	ld bc, $580a
+	lb bc, $58, $0a
 	ld d, $ff
 	ld a, $ff
 	call Func_123c
@@ -2360,12 +2475,12 @@ Func_cfbe:
 	ld a, b
 	ld c, a
 	ld b, $00
-	ld hl, $4fdc
+	ld hl, .data_2
 	add hl, bc
 	ld e, [hl]
 	pop bc
 	ld b, $00
-	ld hl, $4fd8
+	ld hl, .data_1
 	add hl, bc
 	ld c, [hl]
 	ld b, e
@@ -2374,7 +2489,11 @@ Func_cfbe:
 	pop af
 	ret
 
-SECTION "Bank 3@4fe1", ROMX[$4fe1], BANK[$3]
+.data_1
+	db $10, $20, $80, $90
+
+.data_2
+	db $58, $68, $78, $88, $98
 
 Func_cfe1:
 	push af
@@ -2499,7 +2618,7 @@ Func_d095:
 	rlca
 	jr nc, .asm_d0a3
 	ld b, $00
-	ld hl, $50c7
+	ld hl, .data
 	add hl, bc
 	ld d, [hl]
 .asm_d0ae
@@ -2512,7 +2631,7 @@ Func_d095:
 	rlca
 	jr nc, .asm_d0b7
 	ld b, $00
-	ld hl, $50c7
+	ld hl, .data
 	add hl, bc
 	ld d, [hl]
 .asm_d0c2
@@ -2521,9 +2640,9 @@ Func_d095:
 	pop de
 	pop bc
 	ret
-; 0xd0c7
 
-SECTION "Bank 3@50cf", ROMX[$50cf], BANK[$3]
+.data
+	db $02, $04, $00, $0e, $08, $06, $0a, $0c
 
 Func_d0cf:
 	ld a, VBLANK_04
@@ -2684,9 +2803,27 @@ AddCardToPlayerDuelDeck:
 	pop hl
 	pop af
 	ret
-; 0xd1b5
 
-SECTION "Bank 3@51cc", ROMX[$51cc], BANK[$3]
+; unreferenced
+Func_d1b5:
+	push af
+	push bc
+	push de
+	push hl
+	ld hl, wPlayerDuelDeck
+	ld de, wPlayerDeck
+	ld c, DECK_SIZE
+.asm_d1c1
+	ld a, [de]
+	ld [hli], a
+	inc de
+	dec c
+	jr nz, .asm_d1c1
+	pop hl
+	pop de
+	pop bc
+	pop af
+	ret
 
 PlayerDrawCard:
 	push af
@@ -3024,7 +3161,7 @@ Func_d3ec:
 	call WaitForVBlank
 	call Func_1c0a
 	farcall LoadCardGfx
-	ld bc, $6030
+	lb bc, $60, $30
 	call Func_1c1d
 	ld bc, NULL
 	call Func_1c12
@@ -3295,7 +3432,7 @@ Func_d5db:
 	ld b, $00
 	ld c, a
 	sla c
-	ld hl, $561f
+	ld hl, .ptrs
 	add hl, bc
 	ld a, [hli]
 	ld h, [hl]
@@ -3308,7 +3445,7 @@ Func_d5db:
 	jr nz, .asm_d605
 	jr .asm_d61a
 .asm_d60e
-	ld hl, $5647
+	ld hl, .tiles_5
 	ld c, $08
 .asm_d613
 	ld a, [hli]
@@ -3321,9 +3458,24 @@ Func_d5db:
 	pop bc
 	pop af
 	ret
-; 0xd61f
 
-SECTION "Bank 3@564f", ROMX[$564f], BANK[$3]
+.ptrs
+	dw .tiles_1
+	dw .tiles_2
+	dw .tiles_3
+	dw .tiles_4
+
+.tiles_1
+	db $d0, $d0, $d0, $d0, $d0, $d0, $73, $02
+.tiles_2
+	db $d0, $d0, $d0, $d0, $d0, $d0, $d0, $d0
+.tiles_3
+	db $d0, $d0, $d0, $d0, $d0, $d0, $d0, $02
+.tiles_4
+	db $d0, $d0, $d0, $d0, $d0, $d0, $d0, $03
+
+.tiles_5
+	db $d0, $d0, $d0, $d0, $d0, $d0, $d0, $d0
 
 Func_d64f:
 	push de
@@ -3360,7 +3512,7 @@ Func_d677:
 	cp $02
 	jr nz, .asm_d68a
 	call Func_d880
-	cp $00
+	cp TRUE
 	jr nz, .asm_d68a
 	ld e, $00
 .asm_d68a
@@ -3651,13 +3803,11 @@ PlayerHasAnyHandCards:
 	pop bc
 	ret
 
-SECTION "Bank 3@5880", ROMX[$5880], BANK[$3]
-
 Func_d880:
 	push bc
 	push de
 	push hl
-	ld e, $01
+	ld e, FALSE
 	ld a, [wcd5f]
 	cp $02
 	jr nz, .asm_d8aa
@@ -3667,12 +3817,12 @@ Func_d880:
 	call SetTargetCard
 	call LoadTargetCard
 	call Func_2203
-	cp $00
+	cp TRUE
 	jr nz, .asm_d8aa
 	call Func_21f3
 	ld b, $00
 	ld c, a
-	ld hl, $58af
+	ld hl, .data
 	add hl, bc
 	ld e, [hl]
 .asm_d8aa
@@ -3681,9 +3831,9 @@ Func_d880:
 	pop de
 	pop bc
 	ret
-; 0xd8af
 
-SECTION "Bank 3@58b3", ROMX[$58b3], BANK[$3]
+.data
+	db FALSE, FALSE, TRUE, TRUE
 
 Func_d8b3:
 	push bc
@@ -4457,49 +4607,118 @@ Func_ddbb:
 	push af
 	push de
 	push hl
-	ld hl, $5dd3
-.asm_ddc1
+	ld hl, .WRAMAddresses
+.loop
 	ld a, [hli]
 	ld e, a
 	ld a, [hli]
 	ld d, a
-	cp $ff
-	jr z, .asm_ddcf
+	cp HIGH(-1)
+	jr z, .break
 	ld a, [de]
 	call Func_200e
-	jr .asm_ddc1
-.asm_ddcf
+	jr .loop
+.break
 	pop hl
 	pop de
 	pop af
 	ret
-; 0xddd3
 
-SECTION "Bank 3@5e01", ROMX[$5e01], BANK[$3]
+.WRAMAddresses:
+	dw wced1
+	dw wced2
+	dw wced3
+	dw wced4
+	dw wced5
+	dw wced6
+	dw wced7
+	dw wced8
+	dw wced9
+	dw wceda
+	dw wcedb
+	dw wcedc
+	dw wcedd
+	dw wcede
+	dw wcedf
+	dw wcee0
+	dw wcee1
+	dw wcee2
+	dw wcee3
+	dw wcee4
+	dw wcee5
+	dw wcee6
+	dw -1 ; end
 
 Func_de01:
 	push af
 	push de
 	push hl
-	ld hl, $5e19
-.asm_de07
+	ld hl, .WRAMAddresses
+.loop
 	ld a, [hli]
 	ld e, a
 	ld a, [hli]
 	ld d, a
-	cp $ff
-	jr z, .asm_de15
+	cp HIGH(-1)
+	jr z, .break
 	call Func_2051
 	ld [de], a
-	jr .asm_de07
-.asm_de15
+	jr .loop
+.break
 	pop hl
 	pop de
 	pop af
 	ret
-; 0xde19
 
-SECTION "Bank 3@5e81", ROMX[$5e81], BANK[$3]
+.WRAMAddresses:
+	dw wcedc
+	dw wcedd
+	dw wcede
+	dw wcedf
+	dw wcee0
+	dw wcee1
+	dw wcee2
+	dw wcee3
+	dw wcee4
+	dw wcee5
+	dw wcee6
+	dw wced1
+	dw wced2
+	dw wced3
+	dw wced4
+	dw wced5
+	dw wced6
+	dw wced7
+	dw wced8
+	dw wced9
+	dw wceda
+	dw wcedb
+	dw -1 ; end
+
+; unreferenced
+Func_de47:
+	push af
+	xor a
+	ld [wce02], a
+	ld [wce03], a
+	ld [wce04], a
+	ld [wce05], a
+	ld [wce01], a
+	ld [wce12], a
+	ld [wce06], a
+	ld [wce07], a
+	ld [wHealLPAmount + 0], a
+	ld [wHealLPAmount + 1], a
+	ld [wce0c + 0], a
+	ld [wce0c + 1], a
+	ld [wce08], a
+	ld [wce09], a
+	ld [wDamageLPAmount + 0], a
+	ld [wDamageLPAmount + 1], a
+	ld [wce10 + 0], a
+	ld [wce10 + 1], a
+	pop af
+	ret
 
 Func_de81:
 	push af
@@ -5049,7 +5268,7 @@ Func_e259:
 	push hl
 	ld b, $00
 	ld c, a
-	ld hl, $626b
+	ld hl, .data
 	add hl, bc
 	ld a, [hl]
 	call Func_e08a
@@ -5057,9 +5276,9 @@ Func_e259:
 	pop bc
 	pop af
 	ret
-; 0xe26b
 
-SECTION "Bank 3@626f", ROMX[$626f], BANK[$3]
+.data
+	db $00, $00, $01, $02
 
 Func_e26f:
 	push af
@@ -5067,7 +5286,7 @@ Func_e26f:
 	push hl
 	ld b, $00
 	ld c, a
-	ld hl, $6281
+	ld hl, .data
 	add hl, bc
 	ld a, [hl]
 	call Func_e08a
@@ -5075,9 +5294,9 @@ Func_e26f:
 	pop bc
 	pop af
 	ret
-; 0xe281
 
-SECTION "Bank 3@6285", ROMX[$6285], BANK[$3]
+.data
+	db $00, $00, $01, $05
 
 Func_e285:
 	push af
@@ -5388,7 +5607,7 @@ LoadMainMenu:
 	push hl
 	call Func_101d
 	call DisableLCD
-	ld hl, $64bc
+	ld hl, ScreenConfig_e4bc
 	call SetScreenConfig
 	farcall DrawMainMenu
 	call LoadMainMenuCursor
@@ -5398,9 +5617,18 @@ LoadMainMenu:
 	pop hl
 	pop af
 	ret
-; 0xe4bc
 
-SECTION "Bank 3@64c6", ROMX[$64c6], BANK[$3]
+ScreenConfig_e4bc:
+	db LCDC_BG_ON | LCDC_OBJ_ON | LCDC_OBJ_8 | LCDC_BG_9800 | LCDC_BLOCK21 | LCDC_WIN_OFF | LCDC_WIN_9800 ; LCDC
+	db STAT_LYC ; STAT
+	db   0 ; SCY
+	db   0 ; SCX
+	db  32 ; LYC
+	dbpal SHADE_WHITE, SHADE_WHITE, SHADE_WHITE, SHADE_WHITE ; BGP
+	dbpal SHADE_WHITE, SHADE_WHITE, SHADE_WHITE, SHADE_WHITE ; OBP0
+	dbpal SHADE_WHITE, SHADE_WHITE, SHADE_WHITE, SHADE_WHITE ; OBP1
+	db 144 ; WY
+	db 159 + WX_OFS ; WX
 
 LoadMainMenuCursor:
 	call ClearOAM
@@ -5430,9 +5658,8 @@ LoadMainMenuCursor:
 	ret
 
 MainMenuCursorGfx: INCBIN "gfx/gfx_e4ea.2bpp"
-; 0xe4fa
 
-SECTION "Bank 3@64fb", ROMX[$64fb], BANK[$3]
+	ret ; stray ret
 
 Func_e4fb:
 	push af
@@ -5644,7 +5871,7 @@ Func_e626:
 	ld a, [wJoypadPressed]
 	cp [hl]
 	jr nz, .reset
-	ld hl, $66a4
+	ld hl, .CombinationIndices
 	add hl, de
 	ld e, [hl]
 	jr .asm_e661
@@ -5683,9 +5910,9 @@ Func_e626:
 	db PAD_UP, PAD_B, PAD_DOWN, PAD_DOWN, PAD_RIGHT, PAD_UP, PAD_UP, PAD_UP, PAD_UP, PAD_B | PAD_DOWN, PAD_LEFT
 .ButtonCombination3:
 	db PAD_B, PAD_B, PAD_B, PAD_UP, PAD_B, PAD_B, PAD_B | PAD_RIGHT
-; 0xe68a
 
-SECTION "Bank 03@66be", ROMX[$66be], BANK[$03]
+.CombinationIndices:
+	db $01, $02, $03, $04, $05, $06, $80, $08, $09, $0a, $0b, $0c, $0d, $0e, $0f, $10, $11, $81, $13, $14, $15, $16, $17, $18, $19, $82
 
 ResetMainMenuSelection:
 	push af
@@ -5693,9 +5920,9 @@ ResetMainMenuSelection:
 	ld [wMainMenuSelection], a
 	pop af
 	ret
-; 0xe6c5
 
-SECTION "Bank 3@66c7", ROMX[$66c7], BANK[$3]
+	ret ; stray ret
+	ret ; stray ret
 
 Func_e6c7:
 	push af
@@ -5742,15 +5969,15 @@ DrawMainMenuCursor:
 	push hl
 	ld b, $00
 	ld c, a
-	ld hl, $670d
+	ld hl, .YPositions
 	add hl, bc
 	ld a, [hl]
 	pop hl
 	pop bc
 	ret
-; 0xe70d
 
-SECTION "Bank 3@6711", ROMX[$6711], BANK[$3]
+.YPositions:
+	db 96, 104, 112, 120
 
 Func_e711:
 	push af
@@ -5929,7 +6156,7 @@ Func_e7eb:
 	push hl
 	call Func_101d
 	call DisableLCD
-	ld hl, $680e
+	ld hl, ScreenConfig_e80e
 	call SetScreenConfig
 	farcall LoadFontToVTiles2
 	farcall Func_28e0c
@@ -5940,9 +6167,18 @@ Func_e7eb:
 	pop hl
 	pop af
 	ret
-; 0xe80e
 
-SECTION "Bank 3@6818", ROMX[$6818], BANK[$3]
+ScreenConfig_e80e:
+	db LCDC_BG_ON | LCDC_OBJ_ON | LCDC_OBJ_8 | LCDC_BG_9800 | LCDC_BLOCK21 | LCDC_WIN_ON | LCDC_WIN_9C00 ; LCDC
+	db STAT_LYC ; STAT
+	db   0 ; SCY
+	db   0 ; SCX
+	db  32 ; LYC
+	dbpal SHADE_WHITE, SHADE_WHITE, SHADE_WHITE, SHADE_WHITE ; BGP
+	dbpal SHADE_WHITE, SHADE_WHITE, SHADE_WHITE, SHADE_WHITE ; OBP0
+	dbpal SHADE_WHITE, SHADE_WHITE, SHADE_WHITE, SHADE_WHITE ; OBP1
+	db 144 ; WY
+	db 159 + WX_OFS ; WX
 
 Func_e818:
 	call ClearOAM
@@ -5956,9 +6192,9 @@ Func_e825:
 	push bc
 	push de
 	push hl
-	ld de, $683d
+	ld de, Gfx_e83d
 	ld hl, vTiles0
-	ld c, $10
+	ld c, 2 * TILE_1BPP_SIZE
 .asm_e831
 	ld a, [de]
 	ld [hli], a
@@ -5971,9 +6207,10 @@ Func_e825:
 	pop bc
 	pop af
 	ret
-; 0xe83d
 
-SECTION "Bank 3@684e", ROMX[$684e], BANK[$3]
+Gfx_e83d: INCBIN "gfx/gfx_557a.1bpp"
+
+	ret ; stray ret
 
 Func_e84e:
 	push bc
@@ -6023,7 +6260,7 @@ Func_e87f:
 	rlca
 	jr nc, .asm_e88d
 	ld b, $00
-	ld hl, $68b1
+	ld hl, .data
 	add hl, bc
 	ld d, [hl]
 .asm_e898
@@ -6036,7 +6273,7 @@ Func_e87f:
 	rlca
 	jr nc, .asm_e8a1
 	ld b, $00
-	ld hl, $68b1
+	ld hl, .data
 	add hl, bc
 	ld d, [hl]
 .asm_e8ac
@@ -6045,9 +6282,9 @@ Func_e87f:
 	pop de
 	pop bc
 	ret
-; 0xe8b1
 
-SECTION "Bank 3@68b9", ROMX[$68b9], BANK[$3]
+.data
+	db $02, $04, $00, $00, $00, $00, $06, $08
 
 Func_e8b9:
 	ld a, VBLANK_02
@@ -6156,7 +6393,7 @@ Func_e96d:
 	push hl
 	call Func_101d
 	call DisableLCD
-	ld hl, $6996
+	ld hl, ScreenConfig_e996
 	call SetScreenConfig
 	farcall LoadFontToVTiles2
 	farcall Func_289b8
@@ -6169,9 +6406,18 @@ Func_e96d:
 	pop hl
 	pop af
 	ret
-; 0xe996
 
-SECTION "Bank 3@69a0", ROMX[$69a0], BANK[$3]
+ScreenConfig_e996:
+	db LCDC_BG_ON | LCDC_OBJ_ON | LCDC_OBJ_8 | LCDC_BG_9800 | LCDC_BLOCK21 | LCDC_WIN_OFF | LCDC_WIN_9800 ; LCDC
+	db STAT_LYC ; STAT
+	db   0 ; SCY
+	db   0 ; SCX
+	db  32 ; LYC
+	dbpal SHADE_WHITE, SHADE_WHITE, SHADE_WHITE, SHADE_WHITE ; BGP
+	dbpal SHADE_WHITE, SHADE_WHITE, SHADE_WHITE, SHADE_WHITE ; OBP0
+	dbpal SHADE_WHITE, SHADE_WHITE, SHADE_WHITE, SHADE_WHITE ; OBP1
+	db 144 ; WY
+	db 159 + WX_OFS ; WX
 
 Func_e9a0:
 	call ClearOAM
@@ -6185,9 +6431,9 @@ Func_e9ad:
 	push bc
 	push de
 	push hl
-	ld de, $69c5
+	ld de, Gfx_e9c5
 	ld hl, vTiles0
-	ld c, $10
+	ld c, 2 * TILE_1BPP_SIZE
 .asm_e9b9
 	ld a, [de]
 	ld [hli], a
@@ -6200,9 +6446,8 @@ Func_e9ad:
 	pop bc
 	pop af
 	ret
-; 0xe9c5
 
-SECTION "Bank 3@69d5", ROMX[$69d5], BANK[$3]
+Gfx_e9c5: INCBIN "gfx/gfx_557a.1bpp"
 
 Func_e9d5:
 	push af
@@ -6493,15 +6738,15 @@ Func_ebbb:
 	push hl
 	ld b, $00
 	ld c, a
-	ld hl, $6bc8
+	ld hl, .data
 	add hl, bc
 	ld a, [hl]
 	pop hl
 	pop bc
 	ret
-; 0xebc8
 
-SECTION "Bank 3@6bd2", ROMX[$6bd2], BANK[$3]
+.data
+	db $28, $38, $48, $58, $68, $78, $88, $98, $a8, $c9
 
 Func_ebd2:
 	push af
@@ -6547,7 +6792,7 @@ Func_ebfb:
 	rlca
 	jr nc, .asm_ec09
 	ld b, $00
-	ld hl, $6c19
+	ld hl, .data
 	add hl, bc
 	ld d, [hl]
 .asm_ec14
@@ -6556,9 +6801,9 @@ Func_ebfb:
 	pop de
 	pop bc
 	ret
-; 0xec19
 
-SECTION "Bank 3@6c21", ROMX[$6c21], BANK[$3]
+.data
+	db $02, $04, $00, $00, $00, $00, $06, $08
 
 Func_ec21:
 	ld a, VBLANK_02
@@ -6588,7 +6833,7 @@ Func_ec3e:
 	ld b, $00
 	ld a, [wceb1]
 	ld c, a
-	ld hl, $6c5f
+	ld hl, .data
 	add hl, bc
 	ld a, [hl]
 	call Func_eae2
@@ -6598,9 +6843,9 @@ Func_ec3e:
 	pop hl
 	pop bc
 	ret
-; 0xec5f
 
-SECTION "Bank 3@6c61", ROMX[$6c61], BANK[$3]
+.data
+	db $01, $00
 
 Func_ec61:
 	ld a, VBLANK_04
@@ -6851,8 +7096,8 @@ Func_edfe:
 	call SetPendingVBlankMode
 	bcbgcoord 0, 1
 	call AddWordToVBlankStruct
-	ld hl, $6e1c
-	ld c, $14
+	ld hl, .Tiles
+	ld c, SCREEN_WIDTH
 .asm_ee11
 	ld a, [hli]
 	call AddByteToVBlankStruct
@@ -6862,9 +7107,9 @@ Func_edfe:
 	pop bc
 	pop af
 	ret
-; 0xee1c
 
-SECTION "Bank 3@6e30", ROMX[$6e30], BANK[$3]
+.Tiles:
+	db $80, $42, $73, $50, $23, $10, $12, $20, $38, $80, $80, $80, $80, $80, $80, $80, $80, $80, $80, $80
 
 Func_ee30:
 	push hl
@@ -7013,9 +7258,6 @@ Func_ef1d:
 	pop bc
 	pop af
 	ret
-; 0xef49
-
-SECTION "Bank 3@6f49", ROMX[$6f49], BANK[$3]
 
 Func_ef49:
 	push af
@@ -7125,13 +7367,15 @@ Func_efee:
 	ld c, a
 	ld a, [wTempCardID + 1]
 	ld b, a
-	ld de, $12c
+	ld de, MAGIC_CARDS
 	call CompareBCAndDE
 	cp DE_LARGER_THAN_BC
 	jr nz, .asm_f013
-	ld a, $2f
+	ld a, EFFECT_STOP_DEFENSE
 	jr .asm_f01a
 .asm_f013
+	; bug, the following pointer points to the middle of Func_eeee
+	; it most likely was supposed to be pointing to Data_f01e
 	ld hl, $6ef2
 	add hl, bc
 	ld b, h
@@ -7142,9 +7386,74 @@ Func_efee:
 	pop de
 	pop bc
 	ret
-; 0xf01e
 
-SECTION "Bank 3@705f", ROMX[$705f], BANK[$3]
+; unreferenced
+Data_f01e:
+	db EFFECT_STOP_DEFENSE
+	db EFFECT_STOP_DEFENSE
+	db EFFECT_STOP_DEFENSE
+	db EFFECT_STOP_DEFENSE
+	db EFFECT_STOP_DEFENSE
+	db EFFECT_STOP_DEFENSE
+	db EFFECT_STOP_DEFENSE
+	db EFFECT_STOP_DEFENSE
+	db EFFECT_STOP_DEFENSE
+	db EFFECT_STOP_DEFENSE
+	db EFFECT_STOP_DEFENSE
+	db EFFECT_STOP_DEFENSE
+	db EFFECT_STOP_DEFENSE
+	db EFFECT_STOP_DEFENSE
+	db EFFECT_STOP_DEFENSE
+	db EFFECT_STOP_DEFENSE
+	db EFFECT_STOP_DEFENSE
+	db EFFECT_STOP_DEFENSE
+	db EFFECT_STOP_DEFENSE
+	db EFFECT_30
+	db EFFECT_STOP_DEFENSE
+	db EFFECT_STOP_DEFENSE
+	db EFFECT_STOP_DEFENSE
+	db EFFECT_STOP_DEFENSE
+	db EFFECT_STOP_DEFENSE
+	db EFFECT_STOP_DEFENSE
+	db EFFECT_STOP_DEFENSE
+	db EFFECT_STOP_DEFENSE
+	db EFFECT_DRAGON_CAPTURE_JAR
+	db EFFECT_FOREST
+	db EFFECT_WASTELAND
+	db EFFECT_MOUNTAIN
+	db EFFECT_SOGEN
+	db EFFECT_UMI
+	db EFFECT_YAMI
+	db EFFECT_DARK_HOLE
+	db EFFECT_RAIGEKI
+	db EFFECT_MOOYAN_CURRY
+	db EFFECT_RED_MEDICINE
+	db EFFECT_GOBLINS_REMEDY
+	db EFFECT_SOUL_OF_THE_PURE
+	db EFFECT_DIAN_KETO_THE_CURE
+	db EFFECT_SPARKS
+	db EFFECT_HINOTAMA
+	db EFFECT_FINAL_FLAME
+	db EFFECT_OOKAZI
+	db EFFECT_TREMENDOUS_FIRE
+	db EFFECT_32
+	db EFFECT_34
+	db EFFECT_33
+	db EFFECT_STOP_DEFENSE
+	db EFFECT_STOP_DEFENSE
+	db EFFECT_STOP_DEFENSE
+	db EFFECT_STOP_DEFENSE
+	db EFFECT_STOP_DEFENSE
+	db EFFECT_STOP_DEFENSE
+	db EFFECT_STOP_DEFENSE
+	db EFFECT_STOP_DEFENSE
+	db EFFECT_STOP_DEFENSE
+	db EFFECT_STOP_DEFENSE
+	db EFFECT_STOP_DEFENSE
+	db EFFECT_STOP_DEFENSE
+	db EFFECT_STOP_DEFENSE
+	db EFFECT_STOP_DEFENSE
+	db EFFECT_STOP_DEFENSE
 
 ; output:
 ; - a = effect constant
