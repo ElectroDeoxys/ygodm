@@ -166,8 +166,9 @@ wLoadedCardType:: db ; cd17
 
 	ds $1
 
-wcd19:: db ; cd19
-wcd1a:: db ; cd1a
+wUnused_cd19:: db ; cd19
+wUnused_cd1a:: db ; cd1a
+
 wcd1b:: db ; cd1b
 wcd1c:: db ; cd1c
 wcd1d:: db ; cd1d
@@ -225,8 +226,7 @@ wCardLocation:: db ; cdf1
 wTempCardID:: dw ; cdf2
 
 wcdf4:: db ; cdf4
-wcdf5:: db ; cdf5
-wcdf6:: db ; cdf6
+wcdf5:: dw ; cdf5
 wcdf7:: db ; cdf7
 wcdf8:: db ; cdf8
 wcdf9:: db ; cdf9
@@ -304,8 +304,7 @@ wFusionCardID::    dw ; cecf
 wced1:: db ; ced1
 wced2:: db ; ced2
 wced3:: db ; ced3
-wced4:: db ; ced4
-wced5:: db ; ced5
+wced4:: dw ; ced4
 wced6:: db ; ced6
 wced7:: db ; ced7
 wced8:: db ; ced8
@@ -315,8 +314,7 @@ wcedb:: db ; cedb
 wcedc:: db ; cedc
 wcedd:: db ; cedd
 wcede:: db ; cede
-wcedf:: db ; cedf
-wcee0:: db ; cee0
+wcedf:: dw ; cedf
 wcee1:: db ; cee1
 wcee2:: db ; cee2
 wcee3:: db ; cee3

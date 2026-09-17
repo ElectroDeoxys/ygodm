@@ -199,9 +199,9 @@ Func_1921e:
 	push hl
 	ld a, TEXTLOAD_0A
 	farcall SetTextLoadMode
-	ld a, [wced4]
+	ld a, [wced4 + 0]
 	ld c, a
-	ld a, [wced5]
+	ld a, [wced4 + 1]
 	ld b, a
 	farcall SetTextArg
 	farcall LoadText
@@ -227,9 +227,9 @@ Func_19248:
 	push hl
 	ld a, TEXTLOAD_0A
 	farcall SetTextLoadMode
-	ld a, [wcedf]
+	ld a, [wcedf + 0]
 	ld c, a
-	ld a, [wcee0]
+	ld a, [wcedf + 1]
 	ld b, a
 	farcall SetTextArg
 	farcall LoadText
@@ -711,10 +711,10 @@ Func_195a4:
 	push bc
 	push de
 	push hl
-	ld a, [wced4]
-	ld [wcdf5], a
-	ld a, [wced5]
-	ld [wcdf6], a
+	ld a, [wced4 + 0]
+	ld [wcdf5 + 0], a
+	ld a, [wced4 + 1]
+	ld [wcdf5 + 1], a
 	ld a, $00
 	ld [wcdf7], a
 	ld a, [wced6]
@@ -724,23 +724,23 @@ Func_195a4:
 	ld a, $00
 	ld [wcdfa], a
 	call Func_1d2a
-	cp FALSE
+	cp $01
 	jr z, .asm_1962a
 	call Func_2b52
-	ld a, [wced4]
+	ld a, [wced4 + 0]
 	ld c, a
-	ld a, [wced5]
+	ld a, [wced4 + 1]
 	ld b, a
 	ld d, $00
 .asm_195de
 	ld e, $0a
 .asm_195e0
 	ld a, c
-	ld [wcdf5], a
+	ld [wcdf5 + 0], a
 	ld a, b
-	ld [wcdf6], a
+	ld [wcdf5 + 1], a
 	call Func_1d2a
-	cp TRUE
+	cp $00
 	jr z, .asm_195f1
 	ld d, $01
 .asm_195f1
@@ -828,10 +828,10 @@ Func_19678:
 	push bc
 	push de
 	push hl
-	ld a, [wcedf]
-	ld [wcdf5], a
-	ld a, [wcee0]
-	ld [wcdf6], a
+	ld a, [wcedf + 0]
+	ld [wcdf5 + 0], a
+	ld a, [wcedf + 1]
+	ld [wcdf5 + 1], a
 	ld a, $00
 	ld [wcdf7], a
 	ld a, [wcee1]
@@ -844,20 +844,20 @@ Func_19678:
 	cp $01
 	jr z, .asm_196fe
 	call Func_2b52
-	ld a, [wcedf]
+	ld a, [wcedf + 0]
 	ld c, a
-	ld a, [wcee0]
+	ld a, [wcedf + 1]
 	ld b, a
 	ld d, $00
 .asm_196b2
 	ld e, $0a
 .asm_196b4
 	ld a, c
-	ld [wcdf5], a
+	ld [wcdf5 + 0], a
 	ld a, b
-	ld [wcdf6], a
+	ld [wcdf5 + 1], a
 	call Func_1d2a
-	cp TRUE
+	cp $00
 	jr z, .asm_196c5
 	ld d, $01
 .asm_196c5

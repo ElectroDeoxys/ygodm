@@ -4628,8 +4628,8 @@ Func_ddbb:
 	dw wced1
 	dw wced2
 	dw wced3
-	dw wced4
-	dw wced5
+	dw wced4 + 0
+	dw wced4 + 1
 	dw wced6
 	dw wced7
 	dw wced8
@@ -4639,8 +4639,8 @@ Func_ddbb:
 	dw wcedc
 	dw wcedd
 	dw wcede
-	dw wcedf
-	dw wcee0
+	dw wcedf + 0
+	dw wcedf + 1
 	dw wcee1
 	dw wcee2
 	dw wcee3
@@ -4674,8 +4674,8 @@ Func_de01:
 	dw wcedc
 	dw wcedd
 	dw wcede
-	dw wcedf
-	dw wcee0
+	dw wcedf + 0
+	dw wcedf + 1
 	dw wcee1
 	dw wcee2
 	dw wcee3
@@ -4685,8 +4685,8 @@ Func_de01:
 	dw wced1
 	dw wced2
 	dw wced3
-	dw wced4
-	dw wced5
+	dw wced4 + 0
+	dw wced4 + 1
 	dw wced6
 	dw wced7
 	dw wced8
@@ -5020,10 +5020,10 @@ Func_e08e:
 	push af
 	ld a, [wPlayerLP + 0]
 	ld [wce06], a
-	ld [wced4], a
+	ld [wced4 + 0], a
 	ld a, [wPlayerLP + 1]
 	ld [wce07], a
-	ld [wced5], a
+	ld [wced4 + 1], a
 	pop af
 	ret
 
@@ -5031,10 +5031,10 @@ Func_e0a3:
 	push af
 	ld a, [wOppLP + 0]
 	ld [wce08], a
-	ld [wcedf], a
+	ld [wcedf + 0], a
 	ld a, [wOppLP + 1]
 	ld [wce09], a
-	ld [wcee0], a
+	ld [wcedf + 1], a
 	pop af
 	ret
 

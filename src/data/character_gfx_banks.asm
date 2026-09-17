@@ -1,0 +1,19 @@
+CharacterGfxBanks:
+	db BANK(WeevilGfx)      ; WEEVIL
+	db BANK(MaiGfx)         ; MAI
+	db BANK(RexGfx)         ; REX
+	db BANK(MakoGfx)        ; MAKO
+	db BANK(YamiYugiGfx)    ; YAMI_YUGI
+	db BANK(YugiGfx)        ; YUGI
+	db BANK(TeaGfx)         ; TEA
+	db BANK(JoeyGfx)        ; JOEY
+	db BANK(SetoKaibaGfx)   ; SETO_KAIBA
+	db BANK(MokubaGfx)      ; MOKUBA
+	db BANK(TristanGfx)     ; TRISTAN
+	db BANK(BakuraGfx)      ; BAKURA
+	db BANK(PuppeteerGfx)   ; PUPPETEER
+	db BANK(PanikGfx)       ; PANIK
+	db BANK(BanditKeithGfx) ; BANDIT_KEITH
+	db BANK(MaximillionGfx) ; MAXIMILLION
+	db BANK(SimonGfx)       ; SIMON
+	db BANK(ExodiaGfx)      ; EXODIA
