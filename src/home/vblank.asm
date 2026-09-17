@@ -25,6 +25,7 @@ VBlank:
 	jp hl
 
 .Jumptable:
+	table_width 2
 	dw .VBlank00  ; VBLANK_00
 	dw .VBlank02  ; VBLANK_02
 	dw .VBlank04  ; VBLANK_04
@@ -37,6 +38,7 @@ VBlank:
 	dw .VBlank12  ; VBLANK_12
 	dw .VBlank14  ; VBLANK_14
 	dw VBlank16 ; VBLANK_16
+	assert_table_length NUM_VBLANK_MODES
 
 .VBlank00:
 	ld c, LOW(hVBlankJobFlags)
@@ -573,6 +575,7 @@ SetPendingVBlankMode::
 	ret
 
 .Jumptable:
+	table_width 2
 	dw .VBlank00 ; VBLANK_00
 	dw .VBlank02 ; VBLANK_02
 	dw .VBlank04 ; VBLANK_04
@@ -585,6 +588,7 @@ SetPendingVBlankMode::
 	dw .VBlank12 ; VBLANK_12
 	dw .VBlank14 ; VBLANK_14
 	dw .VBlank16 ; VBLANK_16
+	assert_table_length NUM_VBLANK_MODES
 
 .VBlank00:
 .VBlank02:

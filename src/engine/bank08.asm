@@ -81,6 +81,7 @@ GenerateAIOpponentDeck:
 	ret
 
 .PtrTable:
+	table_width 2
 	dw .Weevil      ; WEEVIL
 	dw .Mai         ; MAI
 	dw .Rex         ; REX
@@ -98,6 +99,7 @@ GenerateAIOpponentDeck:
 	dw .BanditKeith ; BANDIT_KEITH
 	dw .Maximillion ; MAXIMILLION
 	dw .Simon       ; SIMON
+	assert_table_length NUM_CHARACTERS - 1
 
 .Weevil:
 	card_freq_table_start

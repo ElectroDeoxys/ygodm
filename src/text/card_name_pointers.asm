@@ -1,4 +1,5 @@
 CardNamePointers:
+	table_width 2
 	dw BEyeWhiteDragonName    ; B_EYE_WHITE_DRAGON
 	dw MysticalElfName        ; MYSTICAL_ELF
 	dw HitotsuMeGiantName     ; HITOTSU_ME_GIANT
@@ -366,3 +367,4 @@ CardNamePointers:
 	dw FiendsMirrorName       ; FIENDS_MIRROR
 	dw InvalidCardName        ; INVALID_CARD
 	dw InvalidCardName + (InvalidCardName.end - InvalidCardName)
+	assert_table_length NUM_CARDS + 2

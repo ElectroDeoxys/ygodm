@@ -1007,6 +1007,7 @@ Func_8a1d:
 	dw .Data_8b3b
 
 .Data_8a63:
+	table_width 6
 	db $4f, $3d, $4f, $3d, $4f, $3d ; WEEVIL
 	db $46, $2b, $46, $2b, $46, $2b ; MAI
 	db $38, $38, $38, $38, $38, $38 ; REX
@@ -1025,8 +1026,10 @@ Func_8a1d:
 	db $40, $30, $40, $30, $40, $30 ; MAXIMILLION
 	db $48, $40, $48, $40, $48, $40 ; SIMON
 	db $c8, $d0, $c8, $d0, $c8, $d0 ; EXODIA
+	assert_table_length NUM_CHARACTERS
 
 .Data_8acf:
+	table_width 6
 	db $5f, $3d, $5f, $3d, $5f, $3d ; WEEVIL
 	db $5c, $2c, $5c, $2c, $5c, $2c ; MAI
 	db $50, $35, $50, $35, $50, $35 ; REX
@@ -1045,8 +1048,10 @@ Func_8a1d:
 	db $50, $30, $50, $30, $50, $30 ; MAXIMILLION
 	db $58, $40, $58, $40, $58, $40 ; SIMON
 	db $c8, $d0, $c8, $d0, $c8, $d0 ; EXODIA
+	assert_table_length NUM_CHARACTERS
 
 .Data_8b3b:
+	table_width 6
 	db $4f, $4d, $4f, $4d, $4f, $4d ; WEEVIL
 	db $51, $3b, $51, $3b, $51, $3b ; MAI
 	db $48, $4a, $48, $4a, $48, $4a ; REX
@@ -1065,6 +1070,7 @@ Func_8a1d:
 	db $48, $40, $48, $40, $48, $40 ; MAXIMILLION
 	db $50, $48, $50, $48, $50, $48 ; SIMON
 	db $c8, $d0, $c8, $d0, $c8, $d0 ; EXODIA
+	assert_table_length NUM_CHARACTERS
 
 Func_8ba7:
 	push af
@@ -1230,6 +1236,7 @@ LoadCharacterOAMGfx:
 	ret
 
 .GfxTable:
+	table_width 2
 	dw WeevilOAMGfx      ; WEEVIL
 	dw MaiOAMGfx         ; MAI
 	dw RexOAMGfx         ; REX
@@ -1248,6 +1255,7 @@ LoadCharacterOAMGfx:
 	dw MaximillionOAMGfx ; MAXIMILLION
 	dw SimonOAMGfx       ; SIMON
 	dw ExodiaOAMGfx      ; EXODIA
+	assert_table_length NUM_CHARACTERS
 
 WeevilOAMGfx:      INCBIN "gfx/characters/weevil_oam.2bpp"
 MaiOAMGfx:         INCBIN "gfx/characters/mai_oam.2bpp"
@@ -1535,6 +1543,7 @@ ConvertNPCDuelistToCharacter:
 	ret
 
 .Characters:
+	table_width 1
 	db WEEVIL       ; DUELIST_WEEVIL
 	db MAI          ; DUELIST_MAI
 	db REX          ; DUELIST_REX
@@ -1551,6 +1560,7 @@ ConvertNPCDuelistToCharacter:
 	db SIMON        ; DUELIST_SIMON
 	db MAXIMILLION  ; DUELIST_MAXIMILLION
 	db YAMI_YUGI    ; DUELIST_YAMI_YUGI
+	assert_table_length NUM_DUELISTS
 
 GetDuelistPreDuelDialogueID:
 	push bc
@@ -1578,6 +1588,7 @@ GetDuelistPreDuelDialogueID:
 	ret
 
 .UnbeatenDialogueIDs:
+	table_width 1
 	dlg Text_3c179 ; DUELIST_WEEVIL
 	dlg Text_3c1b0 ; DUELIST_MAI
 	dlg Text_3c1e2 ; DUELIST_REX
@@ -1594,8 +1605,10 @@ GetDuelistPreDuelDialogueID:
 	dlg Text_3c48a ; DUELIST_SIMON
 	dlg Text_3c455 ; DUELIST_MAXIMILLION
 	dlg Text_3c248 ; DUELIST_YAMI_YUGI
+	assert_table_length NUM_DUELISTS
 
 .AlreadyBeatenDialogueIDs:
+	table_width 1
 	dlg Text_3c4bd ; DUELIST_WEEVIL
 	dlg Text_3c4ef ; DUELIST_MAI
 	dlg Text_3c515 ; DUELIST_REX
@@ -1612,6 +1625,7 @@ GetDuelistPreDuelDialogueID:
 	dlg Text_3c70f ; DUELIST_SIMON
 	dlg Text_3c6dd ; DUELIST_MAXIMILLION
 	dlg Text_3c561 ; DUELIST_YAMI_YUGI
+	assert_table_length NUM_DUELISTS
 
 GetDuelistLossDialogueID:
 	push bc
@@ -1638,6 +1652,7 @@ GetDuelistLossDialogueID:
 	ret
 
 .Exactly5WinsDialogueIDs:
+	table_width 1
 	dlg Text_3ccaf ; DUELIST_WEEVIL
 	dlg Text_3cce5 ; DUELIST_MAI
 	dlg Text_3cd17 ; DUELIST_REX
@@ -1654,8 +1669,10 @@ GetDuelistLossDialogueID:
 	dlg Text_3cf5f ; DUELIST_SIMON
 	dlg Text_3cf33 ; DUELIST_MAXIMILLION
 	dlg Text_3cd7e ; DUELIST_YAMI_YUGI
+	assert_table_length NUM_DUELISTS
 
 .DefaultDialogueIDs:
+	table_width 1
 	dlg Text_3ca22 ; DUELIST_WEEVIL
 	dlg Text_3ca50 ; DUELIST_MAI
 	dlg Text_3ca7d ; DUELIST_REX
@@ -1672,6 +1689,7 @@ GetDuelistLossDialogueID:
 	dlg Text_3cc84 ; DUELIST_SIMON
 	dlg Text_3cc56 ; DUELIST_MAXIMILLION
 	dlg Text_3cae3 ; DUELIST_YAMI_YUGI
+	assert_table_length NUM_DUELISTS
 
 GetDuelistWinDialogueID:
 	push bc
@@ -1687,6 +1705,7 @@ GetDuelistWinDialogueID:
 	ret
 
 .DialogueIDs:
+	table_width 1
 	dlg Text_3c740 ; DUELIST_WEEVIL
 	dlg Text_3c76f ; DUELIST_MAI
 	dlg Text_3c796 ; DUELIST_REX
@@ -1703,6 +1722,7 @@ GetDuelistWinDialogueID:
 	dlg Text_3c9ef ; DUELIST_SIMON
 	dlg Text_3c9bf ; DUELIST_MAXIMILLION
 	dlg Text_3c7f4 ; DUELIST_YAMI_YUGI
+	assert_table_length NUM_DUELISTS
 
 Func_b7ee:
 	push af

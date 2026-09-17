@@ -16,7 +16,6 @@ DEF DE_LARGER_THAN_BC  EQU $2
 	const CONSOLE_SGB1 ; $2
 	const CONSOLE_SGB2 ; $3
 
-
 ; V-Blank modes
 	const_def 0, 2
 	const VBLANK_00 ; $00
@@ -31,6 +30,7 @@ DEF DE_LARGER_THAN_BC  EQU $2
 	const VBLANK_12 ; $12
 	const VBLANK_14 ; $14
 	const VBLANK_16 ; $16
+DEF NUM_VBLANK_MODES EQU const_value / 2
 
 ; if a card in Trunk is not owned yet,
 ; then it is initialised with this value
@@ -38,3 +38,6 @@ DEF NOT_OWNED EQU $ff
 
 ; how many of a single card the player can own
 DEF MAX_CARD_COUNT EQU 99
+
+; number of monsters in starting deck
+DEF NUM_STARTING_DECK_MONSTERS EQU 33

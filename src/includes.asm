@@ -17,6 +17,7 @@ INCLUDE "constants/sgb_constants.asm"
 INCLUDE "constants/sound_constants.asm"
 INCLUDE "constants/text_constants.asm"
 
+INCLUDE "macros/asserts.asm"
 INCLUDE "macros/audio.asm"
 INCLUDE "macros/code.asm"
 INCLUDE "macros/coords.asm"

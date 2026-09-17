@@ -82,6 +82,7 @@ LoadCardData:
 	ret
 
 CardTypes:
+	table_width 1
 	db DRAGON        ; B_EYE_WHITE_DRAGON
 	db SPELLCASTER   ; MYSTICAL_ELF
 	db BEAST_WARRIOR ; HITOTSU_ME_GIANT
@@ -447,6 +448,7 @@ CardTypes:
 	db SPELLCASTER   ; FAIRYS_GIFT
 	db WARRIOR       ; B_LUSTER_SOLDIER
 	db FIEND         ; FIENDS_MIRROR
+	assert_table_length NUM_CARDS
 
 ; applies level boost/reduction to wLoadedCardAtk/Def
 ApplyCardLevelBoost:
@@ -718,6 +720,7 @@ _ApplyFieldBoost:
 	ret
 
 .AttackValues:
+	table_width 2
 	dw CardAttacks ; NONE
 	dw $4939 ; FIELD_FOREST
 	dw $4ef1 ; FIELD_WASTELAND
@@ -725,8 +728,10 @@ _ApplyFieldBoost:
 	dw $5a61 ; FIELD_SOGEN
 	dw $6019 ; FIELD_UMI
 	dw $65d1 ; FIELD_YAMI
+	assert_table_length NUM_FIELDS + 1
 
 .DefenseValues:
+	table_width 2
 	dw CardDefenses ; NONE
 	dw $4c15 ; FIELD_FOREST
 	dw $51cd ; FIELD_WASTELAND
@@ -734,8 +739,10 @@ _ApplyFieldBoost:
 	dw $5d3d ; FIELD_SOGEN
 	dw $62f5 ; FIELD_UMI
 	dw $68ad ; FIELD_YAMI
+	assert_table_length NUM_FIELDS + 1
 
 CardAttacks:
+	table_width 2
 	dw $3000 ; B_EYE_WHITE_DRAGON
 	dw  $800 ; MYSTICAL_ELF
 	dw $1200 ; HITOTSU_ME_GIANT
@@ -1102,8 +1109,10 @@ CardAttacks:
 	dw $3000 ; B_LUSTER_SOLDIER
 	dw $2100 ; FIENDS_MIRROR
 	dw    -1 ; INVALID_CARD
+	assert_table_length NUM_CARDS + 1
 
 CardDefenses:
+	table_width 2
 	dw $2500 ; B_EYE_WHITE_DRAGON
 	dw $2000 ; MYSTICAL_ELF
 	dw $1000 ; HITOTSU_ME_GIANT
@@ -1470,6 +1479,7 @@ CardDefenses:
 	dw $2500 ; B_LUSTER_SOLDIER
 	dw $1800 ; FIENDS_MIRROR
 	dw    -1 ; INVALID_CARD
+	assert_table_length NUM_CARDS + 1
 
 SECTION "Bank 9@6b89", ROMX[$6b89], BANK[$9]
 

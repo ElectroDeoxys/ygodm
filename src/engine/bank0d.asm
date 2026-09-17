@@ -76,6 +76,7 @@ GiveVictoryAwardCard:
 	ret
 
 .PtrTable:
+	table_width 2
 	dw .Weevil      ; WEEVIL
 	dw .Mai         ; MAI
 	dw .Rex         ; REX
@@ -93,6 +94,7 @@ GiveVictoryAwardCard:
 	dw .BanditKeith ; BANDIT_KEITH
 	dw .Maximillion ; MAXIMILLION
 	dw .Simon       ; SIMON
+	assert_table_length NUM_CHARACTERS - 1
 
 .Weevil:
 	card_freq_table_start
@@ -879,6 +881,7 @@ Func_36ebd:
 	dw -1 ; end
 
 VictoryBonusCards:
+	table_width 2
 	dw .Weevil      ; WEEVIL
 	dw .Mai         ; MAI
 	dw .Rex         ; REX
@@ -896,6 +899,7 @@ VictoryBonusCards:
 	dw .BanditKeith ; BANDIT_KEITH
 	dw .Maximillion ; MAXIMILLION
 	dw .Simon       ; SIMON
+	assert_table_length NUM_CHARACTERS - 1
 
 .Weevil:
 	dw FOREST

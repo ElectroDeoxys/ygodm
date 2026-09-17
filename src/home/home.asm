@@ -404,6 +404,7 @@ GetDuelistClass:
 	ret
 
 .Classes:
+	table_width 1
 	db DUELISTCLASS_1 ; DUELIST_WEEVIL
 	db DUELISTCLASS_1 ; DUELIST_MAI
 	db DUELISTCLASS_1 ; DUELIST_REX
@@ -420,6 +421,7 @@ GetDuelistClass:
 	db DUELISTCLASS_1 ; DUELIST_SIMON
 	db DUELISTCLASS_2 ; DUELIST_MAXIMILLION
 	db DUELISTCLASS_1 ; DUELIST_YAMI_YUGI
+	assert_table_length NUM_DUELISTS
 
 Func_2384::
 	push af
@@ -946,7 +948,7 @@ GenerateStartingDeckMonsterCards:
 	farcall SetCardAsSeen
 	inc e
 	ld a, e
-	cp $21
+	cp NUM_STARTING_DECK_MONSTERS
 	jr nz, .asm_2680
 	pop hl
 	pop de
@@ -1061,12 +1063,12 @@ GenerateStartingDeckMagicCards:
 	push bc
 	push de
 	push hl
-	ld e, $21
+	ld e, NUM_STARTING_DECK_MONSTERS
 	ld hl, StartingDeckMagicCards
 .asm_277d
 	ld a, e
 	cp DECK_SIZE
-	jr nc, .asm_2796
+	jr nc, .break
 	ld a, e
 	farcall SetPlayerDeckIndex
 	ld a, [hli]
@@ -1078,7 +1080,7 @@ GenerateStartingDeckMagicCards:
 	farcall SetCardAsSeen
 	inc e
 	jr .asm_277d
-.asm_2796
+.break
 	pop hl
 	pop de
 	pop bc
@@ -1086,6 +1088,7 @@ GenerateStartingDeckMagicCards:
 	ret
 
 StartingDeckMagicCards:
+	table_width 2
 	dw RAIGEKI
 	dw SPARKS
 	dw SPARKS
@@ -1093,6 +1096,7 @@ StartingDeckMagicCards:
 	dw MOOYAN_CURRY
 	dw RED_MEDICINE
 	dw DARK_PIERCE_LIGHT
+	assert_table_length DECK_SIZE - NUM_STARTING_DECK_MONSTERS
 
 RandomlyGiveGaiaFierceKnightOrDarkMagician:
 	push af
@@ -1153,7 +1157,7 @@ SetInitialWinAndDuelCounts::
 	xor a
 	ld hl, wDuelistDuelCounts
 	ld de, .InitialDuelCounts
-	ld c, NUM_DUELISTS
+	ld c, NUM_DUELISTS + 1
 .loop_1
 	ld a, [de]
 	ld [hli], a
@@ -1167,7 +1171,7 @@ SetInitialWinAndDuelCounts::
 	; wins
 	ld hl, wDuelistWinCounts
 	ld de, .InitialWinCounts
-	ld c, NUM_DUELISTS
+	ld c, NUM_DUELISTS + 1
 .loop_2
 	ld a, [de]
 	ld [hli], a
@@ -1185,6 +1189,7 @@ SetInitialWinAndDuelCounts::
 	ret
 
 .InitialDuelCounts:
+	table_width 2
 	dw $0 ; DUELIST_WEEVIL
 	dw $0 ; DUELIST_MAI
 	dw $0 ; DUELIST_REX
@@ -1201,9 +1206,11 @@ SetInitialWinAndDuelCounts::
 	dw $0 ; DUELIST_SIMON
 	dw $0 ; DUELIST_MAXIMILLION
 	dw $0 ; DUELIST_YAMI_YUGI
-	dw $0 ; DUELIST_UNUSED_10
+	dw $0
+	assert_table_length NUM_DUELISTS + 1
 
 .InitialWinCounts:
+	table_width 2
 	dw $0 ; DUELIST_WEEVIL
 	dw $0 ; DUELIST_MAI
 	dw $0 ; DUELIST_REX
@@ -1220,7 +1227,8 @@ SetInitialWinAndDuelCounts::
 	dw $0 ; DUELIST_SIMON
 	dw $0 ; DUELIST_MAXIMILLION
 	dw $0 ; DUELIST_YAMI_YUGI
-	dw $0 ; DUELIST_UNUSED_10
+	dw $0
+	assert_table_length NUM_DUELISTS + 1
 
 IncrementBCWithMaximum9999:
 	push af

@@ -7299,6 +7299,7 @@ Func_ef64:
 	ret
 
 CardEffects:
+	table_width 2
 	dw Func_f189 ; EFFECT_00
 	dw Func_f191 ; EFFECT_01
 	dw Func_f19b ; EFFECT_02
@@ -7353,6 +7354,7 @@ CardEffects:
 	dw Func_f9a3 ; skip
 	dw Func_f9d8 ; skip
 	dw Func_fa05 ; EFFECT_ELEGANT_EGOTIST
+	assert_table_length NUM_EFFECTS
 
 Func_efee:
 	push bc

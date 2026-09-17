@@ -6,7 +6,9 @@ MACRO? save_data_struct
 \1PlayerDeck::        ds DECK_SIZE * $2
 \1Trunk::             ds NUM_CARDS
 \1DuelistDuelCounts:: ds NUM_DUELISTS * $2
+\1UnkDuelCounts::     ds $2
 \1DuelistWinCounts::  ds NUM_DUELISTS * $2
+\1UnkWinCounts::      ds $2
 \1Unk_cf99::          ds $08
 \1Unk_b800::          ds $c8
 \1Unk_b8c8::          ds $c8

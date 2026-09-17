@@ -43,7 +43,6 @@ DEF NUM_IN_THE_SHIP_DUELISTS EQU const_value - IN_THE_SHIP_DUELISTS
 	const DUELIST_SIMON        ; $0d
 	const DUELIST_MAXIMILLION  ; $0e
 	const DUELIST_YAMI_YUGI    ; $0f
-	const DUELIST_UNUSED_10    ; $10
 DEF NUM_DUELISTS EQU const_value
 
 ; duelist classes, decides which themes to play when dueling/talking to that character

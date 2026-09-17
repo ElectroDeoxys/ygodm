@@ -1,4 +1,5 @@
 CharacterGfxBanks:
+	table_width 1
 	db BANK(WeevilGfx)      ; WEEVIL
 	db BANK(MaiGfx)         ; MAI
 	db BANK(RexGfx)         ; REX
@@ -17,3 +18,4 @@ CharacterGfxBanks:
 	db BANK(MaximillionGfx) ; MAXIMILLION
 	db BANK(SimonGfx)       ; SIMON
 	db BANK(ExodiaGfx)      ; EXODIA
+	assert_table_length NUM_CHARACTERS

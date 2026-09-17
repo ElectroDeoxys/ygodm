@@ -385,10 +385,10 @@ wcf4d:: db ; cf4d
 
 ; duel and win counts against each of the NPC duelists
 wDuelistDuelCounts:: ; cf4e
-	ds (NUM_DUELISTS - 1) * 2
+	ds NUM_DUELISTS * 2
 wcf6e:: dw ; cf6e
 wDuelistWinCounts:: ; cf70
-	ds (NUM_DUELISTS - 1) * 2
+	ds NUM_DUELISTS * 2
 wcf90:: dw ; cf90
 
 wcf92:: db ; cf92

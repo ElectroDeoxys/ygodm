@@ -1153,8 +1153,8 @@ SRAMToWRAMMap:
 	dwb wPlayerDeck, DECK_SIZE * $2 ; sPlayerDeck
 	dwb wTrunk, $ff ; sTrunk
 	dwb wTrunk + $ff, LOW(NUM_CARDS - $ff)
-	dwb wDuelistDuelCounts, NUM_DUELISTS * $2 ; sDuelistDuelCounts
-	dwb wDuelistWinCounts, NUM_DUELISTS * $2 ; sDuelistWinCounts
+	dwb wDuelistDuelCounts, NUM_DUELISTS * $2 + $2 ; sDuelistDuelCounts
+	dwb wDuelistWinCounts, NUM_DUELISTS * $2 + $2 ; sDuelistWinCounts
 	dwb wcf99, $08 ; sUnk_cf99
 	dwb sb800, $c8 ; sUnk_b800
 	dwb sb8c8, $c8 ; sUnk_b8c8

@@ -53,3 +53,4 @@
 	const EFFECT_33                   ; $33
 	const EFFECT_34                   ; $34
 	const EFFECT_ELEGANT_EGOTIST      ; $35
+DEF NUM_EFFECTS EQU const_value

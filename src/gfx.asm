@@ -32,6 +32,7 @@ Func_40002::
 	ret
 
 PtrTable_40028:
+	table_width 2
 	dw BEyeWhiteDragonGfx    ; B_EYE_WHITE_DRAGON
 	dw MysticalElfGfx        ; MYSTICAL_ELF
 	dw HitotsuMeGiantGfx     ; HITOTSU_ME_GIANT
@@ -398,6 +399,7 @@ PtrTable_40028:
 	dw BLusterSoldierGfx     ; B_LUSTER_SOLDIER
 	dw FiendsMirrorGfx       ; FIENDS_MIRROR
 	dw InvalidCardGfx        ; INVALID_CARD
+	assert_table_length NUM_CARDS + 1
 
 BEyeWhiteDragonGfx::    INCBIN "gfx/cards/b_eye_white_dragon.2bpp.lz"
 MysticalElfGfx::        INCBIN "gfx/cards/mystical_elf.2bpp.lz"
@@ -414,6 +416,7 @@ SwampBattleguardGfx::   INCBIN "gfx/cards/swamp_battleguard.2bpp.lz"
 TyhoneGfx::             INCBIN "gfx/cards/tyhone.2bpp.lz"
 
 PtrTable_43e84:
+	table_width 2
 	dw WeevilGfx      ; WEEVIL
 	dw MaiGfx         ; MAI
 	dw RexGfx         ; REX
@@ -432,6 +435,7 @@ PtrTable_43e84:
 	dw MaximillionGfx ; MAXIMILLION
 	dw SimonGfx       ; SIMON
 	dw ExodiaGfx      ; EXODIA
+	assert_table_length NUM_CHARACTERS
 
 SECTION "Gfx 2", ROMX, BANK[$11]
 	dw BANK(@)

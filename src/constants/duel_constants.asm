@@ -49,6 +49,7 @@ DEF INITIAL_LP EQU $8000
 	const FIELD_SOGEN     ; $4
 	const FIELD_UMI       ; $5
 	const FIELD_YAMI      ; $6
+DEF NUM_FIELDS EQU const_value - 1
 
 ; Exodia flags
 DEF HAS_R_LEG_OF_FORBIDDEN EQU 1 << 0

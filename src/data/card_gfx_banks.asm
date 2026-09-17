@@ -1,4 +1,5 @@
 CardGraphicsBanks:
+	table_width 1
 	db BANK(BEyeWhiteDragonGfx)    ; B_EYE_WHITE_DRAGON
 	db BANK(MysticalElfGfx)        ; MYSTICAL_ELF
 	db BANK(HitotsuMeGiantGfx)     ; HITOTSU_ME_GIANT
@@ -365,3 +366,4 @@ CardGraphicsBanks:
 	db BANK(BLusterSoldierGfx)     ; B_LUSTER_SOLDIER
 	db BANK(FiendsMirrorGfx)       ; FIENDS_MIRROR
 	db BANK(InvalidCardGfx)        ; INVALID_CARD
+	assert_table_length NUM_CARDS + 1
