@@ -403,7 +403,7 @@ VBlank:
 		ld a, [bc]
 		ld h, a
 		inc c
-		REPT 18
+		REPT LINE_LENGTH
 			ld a, [bc]
 			ld [hli], a
 			inc c

@@ -27,3 +27,17 @@ ENDM
 MACRO? dlg
 	db \1_
 ENDM
+
+MACRO? message_ptr
+	dw \1
+	const \1_
+EXPORT \1_
+ENDM
+
+MACRO? ldmsg
+	ld \1, \2_
+ENDM
+
+MACRO? msg
+	db \1_
+ENDM

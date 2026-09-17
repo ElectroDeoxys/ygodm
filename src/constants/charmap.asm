@@ -195,6 +195,7 @@ DEF CONTROL_CHAR EQU $b0
 	CHARMAP "<DONE>",    $b4
 	CHARMAP "<B5>",      $b5
 	CHARMAP "<B6>",      $b6
+	CHARMAP "<B7>",      $b7
 
 	; text box tiles
 	const_def $bb

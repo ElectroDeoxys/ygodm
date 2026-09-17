@@ -4,6 +4,8 @@
 	const LINE_3 ; $2
 DEF NUM_TEXTBOX_LINES EQU const_value
 
+DEF LINE_LENGTH EQU 18
+
 	const_def 0, 2
 	const TEXTLOAD_NUMBER ; $00
 	const TEXTLOAD_FIELD ; $02

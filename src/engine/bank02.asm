@@ -212,7 +212,7 @@ Func_8511:
 	ld c, a
 	call AddWordToVBlankStruct
 	ld hl, wcd20
-	ld e, $12
+	ld e, LINE_LENGTH
 .asm_852c
 	ld a, [hli]
 	call AddByteToVBlankStruct
@@ -225,7 +225,7 @@ Func_8511:
 	ld c, l
 	call AddWordToVBlankStruct
 	ld hl, wcd32
-	ld e, $12
+	ld e, LINE_LENGTH
 .asm_8541
 	ld a, [hli]
 	call AddByteToVBlankStruct
@@ -518,13 +518,13 @@ Func_86ec:
 	call ProcessChar
 	ld a, [wCharHeadTile]
 	ld hl, wcd20
-	ld c, $12
+	ld c, LINE_LENGTH
 .asm_86ff
 	ld [hli], a
 	dec c
 	jr nz, .asm_86ff
 	ld a, [wCharTile]
-	ld c, $12
+	ld c, LINE_LENGTH
 .asm_8708
 	ld [hli], a
 	dec c

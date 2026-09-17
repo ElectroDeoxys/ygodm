@@ -46,11 +46,11 @@
 	const EFFECT_RAISE_BODY_HEAT      ; $2c
 	const EFFECT_FOLLOW_WIND          ; $2d
 	const EFFECT_POWER_OF_KAISHIN     ; $2e
-	const EFFECT_STOP_DEFENSE         ; $2f
-	const EFFECT_30                   ; $30
+	const EFFECT_INVALID              ; $2f
+	const EFFECT_STOP_DEFENSE         ; $30
 	const EFFECT_DRAGON_CAPTURE_JAR   ; $31
-	const EFFECT_32                   ; $32
-	const EFFECT_33                   ; $33
-	const EFFECT_34                   ; $34
+	const EFFECT_SWORDS_REVEALING     ; $32
+	const EFFECT_DARK_PIERCE_LIGHT    ; $33
+	const EFFECT_SPELLBIND_CIRCLE     ; $34
 	const EFFECT_ELEGANT_EGOTIST      ; $35
 DEF NUM_EFFECTS EQU const_value

@@ -139,7 +139,7 @@ OverwriteTargetCard::
 	ld [hli], a
 	ld a, [wTempCardID + 1]
 	ld [hli], a
-	ld a, [wcdf4]
+	ld a, [wTempCardStatus]
 	ld [hli], a
 	pop hl
 	pop bc
@@ -158,7 +158,7 @@ LoadTargetCard::
 	ld a, [hli]
 	ld [wTempCardID + 1], a
 	ld a, [hli]
-	ld [wcdf4], a
+	ld [wTempCardStatus], a
 	pop hl
 	pop bc
 	pop af

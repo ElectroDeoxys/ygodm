@@ -175,8 +175,8 @@ wcd1d:: db ; cd1d
 wcd1e:: db ; cd1e
 wcd1f:: db ; cd1f
 
-wcd20:: ds $12 ; cd20
-wcd32:: ds $12 ; cd32
+wcd20:: ds LINE_LENGTH ; cd20
+wcd32:: ds LINE_LENGTH ; cd32
 
 wcd44:: db ; cd44
 wcd45:: db ; cd45
@@ -225,7 +225,7 @@ wCardLocationIndex:: db ; cdf0
 wCardLocation:: db ; cdf1
 wTempCardID:: dw ; cdf2
 
-wcdf4:: db ; cdf4
+wTempCardStatus:: db ; cdf4
 wcdf5:: dw ; cdf5
 wcdf7:: db ; cdf7
 wcdf8:: db ; cdf8
@@ -365,16 +365,15 @@ wcf19:: db ; cf19
 wcf1a:: dw ; cf1a
 wcf1c:: db ; cf1c
 
-wcf1d:: ds $12 ; cf1d
-wcf2f:: ds $12 ; cf2f
+wcf1d:: ds LINE_LENGTH ; cf1d
+wcf2f:: ds LINE_LENGTH ; cf2f
 
 wcf41:: db ; cf41
 wcf42:: db ; cf42
-wcf43:: db ; cf43
-wcf44:: db ; cf44
+wcf43:: dw ; cf43
 wcf45:: db ; cf45
 wcf46:: db ; cf46
-wcf47:: db ; cf47
+wDuelMsg:: db ; cf47
 wcf48:: db ; cf48
 wcf49:: db ; cf49
 
@@ -439,7 +438,7 @@ wcfc0:: db ; cfc0
 wcfc1:: db ; cfc1
 wcfc2:: db ; cfc2
 wcfc3:: db ; cfc3
-wcfc4:: ds $12 ; cfc4
+wcfc4:: ds LINE_LENGTH ; cfc4
 
 wcfd6:: db ; cfd6
 wcfd7:: db ; cfd7

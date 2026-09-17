@@ -34,7 +34,7 @@ def main():
 			val = reader.get_rom_byte(pos)
 			pos += 1
 
-			if val >= 0xb0:
+			if val >= 0xb0 and val not in [0xb5, 0xb6, 0xb7]:
 				control_char = charmap[val]
 				if control_char == "<LINE>":
 					out_str += "\"\n\tline \""
@@ -46,8 +46,8 @@ def main():
 					break
 				else:
 					out_str += charmap[val]
-					# msg = f"Unknown control character 0x{val:02x}"
-					# raise RuntimeError(msg)
+					#msg = f"Unknown control character 0x{val:02x}"
+					#raise RuntimeError(msg)
 			else:
 				if start_text:
 					out_str += "\ttext \""

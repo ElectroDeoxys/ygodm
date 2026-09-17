@@ -1200,7 +1200,7 @@ AIOppDrawCard:
 	ld a, b
 	ld [wTempCardID + 1], a
 	call Func_21cc
-	call Func_217e
+	call SetDefaultCardLevel
 	call Func_1caa
 .asm_c75b
 	pop bc
@@ -2845,7 +2845,7 @@ PlayerDrawCard:
 	ld a, b
 	ld [wTempCardID + 1], a
 	call Func_21cc
-	call Func_217e
+	call SetDefaultCardLevel
 	call Func_1caa
 .asm_d1fc
 	pop bc
@@ -3068,8 +3068,8 @@ Func_d366:
 	ld a, c
 	cp $01
 	jr nz, .asm_d39e
-	call Func_21f9
-	cp $01
+	call IsCardFaceDown
+	cp FALSE
 	jr nz, .asm_d39c
 	ld e, $00
 .asm_d39c
@@ -3190,8 +3190,8 @@ Func_d447:
 	ld a, c
 	cp $01
 	jr nz, .asm_d469
-	call Func_21f9
-	cp $01
+	call IsCardFaceDown
+	cp FALSE
 	jr nz, .asm_d467
 	ld e, $00
 .asm_d467
@@ -3926,7 +3926,7 @@ Func_d921:
 	cp TRUE
 	jr nz, .next
 	call Func_2203
-	cp $00
+	cp TRUE
 	jr nz, .next
 	ld e, TRUE
 .next
@@ -4112,7 +4112,7 @@ Func_da4a:
 	ld b, a
 	farcall Func_5af2
 	farcall SetCardAsSeen
-	call Func_2193
+	call SetCardFaceUp
 	pop bc
 	pop af
 	ret
@@ -4196,7 +4196,7 @@ Func_dabc:
 	cp TRUE
 	jr nz, .next
 	call Func_2203
-	cp $00
+	cp TRUE
 	jr z, .asm_dae5
 .next
 	inc b
@@ -4287,7 +4287,7 @@ Func_db4c:
 	call IsValidCard
 	cp TRUE
 	jr nz, .asm_db60
-	call Func_215c
+	call PowerDownMonster
 .asm_db60
 	pop bc
 	pop af
@@ -4420,7 +4420,7 @@ Func_dc2f:
 	call Func_200e
 	ld a, [wTempCardID + 1]
 	call Func_200e
-	ld a, [wcdf4]
+	ld a, [wTempCardStatus]
 	call Func_200e
 	inc d
 	dec c
@@ -4491,7 +4491,7 @@ Func_dcb0:
 	call Func_2051
 	ld [wTempCardID + 1], a
 	call Func_2051
-	ld [wcdf4], a
+	ld [wTempCardStatus], a
 	push bc
 	ld b, d
 	ld c, e
@@ -7203,7 +7203,7 @@ Func_eebf:
 	ld c, CARD_LOCATION_OPP_FIELD
 	call SetTargetCard
 	call Func_21d9
-	call Func_219e
+	call SetCardFaceDown
 	call OverwriteTargetCard
 	ld a, [wAIOppHandTargetCardIndex]
 	ld b, a
@@ -7303,57 +7303,57 @@ CardEffects:
 	dw Func_f189 ; EFFECT_00
 	dw Func_f191 ; EFFECT_01
 	dw Func_f19b ; EFFECT_02
-	dw Func_f1a2 ; EFFECT_FOREST
-	dw Func_f1b6 ; EFFECT_WASTELAND
-	dw Func_f1ca ; EFFECT_MOUNTAIN
-	dw Func_f1de ; EFFECT_SOGEN
-	dw Func_f1f2 ; EFFECT_UMI
-	dw Func_f206 ; EFFECT_YAMI
-	dw Func_f21a ; EFFECT_MOOYAN_CURRY
-	dw Func_f236 ; EFFECT_RED_MEDICINE
-	dw Func_f252 ; EFFECT_GOBLINS_REMEDY
-	dw Func_f26e ; EFFECT_SOUL_OF_THE_PURE
-	dw Func_f28a ; EFFECT_DIAN_KETO_THE_CURE
-	dw Func_f2a6 ; EFFECT_SPARKS
-	dw Func_f2c2 ; EFFECT_HINOTAMA
-	dw Func_f2e0 ; EFFECT_FINAL_FLAME
-	dw Func_f2fe ; EFFECT_OOKAZI
-	dw Func_f31c ; EFFECT_TREMENDOUS_FIRE
-	dw Func_f33a ; EFFECT_DARK_HOLE
-	dw Func_f36b ; EFFECT_RAIGEKI
-	dw Func_f394 ; EFFECT_LEGENDARY_SWORD
-	dw Func_f3ca ; EFFECT_SWORD_OF_DARK
-	dw Func_f400 ; EFFECT_DARK_ENERGY
-	dw Func_f436 ; EFFECT_AXE_OF_DESPAIR
-	dw Func_f46c ; EFFECT_LAZER_CANNON_ARMOR
-	dw Func_f4a2 ; EFFECT_INSECT_ARMOR_LASER
-	dw Func_f4d8 ; EFFECT_ELFS_LIGHT
-	dw Func_f50e ; EFFECT_BEAST_FANGS
-	dw Func_f544 ; EFFECT_STEEL_SHELL
-	dw Func_f57a ; EFFECT_VILE_GERMS
-	dw Func_f5b0 ; EFFECT_BLACK_PENDANT
-	dw Func_f5e6 ; EFFECT_SILVER_BOW_AND_ARROW
-	dw Func_f61c ; EFFECT_HORN_OF_LIGHT
-	dw Func_f652 ; EFFECT_HORN_OF_UNICORN
-	dw Func_f688 ; EFFECT_DRAGON_TREASURE
-	dw Func_f6be ; EFFECT_ELECTRO_WHIP
-	dw Func_f6f4 ; EFFECT_CYBER_SHIELD
-	dw Func_f72a ; EFFECT_MYSTICAL_MOON
-	dw Func_f760 ; EFFECT_MALEVOLENT_NUZZLER
-	dw Func_f796 ; EFFECT_VIOLET_CRYSTAL
-	dw Func_f7cc ; EFFECT_BOOK_OF_SECRET_ART
-	dw Func_f802 ; EFFECT_INVIGORATION
-	dw Func_f838 ; EFFECT_MACHINE_CONVERSION
-	dw Func_f86e ; EFFECT_RAISE_BODY_HEAT
-	dw Func_f8a4 ; EFFECT_FOLLOW_WIND
-	dw Func_f8da ; EFFECT_POWER_OF_KAISHIN
-	dw Func_f18a ; EFFECT_STOP_DEFENSE
-	dw Func_f910 ; skip
-	dw Func_f926 ; EFFECT_DRAGON_CAPTURE_JAR
-	dw Func_f96b ; skip
-	dw Func_f9a3 ; skip
-	dw Func_f9d8 ; skip
-	dw Func_fa05 ; EFFECT_ELEGANT_EGOTIST
+	dw Effect_Forest ; EFFECT_FOREST
+	dw Effect_Wasteland ; EFFECT_WASTELAND
+	dw Effect_Mountain ; EFFECT_MOUNTAIN
+	dw Effect_Sogen ; EFFECT_SOGEN
+	dw Effect_Umi ; EFFECT_UMI
+	dw Effect_Yami ; EFFECT_YAMI
+	dw Effect_MooyanCurry ; EFFECT_MOOYAN_CURRY
+	dw Effect_RedMedicine ; EFFECT_RED_MEDICINE
+	dw Effect_GoblinsRemedy ; EFFECT_GOBLINS_REMEDY
+	dw Effect_SouldOfThePure ; EFFECT_SOUL_OF_THE_PURE
+	dw Effect_DianKetoTheCure ; EFFECT_DIAN_KETO_THE_CURE
+	dw Effect_Sparks ; EFFECT_SPARKS
+	dw Effect_Hinotama ; EFFECT_HINOTAMA
+	dw Effect_FinalFlame ; EFFECT_FINAL_FLAME
+	dw Effect_Ookazi ; EFFECT_OOKAZI
+	dw Effect_TremendousFire ; EFFECT_TREMENDOUS_FIRE
+	dw Effect_DarkHole ; EFFECT_DARK_HOLE
+	dw Effect_Raigeki ; EFFECT_RAIGEKI
+	dw Effect_LegendarySword ; EFFECT_LEGENDARY_SWORD
+	dw Effect_SwordOfDark ; EFFECT_SWORD_OF_DARK
+	dw Effect_DarkEnergy ; EFFECT_DARK_ENERGY
+	dw Effect_AxeOfDespair ; EFFECT_AXE_OF_DESPAIR
+	dw Effect_LazerCannonArmor ; EFFECT_LAZER_CANNON_ARMOR
+	dw Effect_InsectArmorLaser ; EFFECT_INSECT_ARMOR_LASER
+	dw Effect_ElfsLight ; EFFECT_ELFS_LIGHT
+	dw Effect_BeastFangs ; EFFECT_BEAST_FANGS
+	dw Effect_SteelShell ; EFFECT_STEEL_SHELL
+	dw Effect_VileGerms ; EFFECT_VILE_GERMS
+	dw Effect_BlackPendant ; EFFECT_BLACK_PENDANT
+	dw Effect_SilverBowAndArrow ; EFFECT_SILVER_BOW_AND_ARROW
+	dw Effect_HornOfLight ; EFFECT_HORN_OF_LIGHT
+	dw Effect_HornOfUnicorn ; EFFECT_HORN_OF_UNICORN
+	dw Effect_DragonTreasure ; EFFECT_DRAGON_TREASURE
+	dw Effect_ElectroWhip ; EFFECT_ELECTRO_WHIP
+	dw Effect_CyberShield ; EFFECT_CYBER_SHIELD
+	dw Effect_MysticalMoon ; EFFECT_MYSTICAL_MOON
+	dw Effect_MalevolentNuzzler ; EFFECT_MALEVOLENT_NUZZLER
+	dw Effect_VioletCrystal ; EFFECT_VIOLET_CRYSTAL
+	dw Effect_BookOfSecretArt ; EFFECT_BOOK_OF_SECRET_ART
+	dw Effect_Invigoration ; EFFECT_INVIGORATION
+	dw Effect_MachineConversion ; EFFECT_MACHINE_CONVERSION
+	dw Effect_RaiseBodyHeat ; EFFECT_RAISE_BODY_HEAT
+	dw Effect_FollowWind ; EFFECT_FOLLOW_WIND
+	dw Effect_PowerOfKaishin ; EFFECT_POWER_OF_KAISHIN
+	dw Effect_Invalid ; EFFECT_INVALID
+	dw Effect_StopDefense ; EFFECT_STOP_DEFENSE
+	dw Effect_DragonCaptureJar ; EFFECT_DRAGON_CAPTURE_JAR
+	dw Effect_SwordsRevealing ; EFFECT_SWORDS_REVEALING
+	dw Effect_DarkPierceLight ; EFFECT_DARK_PIERCE_LIGHT
+	dw Effect_SpellbindCircle ; EFFECT_SPELLBIND_CIRCLE
+	dw Effect_ElegantEgotist ; EFFECT_ELEGANT_EGOTIST
 	assert_table_length NUM_EFFECTS
 
 Func_efee:
@@ -7373,89 +7373,86 @@ Func_efee:
 	call CompareBCAndDE
 	cp DE_LARGER_THAN_BC
 	jr nz, .asm_f013
-	ld a, EFFECT_STOP_DEFENSE
-	jr .asm_f01a
+	ld a, EFFECT_INVALID
+	jr .done
 .asm_f013
-	; bug, the following pointer points to the middle of Func_eeee
-	; it most likely was supposed to be pointing to Data_f01e
-	ld hl, $6ef2
+	ld hl, Data_f01e - MAGIC_CARDS
 	add hl, bc
 	ld b, h
 	ld c, l
 	ld a, [hl]
-.asm_f01a
+.done
 	pop hl
 	pop de
 	pop bc
 	ret
 
-; unreferenced
 Data_f01e:
-	db EFFECT_STOP_DEFENSE
-	db EFFECT_STOP_DEFENSE
-	db EFFECT_STOP_DEFENSE
-	db EFFECT_STOP_DEFENSE
-	db EFFECT_STOP_DEFENSE
-	db EFFECT_STOP_DEFENSE
-	db EFFECT_STOP_DEFENSE
-	db EFFECT_STOP_DEFENSE
-	db EFFECT_STOP_DEFENSE
-	db EFFECT_STOP_DEFENSE
-	db EFFECT_STOP_DEFENSE
-	db EFFECT_STOP_DEFENSE
-	db EFFECT_STOP_DEFENSE
-	db EFFECT_STOP_DEFENSE
-	db EFFECT_STOP_DEFENSE
-	db EFFECT_STOP_DEFENSE
-	db EFFECT_STOP_DEFENSE
-	db EFFECT_STOP_DEFENSE
-	db EFFECT_STOP_DEFENSE
-	db EFFECT_30
-	db EFFECT_STOP_DEFENSE
-	db EFFECT_STOP_DEFENSE
-	db EFFECT_STOP_DEFENSE
-	db EFFECT_STOP_DEFENSE
-	db EFFECT_STOP_DEFENSE
-	db EFFECT_STOP_DEFENSE
-	db EFFECT_STOP_DEFENSE
-	db EFFECT_STOP_DEFENSE
-	db EFFECT_DRAGON_CAPTURE_JAR
-	db EFFECT_FOREST
-	db EFFECT_WASTELAND
-	db EFFECT_MOUNTAIN
-	db EFFECT_SOGEN
-	db EFFECT_UMI
-	db EFFECT_YAMI
-	db EFFECT_DARK_HOLE
-	db EFFECT_RAIGEKI
-	db EFFECT_MOOYAN_CURRY
-	db EFFECT_RED_MEDICINE
-	db EFFECT_GOBLINS_REMEDY
-	db EFFECT_SOUL_OF_THE_PURE
-	db EFFECT_DIAN_KETO_THE_CURE
-	db EFFECT_SPARKS
-	db EFFECT_HINOTAMA
-	db EFFECT_FINAL_FLAME
-	db EFFECT_OOKAZI
-	db EFFECT_TREMENDOUS_FIRE
-	db EFFECT_32
-	db EFFECT_34
-	db EFFECT_33
-	db EFFECT_STOP_DEFENSE
-	db EFFECT_STOP_DEFENSE
-	db EFFECT_STOP_DEFENSE
-	db EFFECT_STOP_DEFENSE
-	db EFFECT_STOP_DEFENSE
-	db EFFECT_STOP_DEFENSE
-	db EFFECT_STOP_DEFENSE
-	db EFFECT_STOP_DEFENSE
-	db EFFECT_STOP_DEFENSE
-	db EFFECT_STOP_DEFENSE
-	db EFFECT_STOP_DEFENSE
-	db EFFECT_STOP_DEFENSE
-	db EFFECT_STOP_DEFENSE
-	db EFFECT_STOP_DEFENSE
-	db EFFECT_STOP_DEFENSE
+	db EFFECT_INVALID ; LEGENDARY_SWORD
+	db EFFECT_INVALID ; SWORD_OF_DARK
+	db EFFECT_INVALID ; DARK_ENERGY
+	db EFFECT_INVALID ; AXE_OF_DESPAIR
+	db EFFECT_INVALID ; LAZER_CANNON_ARMOR
+	db EFFECT_INVALID ; INSECT_ARMOR_LASER
+	db EFFECT_INVALID ; ELFS_LIGHT
+	db EFFECT_INVALID ; BEAST_FANGS
+	db EFFECT_INVALID ; STEEL_SHELL
+	db EFFECT_INVALID ; VILE_GERMS
+	db EFFECT_INVALID ; BLACK_PENDANT
+	db EFFECT_INVALID ; SILVER_BOW_AND_ARROW
+	db EFFECT_INVALID ; HORN_OF_LIGHT
+	db EFFECT_INVALID ; HORN_OF_UNICORN
+	db EFFECT_INVALID ; DRAGON_TREASURE
+	db EFFECT_INVALID ; ELECTRO_WHIP
+	db EFFECT_INVALID ; CYBER_SHIELD
+	db EFFECT_INVALID ; ELEGANT_EGOTIST
+	db EFFECT_INVALID ; MYSTICAL_MOON
+	db EFFECT_STOP_DEFENSE ; STOP_DEFENSE
+	db EFFECT_INVALID ; MALEVOLENT_NUZZLER
+	db EFFECT_INVALID ; VIOLET_CRYSTAL
+	db EFFECT_INVALID ; BOOK_OF_SECRET_ART
+	db EFFECT_INVALID ; INVIGORATION
+	db EFFECT_INVALID ; MACHINE_CONVERSION
+	db EFFECT_INVALID ; RAISE_BODY_HEAT
+	db EFFECT_INVALID ; FOLLOW_WIND
+	db EFFECT_INVALID ; POWER_OF_KAISHIN
+	db EFFECT_DRAGON_CAPTURE_JAR ; DRAGON_CAPTURE_JAR
+	db EFFECT_FOREST ; FOREST
+	db EFFECT_WASTELAND ; WASTELAND
+	db EFFECT_MOUNTAIN ; MOUNTAIN
+	db EFFECT_SOGEN ; SOGEN
+	db EFFECT_UMI ; UMI
+	db EFFECT_YAMI ; YAMI
+	db EFFECT_DARK_HOLE ; DARK_HOLE
+	db EFFECT_RAIGEKI ; RAIGEKI
+	db EFFECT_MOOYAN_CURRY ; MOOYAN_CURRY
+	db EFFECT_RED_MEDICINE ; RED_MEDICINE
+	db EFFECT_GOBLINS_REMEDY ; GOBLINS_REMEDY
+	db EFFECT_SOUL_OF_THE_PURE ; SOUL_OF_THE_PURE
+	db EFFECT_DIAN_KETO_THE_CURE ; DIAN_KETO_THE_CURE
+	db EFFECT_SPARKS ; SPARKS
+	db EFFECT_HINOTAMA ; HINOTAMA
+	db EFFECT_FINAL_FLAME ; FINAL_FLAME
+	db EFFECT_OOKAZI ; OOKAZI
+	db EFFECT_TREMENDOUS_FIRE ; TREMENDOUS_FIRE
+	db EFFECT_SWORDS_REVEALING ; SWORDS_REVEALING
+	db EFFECT_SPELLBIND_CIRCLE ; SPELLBIND_CIRCLE
+	db EFFECT_DARK_PIERCE_LIGHT ; DARK_PIERCE_LIGHT
+	db EFFECT_INVALID ; YARANZO
+	db EFFECT_INVALID ; KANAN_THE_SWORD
+	db EFFECT_INVALID ; TAKRIMINOS
+	db EFFECT_INVALID ; STUFFED_ANIMAL
+	db EFFECT_INVALID ; MEGASONIC_EYE
+	db EFFECT_INVALID ; SUPER_WAR_LION
+	db EFFECT_INVALID ; YAMADRON
+	db EFFECT_INVALID ; SEIYARYU
+	db EFFECT_INVALID ; THREE_LEGGED_ZOMBIES
+	db EFFECT_INVALID ; ZERA_THE_MANT
+	db EFFECT_INVALID ; FLYING_PENGUIN
+	db EFFECT_INVALID ; MILLENNIUM_SHIELD
+	db EFFECT_INVALID ; FAIRYS_GIFT
+	db EFFECT_INVALID ; B_LUSTER_SOLDIER
+	db EFFECT_INVALID ; FIENDS_MIRROR
 
 ; output:
 ; - a = effect constant
@@ -7512,7 +7509,7 @@ Func_f05f:
 	db EFFECT_CYBER_SHIELD ; CYBER_SHIELD
 	db EFFECT_ELEGANT_EGOTIST ; ELEGANT_EGOTIST
 	db EFFECT_MYSTICAL_MOON ; MYSTICAL_MOON
-	db EFFECT_STOP_DEFENSE ; STOP_DEFENSE
+	db EFFECT_INVALID ; STOP_DEFENSE
 	db EFFECT_MALEVOLENT_NUZZLER ; MALEVOLENT_NUZZLER
 	db EFFECT_VIOLET_CRYSTAL ; VIOLET_CRYSTAL
 	db EFFECT_BOOK_OF_SECRET_ART ; BOOK_OF_SECRET_ART
@@ -7666,7 +7663,7 @@ Func_f182:
 Func_f189:
 	ret
 
-Func_f18a:
+Effect_Invalid:
 	call Func_2b68
 	call Func_cd7a
 	ret
@@ -7682,7 +7679,7 @@ Func_f19b:
 	call Func_ee93
 	ret
 
-Func_f1a2:
+Effect_Forest:
 	push af
 	call SetForestField
 	call Func_f0cf
@@ -7693,7 +7690,7 @@ Func_f1a2:
 	pop af
 	ret
 
-Func_f1b6:
+Effect_Wasteland:
 	push af
 	call SetWastelandField
 	call Func_f0cf
@@ -7704,7 +7701,7 @@ Func_f1b6:
 	pop af
 	ret
 
-Func_f1ca:
+Effect_Mountain:
 	push af
 	call SetMountainField
 	call Func_f0cf
@@ -7715,7 +7712,7 @@ Func_f1ca:
 	pop af
 	ret
 
-Func_f1de:
+Effect_Sogen:
 	push af
 	call SetSogenField
 	call Func_f0cf
@@ -7726,7 +7723,7 @@ Func_f1de:
 	pop af
 	ret
 
-Func_f1f2:
+Effect_Umi:
 	push af
 	call SetUmiField
 	call Func_f0cf
@@ -7737,7 +7734,7 @@ Func_f1f2:
 	pop af
 	ret
 
-Func_f206:
+Effect_Yami:
 	push af
 	call SetYamiField
 	call Func_f0cf
@@ -7748,7 +7745,7 @@ Func_f206:
 	pop af
 	ret
 
-Func_f21a:
+Effect_MooyanCurry:
 	push af
 	push bc
 	call Func_e1f2
@@ -7763,7 +7760,7 @@ Func_f21a:
 	pop af
 	ret
 
-Func_f236:
+Effect_RedMedicine:
 	push af
 	push bc
 	call Func_e1f2
@@ -7778,7 +7775,7 @@ Func_f236:
 	pop af
 	ret
 
-Func_f252:
+Effect_GoblinsRemedy:
 	push af
 	push bc
 	call Func_e1f2
@@ -7793,7 +7790,7 @@ Func_f252:
 	pop af
 	ret
 
-Func_f26e:
+Effect_SouldOfThePure:
 	push af
 	push bc
 	call Func_e1f2
@@ -7808,7 +7805,7 @@ Func_f26e:
 	pop af
 	ret
 
-Func_f28a:
+Effect_DianKetoTheCure:
 	push af
 	push bc
 	call Func_e1f2
@@ -7823,7 +7820,7 @@ Func_f28a:
 	pop af
 	ret
 
-Func_f2a6:
+Effect_Sparks:
 	push af
 	push bc
 	call Func_e1f2
@@ -7838,7 +7835,7 @@ Func_f2a6:
 	pop af
 	ret
 
-Func_f2c2:
+Effect_Hinotama:
 	push af
 	push bc
 	push de
@@ -7855,7 +7852,7 @@ Func_f2c2:
 	pop af
 	ret
 
-Func_f2e0:
+Effect_FinalFlame:
 	push af
 	push bc
 	push de
@@ -7872,7 +7869,7 @@ Func_f2e0:
 	pop af
 	ret
 
-Func_f2fe:
+Effect_Ookazi:
 	push af
 	push bc
 	push de
@@ -7889,7 +7886,7 @@ Func_f2fe:
 	pop af
 	ret
 
-Func_f31c:
+Effect_TremendousFire:
 	push af
 	push bc
 	push de
@@ -7906,7 +7903,7 @@ Func_f31c:
 	pop af
 	ret
 
-Func_f33a:
+Effect_DarkHole:
 	push af
 	push bc
 	push de
@@ -7940,7 +7937,7 @@ Func_f33a:
 	pop af
 	ret
 
-Func_f36b:
+Effect_Raigeki:
 	push af
 	push bc
 	push de
@@ -7967,7 +7964,7 @@ Func_f36b:
 	pop af
 	ret
 
-Func_f394:
+Effect_LegendarySword:
 	push af
 	push bc
 	push de
@@ -7985,7 +7982,7 @@ Func_f394:
 	ld c, CARD_LOCATION_PLAYER_FIELD
 	call SetTargetCard
 	call LoadTargetCard
-	call Func_213a
+	call PowerUpMonster
 	call OverwriteTargetCard
 	ld bc, LEGENDARY_SWORD
 	farcall Func_151db
@@ -7996,7 +7993,7 @@ Func_f394:
 	pop af
 	ret
 
-Func_f3ca:
+Effect_SwordOfDark:
 	push af
 	push bc
 	push de
@@ -8014,7 +8011,7 @@ Func_f3ca:
 	ld c, CARD_LOCATION_PLAYER_FIELD
 	call SetTargetCard
 	call LoadTargetCard
-	call Func_213a
+	call PowerUpMonster
 	call OverwriteTargetCard
 	ld bc, SWORD_OF_DARK
 	farcall Func_151db
@@ -8025,7 +8022,7 @@ Func_f3ca:
 	pop af
 	ret
 
-Func_f400:
+Effect_DarkEnergy:
 	push af
 	push bc
 	push de
@@ -8043,7 +8040,7 @@ Func_f400:
 	ld c, CARD_LOCATION_PLAYER_FIELD
 	call SetTargetCard
 	call LoadTargetCard
-	call Func_213a
+	call PowerUpMonster
 	call OverwriteTargetCard
 	ld bc, DARK_ENERGY
 	farcall Func_151db
@@ -8054,7 +8051,7 @@ Func_f400:
 	pop af
 	ret
 
-Func_f436:
+Effect_AxeOfDespair:
 	push af
 	push bc
 	push de
@@ -8072,7 +8069,7 @@ Func_f436:
 	ld c, CARD_LOCATION_PLAYER_FIELD
 	call SetTargetCard
 	call LoadTargetCard
-	call Func_213a
+	call PowerUpMonster
 	call OverwriteTargetCard
 	ld bc, AXE_OF_DESPAIR
 	farcall Func_151db
@@ -8083,7 +8080,7 @@ Func_f436:
 	pop af
 	ret
 
-Func_f46c:
+Effect_LazerCannonArmor:
 	push af
 	push bc
 	push de
@@ -8101,7 +8098,7 @@ Func_f46c:
 	ld c, CARD_LOCATION_PLAYER_FIELD
 	call SetTargetCard
 	call LoadTargetCard
-	call Func_213a
+	call PowerUpMonster
 	call OverwriteTargetCard
 	ld bc, LAZER_CANNON_ARMOR
 	farcall Func_151db
@@ -8112,7 +8109,7 @@ Func_f46c:
 	pop af
 	ret
 
-Func_f4a2:
+Effect_InsectArmorLaser:
 	push af
 	push bc
 	push de
@@ -8130,7 +8127,7 @@ Func_f4a2:
 	ld c, CARD_LOCATION_PLAYER_FIELD
 	call SetTargetCard
 	call LoadTargetCard
-	call Func_213a
+	call PowerUpMonster
 	call OverwriteTargetCard
 	ld bc, INSECT_ARMOR_LASER
 	farcall Func_151db
@@ -8141,7 +8138,7 @@ Func_f4a2:
 	pop af
 	ret
 
-Func_f4d8:
+Effect_ElfsLight:
 	push af
 	push bc
 	push de
@@ -8159,7 +8156,7 @@ Func_f4d8:
 	ld c, CARD_LOCATION_PLAYER_FIELD
 	call SetTargetCard
 	call LoadTargetCard
-	call Func_213a
+	call PowerUpMonster
 	call OverwriteTargetCard
 	ld bc, ELFS_LIGHT
 	farcall Func_151db
@@ -8170,7 +8167,7 @@ Func_f4d8:
 	pop af
 	ret
 
-Func_f50e:
+Effect_BeastFangs:
 	push af
 	push bc
 	push de
@@ -8188,7 +8185,7 @@ Func_f50e:
 	ld c, CARD_LOCATION_PLAYER_FIELD
 	call SetTargetCard
 	call LoadTargetCard
-	call Func_213a
+	call PowerUpMonster
 	call OverwriteTargetCard
 	ld bc, BEAST_FANGS
 	farcall Func_151db
@@ -8199,7 +8196,7 @@ Func_f50e:
 	pop af
 	ret
 
-Func_f544:
+Effect_SteelShell:
 	push af
 	push bc
 	push de
@@ -8217,7 +8214,7 @@ Func_f544:
 	ld c, CARD_LOCATION_PLAYER_FIELD
 	call SetTargetCard
 	call LoadTargetCard
-	call Func_213a
+	call PowerUpMonster
 	call OverwriteTargetCard
 	ld bc, STEEL_SHELL
 	farcall Func_151db
@@ -8228,7 +8225,7 @@ Func_f544:
 	pop af
 	ret
 
-Func_f57a:
+Effect_VileGerms:
 	push af
 	push bc
 	push de
@@ -8246,7 +8243,7 @@ Func_f57a:
 	ld c, CARD_LOCATION_PLAYER_FIELD
 	call SetTargetCard
 	call LoadTargetCard
-	call Func_213a
+	call PowerUpMonster
 	call OverwriteTargetCard
 	ld bc, VILE_GERMS
 	farcall Func_151db
@@ -8257,7 +8254,7 @@ Func_f57a:
 	pop af
 	ret
 
-Func_f5b0:
+Effect_BlackPendant:
 	push af
 	push bc
 	push de
@@ -8275,7 +8272,7 @@ Func_f5b0:
 	ld c, CARD_LOCATION_PLAYER_FIELD
 	call SetTargetCard
 	call LoadTargetCard
-	call Func_213a
+	call PowerUpMonster
 	call OverwriteTargetCard
 	ld bc, BLACK_PENDANT
 	farcall Func_151db
@@ -8286,7 +8283,7 @@ Func_f5b0:
 	pop af
 	ret
 
-Func_f5e6:
+Effect_SilverBowAndArrow:
 	push af
 	push bc
 	push de
@@ -8304,7 +8301,7 @@ Func_f5e6:
 	ld c, CARD_LOCATION_PLAYER_FIELD
 	call SetTargetCard
 	call LoadTargetCard
-	call Func_213a
+	call PowerUpMonster
 	call OverwriteTargetCard
 	ld bc, SILVER_BOW_AND_ARROW
 	farcall Func_151db
@@ -8315,7 +8312,7 @@ Func_f5e6:
 	pop af
 	ret
 
-Func_f61c:
+Effect_HornOfLight:
 	push af
 	push bc
 	push de
@@ -8333,7 +8330,7 @@ Func_f61c:
 	ld c, CARD_LOCATION_PLAYER_FIELD
 	call SetTargetCard
 	call LoadTargetCard
-	call Func_213a
+	call PowerUpMonster
 	call OverwriteTargetCard
 	ld bc, HORN_OF_LIGHT
 	farcall Func_151db
@@ -8344,7 +8341,7 @@ Func_f61c:
 	pop af
 	ret
 
-Func_f652:
+Effect_HornOfUnicorn:
 	push af
 	push bc
 	push de
@@ -8362,7 +8359,7 @@ Func_f652:
 	ld c, CARD_LOCATION_PLAYER_FIELD
 	call SetTargetCard
 	call LoadTargetCard
-	call Func_213a
+	call PowerUpMonster
 	call OverwriteTargetCard
 	ld bc, HORN_OF_UNICORN
 	farcall Func_151db
@@ -8373,7 +8370,7 @@ Func_f652:
 	pop af
 	ret
 
-Func_f688:
+Effect_DragonTreasure:
 	push af
 	push bc
 	push de
@@ -8391,7 +8388,7 @@ Func_f688:
 	ld c, CARD_LOCATION_PLAYER_FIELD
 	call SetTargetCard
 	call LoadTargetCard
-	call Func_213a
+	call PowerUpMonster
 	call OverwriteTargetCard
 	ld bc, DRAGON_TREASURE
 	farcall Func_151db
@@ -8402,7 +8399,7 @@ Func_f688:
 	pop af
 	ret
 
-Func_f6be:
+Effect_ElectroWhip:
 	push af
 	push bc
 	push de
@@ -8420,7 +8417,7 @@ Func_f6be:
 	ld c, CARD_LOCATION_PLAYER_FIELD
 	call SetTargetCard
 	call LoadTargetCard
-	call Func_213a
+	call PowerUpMonster
 	call OverwriteTargetCard
 	ld bc, ELECTRO_WHIP
 	farcall Func_151db
@@ -8431,7 +8428,7 @@ Func_f6be:
 	pop af
 	ret
 
-Func_f6f4:
+Effect_CyberShield:
 	push af
 	push bc
 	push de
@@ -8449,7 +8446,7 @@ Func_f6f4:
 	ld c, CARD_LOCATION_PLAYER_FIELD
 	call SetTargetCard
 	call LoadTargetCard
-	call Func_213a
+	call PowerUpMonster
 	call OverwriteTargetCard
 	ld bc, CYBER_SHIELD
 	farcall Func_151db
@@ -8460,7 +8457,7 @@ Func_f6f4:
 	pop af
 	ret
 
-Func_f72a:
+Effect_MysticalMoon:
 	push af
 	push bc
 	push de
@@ -8478,7 +8475,7 @@ Func_f72a:
 	ld c, CARD_LOCATION_PLAYER_FIELD
 	call SetTargetCard
 	call LoadTargetCard
-	call Func_213a
+	call PowerUpMonster
 	call OverwriteTargetCard
 	ld bc, MYSTICAL_MOON
 	farcall Func_151db
@@ -8489,7 +8486,7 @@ Func_f72a:
 	pop af
 	ret
 
-Func_f760:
+Effect_MalevolentNuzzler:
 	push af
 	push bc
 	push de
@@ -8507,7 +8504,7 @@ Func_f760:
 	ld c, CARD_LOCATION_PLAYER_FIELD
 	call SetTargetCard
 	call LoadTargetCard
-	call Func_213a
+	call PowerUpMonster
 	call OverwriteTargetCard
 	ld bc, MALEVOLENT_NUZZLER
 	farcall Func_151db
@@ -8518,7 +8515,7 @@ Func_f760:
 	pop af
 	ret
 
-Func_f796:
+Effect_VioletCrystal:
 	push af
 	push bc
 	push de
@@ -8536,7 +8533,7 @@ Func_f796:
 	ld c, CARD_LOCATION_PLAYER_FIELD
 	call SetTargetCard
 	call LoadTargetCard
-	call Func_213a
+	call PowerUpMonster
 	call OverwriteTargetCard
 	ld bc, VIOLET_CRYSTAL
 	farcall Func_151db
@@ -8547,7 +8544,7 @@ Func_f796:
 	pop af
 	ret
 
-Func_f7cc:
+Effect_BookOfSecretArt:
 	push af
 	push bc
 	push de
@@ -8565,7 +8562,7 @@ Func_f7cc:
 	ld c, CARD_LOCATION_PLAYER_FIELD
 	call SetTargetCard
 	call LoadTargetCard
-	call Func_213a
+	call PowerUpMonster
 	call OverwriteTargetCard
 	ld bc, BOOK_OF_SECRET_ART
 	farcall Func_151db
@@ -8576,7 +8573,7 @@ Func_f7cc:
 	pop af
 	ret
 
-Func_f802:
+Effect_Invigoration:
 	push af
 	push bc
 	push de
@@ -8594,7 +8591,7 @@ Func_f802:
 	ld c, CARD_LOCATION_PLAYER_FIELD
 	call SetTargetCard
 	call LoadTargetCard
-	call Func_213a
+	call PowerUpMonster
 	call OverwriteTargetCard
 	ld bc, INVIGORATION
 	farcall Func_151db
@@ -8605,7 +8602,7 @@ Func_f802:
 	pop af
 	ret
 
-Func_f838:
+Effect_MachineConversion:
 	push af
 	push bc
 	push de
@@ -8623,7 +8620,7 @@ Func_f838:
 	ld c, CARD_LOCATION_PLAYER_FIELD
 	call SetTargetCard
 	call LoadTargetCard
-	call Func_213a
+	call PowerUpMonster
 	call OverwriteTargetCard
 	ld bc, MACHINE_CONVERSION
 	farcall Func_151db
@@ -8634,7 +8631,7 @@ Func_f838:
 	pop af
 	ret
 
-Func_f86e:
+Effect_RaiseBodyHeat:
 	push af
 	push bc
 	push de
@@ -8652,7 +8649,7 @@ Func_f86e:
 	ld c, CARD_LOCATION_PLAYER_FIELD
 	call SetTargetCard
 	call LoadTargetCard
-	call Func_213a
+	call PowerUpMonster
 	call OverwriteTargetCard
 	ld bc, RAISE_BODY_HEAT
 	farcall Func_151db
@@ -8663,7 +8660,7 @@ Func_f86e:
 	pop af
 	ret
 
-Func_f8a4:
+Effect_FollowWind:
 	push af
 	push bc
 	push de
@@ -8681,7 +8678,7 @@ Func_f8a4:
 	ld c, CARD_LOCATION_PLAYER_FIELD
 	call SetTargetCard
 	call LoadTargetCard
-	call Func_213a
+	call PowerUpMonster
 	call OverwriteTargetCard
 	ld bc, FOLLOW_WIND
 	farcall Func_151db
@@ -8692,7 +8689,7 @@ Func_f8a4:
 	pop af
 	ret
 
-Func_f8da:
+Effect_PowerOfKaishin:
 	push af
 	push bc
 	push de
@@ -8710,7 +8707,7 @@ Func_f8da:
 	ld c, CARD_LOCATION_PLAYER_FIELD
 	call SetTargetCard
 	call LoadTargetCard
-	call Func_213a
+	call PowerUpMonster
 	call OverwriteTargetCard
 	ld bc, POWER_OF_KAISHIN
 	farcall Func_151db
@@ -8721,7 +8718,7 @@ Func_f8da:
 	pop af
 	ret
 
-Func_f910:
+Effect_StopDefense:
 	push af
 	push bc
 	call Func_2b26
@@ -8734,7 +8731,7 @@ Func_f910:
 	pop af
 	ret
 
-Func_f926:
+Effect_DragonCaptureJar:
 	push af
 	push bc
 	push de
@@ -8779,20 +8776,20 @@ Func_f926:
 	pop af
 	ret
 
-Func_f96b:
+Effect_SwordsRevealing:
 	push af
 	push bc
 	push de
 	call Func_2be8
-	ld c, $01
-.asm_f973
+	ld c, CARD_LOCATION_OPP_FIELD
+.loop_fields
 	ld a, c
-	cp $03
+	cp CARD_LOCATION_PLAYER_FIELD + 1
 	jr nc, .asm_f991
 	ld b, $00
 .asm_f97a
 	ld a, b
-	cp $05
+	cp FIELD_SIZE
 	jr nc, .asm_f98e
 	call SetTargetCard
 	call LoadTargetCard
@@ -8802,7 +8799,7 @@ Func_f96b:
 	jr .asm_f97a
 .asm_f98e
 	inc c
-	jr .asm_f973
+	jr .loop_fields
 .asm_f991
 	call Func_f0cf
 	call Func_2b26
@@ -8814,7 +8811,7 @@ Func_f96b:
 	pop af
 	ret
 
-Func_f9a3:
+Effect_DarkPierceLight:
 	push af
 	push bc
 	push de
@@ -8848,7 +8845,7 @@ Func_f9a3:
 	pop af
 	ret
 
-Func_f9d8:
+Effect_SpellbindCircle:
 	push af
 	push bc
 	push de
@@ -8875,7 +8872,7 @@ Func_f9d8:
 	pop af
 	ret
 
-Func_fa05:
+Effect_ElegantEgotist:
 	push af
 	push bc
 	push de
@@ -8901,7 +8898,7 @@ Func_fa05:
 	ld a, b
 	ld [wTempCardID + 1], a
 	call Func_21d9
-	call Func_2193
+	call SetCardFaceUp
 	call OverwriteTargetCard
 	farcall Func_15204
 .not_harpy_lady

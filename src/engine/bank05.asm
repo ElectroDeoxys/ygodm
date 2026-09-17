@@ -4,8 +4,8 @@
 	farfunc Func_14036 ; $03
 	farfunc Func_14185 ; $05
 	farfunc Func_1420c ; $07
-	farfunc $45cd ; $09
-	farfunc $48b6 ; $0b
+	farfunc ShowDuelMessage ; $09
+	farfunc Func_148b6 ; $0b
 	farfunc Func_1500c ; $0d
 	farfunc Func_1501f ; $0f
 	farfunc Func_15032 ; $11
@@ -88,7 +88,7 @@ Func_140a3:
 	call Func_1508
 	call Func_111c
 	ld de, wTextBuffer
-	ld c, $12
+	ld c, LINE_LENGTH
 .asm_140bd
 	ld a, [de]
 	inc de
@@ -100,7 +100,7 @@ Func_140a3:
 	ld de, $e
 	add hl, de
 	ld de, wTextBuffer
-	ld c, $12
+	ld c, LINE_LENGTH
 .asm_140d2
 	ld a, [de]
 	inc de
@@ -636,16 +636,17 @@ HandleExodiaWinCondition:
 	db HAS_L_ARM_OF_FORBIDDEN
 	db HAS_EXODIA_FORBIDDEN
 
-Func_145cd:
+; shows duel message loaded into [wDuelMsg]
+ShowDuelMessage:
 	push af
 	push bc
 	push de
 	push hl
 	call Func_1466f
 	call Func_146b6
-	call Func_1461b
+	call ShowDuelTextBox
 	call Func_148b6
-	call Func_1463c
+	call HideDuelTextBox_FromTop
 	call Func_1467e
 	pop hl
 	pop de
@@ -660,7 +661,7 @@ Func_145e8:
 	push hl
 	call Func_1466f
 	call Func_146b6
-	call Func_1461b
+	call ShowDuelTextBox
 	call Func_148b6
 	pop hl
 	pop de
@@ -674,11 +675,11 @@ Func_145fd:
 	push de
 	push hl
 	call Func_1466f
-	call Func_14655
+	call HideDuelTextBox
 	call Func_146b6
-	call Func_1461b
+	call ShowDuelTextBox
 	call Func_148b6
-	call Func_1463c
+	call HideDuelTextBox_FromTop
 	call Func_1467e
 	pop hl
 	pop de
@@ -686,66 +687,66 @@ Func_145fd:
 	pop af
 	ret
 
-Func_1461b:
+ShowDuelTextBox:
 	push af
 	push bc
-	ld a, $8f
+	ld a, SCREEN_HEIGHT_PX - 1
 	ldh [rWY], a
-	ld a, $07
+	ld a, 0 + WX_OFS
 	ldh [rWX], a
-	ld c, $8f
-.asm_14627
+	ld c, SCREEN_HEIGHT_PX - 1
+.loop
 	ld a, c
-	cp $67
-	jr c, .asm_14635
+	cp 103
+	jr c, .done
 	ldh [rWY], a
 	dec c
 	dec c
 	call WaitForVBlank
-	jr .asm_14627
-.asm_14635
-	ld a, $67
+	jr .loop
+.done
+	ld a, 103
 	ldh [rWY], a
 	pop bc
 	pop af
 	ret
 
-Func_1463c:
+HideDuelTextBox_FromTop:
 	push af
 	push bc
-	ld c, $67
-.asm_14640
+	ld c, 103
+.loop
 	ld a, c
-	cp $8f
-	jr nc, .asm_1464e
+	cp SCREEN_HEIGHT_PX - 1
+	jr nc, .done
 	ldh [rWY], a
 	inc c
 	inc c
 	call WaitForVBlank
-	jr .asm_14640
-.asm_1464e
-	ld a, $8f
+	jr .loop
+.done
+	ld a, SCREEN_HEIGHT_PX - 1
 	ldh [rWY], a
 	pop bc
 	pop af
 	ret
 
-Func_14655:
+HideDuelTextBox:
 	push af
 	push bc
 	ldh a, [rWY]
 	ld c, a
-.asm_1465a
+.loop
 	ld a, c
-	cp $8f
-	jr nc, .asm_14668
+	cp SCREEN_HEIGHT_PX - 1
+	jr nc, .done
 	ldh [rWY], a
 	inc c
 	inc c
 	call WaitForVBlank
-	jr .asm_1465a
-.asm_14668
-	ld a, $8f
+	jr .loop
+.done
+	ld a, SCREEN_HEIGHT_PX - 1
 	ldh [rWY], a
 	pop bc
 	pop af
@@ -775,9 +776,9 @@ Func_14686:
 	ld a, $01
 	ld [wcf41], a
 	ld a, $00
-	ld [wcf43], a
+	ld [wcf43 + 0], a
 	ld a, $00
-	ld [wcf44], a
+	ld [wcf43 + 1], a
 	ld a, $00
 	ld [wcf45], a
 	ld a, $00
@@ -808,6 +809,7 @@ Func_146b6:
 	call Func_146ef
 	call RequestVBlankMode
 	call WaitForVBlank
+
 	ld a, VBLANK_10
 	call SetPendingVBlankMode
 	ld a, $00
@@ -837,7 +839,7 @@ Func_146ef:
 	ld c, a
 	call AddWordToVBlankStruct
 	ld hl, wcf1d
-	ld e, $12
+	ld e, LINE_LENGTH
 .asm_1470a
 	ld a, [hli]
 	call AddByteToVBlankStruct
@@ -849,7 +851,7 @@ Func_146ef:
 	ld c, l
 	call AddWordToVBlankStruct
 	ld hl, wcf2f
-	ld e, $12
+	ld e, LINE_LENGTH
 .asm_1471f
 	ld a, [hli]
 	call AddByteToVBlankStruct
@@ -869,13 +871,13 @@ Func_14731:
 	push bc
 	push hl
 	ld a, [wcf42]
-	cp $b0
-	jr nc, .asm_14740
+	cp CONTROL_CHAR
+	jr nc, .ctrl_char
 	call Func_14761
 	jr .done
-.asm_14740
+.ctrl_char
 	ld b, $00
-	sub $b0
+	sub CONTROL_CHAR
 	ld c, a
 	sla c
 	ld hl, .Jumptable
@@ -891,11 +893,11 @@ Func_14731:
 	ret
 
 .Jumptable:
-	dw Func_147b0
-	dw Func_147d4
-	dw Func_14812
-	dw Func_1481a
-	dw Func_1482c
+	dw Func_147b0 ; <LINE>
+	dw Func_147d4 ; <PROMPT>
+	dw Func_14812 ; <B2>
+	dw Func_1481a ; <B3>
+	dw Func_1482c ; <DONE>
 
 Func_14761:
 	push af
@@ -1026,17 +1028,17 @@ Func_14830:
 	push bc
 	push hl
 	call Func_14854
-	ld a, $00
+	ld a, ' '
 	call ProcessChar
 	ld a, [wCharHeadTile]
 	ld hl, wcf1d
-	ld c, $12
+	ld c, LINE_LENGTH
 .asm_14843
 	ld [hli], a
 	dec c
 	jr nz, .asm_14843
 	ld a, [wCharTile]
-	ld c, $12
+	ld c, LINE_LENGTH
 .asm_1484c
 	ld [hli], a
 	dec c
@@ -1049,7 +1051,7 @@ Func_14830:
 Func_14854:
 	push af
 	ld a, [wcf18]
-	cp $00
+	cp TRUE
 	jr nz, .asm_1486d
 	ld a, [wcf46]
 	cp $00
@@ -1081,7 +1083,7 @@ Func_1487e:
 	ld [wcf41], a
 	jr nz, .asm_148a5
 	ld a, [wcf42]
-	cp $b0
+	cp CONTROL_CHAR
 	jr nc, .asm_14898
 	ld a, $02
 	ld [wcf41], a
@@ -1173,7 +1175,7 @@ Func_1490a:
 	call Func_14934
 	ld [wcf42], a
 	call Func_14961
-	cp $00
+	cp TRUE
 	jr nz, .asm_14931
 	call Func_148f1
 	call Func_14970
@@ -1187,25 +1189,25 @@ Func_14934:
 	push bc
 	push hl
 	ld b, $00
-	ld a, [wcf47]
+	ld a, [wDuelMsg]
 	ld c, a
 	sla c
 	rl b
-	ld hl, $4980
+	ld hl, DuelMessages
 	add hl, bc
 	ld a, [hli]
 	ld h, [hl]
 	ld l, a
-	ld a, [wcf44]
+	ld a, [wcf43 + 1]
 	ld b, a
-	ld a, [wcf43]
+	ld a, [wcf43 + 0]
 	ld c, a
 	inc a
-	ld [wcf43], a
+	ld [wcf43 + 0], a
 	jr nz, .asm_1495c
-	ld a, [wcf44]
+	ld a, [wcf43 + 1]
 	inc a
-	ld [wcf44], a
+	ld [wcf43 + 1], a
 .asm_1495c
 	add hl, bc
 	ld a, [hl]
@@ -1214,14 +1216,14 @@ Func_14934:
 	ret
 
 Func_14961:
-	cp $b5
+	cp '<B5>'
 	jr c, .asm_1496d
-	sub $b5
+	sub '<B5>'
 	call Func_2ce8
-	xor a
+	xor a ; TRUE
 	jr .asm_1496f
 .asm_1496d
-	ld a, $01
+	ld a, FALSE
 .asm_1496f
 	ret
 
@@ -1237,9 +1239,353 @@ Func_14970:
 	pop af
 	pop bc
 	ret
-; 0x14980
 
-SECTION "Bank 5@4f5a", ROMX[$4f5a], BANK[$5]
+	const_def
+
+DuelMessages:
+	message_ptr Text_ItsYourTurn ; $00
+	message_ptr Text_ItsTheComputersTurn ; $01
+	message_ptr Text_149f4 ; $02
+	message_ptr Text_149ff ; $03
+	message_ptr Text_TurnFinished ; $04
+	message_ptr Text_CommunicationError ; $05
+	message_ptr Text_TheDeckIsNotComplete ; $06
+	message_ptr Text_TheTradeHasEnded ; $07
+	message_ptr Text_YourOpponentIsCurrentlySearching ; $08
+	message_ptr Text_CommunicationHasBeenEstablished ; $09
+	message_ptr Text_14a8a ; $0a
+	message_ptr Text_14a96 ; $0b
+	message_ptr Text_14aa2 ; $0c
+	message_ptr Text_14aae ; $0d
+	message_ptr Text_14aba ; $0e
+	message_ptr Text_14ad5 ; $0f
+	message_ptr Text_14aec ; $10
+	message_ptr Text_14b09 ; $11
+	message_ptr Text_14b20 ; $12
+	message_ptr Text_14b3d ; $13
+	message_ptr Text_14b6f ; $14
+	message_ptr Text_14bad ; $15
+	message_ptr Text_14be9 ; $16
+	message_ptr Text_14c23 ; $17
+	message_ptr Text_14c5c ; $18
+	message_ptr Text_14ca3 ; $19
+	message_ptr Text_14cdd ; $1a
+	message_ptr Text_14d06 ; $1b
+	message_ptr Text_14d2d ; $1c
+	message_ptr Text_14d4a ; $1d
+	message_ptr Text_14d67 ; $1e
+	message_ptr Text_14d84 ; $1f
+	message_ptr Text_14da2 ; $20
+	message_ptr Text_14dc9 ; $21
+	message_ptr Text_14de5 ; $22
+	message_ptr Text_14e06 ; $23
+	message_ptr Text_14e26 ; $24
+	message_ptr Text_14e48 ; $25
+	message_ptr Text_14e67 ; $26
+	message_ptr Text_14ea8 ; $27
+	message_ptr Text_14ed4 ; $28
+	message_ptr Text_14f04 ; $29
+	message_ptr Text_14f19 ; $2a
+	message_ptr Text_14f2d ; $2b
+	message_ptr Text_14f40 ; $2c
+
+Text_ItsYourTurn:
+	text "あなたのタ-ンです"
+	prompt
+	done
+
+Text_ItsTheComputersTurn:
+	text "コンピュ-タ-のタ-ンです"
+	prompt
+	done
+
+Text_149f4:
+	text "つうしんちゅうです"
+	prompt
+	done
+
+Text_149ff:
+	text "てふだから 1まい えらんでください"
+	line ""
+	prompt
+	done
+
+Text_TurnFinished:
+	text "タ-ンしゅうりょうです"
+	prompt
+	done
+
+Text_CommunicationError:
+	text "つうしんエラ-です"
+	line "もういちど やりなおしてください"
+	prompt
+	done
+
+Text_TheDeckIsNotComplete:
+	text "デッキが40まい そろぅていません"
+	prompt
+	done
+
+Text_TheTradeHasEnded:
+	text "トレ-ドはしゅうりょうしました"
+	prompt
+	done
+
+Text_YourOpponentIsCurrentlySearching:
+	text "たいせんあいてが そうさちゅうです"
+	done
+
+Text_CommunicationHasBeenEstablished:
+	text "つうしんゆうごうがはぅせいした"
+	prompt
+	text "<B5>になぅた"
+	prompt
+	done
+
+Text_14a8a:
+	text "<B5>は <B6>にしんかした"
+	prompt
+	done
+
+Text_14a96:
+	text "<B5>は <B6>にしんかした"
+	prompt
+	done
+
+Text_14aa2:
+	text "<B5>は <B6>にしんかした"
+	prompt
+	done
+
+Text_14aae:
+	text "<B5>は <B6>にしんかした"
+	prompt
+	done
+
+Text_14aba:
+	text "ひかりのごふうけん のこうかは"
+	line "まだ つづいている"
+	prompt
+	done
+
+Text_14ad5:
+	text "ひかりのごふうけん のこうかが"
+	line "なくなぅた"
+	prompt
+	done
+
+Text_14aec:
+	text "でんせつのけんをつかぅた"
+	line "モンスタ-はパワ-アップした"
+	prompt
+	done
+
+Text_14b09:
+	text "<B5>をつかぅた"
+	prompt
+	text "<B6>はぶんしんして <B7>になぅた"
+	prompt
+	done
+
+Text_14b20:
+	text "しゅびふうじをつかぅた"
+	line "あいては こうげきしかできない"
+	prompt
+	done
+
+Text_14b3d:
+	text "ドラゴンぞく·ふういんのつぼを"
+	line "つかぅた"
+	prompt
+	text "フィ-ルドにいた ドラゴンぞくは"
+	line "つぼにふういんされた"
+	prompt
+	done
+
+Text_14b6f:
+	text "もりカ-ドをつかぅた"
+	line "フィ-ルドはもりにへんかした"
+	prompt
+	text "じゅうせんし けもの こんちゅう"
+	line "しょくぶつはフィ-ルドパワ-をえる"
+	prompt
+	done
+
+Text_14bad:
+	text "こうやカ-ドをつかぅた"
+	line "フィ-ルドはこうやにへんかした"
+	prompt
+	text "アンデット きょうりゅう がんせき"
+	line "はフィ-ルドパワ-をえる"
+	prompt
+	done
+
+Text_14be9:
+	text "やまカ-ドをつかぅた"
+	line "フィ-ルドはやまにへんかした"
+	prompt
+	text "ドラゴン ちょうじゅう いかずち"
+	line "は フィ-ルドパワ-をえる"
+	prompt
+	done
+
+Text_14c23:
+	text "そうげんカ-ドをつかぅた"
+	line "フィ-ルドはそうげんにへんかした"
+	prompt
+	text "せんし じゅうせんし は フィ-ルド"
+	line "パワ-をえる"
+	prompt
+	done
+
+Text_14c5c:
+	text "うみカ-ドをつかぅた"
+	line "フィ-ルドはうみにへんかした"
+	prompt
+	text "さかな かいりゅう いかずち みず"
+	line "は パワ-アップ"
+	prompt
+	text "きかい ほのお は パワ-ダウン"
+	prompt
+	done
+
+Text_14ca3:
+	text "やみカ-ドをつかぅた"
+	line "フィ-ルドはやみにへんかした"
+	prompt
+	text "まほうつかい あくま はパワ-アップ"
+	line "てんし はパワ-ダウン"
+	prompt
+	done
+
+Text_14cdd:
+	text "ブラック·ホ-ルをつかぅた"
+	prompt
+	text "フィ-ルドのモンスタ-は すべて"
+	line "きえさぅてしまう"
+	prompt
+	done
+
+Text_14d06:
+	text "サンダ-·ボルトをつかぅた"
+	prompt
+	text "てきのフィ-ルドモンスタ-は"
+	line "きえさぅてしまう"
+	prompt
+	done
+
+Text_14d2d:
+	text "モウヤンのカレ-をつかぅた"
+	line "ライフポイントが かいふく"
+	prompt
+	done
+
+Text_14d4a:
+	text "レッドポ-ションをつかぅた"
+	line "ライフポイントが かいふく"
+	prompt
+	done
+
+Text_14d67:
+	text "ゴブりンのひやくをつかぅた"
+	line "ライフポイントが かいふく"
+	prompt
+	done
+
+Text_14d84:
+	text "てんしのいきちをつかぅた"
+	line "ライフポイントが かいふくした"
+	prompt
+	done
+
+Text_14da2:
+	text "ちりょうのかみ ディアン·ケトを"
+	line "つかぅた"
+	prompt
+	text "ライフポイントが かいふくした"
+	prompt
+	done
+
+Text_14dc9:
+	text "ひのこ をつかぅた"
+	line "あいてのライフポイントにダメ-ジ"
+	prompt
+	done
+
+Text_14de5:
+	text "ファイア-ボ-ル をつかぅた"
+	line "あいてのライフポイントにダメ-ジ"
+	prompt
+	done
+
+Text_14e06:
+	text "ひあぶりのけい をつかぅた"
+	line "あいてのライフポイントにダメ-ジ"
+	prompt
+	done
+
+Text_14e26:
+	text "ちゅうやのおおかじ をつかぅた"
+	line "あいてのライフポイントにダメ-ジ"
+	prompt
+	done
+
+Text_14e48:
+	text "かえんじごく をつかぅた"
+	line "あいてのライフポイントにダメ-ジ"
+	prompt
+	done
+
+Text_14e67:
+	text "ひかりのごふうけん をつかぅた"
+	line "あいては 3タ-ンこうげきできない"
+	prompt
+	text "フィ-ルドにいるモンスタ-は"
+	line "ひかりによぅてはんべつされた"
+	prompt
+	done
+
+Text_14ea8:
+	text "ろくぼうせいのじゅばく をつかぅた"
+	prompt
+	text "フィ-ルドにいるてきのモンスタ-は"
+	line "パワ-ダウン"
+	prompt
+	done
+
+Text_14ed4:
+	text "やみをかきけすひかり をつかぅた"
+	prompt
+	text "フィ-ルドにいるモンスタ-は"
+	line "ひかりによぅてはんべつされた"
+	prompt
+	done
+
+Text_14f04:
+	text "つうしんエラ- バッファがあふれました"
+	prompt
+	done
+
+Text_14f19:
+	text "<B5>と <B6>は"
+	prompt
+	text "ゆうごうして <B7>になぅた"
+	prompt
+	done
+
+Text_14f2d:
+	text "<B5>をつかぅた"
+	prompt
+	text "<B6>はパワ-アップした"
+	prompt
+	done
+
+Text_14f40:
+	text "<B5>をつかぅた"
+	prompt
+	text "しかし パワ-アップはできなかぅた"
+	prompt
+	done
 
 Func_14f5a:
 	push af
@@ -1248,18 +1594,18 @@ Func_14f5a:
 	push hl
 	ld d, $00
 	ld a, [wJoypadPressed]
-	and $03
-	jr z, .asm_14f74
+	and PAD_A | PAD_B
+	jr z, .no_a_or_b_btns
 	ld c, $08
 .asm_14f69
 	dec c
 	rlca
 	jr nc, .asm_14f69
 	ld b, $00
-	ld hl, $4f88
+	ld hl, .data
 	add hl, bc
 	ld d, [hl]
-.asm_14f74
+.no_a_or_b_btns
 	ld a, $01
 	ld [wcf49], a
 	ld a, d
@@ -1273,9 +1619,9 @@ Func_14f5a:
 	pop bc
 	pop af
 	ret
-; 0x14f88
 
-SECTION "Bank 5@4f90", ROMX[$4f90], BANK[$5]
+.data
+	db $02, $02, $00, $00, $00, $00, $00, $00
 
 Func_14f90:
 	push af
@@ -1369,10 +1715,10 @@ SECTION "Bank 5@500c", ROMX[$500c], BANK[$5]
 Func_1500c:
 	push af
 	call Func_2b68
-	ld a, $00
+	ld a, TRUE
 	ld [wcf18], a
-	ld a, $00
-	ld [wcf47], a
+	ldmsg a, Text_ItsYourTurn
+	ld [wDuelMsg], a
 	call Func_145fd
 	pop af
 	ret
@@ -1380,11 +1726,11 @@ Func_1500c:
 Func_1501f:
 	push af
 	call Func_2b68
-	ld a, $00
+	ld a, TRUE
 	ld [wcf18], a
-	ld a, $01
-	ld [wcf47], a
-	call Func_145cd
+	ldmsg a, Text_ItsTheComputersTurn
+	ld [wDuelMsg], a
+	call ShowDuelMessage
 	pop af
 	ret
 
@@ -1393,10 +1739,10 @@ Func_15032:
 	ld a, [wcdff]
 	cp $02
 	jr nz, .asm_15047
-	ld a, $00
+	ld a, TRUE
 	ld [wcf18], a
-	ld a, $08
-	ld [wcf47], a
+	ldmsg a, Text_YourOpponentIsCurrentlySearching
+	ld [wDuelMsg], a
 	call Func_145e8
 .asm_15047
 	pop af
@@ -1408,11 +1754,11 @@ SECTION "Bank 5@5059", ROMX[$5059], BANK[$5]
 Func_15059:
 	push af
 	push bc
-	ld a, $01
+	ld a, FALSE
 	ld [wcf18], a
-	ld a, $07
-	ld [wcf47], a
-	call Func_145cd
+	ldmsg a, Text_TheTradeHasEnded
+	ld [wDuelMsg], a
+	call ShowDuelMessage
 	call Func_2c4a
 	call Func_14201
 	call IsValidCard
@@ -1420,11 +1766,11 @@ Func_15059:
 	jr nz, .asm_15087
 	ld e, $04
 	call Func_2cf2
-	ld a, $01
+	ld a, FALSE
 	ld [wcf18], a
-	ld a, $09
-	ld [wcf47], a
-	call Func_145cd
+	ldmsg a, Text_CommunicationHasBeenEstablished
+	ld [wDuelMsg], a
+	call ShowDuelMessage
 .asm_15087
 	pop bc
 	pop af
@@ -1436,31 +1782,31 @@ SECTION "Bank 5@509a", ROMX[$509a], BANK[$5]
 Func_1509a:
 	push af
 	call Func_2b68
-	ld a, $00
+	ld a, TRUE
 	ld [wcf18], a
-	ld a, $04
-	ld [wcf47], a
-	call Func_145cd
+	ldmsg a, Text_TurnFinished
+	ld [wDuelMsg], a
+	call ShowDuelMessage
 	pop af
 	ret
 
 Func_150ad:
 	push af
-	ld a, $01
+	ld a, FALSE
 	ld [wcf18], a
-	ld a, $05
-	ld [wcf47], a
-	call Func_145cd
+	ldmsg a, Text_CommunicationError
+	ld [wDuelMsg], a
+	call ShowDuelMessage
 	pop af
 	ret
 
 Func_150bd:
 	push af
-	ld a, $01
+	ld a, FALSE
 	ld [wcf18], a
-	ld a, $06
-	ld [wcf47], a
-	call Func_145cd
+	ldmsg a, Text_TheDeckIsNotComplete
+	ld [wDuelMsg], a
+	call ShowDuelMessage
 	pop af
 	ret
 ; 0x150cd
@@ -1473,13 +1819,13 @@ Func_150dd:
 	push de
 	push hl
 	ld e, a
-	ld a, $00
+	ld a, TRUE
 	ld [wcf18], a
 	ld d, $00
-	ld hl, $5118
+	ld hl, .DuelMessages
 	add hl, de
 	ld a, [hl]
-	ld [wcf47], a
+	ld [wDuelMsg], a
 	call Func_2c4a
 	sla e
 	ld hl, $511c
@@ -1498,67 +1844,130 @@ Func_150dd:
 	ld c, a
 	ld b, [hl]
 	call Func_2d01
-	call Func_145cd
+	call ShowDuelMessage
 	pop hl
 	pop de
 	pop bc
 	pop af
 	ret
-; 0x15118
 
-SECTION "Bank 5@512c", ROMX[$512c], BANK[$5]
+.DuelMessages:
+	msg Text_14a8a
+	msg Text_14a96
+	msg Text_14aa2
+	msg Text_14aae
+
+	db $15, $01
+	db $37, $00
+	db $47, $00
+	db $38, $00
+
+	db $37, $00
+	db $47, $00
+	db $38, $00
+	db $42, $00
 
 Func_1512c::
 	push af
 	push bc
 	push hl
 	ld c, a
-	ld a, $00
+	ld a, TRUE
 	ld [wcf18], a
 	ld b, $00
-	ld hl, $5146
+	ld hl, .DuelMessages
 	add hl, bc
 	ld a, [hl]
-	ld [wcf47], a
-	call Func_145cd
+	ld [wDuelMsg], a
+	call ShowDuelMessage
 	pop hl
 	pop bc
 	pop af
 	ret
-; 0x15146
 
-SECTION "Bank 5@5148", ROMX[$5148], BANK[$5]
+.DuelMessages:
+	msg Text_14aba
+	msg Text_14ad5
 
 Func_15148:
 	push af
 	push bc
 	push hl
 	ld c, a
-	ld a, $00
+	ld a, TRUE
 	ld [wcf18], a
 	ld b, $00
-	ld hl, $5162
+	ld hl, .DuelMessages
 	add hl, bc
 	ld a, [hl]
-	ld [wcf47], a
-	call Func_145cd
+	ld [wDuelMsg], a
+	call ShowDuelMessage
 	pop hl
 	pop bc
 	pop af
 	ret
-; 0x15162
 
-SECTION "Bank 5@5194", ROMX[$5194], BANK[$5]
+.DuelMessages:
+	msg Text_14aec
+	msg Text_14aec
+	msg Text_14aec
+	msg Text_14aec
+	msg Text_14aec
+	msg Text_14aec
+	msg Text_14aec
+	msg Text_14aec
+	msg Text_14aec
+	msg Text_14aec
+	msg Text_14aec
+	msg Text_14aec
+	msg Text_14aec
+	msg Text_14aec
+	msg Text_14aec
+	msg Text_14aec
+	msg Text_14aec
+	msg Text_14aec
+	msg Text_14aec
+	msg Text_14b20
+	msg Text_14aec
+	msg Text_14aec
+	msg Text_14aec
+	msg Text_14aec
+	msg Text_14aec
+	msg Text_14aec
+	msg Text_14aec
+	msg Text_14aec
+	msg Text_14b3d
+	msg Text_14b6f
+	msg Text_14bad
+	msg Text_14be9
+	msg Text_14c23
+	msg Text_14c5c
+	msg Text_14ca3
+	msg Text_14cdd
+	msg Text_14d06
+	msg Text_14d2d
+	msg Text_14d4a
+	msg Text_14d67
+	msg Text_14d84
+	msg Text_14da2
+	msg Text_14dc9
+	msg Text_14de5
+	msg Text_14e06
+	msg Text_14e26
+	msg Text_14e48
+	msg Text_14e67
+	msg Text_14ea8
+	msg Text_14ed4
 
 Func_15194:
 	push af
 	push bc
 	push de
 	push hl
-	ld a, $00
+	ld a, TRUE
 	ld [wcf18], a
-	ld a, $2a
-	ld [wcf47], a
+	ldmsg a, Text_14f19
+	ld [wDuelMsg], a
 	call Func_2c4a
 	ld e, $04
 	ld a, [wMaterial1CardID + 0]
@@ -1581,7 +1990,7 @@ Func_15194:
 	call IsValidCard
 	cp TRUE
 	jr nz, .asm_151d6
-	call Func_145cd
+	call ShowDuelMessage
 .asm_151d6
 	pop hl
 	pop de
@@ -1593,10 +2002,10 @@ Func_151db:
 	push af
 	push bc
 	push de
-	ld a, $00
+	ld a, TRUE
 	ld [wcf18], a
-	ld a, $2b
-	ld [wcf47], a
+	ldmsg a, Text_14f2d
+	ld [wDuelMsg], a
 	call Func_2c4a
 	ld e, $04
 	call Func_2cf2
@@ -1606,7 +2015,7 @@ Func_151db:
 	ld a, [wTempCardID + 1]
 	ld b, a
 	call Func_2d01
-	call Func_145cd
+	call ShowDuelMessage
 	pop de
 	pop bc
 	pop af
@@ -1616,10 +2025,10 @@ Func_15204:
 	push af
 	push bc
 	push de
-	ld a, $00
+	ld a, TRUE
 	ld [wcf18], a
-	ld a, $11
-	ld [wcf47], a
+	ldmsg a, Text_14b09
+	ld [wDuelMsg], a
 	call Func_2c4a
 	ld e, $04
 	ld bc, ELEGANT_EGOTIST
@@ -1630,7 +2039,7 @@ Func_15204:
 	ld e, $04
 	ld bc, HARPIE_LADY_SISTER
 	call Func_2d10
-	call Func_145cd
+	call ShowDuelMessage
 	pop de
 	pop bc
 	pop af

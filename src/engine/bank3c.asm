@@ -21,7 +21,7 @@ Func_f0004:
 	ld e, a
 	hlbgcoord 1, 13
 	call Func_1114
-	ld c, $12
+	ld c, LINE_LENGTH
 .asm_f0023
 	ld a, [de]
 	inc de
@@ -40,7 +40,7 @@ Func_f0004:
 	jr nz, .asm_f0023
 	call Func_111c
 	hlbgcoord 1, 15
-	ld c, $12
+	ld c, LINE_LENGTH
 .asm_f0043
 	ld a, [de]
 	inc de

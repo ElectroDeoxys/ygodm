@@ -1,149 +1,155 @@
-Func_213a::
+PowerUpMonster::
 	push af
 	push bc
 	push hl
-	ld a, [wcdf4]
-	and $30
+	ld a, [wTempCardStatus]
+	and CARD_LEVEL_MASK
 	ld c, a
 	swap c
 	ld b, $00
-	ld hl, .data
+	ld hl, .Levels
 	add hl, bc
-	ld a, [wcdf4]
-	and $cf
+	ld a, [wTempCardStatus]
+	and ~CARD_LEVEL_MASK
 	or [hl]
-	ld [wcdf4], a
+	ld [wTempCardStatus], a
 	pop hl
 	pop bc
 	pop af
 	ret
 
-.data
-	db $10, $20, $30, $30
+.Levels:
+	db LEVEL_0      ; LEVEL_MINUS_1
+	db LEVEL_PLUS_1 ; LEVEL_0
+	db LEVEL_PLUS_2 ; LEVEL_PLUS_1
+	db LEVEL_PLUS_2 ; LEVEL_PLUS_2
 
-Func_215c::
+PowerDownMonster::
 	push af
 	push bc
 	push hl
-	ld a, [wcdf4]
-	and $30
+	ld a, [wTempCardStatus]
+	and CARD_LEVEL_MASK
 	ld c, a
 	swap c
 	ld b, $00
-	ld hl, .data
+	ld hl, .Levels
 	add hl, bc
-	ld a, [wcdf4]
-	and $cf
+	ld a, [wTempCardStatus]
+	and ~CARD_LEVEL_MASK
 	or [hl]
-	ld [wcdf4], a
+	ld [wTempCardStatus], a
 	pop hl
 	pop bc
 	pop af
 	ret
 
-.data
-	db $00, $00, $10, $20
+.Levels:
+	db LEVEL_MINUS_1 ; LEVEL_MINUS_1
+	db LEVEL_MINUS_1 ; LEVEL_0
+	db LEVEL_0       ; LEVEL_PLUS_1
+	db LEVEL_PLUS_1  ; LEVEL_PLUS_2
 
-Func_217e::
+SetDefaultCardLevel::
 	push af
-	ld a, [wcdf4]
-	and $cf
-	or $10
-	ld [wcdf4], a
+	ld a, [wTempCardStatus]
+	and ~CARD_LEVEL_MASK
+	or LEVEL_0
+	ld [wTempCardStatus], a
 	pop af
 	ret
 
 GetCardLevel::
-	ld a, [wcdf4]
-	and $30
+	ld a, [wTempCardStatus]
+	and CARD_LEVEL_MASK
 	swap a
 	ret
 
-Func_2193::
+SetCardFaceUp::
 	push af
-	ld a, [wcdf4]
-	or $40
-	ld [wcdf4], a
+	ld a, [wTempCardStatus]
+	or CARDFLAG_FACE_UP
+	ld [wTempCardStatus], a
 	pop af
 	ret
 
-Func_219e::
+SetCardFaceDown::
 	push af
-	ld a, [wcdf4]
-	and $bf
-	ld [wcdf4], a
+	ld a, [wTempCardStatus]
+	and ~CARDFLAG_FACE_UP
+	ld [wTempCardStatus], a
 	pop af
 	ret
 
 Func_21a9::
 	push af
-	ld a, [wcdf4]
-	or $08
-	ld [wcdf4], a
+	ld a, [wTempCardStatus]
+	or CARDFLAG_UNK3
+	ld [wTempCardStatus], a
 	pop af
 	ret
 
 Func_21b4::
 	push af
-	ld a, [wcdf4]
-	and $f7
-	ld [wcdf4], a
+	ld a, [wTempCardStatus]
+	and ~CARDFLAG_UNK3
+	ld [wTempCardStatus], a
 	pop af
 	ret
 
 ; unreferenced
 Func_21bf:
 	push af
-	ld a, [wcdf4]
+	ld a, [wTempCardStatus]
 	and $f8
 	or $00
-	ld [wcdf4], a
+	ld [wTempCardStatus], a
 	pop af
 	ret
 
 Func_21cc::
 	push af
-	ld a, [wcdf4]
+	ld a, [wTempCardStatus]
 	and $f8
 	or $01
-	ld [wcdf4], a
+	ld [wTempCardStatus], a
 	pop af
 	ret
 
 Func_21d9::
 	push af
-	ld a, [wcdf4]
+	ld a, [wTempCardStatus]
 	and $f8
 	or $02
-	ld [wcdf4], a
+	ld [wTempCardStatus], a
 	pop af
 	ret
 
 Func_21e6::
 	push af
-	ld a, [wcdf4]
+	ld a, [wTempCardStatus]
 	and $f8
 	or $03
-	ld [wcdf4], a
+	ld [wTempCardStatus], a
 	pop af
 	ret
 
 Func_21f3::
-	ld a, [wcdf4]
+	ld a, [wTempCardStatus]
 	and $07
 	ret
 
-Func_21f9::
-	ld a, [wcdf4]
-	and $40
-	jr z, .asm_2202
-	ld a, $01
-.asm_2202
+IsCardFaceDown::
+	ld a, [wTempCardStatus]
+	and CARDFLAG_FACE_UP
+	jr z, .true
+	ld a, FALSE
+.true
 	ret
 
 Func_2203::
-	ld a, [wcdf4]
-	and $08
+	ld a, [wTempCardStatus]
+	and CARDFLAG_UNK3
 	jr z, .true
 	ld a, FALSE
 .true
@@ -151,7 +157,7 @@ Func_2203::
 
 ; unreferenced
 Func_220d:
-	ld a, [wcdf4]
+	ld a, [wTempCardStatus]
 	and $10
 	jr z, .asm_2216
 	ld a, $01
@@ -2005,7 +2011,7 @@ Func_2c4a::
 	ld [wcfde], a
 	ld hl, wcfc4
 	ld a, $ff
-	ld c, $12
+	ld c, LINE_LENGTH
 .asm_2c74
 	ld [hli], a
 	dec c
@@ -2075,7 +2081,7 @@ Func_2cc3:
 	farcall LoadText
 	ld hl, wcfc4
 	ld de, wTextBuffer
-	ld c, $12
+	ld c, LINE_LENGTH
 .asm_2cd9
 	ld a, [de]
 	ld [hli], a
@@ -2132,7 +2138,7 @@ Func_2d10::
 	ret
 
 Func_2d1f:
-	ld a, $08
+	ld a, MUSIC_08
 	ld [wcfef], a
 	call Func_2d2e
 	xor a
@@ -2155,7 +2161,7 @@ VBlank16:
 	bankswitch BANK(UpdateAudio)
 	call UpdateAudio
 	di
-	bankswitch $3d
+	bankswitch BANK(Func_f4002)
 	ei
 	ld a, $01
 	ld [wcfe2], a

@@ -7,7 +7,7 @@
 	const MUSIC_DUEL3 ; $05
 	const MUSIC_CAMPAIGN ; $06
 	const MUSIC_07 ; $07
-	const MUSIC_08 ; $08 unused?
+	const MUSIC_08 ; $08
 	const MUSIC_DUEL_PREP ; $09
 	const MUSIC_BATTLE ; $0a
 	const MUSIC_TEA ; $0b

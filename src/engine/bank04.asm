@@ -134,10 +134,10 @@ DoDuel:
 	call IsDuelOngoing
 	cp FALSE
 	jr z, .duel_finished
-	farcall Func_1501f
-	call Func_2391
 
 	; opponent's turn
+	farcall Func_1501f
+	call Func_2391
 	call Func_101f8
 	call Func_10302
 	call IsDuelOngoing
