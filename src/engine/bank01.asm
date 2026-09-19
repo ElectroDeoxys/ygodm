@@ -1774,7 +1774,10 @@ GiveCard::
 	pop af
 	ret
 
-Func_5b29:
+; tries removing card from trunk
+; if card is not in trunk, return FALSE
+; otherwise, decrement its count and return TRUE
+RemoveCardFromTrunk:
 	push bc
 	push de
 	push hl
@@ -1785,20 +1788,24 @@ Func_5b29:
 	ld b, a
 	ld hl, wTrunk
 	add hl, bc
+	; is card count 0?
 	ld a, [hl]
-	cp $00
-	jr nz, .asm_5b43
-	ld d, $01
-	jr .asm_5b4d
-.asm_5b43
-	cp $ff
-	jr nz, .asm_5b4b
-	ld d, $01
-	jr .asm_5b4d
-.asm_5b4b
+	cp 0
+	jr nz, .non_zero
+	; yes
+	ld d, FALSE
+	jr .done
+.non_zero
+	; does player own it?
+	cp NOT_OWNED
+	jr nz, .decrement
+	; no
+	ld d, FALSE
+	jr .done
+.decrement
 	dec a
 	ld [hl], a
-.asm_5b4d
+.done
 	ld a, d
 	pop hl
 	pop de
@@ -1867,13 +1874,13 @@ Func_5b92:
 	ld a, [wCardID_cae2 + 1]
 	ld b, a
 	push bc
-	farcall Func_c664
+	farcall CountPlayerDeckCards
 	ld a, b
 	pop bc
 	cp TRUE
 	jr nz, .asm_5bb4
-	call Func_5b29
-	cp $00
+	call RemoveCardFromTrunk
+	cp TRUE
 	jr nz, .asm_5bb4
 	farcall Func_c618
 	ld e, $00
@@ -1886,7 +1893,7 @@ Func_5b92:
 Func_5bb8:
 	push af
 	push bc
-	farcall Func_c664
+	farcall CountPlayerDeckCards
 	ld a, c
 	cp $01
 	jr z, .asm_5bce
@@ -1899,19 +1906,19 @@ Func_5bb8:
 	pop af
 	ret
 
-; unreferenced
 Func_5bd1:
 	push af
 	push bc
-	farcall Func_c664
+	; if player's deck is empty, exit
+	farcall CountPlayerDeckCards
 	ld a, c
-	cp $00
-	jr z, .asm_5be7
+	cp 0
+	jr z, .empty
 	farcall GetPlayerDeckCard
 	call Func_5af2
 	call GiveCard
 	farcall RemoveCardFromPlayerDeck
-.asm_5be7
+.empty
 	pop bc
 	pop af
 	ret
@@ -1930,8 +1937,8 @@ Func_5bea:
 	pop bc
 	cp $00
 	jr nz, .asm_5c0c
-	call Func_5b29
-	cp $00
+	call RemoveCardFromTrunk
+	cp TRUE
 	jr nz, .asm_5c0c
 	farcall Func_e75b
 	ld e, $00

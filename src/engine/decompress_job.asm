@@ -27,4 +27,3 @@ DecompressJob::
 	db $01, LOW(hDecompressJobFlags)
 	jr z, .wait_2
 	jr .loop
-; 0x1c038

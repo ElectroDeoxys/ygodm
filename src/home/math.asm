@@ -22,8 +22,10 @@ DDividedByB::
 	pop af
 	ret
 
-; unreferenced
-Func_135e:
+; multiplies bc by de, interpreting
+; one of the numbers as a fixed point number
+; of 16-bits ([0, 65535] -> [0.0, 1.0])
+MultiplyQ16::
 	push af
 	push bc
 	push hl

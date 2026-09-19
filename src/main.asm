@@ -8,24 +8,31 @@ INCBIN "data/bank_fill/bank02.bin"
 
 SECTION "Bank 03", ROMX
 INCLUDE "engine/bank03.asm"
+INCBIN "data/bank_fill/bank03.bin"
 
 SECTION "Bank 04", ROMX
 INCLUDE "engine/bank04.asm"
+INCBIN "data/bank_fill/bank04.bin"
 
 SECTION "Bank 05", ROMX
 INCLUDE "engine/bank05.asm"
+INCBIN "data/bank_fill/bank05.bin"
 
 SECTION "Bank 06", ROMX
 INCLUDE "engine/bank06.asm"
+INCBIN "data/bank_fill/bank06.bin"
 
 SECTION "Bank 07", ROMX
-INCLUDE "engine/bank07.asm"
+INCLUDE "engine/decompress_job.asm"
+INCBIN "data/bank_fill/bank07.bin"
 
 SECTION "Bank 08", ROMX
 INCLUDE "engine/bank08.asm"
+INCBIN "data/bank_fill/bank08.bin"
 
 SECTION "Bank 09", ROMX
 INCLUDE "engine/bank09.asm"
+INCBIN "data/bank_fill/bank09.bin"
 
 SECTION "Bank 0a", ROMX
 INCLUDE "engine/bank0a.asm"

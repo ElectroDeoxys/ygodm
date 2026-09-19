@@ -295,7 +295,7 @@ wceb5:: db ; ceb5
 wceb6:: db ; ceb6
 wceb7:: ds 5 * $2 ; ceb7
 
-wcec1:: ds $a ; cec1
+wcec1:: ds $5 * $2 ; cec1
 
 wMaterial1CardID:: dw ; cecb
 wMaterial2CardID:: dw ; cecd
@@ -395,7 +395,7 @@ wcf93:: db ; cf93
 wcf94:: db ; cf94
 wcf95:: db ; cf95
 wcf96:: db ; cf96
-	ds $1
+wcf97:: db ; cf97
 wcf98:: db ; cf98
 wcf99:: db ; cf99
 wcf9a:: db ; cf9a

@@ -155,8 +155,7 @@ Func_2203::
 .true
 	ret
 
-; unreferenced
-Func_220d:
+Func_220d::
 	ld a, [wTempCardStatus]
 	and $10
 	jr z, .asm_2216

@@ -9,7 +9,7 @@
 	farfunc Func_1500c ; $0d
 	farfunc Func_1501f ; $0f
 	farfunc Func_15032 ; $11
-	farfunc $508a ; $13
+	farfunc Func_1508a ; $13
 	farfunc Func_1509a ; $15
 	farfunc Func_150ad ; $17
 	farfunc Func_150bd ; $19
@@ -19,12 +19,12 @@
 	farfunc Func_15194 ; $21
 	farfunc Func_151db ; $23
 	farfunc Func_15204 ; $25
-	farfunc $5049 ; $27
+	farfunc Func_15049 ; $27
 	farfunc Func_15059 ; $29
-	farfunc $50cd ; $2b
+	farfunc Func_150cd ; $2b
 	farfunc HandleExodiaWinCondition ; $2d
 	farfunc HandleEmptyHandWinCondition ; $2f
-	farfunc $52a3 ; $31
+	farfunc AutoBuildPlayerDeck ; $31
 	farfunc Func_14216 ; $33
 	farfunc Func_14238 ; $35
 
@@ -33,7 +33,7 @@ Func_14036:
 	push hl
 	call Func_101d
 	call DisableLCD
-	ld hl, $406e
+	ld hl, ScreenConfig_1406e
 	call SetScreenConfig
 	call Func_12d2
 	farcall LoadFontToVTiles2
@@ -51,9 +51,18 @@ Func_14036:
 	pop hl
 	pop af
 	ret
-; 0x1406e
 
-SECTION "Bank 5@4078", ROMX[$4078], BANK[$5]
+ScreenConfig_1406e:
+	db LCDC_BG_ON | LCDC_OBJ_ON | LCDC_OBJ_16 | LCDC_BG_9800 | LCDC_BLOCK21 | LCDC_WIN_OFF | LCDC_WIN_9800 ; LCDC
+	db STAT_LYC ; STAT
+	db   0 ; SCY
+	db   0 ; SCX
+	db  32 ; LYC
+	dbpal SHADE_WHITE, SHADE_WHITE, SHADE_WHITE, SHADE_WHITE ; BGP
+	dbpal SHADE_WHITE, SHADE_WHITE, SHADE_WHITE, SHADE_WHITE ; OBP0
+	dbpal SHADE_WHITE, SHADE_WHITE, SHADE_WHITE, SHADE_WHITE ; OBP1
+	db 144 ; WY
+	db 159 + WX_OFS ; WX
 
 Func_14078:
 	push af
@@ -61,7 +70,7 @@ Func_14078:
 	call Func_1c0a
 	call Func_1256
 	farcall Func_5eb3
-	ld bc, $1028
+	lb bc, $10, $28
 	call Func_1c1d
 	ld bc, NULL
 	call Func_1c12
@@ -244,7 +253,7 @@ Func_141a8:
 	push hl
 	ld d, $00
 	ld a, [wJoypadPressed]
-	and $02
+	and PAD_B
 	jr z, .asm_141c1
 	ld c, $08
 .asm_141b6
@@ -252,7 +261,7 @@ Func_141a8:
 	rlca
 	jr nc, .asm_141b6
 	ld b, $00
-	ld hl, $41c6
+	ld hl, .data
 	add hl, bc
 	ld d, [hl]
 .asm_141c1
@@ -261,9 +270,9 @@ Func_141a8:
 	pop de
 	pop bc
 	ret
-; 0x141c6
 
-SECTION "Bank 5@41ce", ROMX[$41ce], BANK[$5]
+.data
+	db $00, $02, $00, $00, $00, $00, $00, $00
 
 Func_141ce:
 	ld a, VBLANK_02
@@ -421,7 +430,7 @@ Func_1428e:
 	sla a
 	sla b
 	add b
-	ld c, a
+	ld c, a ; *10
 	ld b, $00
 	add hl, bc
 	ld b, h
@@ -429,7 +438,7 @@ Func_1428e:
 	ld e, d
 	sla e
 	ld d, $00
-	ld hl, $42c7
+	ld hl, .ptrs
 	add hl, de
 	ld a, [hli]
 	ld h, [hl]
@@ -456,9 +465,27 @@ Func_1428e:
 	pop bc
 	pop af
 	ret
-; 0x142c7
 
-SECTION "Bank 5@430f", ROMX[$430f], BANK[$5]
+.ptrs
+	dw .ptrs_1
+	dw .ptrs_2
+	dw .ptrs_3
+	dw .ptrs_4
+	dw .ptrs_5
+	dw .ptrs_6
+
+.ptrs_1
+	dw wcec1 + 0, wcec1 + 2, wcec1 + 4, wcec1 + 6, wcec1 + 8
+.ptrs_2
+	dw wcec1 + 0, wcec1 + 4, wcec1 + 2, wcec1 + 6, wcec1 + 8
+.ptrs_3
+	dw wcec1 + 2, wcec1 + 0, wcec1 + 4, wcec1 + 6, wcec1 + 8
+.ptrs_4
+	dw wcec1 + 2, wcec1 + 4, wcec1 + 0, wcec1 + 6, wcec1 + 8
+.ptrs_5
+	dw wcec1 + 4, wcec1 + 0, wcec1 + 2, wcec1 + 6, wcec1 + 8
+.ptrs_6
+	dw wcec1 + 4, wcec1 + 2, wcec1 + 0, wcec1 + 6, wcec1 + 8
 
 Func_1430f:
 	push af
@@ -494,7 +521,7 @@ Func_1432f:
 	ld e, $18
 .asm_14337
 	push de
-	ld bc, $436b
+	ld bc, .data_1
 	ld e, d
 	ld d, $00
 .asm_1433e
@@ -506,7 +533,7 @@ Func_1432f:
 	call Func_14271
 	cp $00
 	jr nz, .asm_1435e
-	ld bc, $445b
+	ld bc, .data_2
 	ld a, e
 	ld d, $00
 	call Func_1428e
@@ -527,9 +554,58 @@ Func_1432f:
 	pop bc
 	pop af
 	ret
-; 0x1436b
 
-SECTION "Bank 5@454b", ROMX[$454b], BANK[$5]
+.data_1
+	db $25, $00, $26, $00, $20, $01, $6d, $01, $6d, $01
+	db $03, $00, $0f, $00, $20, $01, $6d, $01, $6d, $01
+	db $19, $00, $5a, $00, $20, $01, $6d, $01, $6d, $01
+	db $7a, $00, $15, $01, $20, $01, $6d, $01, $6d, $01
+	db $9c, $00, $15, $01, $20, $01, $6d, $01, $6d, $01
+	db $11, $01, $15, $01, $20, $01, $6d, $01, $6d, $01
+	db $10, $01, $15, $01, $20, $01, $6d, $01, $6d, $01
+	db $07, $00, $15, $01, $20, $01, $6d, $01, $6d, $01
+	db $4a, $00, $15, $01, $20, $01, $6d, $01, $6d, $01
+	db $9d, $00, $15, $01, $20, $01, $6d, $01, $6d, $01
+	db $ed, $00, $15, $01, $20, $01, $6d, $01, $6d, $01
+	db $b3, $00, $15, $01, $20, $01, $6d, $01, $6d, $01
+	db $7a, $00, $37, $00, $20, $01, $6d, $01, $6d, $01
+	db $9c, $00, $37, $00, $20, $01, $6d, $01, $6d, $01
+	db $11, $01, $37, $00, $20, $01, $6d, $01, $6d, $01
+	db $10, $01, $37, $00, $20, $01, $6d, $01, $6d, $01
+	db $07, $00, $37, $00, $20, $01, $6d, $01, $6d, $01
+	db $4a, $00, $37, $00, $20, $01, $6d, $01, $6d, $01
+	db $9d, $00, $37, $00, $20, $01, $6d, $01, $6d, $01
+	db $ed, $00, $37, $00, $20, $01, $6d, $01, $6d, $01
+	db $b3, $00, $37, $00, $20, $01, $6d, $01, $6d, $01
+	db $47, $00, $47, $00, $20, $01, $6d, $01, $6d, $01
+	db $38, $00, $47, $00, $20, $01, $6d, $01, $6d, $01
+	db $15, $00, $51, $00, $20, $01, $6d, $01, $6d, $01
+
+.data_2
+	db $24, $00, $6d, $01, $6d, $01, $6d, $01, $6d, $01
+	db $44, $00, $6d, $01, $6d, $01, $6d, $01, $6d, $01
+	db $5b, $00, $6d, $01, $6d, $01, $6d, $01, $6d, $01
+	db $37, $00, $6d, $01, $6d, $01, $6d, $01, $6d, $01
+	db $37, $00, $6d, $01, $6d, $01, $6d, $01, $6d, $01
+	db $37, $00, $6d, $01, $6d, $01, $6d, $01, $6d, $01
+	db $37, $00, $6d, $01, $6d, $01, $6d, $01, $6d, $01
+	db $37, $00, $6d, $01, $6d, $01, $6d, $01, $6d, $01
+	db $37, $00, $6d, $01, $6d, $01, $6d, $01, $6d, $01
+	db $37, $00, $6d, $01, $6d, $01, $6d, $01, $6d, $01
+	db $37, $00, $6d, $01, $6d, $01, $6d, $01, $6d, $01
+	db $37, $00, $6d, $01, $6d, $01, $6d, $01, $6d, $01
+	db $47, $00, $6d, $01, $6d, $01, $6d, $01, $6d, $01
+	db $47, $00, $6d, $01, $6d, $01, $6d, $01, $6d, $01
+	db $47, $00, $6d, $01, $6d, $01, $6d, $01, $6d, $01
+	db $47, $00, $6d, $01, $6d, $01, $6d, $01, $6d, $01
+	db $47, $00, $6d, $01, $6d, $01, $6d, $01, $6d, $01
+	db $47, $00, $6d, $01, $6d, $01, $6d, $01, $6d, $01
+	db $47, $00, $6d, $01, $6d, $01, $6d, $01, $6d, $01
+	db $47, $00, $6d, $01, $6d, $01, $6d, $01, $6d, $01
+	db $47, $00, $6d, $01, $6d, $01, $6d, $01, $6d, $01
+	db $38, $00, $6d, $01, $6d, $01, $6d, $01, $6d, $01
+	db $42, $00, $6d, $01, $6d, $01, $6d, $01, $6d, $01
+	db $d8, $00, $6d, $01, $6d, $01, $6d, $01, $6d, $01
 
 HandleExodiaWinCondition:
 	push af
@@ -832,7 +908,7 @@ Func_146ef:
 	ld a, [wcf46]
 	ld c, a
 	sla c
-	ld hl, $472b
+	ld hl, .Coords
 	add hl, bc
 	ld a, [hli]
 	ld b, [hl]
@@ -845,7 +921,7 @@ Func_146ef:
 	call AddByteToVBlankStruct
 	dec e
 	jr nz, .asm_1470a
-	ld hl, $20
+	ld hl, TILEMAP_WIDTH
 	add hl, bc
 	ld b, h
 	ld c, l
@@ -862,9 +938,11 @@ Func_146ef:
 	pop bc
 	pop af
 	ret
-; 0x1472b
 
-SECTION "Bank 5@4731", ROMX[$4731], BANK[$5]
+.Coords:
+	dwcoord 1, 0, vBGMap1
+	dwcoord 1, 2, vBGMap1
+	dwcoord 1, 4, vBGMap1
 
 Func_14731:
 	push af
@@ -1090,9 +1168,9 @@ Func_1487e:
 	jr .asm_148a5
 .asm_14898
 	ld b, $00
-	sub $b0
+	sub CONTROL_CHAR
 	ld c, a
-	ld hl, $48a9
+	ld hl, .data
 	add hl, bc
 	ld a, [hl]
 	ld [wcf41], a
@@ -1101,9 +1179,17 @@ Func_1487e:
 	pop bc
 	pop af
 	ret
-; 0x148a9
 
-SECTION "Bank 5@48b6", ROMX[$48b6], BANK[$5]
+.data
+	db $01, $14, $10, $03, $01
+
+; unreferenced
+Func_148ae:
+	push af
+	ld a, $00
+	ld [wDuelMsg], a
+	pop af
+	ret
 
 Func_148b6:
 	push af
@@ -1666,7 +1752,7 @@ Func_14fb9:
 	ld b, $00
 	ld a, [wcf48]
 	ld c, a
-	ld hl, $4fdc
+	ld hl, .data
 	add hl, bc
 	ld a, [hl]
 	ld [wcf48], a
@@ -1675,9 +1761,9 @@ Func_14fb9:
 	pop bc
 	pop af
 	ret
-; 0x14fdc
 
-SECTION "Bank 5@4fe1", ROMX[$4fe1], BANK[$5]
+.data
+	db $00, $02, $01, $04, $03
 
 Func_14fe1:
 	call Func_14fe8
@@ -1693,7 +1779,7 @@ Func_14fe8:
 	ld a, [wcf48]
 	ld c, a
 	dec c
-	ld hl, $5008
+	ld hl, .data
 	add hl, bc
 	ld d, h
 	ld e, l
@@ -1708,9 +1794,9 @@ Func_14fe8:
 	pop bc
 	pop af
 	ret
-; 0x15008
 
-SECTION "Bank 5@500c", ROMX[$500c], BANK[$5]
+.data
+	db $78, $00, $79, $00
 
 Func_1500c:
 	push af
@@ -1747,9 +1833,17 @@ Func_15032:
 .asm_15047
 	pop af
 	ret
-; 0x15049
 
-SECTION "Bank 5@5059", ROMX[$5059], BANK[$5]
+; unreferenced
+Func_15049:
+	push af
+	ld a, $01
+	ld [wcf18], a
+	ldmsg a, Text_149f4
+	ld [wDuelMsg], a
+	call ShowDuelMessage
+	pop af
+	ret
 
 Func_15059:
 	push af
@@ -1775,9 +1869,17 @@ Func_15059:
 	pop bc
 	pop af
 	ret
-; 0x1508a
 
-SECTION "Bank 5@509a", ROMX[$509a], BANK[$5]
+; unreferenced
+Func_1508a:
+	push af
+	ld a, $00
+	ld [wcf18], a
+	ldmsg a, Text_149ff
+	ld [wDuelMsg], a
+	call ShowDuelMessage
+	pop af
+	ret
 
 Func_1509a:
 	push af
@@ -1809,9 +1911,17 @@ Func_150bd:
 	call ShowDuelMessage
 	pop af
 	ret
-; 0x150cd
 
-SECTION "Bank 5@50dd", ROMX[$50dd], BANK[$5]
+; unreferenced
+Func_150cd:
+	push af
+	ld a, $01
+	ld [wcf18], a
+	ldmsg a, Text_14f04
+	ld [wDuelMsg], a
+	call ShowDuelMessage
+	pop af
+	ret
 
 Func_150dd:
 	push af
@@ -2087,4 +2197,271 @@ PlayerHasSameOrMoreLPThanOpponent:
 	pop de
 	pop bc
 	ret
-; 0x1526e
+
+; unreferenced
+Func_1526e:
+	call Func_15272
+	ret
+
+Func_15272:
+	push af
+	ld a, $00
+	ld [wcf97], a
+	pop af
+	ret
+
+; unreferenced
+Func_1527a:
+	push af
+	ld a, $01
+	ld [wcf97], a
+	pop af
+	ret
+
+; unreferenced
+Func_15282:
+	push af
+	ld a, $02
+	ld [wcf97], a
+	pop af
+	ret
+
+; moves all cards from the player's deck to the trunk
+EmptyPlayersDeck:
+	push af
+	push bc
+	farcall GetPlayerDeckCardCount
+	dec a
+	ld c, a
+.loop
+	ld a, c
+	cp -1
+	jr z, .done
+	ld a, c
+	farcall SetPlayerDeckIndex
+	farcall Func_5bd1
+	dec c
+	jr .loop
+.done
+	pop bc
+	pop af
+	ret
+
+; unreferenced
+; auto-builds a deck with high atk monsters
+; owned by the player, maybe used for debugging
+AutoBuildPlayerDeck:
+	call Func_15272
+	call EmptyPlayersDeck
+	call .AutoBuild
+	farcall Func_c3e3
+	farcall Func_c25e
+	farcall Func_c786
+	ret
+
+.AutoBuild:
+	push af
+	push de
+
+	ld a, [wcf97]
+	cp $00
+	jr nz, .asm_152c9
+	; high attack
+	ld e, 30
+.asm_152c1
+	call AddMonsterWithHighAttackToPlayerDeck
+	dec e
+	jr nz, .asm_152c1
+	jr .done
+
+.asm_152c9
+	cp $01
+	jr nz, .asm_152df
+	; mixed attack/defense
+	ld e, 15
+.asm_152cf
+	call AddMonsterWithHighAttackToPlayerDeck
+	dec e
+	jr nz, .asm_152cf
+	ld e, 15
+.asm_152d7
+	call AddMonsterWithHighDefenseToPlayerDeck
+	dec e
+	jr nz, .asm_152d7
+	jr .done
+
+.asm_152df
+	; high defense
+	ld e, 30
+.asm_152e1
+	call AddMonsterWithHighDefenseToPlayerDeck
+	dec e
+	jr nz, .asm_152e1
+.done
+	pop de
+	pop af
+	ret
+
+AddMonsterWithHighAttackToPlayerDeck:
+	push af
+	push bc
+	call GenerateRandomMonsterCard
+	call FindMonsterWithHighAttack
+	farcall Func_5af2
+	farcall Func_5b92
+	pop bc
+	pop af
+	ret
+
+AddMonsterWithHighDefenseToPlayerDeck:
+	push af
+	push bc
+	call GenerateRandomMonsterCard
+	call FindMonsterWithHighDefense
+	farcall Func_5af2
+	farcall Func_5b92
+	pop bc
+	pop af
+	ret
+
+GenerateRandomMonsterCard:
+	push af
+	push de
+	ld a, 0
+	ld [wRandRangeStart], a
+	ld a, 255
+	ld [wRandRangeEnd], a
+	call RandomRange
+	ld a, [wRandNum]
+	ld e, a
+	call RandomRange
+	ld a, [wRandNum]
+	ld d, a
+	; de = random number in [0, 65535]
+	ld bc, MAGIC_CARDS
+	call MultiplyQ16
+	ld b, d
+	ld c, e
+	pop de
+	pop af
+	ret
+
+; expectation: given a starting monster card in bc
+; check the next 10 cards and choose the monster card
+; with the highest attack
+; reality: the maximum attack value is found,
+; but the output monster card is the last one checked
+FindMonsterWithHighAttack:
+	push af
+	push de
+	push hl
+	ld de, 0
+	ld l, 0
+.loop
+	ld a, l
+	cp 10
+	jr nc, .break
+	inc bc
+	ld a, b
+	cp HIGH(MAGIC_CARDS)
+	jr nz, .monster_card
+	ld a, c
+	cp LOW(MAGIC_CARDS)
+	jr c, .monster_card
+	; wrap back to beginning
+	ld bc, B_EYE_WHITE_DRAGON
+.monster_card
+	farcall Func_5af2
+	farcall GetCardCountInTrunk
+	; does player own it already?
+	cp NOT_OWNED
+	jr z, .loop
+	; yes, is the count 0?
+	cp 0
+	jr z, .loop
+	; count is non-zero
+	inc l
+	push bc
+	push de
+	farcall LoadCardData
+	ld a, [wLoadedCardAtk + 0]
+	ld c, a
+	ld a, [wLoadedCardAtk + 1]
+	ld b, a
+	push bc
+	call Func_13bb
+	ld a, e
+	pop bc
+	pop de
+	cp $00
+	jr nz, .next
+	ld d, b
+	ld e, c
+.next
+	pop bc
+	jr .loop
+.break
+	pop hl
+	pop de
+	pop af
+	ret
+
+; expectation: given a starting monster card in bc
+; check the next 10 cards and choose the monster card
+; with the highest defense
+; reality: the maximum defense value is found,
+; but the output monster card is the last one checked
+FindMonsterWithHighDefense:
+	push af
+	push de
+	push hl
+	ld de, 0
+	ld l, 0
+.loop
+	ld a, l
+	cp 10
+	jr nc, .break
+	inc bc
+	ld a, b
+	cp HIGH(MAGIC_CARDS)
+	jr nz, .asm_15397
+	ld a, c
+	cp LOW(MAGIC_CARDS)
+	jr c, .asm_15397
+	; wrap back to beginning
+	ld bc, B_EYE_WHITE_DRAGON
+.asm_15397
+	farcall Func_5af2
+	farcall GetCardCountInTrunk
+	; does player own it already?
+	cp NOT_OWNED
+	jr z, .loop
+	; yes, is the count 0?
+	cp 0
+	jr z, .loop
+	; count is non-zero
+	inc l
+	push bc
+	push de
+	farcall LoadCardData
+	ld a, [wLoadedCardDef + 0]
+	ld c, a
+	ld a, [wLoadedCardDef + 1]
+	ld b, a
+	push bc
+	call Func_13bb
+	ld a, e
+	pop bc
+	pop de
+	cp $00
+	jr nz, .next
+	ld d, b
+	ld e, c
+.next
+	pop bc
+	jr .loop
+.break
+	pop hl
+	pop de
+	pop af
+	ret

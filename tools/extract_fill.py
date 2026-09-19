@@ -9,7 +9,7 @@ def main():
     start_pos = int(args.offset[0], 16)
     filler = reader.get_rom_bytes(start_pos, 0x4000 - (start_pos % 0x4000))
     bank_num = start_pos // 0x4000
-    with open(f"bank{bank_num:02x}.bin", "wb") as file:
+    with open(f"src/data/bank_fill/bank{bank_num:02x}.bin", "wb") as file:
         file.write(filler)
 
 if __name__ == "__main__":

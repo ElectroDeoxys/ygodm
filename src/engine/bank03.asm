@@ -14,7 +14,7 @@
 	farfunc DuelPrepMenu ; $17
 	farfunc Func_e84e ; $19
 	farfunc Func_c618 ; $1b
-	farfunc Func_c664 ; $1d
+	farfunc CountPlayerDeckCards ; $1d
 	farfunc Func_e75b ; $1f
 	farfunc Func_e7a7 ; $21
 	farfunc GetPlayerDeckCard ; $23
@@ -631,7 +631,7 @@ Func_c407:
 	call GetPlayerDeckCardCount
 	dec a
 	ld d, a
-	ld b, $05
+	ld b, 5
 	call DDividedByB
 	ld a, d
 	ld [wcc57], a
@@ -963,7 +963,7 @@ Func_c618:
 	push de
 	ld d, b
 	ld e, c
-	call Func_c664
+	call CountPlayerDeckCards
 	ld a, b
 	cp TRUE
 	jr nz, .asm_c62d
@@ -1012,12 +1012,15 @@ RemoveCardFromPlayerDeck::
 	pop af
 	ret
 
-Func_c664:
+; output:
+; - b = TRUE if player's deck has missing cards
+; - c = deck card count
+CountPlayerDeckCards:
 	push af
 	push de
 	push hl
 	ld hl, wPlayerDeck
-	ld e, $00
+	ld e, 0
 .loop_deck
 	ld a, [hli]
 	ld c, a

@@ -5,14 +5,12 @@
 	farfunc Func_191c5
 	farfunc Func_19272
 
-SECTION "Bank 6@4008", ROMX[$4008], BANK[$6]
-
 Func_18008:
 	push hl
 	farcall Func_3c006
 	call Func_101d
 	call DisableLCD
-	ld hl, $4038
+	ld hl, ScreenConfig_18038
 	call SetScreenConfig
 	call ClearOAM
 	farcall LoadCharacterGfx
@@ -26,9 +24,18 @@ Func_18008:
 	call Func_2564
 	pop hl
 	ret
-; 0x18038
 
-SECTION "Bank 6@4042", ROMX[$4042], BANK[$6]
+ScreenConfig_18038:
+	db LCDC_BG_ON | LCDC_OBJ_ON | LCDC_OBJ_16 | LCDC_BG_9800 | LCDC_BLOCK21 | LCDC_WIN_OFF | LCDC_WIN_9800 ; LCDC
+	db STAT_LYC ; STAT
+	db   0 ; SCY
+	db   0 ; SCX
+	db  32 ; LYC
+	dbpal SHADE_WHITE, SHADE_WHITE, SHADE_WHITE, SHADE_WHITE ; BGP
+	dbpal SHADE_WHITE, SHADE_WHITE, SHADE_WHITE, SHADE_WHITE ; OBP0
+	dbpal SHADE_WHITE, SHADE_WHITE, SHADE_WHITE, SHADE_WHITE ; OBP1
+	db 144 ; WY
+	db 159 + WX_OFS ; WX
 
 LoadTextBoxGfx:
 	push af
@@ -56,7 +63,29 @@ LoadTextBoxGfx:
 
 Gfx_1805e: INCBIN "gfx/gfx_1805e.2bpp"
 
-SECTION "Bank 6@414d", ROMX[$414d], BANK[$6]
+; unreferenced
+Func_1812e:
+	push af
+	push bc
+	push de
+	push hl
+	ld hl, vTiles2
+	ld b, $10
+.asm_18137
+	call Func_17ab
+	dec b
+	jr nz, .asm_18137
+	ld hl, vTiles1
+	ld b, $08
+.asm_18142
+	call Func_17ab
+	dec b
+	jr nz, .asm_18142
+	pop hl
+	pop de
+	pop bc
+	pop af
+	ret
 
 Func_1814d:
 	push af
@@ -73,9 +102,9 @@ Func_1814d:
 	ld d, [hl]
 	ld e, a
 	ld hl, vBGMap0
-	ld b, $0b
+	ld b, 11 ; rows
 .asm_18165
-	ld c, $14
+	ld c, SCREEN_WIDTH ; cols
 .asm_18167
 	ld a, [de]
 	ld [hli], a
@@ -83,7 +112,7 @@ Func_1814d:
 	dec c
 	jr nz, .asm_18167
 	push de
-	ld de, $c
+	ld de, TILEMAP_WIDTH - SCREEN_WIDTH
 	add hl, de
 	pop de
 	dec b
@@ -99,11 +128,11 @@ DrawTextBox:
 	push bc
 	push de
 	push hl
-	ld de, $419d
+	ld de, Tilemap_1819d
 	hlbgcoord 0, 11
-	ld b, $07
+	ld b, 7 ; rows
 .asm_18187
-	ld c, $14
+	ld c, SCREEN_WIDTH ; cols
 .asm_18189
 	ld a, [de]
 	ld [hli], a
@@ -111,7 +140,7 @@ DrawTextBox:
 	dec c
 	jr nz, .asm_18189
 	push de
-	ld de, $c
+	ld de, TILEMAP_WIDTH - SCREEN_WIDTH
 	add hl, de
 	pop de
 	dec b
@@ -121,32 +150,49 @@ DrawTextBox:
 	pop bc
 	pop af
 	ret
-; 0x1819d
 
-SECTION "Bank 6@4229", ROMX[$4229], BANK[$6]
+Tilemap_1819d: INCBIN "data/tilemaps/bg_1819d.tilemap"
 
 NPCCharacterTilemaps:
-	dw $424d
-	dw $4329
-	dw $4405
-	dw $44e1
-	dw $45bd
-	dw $4699
-	dw $4775
-	dw $4851
-	dw $492d
-	dw $4a09
-	dw $4ae5
-	dw $4bc1
-	dw $4c9d
-	dw $4d79
-	dw $4e55
-	dw $4f31
-	dw $500d
-	dw $50e9
-; 0x1824d
+	table_width 2
+	dw WeevilTilemap      ; WEEVIL
+	dw MaiTilemap         ; MAI
+	dw RexTilemap         ; REX
+	dw MakoTilemap        ; MAKO
+	dw YamiYugiTilemap    ; YAMI_YUGI
+	dw YugiTilemap        ; YUGI
+	dw TeaTilemap         ; TEA
+	dw JoeyTilemap        ; JOEY
+	dw SetoKaibaTilemap   ; SETO_KAIBA
+	dw MokubaTilemap      ; MOKUBA
+	dw TristanTilemap     ; TRISTAN
+	dw BakuraTilemap      ; BAKURA
+	dw PuppeteerTilemap   ; PUPPETEER
+	dw PanikTilemap       ; PANIK
+	dw BanditKeithTilemap ; BANDIT_KEITH
+	dw MaximillionTilemap ; MAXIMILLION
+	dw SimonTilemap       ; SIMON
+	dw ExodiaTilemap      ; EXODIA
+	assert_table_length NUM_CHARACTERS
 
-SECTION "Bank 6@51c5", ROMX[$51c5], BANK[$6]
+WeevilTilemap:      INCBIN "data/tilemaps/weevil.tilemap"
+MaiTilemap:         INCBIN "data/tilemaps/mai.tilemap"
+RexTilemap:         INCBIN "data/tilemaps/rex.tilemap"
+MakoTilemap:        INCBIN "data/tilemaps/mako.tilemap"
+YamiYugiTilemap:    INCBIN "data/tilemaps/yami_yugi.tilemap"
+YugiTilemap:        INCBIN "data/tilemaps/yugi.tilemap"
+TeaTilemap:         INCBIN "data/tilemaps/tea.tilemap"
+JoeyTilemap:        INCBIN "data/tilemaps/joey.tilemap"
+SetoKaibaTilemap:   INCBIN "data/tilemaps/seto_kaiba.tilemap"
+MokubaTilemap:      INCBIN "data/tilemaps/mokuba.tilemap"
+TristanTilemap:     INCBIN "data/tilemaps/tristan.tilemap"
+BakuraTilemap:      INCBIN "data/tilemaps/bakura.tilemap"
+PuppeteerTilemap:   INCBIN "data/tilemaps/puppeteer.tilemap"
+PanikTilemap:       INCBIN "data/tilemaps/panik.tilemap"
+BanditKeithTilemap: INCBIN "data/tilemaps/bandit_keith.tilemap"
+MaximillionTilemap: INCBIN "data/tilemaps/maximillion.tilemap"
+SimonTilemap:       INCBIN "data/tilemaps/simon.tilemap"
+ExodiaTilemap:      INCBIN "data/tilemaps/exodia.tilemap"
 
 Func_191c5:
 	push af
@@ -154,7 +200,7 @@ Func_191c5:
 	push hl
 	call Func_101d
 	call DisableLCD
-	ld hl, $51f3
+	ld hl, ScreenConfig_191f3
 	call SetScreenConfig
 	farcall Func_29163
 	farcall LoadDigitTiles
@@ -169,9 +215,18 @@ Func_191c5:
 	pop bc
 	pop af
 	ret
-; 0x191f3
 
-SECTION "Bank 6@51fd", ROMX[$51fd], BANK[$6]
+ScreenConfig_191f3:
+	db LCDC_BG_ON | LCDC_OBJ_ON | LCDC_OBJ_16 | LCDC_BG_9800 | LCDC_BLOCK21 | LCDC_WIN_OFF | LCDC_WIN_9800 ; LCDC
+	db STAT_LYC ; STAT
+	db   0 ; SCY
+	db   0 ; SCX
+	db  32 ; LYC
+	dbpal SHADE_WHITE, SHADE_WHITE, SHADE_WHITE, SHADE_WHITE ; BGP
+	dbpal SHADE_WHITE, SHADE_WHITE, SHADE_WHITE, SHADE_WHITE ; OBP0
+	dbpal SHADE_WHITE, SHADE_WHITE, SHADE_WHITE, SHADE_WHITE ; OBP1
+	db 144 ; WY
+	db 159 + WX_OFS ; WX
 
 Func_191fd:
 	push af
@@ -406,7 +461,7 @@ Func_19379:
 .asm_19398
 	bcbgcoord 1, 2
 	call AddWordToVBlankStruct
-	ld hl, $53bb
+	ld hl, .data
 	ld c, $04
 .asm_193a3
 	ld a, [hli]
@@ -425,9 +480,9 @@ Func_19379:
 	pop bc
 	pop af
 	ret
-; 0x193bb
 
-SECTION "Bank 6@53bf", ROMX[$53bf], BANK[$6]
+.data
+	db $80, $80, $8b, $80
 
 Func_193bf:
 	push af
@@ -449,7 +504,7 @@ Func_193bf:
 .asm_193de
 	bcbgcoord 1, 3
 	call AddWordToVBlankStruct
-	ld hl, $5401
+	ld hl, .data
 	ld c, $04
 .asm_193e9
 	ld a, [hli]
@@ -468,9 +523,9 @@ Func_193bf:
 	pop bc
 	pop af
 	ret
-; 0x19401
 
-SECTION "Bank 6@5405", ROMX[$5405], BANK[$6]
+.data
+	db $80, $80, $8c, $80
 
 Func_19405:
 	push af
@@ -623,7 +678,7 @@ Func_194ff:
 .asm_1951e
 	bcbgcoord 11, 2
 	call AddWordToVBlankStruct
-	ld hl, $5541
+	ld hl, .data
 	ld c, $04
 .asm_19529
 	ld a, [hli]
@@ -642,9 +697,9 @@ Func_194ff:
 	pop bc
 	pop af
 	ret
-; 0x19541
 
-SECTION "Bank 6@5545", ROMX[$5545], BANK[$6]
+.data
+	db $80, $80, $8b, $80
 
 Func_19545:
 	push af
@@ -666,7 +721,7 @@ Func_19545:
 .asm_19564
 	bcbgcoord 11, 3
 	call AddWordToVBlankStruct
-	ld hl, $5587
+	ld hl, .data
 	ld c, $04
 .asm_1956f
 	ld a, [hli]
@@ -685,9 +740,9 @@ Func_19545:
 	pop bc
 	pop af
 	ret
-; 0x19587
 
-SECTION "Bank 6@558b", ROMX[$558b], BANK[$6]
+.data
+	db $80, $80, $8c, $80
 
 Func_1958b:
 	push bc
@@ -798,7 +853,7 @@ Func_1962f:
 .asm_1964b
 	bcbgcoord 0, 16
 	call AddWordToVBlankStruct
-	ld hl, $5674
+	ld hl, .data
 	ld c, $04
 .asm_19656
 	ld a, [hli]
@@ -819,9 +874,9 @@ Func_1962f:
 	pop bc
 	pop af
 	ret
-; 0x19674
 
-SECTION "Bank 6@5678", ROMX[$5678], BANK[$6]
+.data
+	db $80, $85, $8a, $80
 
 Func_19678:
 	push af
@@ -915,7 +970,7 @@ Func_19703:
 .asm_1971f
 	bcbgcoord 10, 16
 	call AddWordToVBlankStruct
-	ld hl, $5748
+	ld hl, .data
 	ld c, $04
 .asm_1972a
 	ld a, [hli]
@@ -936,6 +991,6 @@ Func_19703:
 	pop bc
 	pop af
 	ret
-; 0x19748
 
-
+.data
+	db $80, $85, $8a, $80
