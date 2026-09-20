@@ -42,7 +42,7 @@ Func_14036:
 	call Func_140e3
 	call Func_14113
 	call Func_14143
-	farcall Func_f0004
+	farcall PrintCardDescription
 	call EnableLCD
 	call Func_ff0
 	call WaitForVBlank

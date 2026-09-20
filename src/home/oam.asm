@@ -133,10 +133,10 @@ Func_12a4:
 .asm_12b3
 	ld a, [wcd1b]
 	add d
-	ld [hli], a
+	ld [hli], a ; y
 	ld a, [wcd1c]
 	add e
-	ld [hli], a
+	ld [hli], a ; x
 	inc hl
 	inc hl
 	ld a, $08
