@@ -29,4 +29,4 @@ INCLUDE "home/link.asm"
 INCLUDE "home/rng.asm"
 INCLUDE "home/home.asm"
 
-INCBIN "data/bank_fill/bank00.bin"
+bankfill "data/bank_fill/bank00.bin"

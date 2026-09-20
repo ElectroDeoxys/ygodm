@@ -82,6 +82,8 @@ ROMX $1e
 	"Gfx 15"
 ROMX $1f
 	"Gfx 16"
+ROMX $20
+	"Bank 20"
 ROMX $21
 	"Gfx 17"
 ROMX $22
@@ -106,12 +108,34 @@ ROMX $2b
 	"Gfx 27"
 ROMX $2c
 	"Gfx 28"
+ROMX $2d
+	"Bank 2d"
 ROMX $2e
 	"Gfx 29"
 ROMX $2f
 	"Gfx 30"
 ROMX $30
 	"Gfx 31"
+ROMX $31
+	"Bank 31"
+ROMX $32
+	"Bank 32"
+ROMX $33
+	"Bank 33"
+ROMX $34
+	"Bank 34"
+ROMX $35
+	"Bank 35"
+ROMX $36
+	"Bank 36"
+ROMX $37
+	"Bank 37"
+ROMX $38
+	"Bank 38"
+ROMX $39
+	"Bank 39"
+ROMX $3a
+	"Bank 3a"
 ROMX $3b
 	"Bank 3b"
 ROMX $3c

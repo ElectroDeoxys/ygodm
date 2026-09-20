@@ -437,6 +437,8 @@ PtrTable_43e84:
 	dw ExodiaGfx      ; EXODIA
 	assert_table_length NUM_CHARACTERS
 
+bankfill "data/bank_fill/bank10.bin"
+
 SECTION "Gfx 2", ROMX, BANK[$11]
 	dw BANK(@)
 BattleSteerGfx::        INCBIN "gfx/cards/battle_steer.2bpp.lz"
@@ -453,6 +455,7 @@ SkullServantGfx::       INCBIN "gfx/cards/skull_servant.2bpp.lz"
 HornImpGfx::            INCBIN "gfx/cards/horn_imp.2bpp.lz"
 BattleOxGfx::           INCBIN "gfx/cards/battle_ox.2bpp.lz"
 BeaverWarriorGfx::      INCBIN "gfx/cards/beaver_warrior.2bpp.lz"
+bankfill "data/bank_fill/bank11.bin"
 
 SECTION "Gfx 3", ROMX, BANK[$12]
 	dw BANK(@)
@@ -469,6 +472,7 @@ GaiaDragonChampGfx::    INCBIN "gfx/cards/gaia_dragon_champ.2bpp.lz"
 GaiaFierceKnightGfx::   INCBIN "gfx/cards/gaia_fierce_knight.2bpp.lz"
 CurseOfDragonGfx::      INCBIN "gfx/cards/curse_of_dragon.2bpp.lz"
 DragonPiperGfx::        INCBIN "gfx/cards/dragon_piper.2bpp.lz"
+bankfill "data/bank_fill/bank12.bin"
 
 SECTION "Gfx 4", ROMX, BANK[$13]
 	dw BANK(@)
@@ -485,6 +489,7 @@ BasicInsectGfx::        INCBIN "gfx/cards/basic_insect.2bpp.lz"
 ArmoredLizardGfx::      INCBIN "gfx/cards/armored_lizard.2bpp.lz"
 HerculesBeetleGfx::     INCBIN "gfx/cards/hercules_beetle.2bpp.lz"
 KillerNeedleGfx::       INCBIN "gfx/cards/killer_needle.2bpp.lz"
+bankfill "data/bank_fill/bank13.bin"
 
 SECTION "Gfx 5", ROMX, BANK[$14]
 	dw BANK(@)
@@ -501,6 +506,7 @@ HarpieLadySisterGfx::   INCBIN "gfx/cards/harpie_lady_sister.2bpp.lz"
 TigerAxeGfx::           INCBIN "gfx/cards/tiger_axe.2bpp.lz"
 SilverFangGfx::         INCBIN "gfx/cards/silver_fang.2bpp.lz"
 KojikocyGfx::           INCBIN "gfx/cards/kojikocy.2bpp.lz"
+bankfill "data/bank_fill/bank14.bin"
 
 SECTION "Gfx 6", ROMX, BANK[$15]
 	dw BANK(@)
@@ -517,6 +523,7 @@ KrokodilusGfx::         INCBIN "gfx/cards/krokodilus.2bpp.lz"
 GrapplerGfx::           INCBIN "gfx/cards/grappler.2bpp.lz"
 AxeRaiderGfx::          INCBIN "gfx/cards/axe_raider.2bpp.lz"
 MegazowlerGfx::         INCBIN "gfx/cards/megazowler.2bpp.lz"
+bankfill "data/bank_fill/bank15.bin"
 
 SECTION "Gfx 7", ROMX, BANK[$16]
 	dw BANK(@)
@@ -533,6 +540,7 @@ CatapultTurtleGfx::     INCBIN "gfx/cards/catapult_turtle.2bpp.lz"
 GyakutennoMegamiGfx::   INCBIN "gfx/cards/gyakutenno_megami.2bpp.lz"
 MysticHorsemanGfx::     INCBIN "gfx/cards/mystic_horseman.2bpp.lz"
 RabidHorsemanGfx::      INCBIN "gfx/cards/rabid_horseman.2bpp.lz"
+bankfill "data/bank_fill/bank16.bin"
 
 SECTION "Gfx 8", ROMX, BANK[$17]
 	dw BANK(@)
@@ -549,6 +557,7 @@ MaskOfDarknessGfx::     INCBIN "gfx/cards/mask_of_darkness.2bpp.lz"
 JobChangeMirrorGfx::    INCBIN "gfx/cards/job_change_mirror.2bpp.lz"
 CurtainOfDarkGfx::      INCBIN "gfx/cards/curtain_of_dark.2bpp.lz"
 TomozaurusGfx::         INCBIN "gfx/cards/tomozaurus.2bpp.lz"
+bankfill "data/bank_fill/bank17.bin"
 
 SECTION "Gfx 9", ROMX, BANK[$18]
 	dw BANK(@)
@@ -565,6 +574,7 @@ KamionwizardGfx::       INCBIN "gfx/cards/kamionwizard.2bpp.lz"
 NightmareScorpionGfx::  INCBIN "gfx/cards/nightmare_scorpion.2bpp.lz"
 SpiritOfTheBookGfx::    INCBIN "gfx/cards/spirit_of_the_book.2bpp.lz"
 SupporterShadowsGfx::   INCBIN "gfx/cards/supporter_shadows.2bpp.lz"
+bankfill "data/bank_fill/bank18.bin"
 
 SECTION "Gfx 10", ROMX, BANK[$19]
 	dw BANK(@)
@@ -581,6 +591,7 @@ LamoonGfx::             INCBIN "gfx/cards/lamoon.2bpp.lz"
 NemurikoGfx::           INCBIN "gfx/cards/nemuriko.2bpp.lz"
 WeatherControlGfx::     INCBIN "gfx/cards/weather_control.2bpp.lz"
 OctoberserGfx::         INCBIN "gfx/cards/octoberser.2bpp.lz"
+bankfill "data/bank_fill/bank19.bin"
 
 SECTION "Gfx 11", ROMX, BANK[$1a]
 	dw BANK(@)
@@ -597,6 +608,7 @@ SpikedSnailGfx::        INCBIN "gfx/cards/spiked_snail.2bpp.lz"
 FlameManipulatorGfx::   INCBIN "gfx/cards/flame_manipulator.2bpp.lz"
 NecrolancerGfx::        INCBIN "gfx/cards/necrolancer.2bpp.lz"
 DjinnTheWatcherGfx::    INCBIN "gfx/cards/djinn_the_watcher.2bpp.lz"
+bankfill "data/bank_fill/bank1a.bin"
 
 SECTION "Gfx 12", ROMX, BANK[$1b]
 	dw BANK(@)
@@ -613,6 +625,7 @@ FireReaperGfx::         INCBIN "gfx/cards/fire_reaper.2bpp.lz"
 LarvasGfx::             INCBIN "gfx/cards/larvas.2bpp.lz"
 HardArmorGfx::          INCBIN "gfx/cards/hard_armor.2bpp.lz"
 FiregrassGfx::          INCBIN "gfx/cards/firegrass.2bpp.lz"
+bankfill "data/bank_fill/bank1b.bin"
 
 SECTION "Gfx 13", ROMX, BANK[$1c]
 	dw BANK(@)
@@ -629,6 +642,7 @@ AncientJarGfx::         INCBIN "gfx/cards/ancient_jar.2bpp.lz"
 DarkfireDragonGfx::     INCBIN "gfx/cards/darkfire_dragon.2bpp.lz"
 DarkKingAbyssGfx::      INCBIN "gfx/cards/dark_king_abyss.2bpp.lz"
 SpiritOfTheHarpGfx::    INCBIN "gfx/cards/spirit_of_the_harp.2bpp.lz"
+bankfill "data/bank_fill/bank1c.bin"
 
 SECTION "Gfx 14", ROMX, BANK[$1d]
 	dw BANK(@)
@@ -645,6 +659,7 @@ ArlownayGfx::           INCBIN "gfx/cards/arlownay.2bpp.lz"
 DarkShadeGfx::          INCBIN "gfx/cards/dark_shade.2bpp.lz"
 MaskedClownGfx::        INCBIN "gfx/cards/masked_clown.2bpp.lz"
 LuckyTrinketGfx::       INCBIN "gfx/cards/lucky_trinket.2bpp.lz"
+bankfill "data/bank_fill/bank1d.bin"
 
 SECTION "Gfx 15", ROMX, BANK[$1e]
 	dw BANK(@)
@@ -661,6 +676,7 @@ TurtleTigerGfx::        INCBIN "gfx/cards/turtle_tiger.2bpp.lz"
 TerraTheTerribleGfx::   INCBIN "gfx/cards/terra_the_terrible.2bpp.lz"
 DoronGfx::              INCBIN "gfx/cards/doron.2bpp.lz"
 PenguinKnightGfx::      INCBIN "gfx/cards/penguin_knight.2bpp.lz"
+bankfill "data/bank_fill/bank1e.bin"
 
 SECTION "Gfx 16", ROMX, BANK[$1f]
 	dw BANK(@)
@@ -677,6 +693,12 @@ TwinLongRods1Gfx::      INCBIN "gfx/cards/twin_long_rods_1.2bpp.lz"
 DrollBirdGfx::          INCBIN "gfx/cards/droll_bird.2bpp.lz"
 PetitAngelGfx::         INCBIN "gfx/cards/petit_angel.2bpp.lz"
 WingedCleaverGfx::      INCBIN "gfx/cards/winged_cleaver.2bpp.lz"
+bankfill "data/bank_fill/bank1f.bin"
+
+SECTION "Bank 20", ROMX, BANK[$20]
+; bank $20 intentionally left blank
+; due to hardware inability to access it
+bankfill "data/bank_fill/bank20.bin"
 
 SECTION "Gfx 17", ROMX, BANK[$21]
 	dw BANK(@)
@@ -693,6 +715,7 @@ SolitudeGfx::           INCBIN "gfx/cards/solitude.2bpp.lz"
 MaskedSorcererGfx::     INCBIN "gfx/cards/masked_sorcerer.2bpp.lz"
 KumootokoGfx::          INCBIN "gfx/cards/kumootoko.2bpp.lz"
 MidnightFiendGfx::      INCBIN "gfx/cards/midnight_fiend.2bpp.lz"
+bankfill "data/bank_fill/bank21.bin"
 
 SECTION "Gfx 18", ROMX, BANK[$22]
 	dw BANK(@)
@@ -709,6 +732,7 @@ MadjinnGunnGfx::        INCBIN "gfx/cards/madjinn_gunn.2bpp.lz"
 DarkTitanTerrorGfx::    INCBIN "gfx/cards/dark_titan_terror.2bpp.lz"
 BeautifulHeadhuntGfx::  INCBIN "gfx/cards/beautiful_headhunt.2bpp.lz"
 WodanTheResidentGfx::   INCBIN "gfx/cards/wodan_the_resident.2bpp.lz"
+bankfill "data/bank_fill/bank22.bin"
 
 SECTION "Gfx 19", ROMX, BANK[$23]
 	dw BANK(@)
@@ -725,6 +749,7 @@ MedaBatGfx::            INCBIN "gfx/cards/meda_bat.2bpp.lz"
 OneWhoHuntsSoulGfx::    INCBIN "gfx/cards/one_who_hunts_soul.2bpp.lz"
 RootWaterGfx::          INCBIN "gfx/cards/root_water.2bpp.lz"
 MasterAndExpertGfx::    INCBIN "gfx/cards/master_and_expert.2bpp.lz"
+bankfill "data/bank_fill/bank23.bin"
 
 SECTION "Gfx 20", ROMX, BANK[$24]
 	dw BANK(@)
@@ -741,6 +766,7 @@ BeastkingOfSwampGfx::   INCBIN "gfx/cards/beastking_of_swamp.2bpp.lz"
 AncientSorcererGfx::    INCBIN "gfx/cards/ancient_sorcerer.2bpp.lz"
 LunarQueenElzaimGfx::   INCBIN "gfx/cards/lunar_queen_elzaim.2bpp.lz"
 ArchfiendMirrorGfx::    INCBIN "gfx/cards/archfiend_mirror.2bpp.lz"
+bankfill "data/bank_fill/bank24.bin"
 
 SECTION "Gfx 21", ROMX, BANK[$25]
 	dw BANK(@)
@@ -757,6 +783,7 @@ MegirusLightGfx::       INCBIN "gfx/cards/megirus_light.2bpp.lz"
 MavelusGfx::            INCBIN "gfx/cards/mavelus.2bpp.lz"
 AncientTreeGfx::        INCBIN "gfx/cards/ancient_tree.2bpp.lz"
 GreenPhantomKingGfx::   INCBIN "gfx/cards/green_phantom_king.2bpp.lz"
+bankfill "data/bank_fill/bank25.bin"
 
 SECTION "Gfx 22", ROMX, BANK[$26]
 	dw BANK(@)
@@ -773,6 +800,7 @@ TaoTheChanterGfx::      INCBIN "gfx/cards/tao_the_chanter.2bpp.lz"
 SerpentMarauderGfx::    INCBIN "gfx/cards/serpent_marauder.2bpp.lz"
 GatekeeperGfx::         INCBIN "gfx/cards/gatekeeper.2bpp.lz"
 OgreOfTheBlackGfx::     INCBIN "gfx/cards/ogre_of_the_black.2bpp.lz"
+bankfill "data/bank_fill/bank26.bin"
 
 SECTION "Gfx 23", ROMX, BANK[$27]
 	dw BANK(@)
@@ -789,6 +817,7 @@ CyberSoldierDarkGfx::   INCBIN "gfx/cards/cyber_soldier_dark.2bpp.lz"
 DragonErsatzHeadGfx::   INCBIN "gfx/cards/dragon_ersatz_head.2bpp.lz"
 SonicMaidGfx::          INCBIN "gfx/cards/sonic_maid.2bpp.lz"
 KuramaGfx::             INCBIN "gfx/cards/kurama.2bpp.lz"
+bankfill "data/bank_fill/bank27.bin"
 
 SECTION "Gfx 24", ROMX, BANK[$28]
 	dw BANK(@)
@@ -805,6 +834,7 @@ VileGermsGfx::          INCBIN "gfx/cards/vile_germs.2bpp.lz"
 BlackPendantGfx::       INCBIN "gfx/cards/black_pendant.2bpp.lz"
 SilverBowAndArrowGfx::  INCBIN "gfx/cards/silver_bow_and_arrow.2bpp.lz"
 HornOfLightGfx::        INCBIN "gfx/cards/horn_of_light.2bpp.lz"
+bankfill "data/bank_fill/bank28.bin"
 
 SECTION "Gfx 25", ROMX, BANK[$29]
 	dw BANK(@)
@@ -821,6 +851,7 @@ BookOfSecretArtGfx::    INCBIN "gfx/cards/book_of_secret_art.2bpp.lz"
 InvigorationGfx::       INCBIN "gfx/cards/invigoration.2bpp.lz"
 MachineConversionGfx::  INCBIN "gfx/cards/machine_conversion.2bpp.lz"
 RaiseBodyHeatGfx::      INCBIN "gfx/cards/raise_body_heat.2bpp.lz"
+bankfill "data/bank_fill/bank29.bin"
 
 SECTION "Gfx 26", ROMX, BANK[$2a]
 	dw BANK(@)
@@ -837,6 +868,7 @@ DarkHoleGfx::           INCBIN "gfx/cards/dark_hole.2bpp.lz"
 RaigekiGfx::            INCBIN "gfx/cards/raigeki.2bpp.lz"
 MooyanCurryGfx::        INCBIN "gfx/cards/mooyan_curry.2bpp.lz"
 RedMedicineGfx::        INCBIN "gfx/cards/red_medicine.2bpp.lz"
+bankfill "data/bank_fill/bank2a.bin"
 
 SECTION "Gfx 27", ROMX, BANK[$2b]
 	dw BANK(@)
@@ -853,6 +885,7 @@ SpellbindCircleGfx::    INCBIN "gfx/cards/spellbind_circle.2bpp.lz"
 DarkPierceLightGfx::    INCBIN "gfx/cards/dark_pierce_light.2bpp.lz"
 YaranzoGfx::            INCBIN "gfx/cards/yaranzo.2bpp.lz"
 KananTheSwordGfx::      INCBIN "gfx/cards/kanan_the_sword.2bpp.lz"
+bankfill "data/bank_fill/bank2b.bin"
 
 SECTION "Gfx 28", ROMX, BANK[$2c]
 	dw BANK(@)
@@ -870,6 +903,10 @@ FairysGiftGfx::         INCBIN "gfx/cards/fairys_gift.2bpp.lz"
 BLusterSoldierGfx::     INCBIN "gfx/cards/b_luster_soldier.2bpp.lz"
 FiendsMirrorGfx::       INCBIN "gfx/cards/fiends_mirror.2bpp.lz"
 InvalidCardGfx::        INCBIN "gfx/cards/invalid_card.2bpp.lz"
+bankfill "data/bank_fill/bank2c.bin"
+
+SECTION "Bank 2d", ROMX, BANK[$2d]
+bankfill "data/bank_fill/bank2d.bin"
 
 SECTION "Gfx 29", ROMX, BANK[$2e]
 	dw BANK(@)
@@ -879,6 +916,7 @@ RexGfx::                INCBIN "gfx/characters/rex.2bpp.lz"
 MakoGfx::               INCBIN "gfx/characters/mako.2bpp.lz"
 YamiYugiGfx::           INCBIN "gfx/characters/yami_yugi.2bpp.lz"
 YugiGfx::               INCBIN "gfx/characters/yugi.2bpp.lz"
+bankfill "data/bank_fill/bank2e.bin"
 
 SECTION "Gfx 30", ROMX, BANK[$2f]
 	dw BANK(@)
@@ -888,6 +926,7 @@ SetoKaibaGfx::          INCBIN "gfx/characters/seto_kaiba.2bpp.lz"
 MokubaGfx::             INCBIN "gfx/characters/mokuba.2bpp.lz"
 TristanGfx::            INCBIN "gfx/characters/tristan.2bpp.lz"
 BakuraGfx::             INCBIN "gfx/characters/bakura.2bpp.lz"
+bankfill "data/bank_fill/bank2f.bin"
 
 SECTION "Gfx 31", ROMX, BANK[$30]
 	dw BANK(@)
@@ -897,3 +936,4 @@ BanditKeithGfx::        INCBIN "gfx/characters/bandit_keith.2bpp.lz"
 MaximillionGfx::        INCBIN "gfx/characters/maximillion.2bpp.lz"
 SimonGfx::              INCBIN "gfx/characters/simon.2bpp.lz"
 ExodiaGfx::             INCBIN "gfx/characters/exodia.2bpp.lz"
+bankfill "data/bank_fill/bank30.bin"

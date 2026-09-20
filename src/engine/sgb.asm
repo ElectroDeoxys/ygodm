@@ -282,9 +282,17 @@ SendSGBPacket:
 	pop bc
 	pop af
 	ret
-; 0xfc170
 
-SECTION "Bank 3f@417b", ROMX[$417b], BANK[$3f]
+; unreferenced
+Func_fc170:
+	push bc
+	ld b, $17
+.asm_fc173
+	call SendSGBPacket.Do4Frames
+	dec b
+	jr nz, .asm_fc173
+	pop bc
+	ret
 
 ; input:
 ; - hl = data to transfer
@@ -387,7 +395,7 @@ Func_fc1e0:
 	set B_LCDC_ENABLE, [hl]
 	ld hl, SGBPacket_fc3b1
 	call SendSGBPacket
-	ld hl, $4348
+	ld hl, Data_fc348
 	ld bc, $5a
 	ld de, vTiles0
 	call WriteVRAMForSGBTransfer
@@ -416,21 +424,21 @@ Func_fc216:
 	call SendSGBPacket
 	ld a, $e4
 	ldh [rBGP], a
-	ld hl, $4d91
+	ld hl, SGB_fcd91
 	ld bc, $1000
 	ld de, vTiles0
 	call WriteVRAMForSGBTransfer
 	ld hl, SGBPacket_CharacterTransfer_Tiles0
 	call SendSGBPacket
 	ld bc, $1000
-	ld hl, $4d91
+	ld hl, SGB_fcd91
 	add hl, bc
 	ld bc, $1000
 	ld de, vTiles0
 	call WriteVRAMForSGBTransfer
 	ld hl, SGBPacket_CharacterTransfer_Tiles1
 	call SendSGBPacket
-	ld hl, $4531
+	ld hl, SGB_fc531
 	ld bc, $1080
 	ld de, vTiles0
 	call WriteVRAMForSGBTransfer
@@ -438,7 +446,7 @@ Func_fc216:
 	call SendSGBPacket
 	ld hl, SGBPacket_fc3c1
 	call SendSGBPacket
-	ld hl, $4348
+	ld hl, Data_fc348
 	ld bc, $5a
 	ld de, vTiles0
 	call WriteVRAMForSGBTransfer
@@ -465,7 +473,7 @@ Func_fc290:
 	set B_LCDC_ENABLE, [hl]
 	ld hl, SGBPacket_fc3e1
 	call SendSGBPacket
-	ld hl, $42df
+	ld hl, Data_fc2df
 	ld bc, $5a
 	ld de, vTiles0
 	call WriteVRAMForSGBTransfer
@@ -497,9 +505,16 @@ Func_fc2c6:
 	pop bc
 	pop af
 	ret
-; 0xfc2df
 
-SECTION "Bank 3f@43b1", ROMX[$43b1], BANK[$3f]
+Data_fc2df:
+	ds $5a, $00
+
+	ds $f, $00
+
+Data_fc348:
+	ds $5a, $00
+
+	ds $f, $00
 
 SGBPacket_fc3b1:
 	sgb_pal_01 $7bff, $7bdf, $2372, $0001, $0008, $000a, $000c
@@ -536,9 +551,18 @@ SGBPacket_CharacterTransfer_Tiles0:
 
 SGBPacket_CharacterTransfer_Tiles1:
 	sgb_chr_trn CHR_TRN_TILES1, CHR_TRN_BG
-; 0xfc471
 
-SECTION "Bank 3f@44a1", ROMX[$44a1], BANK[$3f]
+; unreferenced
+SGBPacket_PaletteTransfer:
+	sgb_pal_trn
+
+; unreferenced
+SGBPacket_PaletteSet:
+	sgb_pal_set $8, $9, $a, $b, $c0
+
+; unreferenced
+SGBPacket_DisablePalettePriority:
+	sgb_pal_pri $0
 
 SGBPacket_fc4a1:
 	sgb_data_snd $81b, $00, $ea, $ea, $ea, $ea, $ea, $a9, $01, $cd, $4f, $0c, $d0
@@ -563,4 +587,10 @@ SGBPacket_fc501:
 
 SGBPacket_fc511:
 	sgb_data_snd $810, $00, $4c, $20, $08, $ea, $ea, $ea, $ea, $ea, $60, $ea, $ea
-; 0xfc521
+
+; unreferenced
+SGBPacket_IconEnable:
+	sgb_icon_en $01
+
+SGB_fc531: INCBIN "data/sgb_fc531.bin"
+SGB_fcd91: INCBIN "data/sgb_fcd91.bin"

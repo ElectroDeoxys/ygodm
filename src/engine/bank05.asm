@@ -1938,7 +1938,7 @@ Func_150dd:
 	ld [wDuelMsg], a
 	call Func_2c4a
 	sla e
-	ld hl, $511c
+	ld hl, .data_1
 	add hl, de
 	push de
 	ld e, $04
@@ -1947,7 +1947,7 @@ Func_150dd:
 	ld b, [hl]
 	call Func_2cf2
 	pop de
-	ld hl, $5124
+	ld hl, .data_2
 	add hl, de
 	ld e, $04
 	ld a, [hli]
@@ -1967,11 +1967,13 @@ Func_150dd:
 	msg Text_14aa2
 	msg Text_14aae
 
+.data_1
 	db $15, $01
 	db $37, $00
 	db $47, $00
 	db $38, $00
 
+.data_2
 	db $37, $00
 	db $47, $00
 	db $38, $00

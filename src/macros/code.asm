@@ -5,14 +5,10 @@ ENDM
 MACRO? farcall
 	rst Farcall
 
-	IF _NARG == 2 ; TODO remove when all farcalls are defined
-		db \1, \2
-	ELSE
-		DEF _farcallidx EQUS "FARFUNCIDX_\1"
-		db _farcallidx ; offset in table
-		db BANK(\1) ; ROM bank
-		PURGE _farcallidx
-	ENDC
+	DEF _farcallidx EQUS "FARFUNCIDX_\1"
+	db _farcallidx ; offset in table
+	db BANK(\1) ; ROM bank
+	PURGE _farcallidx
 ENDM
 
 MACRO? farcall_table_start
@@ -32,9 +28,9 @@ MACRO? bankswitch
 	ld a, \1
 	ld [wcfe1], a
 	ld a, (\1) >> 5
-	ld [$4100], a
+	ld [rRAMB + $100], a
 	ld a, (\1) & $1f
-	ld [$2100], a
+	ld [rROMB + $100], a
 ENDM
 
 MACRO? debug_loop

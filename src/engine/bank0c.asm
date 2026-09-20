@@ -39,24 +39,24 @@ Func_3000e:
 	dec b
 	jr nz, .asm_3002a
 	ld de, vBGMap0
-	ld hl, $4ff5
-	ld b, $12
-.asm_3003d
-	ld c, $14
-.asm_3003f
+	ld hl, Tilemap_30ff5
+	ld b, SCREEN_HEIGHT ; rows
+.loop_rows
+	ld c, SCREEN_WIDTH ; cols
+.loop_cols
 	ld a, [hli]
 	ld [de], a
 	inc de
 	dec c
-	jr nz, .asm_3003f
+	jr nz, .loop_cols
 	push hl
-	ld hl, $c
+	ld hl, TILEMAP_WIDTH - SCREEN_WIDTH
 	add hl, de
 	ld d, h
 	ld e, l
 	pop hl
 	dec b
-	jr nz, .asm_3003d
+	jr nz, .loop_rows
 	pop hl
 	pop de
 	pop bc
@@ -64,8 +64,7 @@ Func_3000e:
 	ret
 
 Gfx_30055: INCBIN "gfx/gfx_30055.2bpp"
-
-SECTION "Bank c@515d", ROMX[$515d], BANK[$c]
+Tilemap_30ff5: INCBIN "data/tilemaps/bg_30ff5.tilemap"
 
 Func_3115d:
 	push af
@@ -98,24 +97,24 @@ Func_3115d:
 	dec b
 	jr nz, .asm_31179
 	ld de, vBGMap0
-	ld hl, $61a4
-	ld b, $12
-.asm_3118c
-	ld c, $14
-.asm_3118e
+	ld hl, Tilemap_321a4
+	ld b, SCREEN_HEIGHT ; rows
+.loop_rows
+	ld c, SCREEN_WIDTH ; cols
+.loop_cols
 	ld a, [hli]
 	ld [de], a
 	inc de
 	dec c
-	jr nz, .asm_3118e
+	jr nz, .loop_cols
 	push hl
-	ld hl, $c
+	ld hl, TILEMAP_WIDTH - SCREEN_WIDTH
 	add hl, de
 	ld d, h
 	ld e, l
 	pop hl
 	dec b
-	jr nz, .asm_3118c
+	jr nz, .loop_rows
 	pop hl
 	pop de
 	pop bc
@@ -123,8 +122,7 @@ Func_3115d:
 	ret
 
 Gfx_311a4: INCBIN "gfx/gfx_311a4.2bpp"
-
-SECTION "Bank c@630c", ROMX[$630c], BANK[$c]
+Tilemap_321a4: INCBIN "data/tilemaps/bg_321a4.tilemap"
 
 Func_3230c:
 	push af
@@ -157,24 +155,24 @@ Func_3230c:
 	dec b
 	jr nz, .asm_32328
 	ld de, vBGMap0
-	ld hl, $7353
-	ld b, $12
-.asm_3233b
-	ld c, $14
-.asm_3233d
+	ld hl, Tilemap_33353
+	ld b, SCREEN_HEIGHT ; rows
+.loop_rows
+	ld c, SCREEN_WIDTH ; cols
+.loop_cols
 	ld a, [hli]
 	ld [de], a
 	inc de
 	dec c
-	jr nz, .asm_3233d
+	jr nz, .loop_cols
 	push hl
-	ld hl, $c
+	ld hl, TILEMAP_WIDTH - SCREEN_WIDTH
 	add hl, de
 	ld d, h
 	ld e, l
 	pop hl
 	dec b
-	jr nz, .asm_3233b
+	jr nz, .loop_rows
 	pop hl
 	pop de
 	pop bc
@@ -182,8 +180,7 @@ Func_3230c:
 	ret
 
 Gfx_32353: INCBIN "gfx/gfx_32353.2bpp"
-
-SECTION "Bank 0c@74bb", ROMX[$74bb], BANK[$0c]
+Tilemap_33353: INCBIN "data/tilemaps/bg_33353.tilemap"
 
 Func_334bb:
 	push af
@@ -204,24 +201,24 @@ Func_334bb:
 	dec b
 	jr nz, .asm_334c7
 	ld de, vBGMap0
-	ld hl, $75c5
-	ld b, $12
-.asm_334da
-	ld c, $14
-.asm_334dc
+	ld hl, Tilemap_335c5
+	ld b, SCREEN_HEIGHT ; rows
+.loop_rows
+	ld c, SCREEN_WIDTH ; cols
+.loop_cols
 	ld a, [hli]
 	ld [de], a
 	inc de
 	dec c
-	jr nz, .asm_334dc
+	jr nz, .loop_cols
 	push hl
-	ld hl, $c
+	ld hl, TILEMAP_WIDTH - SCREEN_WIDTH
 	add hl, de
 	ld d, h
 	ld e, l
 	pop hl
 	dec b
-	jr nz, .asm_334da
+	jr nz, .loop_rows
 	farcall Func_2b9ed
 	pop hl
 	pop de
@@ -230,8 +227,7 @@ Func_334bb:
 	ret
 
 Gfx_334f5: INCBIN "gfx/gfx_334f5.2bpp"
-
-SECTION "Bank c@772d", ROMX[$772d], BANK[$c]
+Tilemap_335c5: INCBIN "data/tilemaps/bg_335c5.tilemap"
 
 Func_3372d:
 	push af
@@ -239,32 +235,31 @@ Func_3372d:
 	push de
 	push hl
 	ld de, vBGMap0
-	ld hl, $7751
-	ld b, $12
-.asm_33739
-	ld c, $14
-.asm_3373b
+	ld hl, Tilemap_33751
+	ld b, SCREEN_HEIGHT ; rows
+.loop_rows
+	ld c, SCREEN_WIDTH ; cols
+.loop_cols
 	ld a, [hli]
 	ld [de], a
 	inc de
 	dec c
-	jr nz, .asm_3373b
+	jr nz, .loop_cols
 	push hl
-	ld hl, $c
+	ld hl, TILEMAP_WIDTH - SCREEN_WIDTH
 	add hl, de
 	ld d, h
 	ld e, l
 	pop hl
 	dec b
-	jr nz, .asm_33739
+	jr nz, .loop_rows
 	pop hl
 	pop de
 	pop bc
 	pop af
 	ret
-; 0x33751
 
-SECTION "Bank c@78b9", ROMX[$78b9], BANK[$c]
+Tilemap_33751: INCBIN "data/tilemaps/bg_33751.tilemap"
 
 Func_338b9:
 	push af
@@ -273,9 +268,9 @@ Func_338b9:
 	push hl
 	ld hl, Gfx_334f5
 	ld de, vTiles1 tile $50
-	ld b, $30
+	ld b, $30 ; tiles
 .asm_338c5
-	ld c, $10
+	ld c, TILE_SIZE
 .asm_338c7
 	ld a, [hli]
 	ld [de], a
@@ -285,27 +280,28 @@ Func_338b9:
 	dec b
 	jr nz, .asm_338c5
 	ld de, vBGMap0
-	ld hl, $78f0
-	ld b, $12
-.asm_338d8
-	ld c, $14
-.asm_338da
+	ld hl, Tilemap_338f0
+	ld b, SCREEN_HEIGHT ; rows
+.loop_rows
+	ld c, SCREEN_WIDTH ; cols
+.loop_cols
 	ld a, [hli]
 	ld [de], a
 	inc de
 	dec c
-	jr nz, .asm_338da
+	jr nz, .loop_cols
 	push hl
-	ld hl, $c
+	ld hl, TILEMAP_WIDTH - SCREEN_WIDTH
 	add hl, de
 	ld d, h
 	ld e, l
 	pop hl
 	dec b
-	jr nz, .asm_338d8
+	jr nz, .loop_rows
 	pop hl
 	pop de
 	pop bc
 	pop af
 	ret
-; 0x338f0
+
+Tilemap_338f0: INCBIN "data/tilemaps/bg_338f0.tilemap"

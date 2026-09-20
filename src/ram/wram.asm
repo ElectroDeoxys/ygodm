@@ -463,8 +463,7 @@ wcfe8:: db ; cfe8
 wcfe9:: db ; cfe9
 wcfea:: db ; cfea
 wcfeb:: db ; cfeb
-wcfec:: db ; cfec
-wcfed:: db ; cfed
+wcfec:: dw ; cfec
 wcfee:: db ; cfee
 wcfef:: db ; cfef
 wcff0:: db ; cff0

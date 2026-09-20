@@ -14,6 +14,24 @@ MACRO sgb_pal_01
 	db $00
 ENDM
 
+MACRO sgb_pal_set
+	sgb_header PAL_SET_CMD, 1
+	dw \1, \2, \3, \4 ; pal IDs
+	db \5 ; flags
+	ds 6, $00
+ENDM
+
+MACRO sgb_pal_trn
+	sgb_header PAL_TRN_CMD, 1
+	ds 15, $00
+ENDM
+
+MACRO sgb_icon_en
+	sgb_header ICON_EN_CMD, 1
+	db \1
+	ds 14, $00
+ENDM
+
 MACRO sgb_data_snd
 	ASSERT _NARG <= 2 + 11
 	sgb_header DATA_SND_CMD, 1
@@ -58,5 +76,11 @@ ENDM
 MACRO sgb_mask_en
 	sgb_header MASK_EN_CMD, 1
 	db \1 ; MASK_EN_* parameter
+	ds 14, $00
+ENDM
+
+MACRO sgb_pal_pri
+	sgb_header PAL_PRI_CMD, 1
+	db \1
 	ds 14, $00
 ENDM

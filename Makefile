@@ -44,7 +44,7 @@ RGBGFXFLAGS  ?= -Weverything
 	compare \
 	tools
 
-all: ygodm compare
+all: ygodm
 ygodm: ygodm.gb
 
 clean: tidy
@@ -60,7 +60,8 @@ tidy:
 	      src/rgbdscheck.o
 	$(MAKE) clean -C tools/
 
-compare: $(roms)
+compare: RGBASMFLAGS += -D_MATCHING
+compare: all
 	@$(SHA1) -c rom.sha1
 
 tools:
@@ -102,18 +103,21 @@ endif
 RGBFIXFLAGS += -sv -k A4 -l 0x33 -m MBC1+RAM+BATTERY -p 0xff -r 2 -t YUGIOU
 
 $(rom): $(ygodm_obj) src/layout.link
-	$(RGBLINK) $(RGBLINKFLAGS) -l src/layout.link -m $(rom:.gb=.map) -n $(rom:.gb=.sym) -O baserom.gb -o $@ $(filter %.o,$^)
+	$(RGBLINK) $(RGBLINKFLAGS) -l src/layout.link -m $(rom:.gb=.map) -n $(rom:.gb=.sym) -o $@ $(filter %.o,$^)
 	$(RGBFIX) $(RGBFIXFLAGS) $@
 
 ### Special sprite rules
 
 src/gfx/font.1bpp: tools/gfx += --remove-whitespace
+src/gfx/gfx_f40e8.1bpp: RGBGFXFLAGS += -x 6
 
 src/gfx/gfx_630b.2bpp: tools/gfx += --interleave --png=$<
 src/gfx/gfx_6675.2bpp: tools/gfx += --interleave --png=$<
 src/gfx/gfx_68f4.2bpp: tools/gfx += --interleave --png=$<
 src/gfx/gfx_6ce6.2bpp: tools/gfx += --interleave --png=$<
 src/gfx/characters/%.2bpp: tools/gfx += --interleave --png=$<
+src/gfx/duel/attack.2bpp: tools/gfx += --interleave --png=$<
+src/gfx/duel/destroy.2bpp: tools/gfx += --interleave --png=$<
 
 ### Catch-all graphics rules
 

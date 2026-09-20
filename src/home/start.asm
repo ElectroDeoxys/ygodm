@@ -36,4 +36,5 @@ _Start:
 	call RequestVBlankMode
 	call Func_2d1f
 	debug_loop
-	ret
+
+	ret ; stray ret

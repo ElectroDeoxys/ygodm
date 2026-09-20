@@ -3,6 +3,11 @@ MACRO? dwb
 	db \2
 ENDM
 
+MACRO? dbw
+	db \1
+	dw \2
+ENDM
+
 MACRO? dn ; nybbles
 	REPT _NARG / 2
 		db ((\1) << 4) | (\2)
@@ -29,4 +34,11 @@ MACRO? card_freq_table_end
 	REPT INVALID_CARD - _cur_card
 		dw _cur_freq
 	ENDR
+ENDM
+
+; used to match unused bank space
+MACRO? bankfill
+	IF DEF(_MATCHING)
+		INCBIN \1
+	ENDC
 ENDM
