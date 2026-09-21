@@ -2625,7 +2625,11 @@ Func_d095:
 	add hl, bc
 	ld d, [hl]
 .asm_d0ae
-	ld a, [wJoypadDown]
+	IF DEF(_EARLY_DAYS)
+		ld a, [wcaa7]
+	ELSE
+		ld a, [wJoypadDown]
+	ENDC
 	and PAD_CTRL_PAD
 	jr z, .asm_d0c2
 	ld c, $08
@@ -5737,8 +5741,13 @@ Func_e52e:
 
 .data
 	db $02 ; PAD_A
-	db $0a ; PAD_B
-	db $00 ; PAD_SELECT
+	IF DEF(_EARLY_DAYS)
+		db $00 ; PAD_B
+		db $0a ; PAD_SELECT
+	ELSE
+		db $0a ; PAD_B
+		db $00 ; PAD_SELECT
+	ENDC
 	db $08 ; PAD_START
 	db $00 ; PAD_RIGHT
 	db $00 ; PAD_LEFT
@@ -5803,7 +5812,12 @@ Func_e5cf:
 	call WaitForVBlank
 	ld a, e
 	cp $80
-	jr nz, .asm_e5f1
+	IF DEF(_EARLY_DAYS)
+		nop
+		nop
+	ELSE
+		jr nz, .asm_e5f1
+	ENDC
 	farcall Func_10a1b
 	call ResetMainMenuSelection
 	call LoadMainMenu

@@ -49,7 +49,7 @@ def main():
                     break
 
         with open(filename[:-3], "wb") as file:
-            file.write(bytes(decompressed))
+            file.write(bytes(decompressed[:0x500]))
 
 if __name__ == "__main__":
     main()

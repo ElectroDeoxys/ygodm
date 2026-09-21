@@ -842,7 +842,11 @@ Func_f86::
 	push bc
 	ld c, $0a
 .asm_f89
-	call WaitForVBlank
+	IF DEF(_EARLY_DAYS)
+		call Func_3f18
+	ELSE
+		call WaitForVBlank
+	ENDC
 	dec c
 	jr nz, .asm_f89
 	pop bc

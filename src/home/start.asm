@@ -24,7 +24,14 @@ _Start:
 	ld a, SGBFUNC_6
 	farcall ExecuteSGBFunction
 	call EnableVBlank
-	farcall Func_65f3
+
+	IF DEF(_EARLY_DAYS)
+		REPT 3
+			nop
+		ENDR
+	ELSE
+		farcall Func_65f3
+	ENDC
 
 	; enter main game loop
 	farcall GameLoop

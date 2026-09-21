@@ -39,6 +39,6 @@ ENDM
 ; used to match unused bank space
 MACRO? bankfill
 	IF DEF(_MATCHING)
-		INCBIN \1
+		INCBIN \#
 	ENDC
 ENDM

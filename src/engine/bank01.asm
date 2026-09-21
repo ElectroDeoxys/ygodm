@@ -2366,153 +2366,326 @@ Func_5e66:
 	pop af
 	ret
 
-Func_5eb3:
-	push af
-	push bc
-	push de
-	push hl
-	ld a, $00
-	call Func_1842
-	ld a, [wLoadedCardID + 0]
-	call Func_1842
-	ld a, [wLoadedCardID + 1]
-	call Func_1842
-	call SetJobFlag
-	lb bc, $cd, LOW(hDecompressJobFlags)
-	dec b
-	rla
-	ld [$ff00+c], a
-	ld bc, vTiles0
-	ld e, $0a
-.asm_5ed6
-	ld a, VBLANK_08
-	call SetPendingVBlankMode
-	call AddWordToVBlankStruct
-	ld hl, $80
-	add hl, bc
-	ld b, h
-	ld c, l
-	call Func_f62
-	call RequestVBlankMode
-	call WaitForVBlank
-	dec e
-	jr nz, .asm_5ed6
-	pop hl
-	pop de
-	pop bc
-	pop af
-	ret
+IF DEF(_EARLY_DAYS)
+	Func_5eb3:
+		push af
+		push bc
+		push de
+		push hl
+		ld bc, vTiles0
+		farcall Func_1fc004
+		jr .done
 
-LoadCardGfx:
-	push af
-	push bc
-	push de
-	push hl
-	ld a, $00
-	call Func_1842
-	ld a, [wLoadedCardID + 0]
-	call Func_1842
-	ld a, [wLoadedCardID + 1]
-	call Func_1842
-	call SetJobFlag
-	db $01, LOW(hDecompressJobFlags)
-	call ActivateJob
-	db JOB_DECOMPRESS
+		call Func_1842
+		ld a, [wLoadedCardID + 1]
+		call Func_1842
+		call SetJobFlag
+		lb bc, $cd, LOW(hDecompressJobFlags)
+		dec b
+		rla
+		ld [$ff00+c], a
+		ld bc, vTiles0
+	.Func_5ed4:
+		ld h, b
+		ld l, c
+	.asm_5ed6
+		ld e, $0a
+	.asm_5ed8
+		call Func_17ab
+		dec e
+		jr nz, .asm_5ed8
+		pop hl
+		pop de
+		pop bc
+		pop af
+		ret
+		ld c, l
+		call Func_f62
+		call RequestVBlankMode
+		call WaitForVBlank
+		dec e
+		jr nz, .asm_5ed6
+	.done
+		pop hl
+		pop de
+		pop bc
+		pop af
+		ret
+ELSE
+	Func_5eb3:
+		push af
+		push bc
+		push de
+		push hl
+		ld a, $00
+		call Func_1842
+		ld a, [wLoadedCardID + 0]
+		call Func_1842
+		ld a, [wLoadedCardID + 1]
+		call Func_1842
+		call SetJobFlag
+		lb bc, $cd, LOW(hDecompressJobFlags)
+		dec b
+		rla
+		ld [$ff00+c], a
+		ld bc, vTiles0
+		ld e, $0a
+	.asm_5ed6
+		ld a, VBLANK_08
+		call SetPendingVBlankMode
+		call AddWordToVBlankStruct
+		ld hl, $80
+		add hl, bc
+		ld b, h
+		ld c, l
+		call Func_f62
+		call RequestVBlankMode
+		call WaitForVBlank
+		dec e
+		jr nz, .asm_5ed6
+		pop hl
+		pop de
+		pop bc
+		pop af
+		ret
+ENDC
 
-	ld bc, vTiles1
-	ld e, $0a
-.asm_5f18
-	ld a, VBLANK_08
-	call SetPendingVBlankMode
-	call AddWordToVBlankStruct
-	ld hl, $8 tiles
-	add hl, bc
-	ld b, h
-	ld c, l
-	call Func_f62
-	call RequestVBlankMode
-	call WaitForVBlank
-	dec e
-	jr nz, .asm_5f18
-	pop hl
-	pop de
-	pop bc
-	pop af
-	ret
 
-Func_5f37:
-	push af
-	push bc
-	push de
-	push hl
-	ld a, $00
-	call Func_1842
-	ld a, [wLoadedCardID + 0]
-	call Func_1842
-	ld a, [wLoadedCardID + 1]
-	call Func_1842
-	call SetJobFlag
-	lb bc, $cd, LOW(hDecompressJobFlags)
-	dec b
-	rla
-	ld [$ff00+c], a
-	ld bc, vTiles1 tile $60
-	ld e, $0a
-.asm_5f5a
-	ld a, VBLANK_08
-	call SetPendingVBlankMode
-	call AddWordToVBlankStruct
-	ld hl, $80
-	add hl, bc
-	ld b, h
-	ld c, l
-	call Func_f62
-	call RequestVBlankMode
-	call WaitForVBlank
-	dec e
-	jr nz, .asm_5f5a
-	pop hl
-	pop de
-	pop bc
-	pop af
-	ret
+IF DEF(_EARLY_DAYS)
+	LoadCardGfx:
+		push af
+		push bc
+		push de
+		push hl
 
-Func_5f79:
-	push af
-	push bc
-	push de
-	push hl
-	ld a, $00
-	call Func_1842
-	ld a, [wLoadedCardID + 0]
-	call Func_1842
-	ld a, [wLoadedCardID + 1]
-	call Func_1842
-	call SetJobFlag
-	lb bc, $cd, LOW(hDecompressJobFlags)
-	dec b
-	rla
-	ld [$ff00+c], a
-	ld bc, vTiles2 tile $30
-	ld e, $0a
-.asm_5f9c
-	ld a, VBLANK_08
-	call SetPendingVBlankMode
-	call AddWordToVBlankStruct
-	ld hl, $80
-	add hl, bc
-	ld b, h
-	ld c, l
-	call Func_f62
-	call RequestVBlankMode
-	call WaitForVBlank
-	dec e
-	jr nz, .asm_5f9c
-	pop hl
-	pop de
-	pop bc
-	pop af
-	ret
+		ld bc, vTiles1
+		farcall Func_1fc004
+		jr Func_5eb3.done
+		call Func_1842
+		ld a, [wLoadedCardID + 1]
+		call Func_1842
+		call SetJobFlag
+		lb bc, $cd, LOW(hDecompressJobFlags)
+		dec b
+		rla
+		ld [$ff00+c], a
+		ld bc, vTiles1
+		jp Func_5eb3.Func_5ed4
+
+		; this part of code is cobbled
+		db $08, $cd, $e3
+		dec c
+		call AddWordToVBlankStruct
+		ld hl, $80
+		add hl, bc
+		ld b, h
+		ld c, l
+		call Func_f62
+		call RequestVBlankMode
+		call WaitForVBlank
+		dec e
+		db $20, $e6
+		pop hl
+		pop de
+		pop bc
+		pop af
+		ret
+ELSE
+	LoadCardGfx:
+		push af
+		push bc
+		push de
+		push hl
+		ld a, $00
+		call Func_1842
+		ld a, [wLoadedCardID + 0]
+		call Func_1842
+		ld a, [wLoadedCardID + 1]
+		call Func_1842
+		call SetJobFlag
+		db $01, LOW(hDecompressJobFlags)
+		call ActivateJob
+		db JOB_DECOMPRESS
+
+		ld bc, vTiles1
+		ld e, $0a
+	.asm_5f18
+		ld a, VBLANK_08
+		call SetPendingVBlankMode
+		call AddWordToVBlankStruct
+		ld hl, $8 tiles
+		add hl, bc
+		ld b, h
+		ld c, l
+		call Func_f62
+		call RequestVBlankMode
+		call WaitForVBlank
+		dec e
+		jr nz, .asm_5f18
+		pop hl
+		pop de
+		pop bc
+		pop af
+		ret
+ENDC
+
+IF DEF(_EARLY_DAYS)
+	Func_5f37:
+		push af
+		push bc
+		push de
+		push hl
+		ld bc, vTiles1 tile $60
+		farcall Func_1fc004
+		jr Func_5eb3.done
+
+		call Func_1842
+		ld a, [$cd10]
+		call Func_1842
+		call SetJobFlag
+		lb bc, $cd, LOW(hDecompressJobFlags)
+		dec b
+		rla
+		ld [$ff00+c], a
+		ld bc, vTiles1 tile $60
+		jp Func_5eb3.Func_5ed4
+
+		; this part of code is cobbled
+		db $08, $cd, $e3
+		dec c
+		call AddWordToVBlankStruct
+		ld hl, $80
+		add hl, bc
+		ld b, h
+		ld c, l
+		call Func_f62
+		call RequestVBlankMode
+		call WaitForVBlank
+		dec e
+		db $20, $e6
+		pop hl
+		pop de
+		pop bc
+		pop af
+		ret
+ELSE
+	Func_5f37:
+		push af
+		push bc
+		push de
+		push hl
+		ld a, $00
+		call Func_1842
+		ld a, [wLoadedCardID + 0]
+		call Func_1842
+		ld a, [wLoadedCardID + 1]
+		call Func_1842
+		call SetJobFlag
+		lb bc, $cd, LOW(hDecompressJobFlags)
+		dec b
+		rla
+		ld [$ff00+c], a
+		ld bc, vTiles1 tile $60
+		ld e, $0a
+	.asm_5f5a
+		ld a, VBLANK_08
+		call SetPendingVBlankMode
+		call AddWordToVBlankStruct
+		ld hl, $80
+		add hl, bc
+		ld b, h
+		ld c, l
+		call Func_f62
+		call RequestVBlankMode
+		call WaitForVBlank
+		dec e
+		jr nz, .asm_5f5a
+		pop hl
+		pop de
+		pop bc
+		pop af
+		ret
+ENDC
+
+IF DEF(_EARLY_DAYS)
+	Func_5f79:
+		push af
+		push bc
+		push de
+		push hl
+		ld bc, vTiles2 tile $30
+		farcall Func_1fc004
+	.loop
+		jp Func_5eb3.done
+		ld b, d
+		jr .loop
+
+		db $10, $cd
+		call Func_1842
+		call SetJobFlag
+		ld bc, $cde6
+		dec b
+		rla
+		ld [$ff00+c], a
+		ld bc, vTiles2 tile $30
+		jp Func_5eb3.Func_5ed4
+
+		; this part of code is cobbled
+		db $08, $cd, $e3
+		dec c
+		call AddWordToVBlankStruct
+		ld hl, $80
+		add hl, bc
+		ld b, h
+		ld c, l
+		call Func_f62
+		call RequestVBlankMode
+		call WaitForVBlank
+		dec e
+		db $20, $e6
+		pop hl
+		pop de
+		pop bc
+		pop af
+		ret
+ELSE
+	Func_5f79:
+		push af
+		push bc
+		push de
+		push hl
+		ld a, $00
+		call Func_1842
+		ld a, [wLoadedCardID + 0]
+		call Func_1842
+		ld a, [wLoadedCardID + 1]
+		call Func_1842
+		call SetJobFlag
+		lb bc, $cd, LOW(hDecompressJobFlags)
+		dec b
+		rla
+		ld [$ff00+c], a
+		ld bc, vTiles2 tile $30
+		ld e, $0a
+	.asm_5f9c
+		ld a, VBLANK_08
+		call SetPendingVBlankMode
+		call AddWordToVBlankStruct
+		ld hl, $80
+		add hl, bc
+		ld b, h
+		ld c, l
+		call Func_f62
+		call RequestVBlankMode
+		call WaitForVBlank
+		dec e
+		jr nz, .asm_5f9c
+		pop hl
+		pop de
+		pop bc
+		pop af
+		ret
+ENDC
 
 ; loads tiles that correspond to character in wNPCCharacter
 LoadCharacterGfx:

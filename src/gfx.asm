@@ -1,4 +1,4 @@
-SECTION "Gfx 1", ROMX, BANK[$10]
+SECTION "Gfx 1", ROMX
 
 	dw BANK(@)
 
@@ -439,7 +439,7 @@ PtrTable_43e84:
 
 bankfill "data/bank_fill/bank10.bin"
 
-SECTION "Gfx 2", ROMX, BANK[$11]
+SECTION "Gfx 2", ROMX
 	dw BANK(@)
 BattleSteerGfx::        INCBIN "gfx/cards/battle_steer.2bpp.lz"
 FlameSwordsmanGfx::     INCBIN "gfx/cards/flame_swordsman.2bpp.lz"
@@ -457,7 +457,7 @@ BattleOxGfx::           INCBIN "gfx/cards/battle_ox.2bpp.lz"
 BeaverWarriorGfx::      INCBIN "gfx/cards/beaver_warrior.2bpp.lz"
 bankfill "data/bank_fill/bank11.bin"
 
-SECTION "Gfx 3", ROMX, BANK[$12]
+SECTION "Gfx 3", ROMX
 	dw BANK(@)
 RockOgreGrotto1Gfx::    INCBIN "gfx/cards/rock_ogre_grotto1.2bpp.lz"
 MountainWarriorGfx::    INCBIN "gfx/cards/mountain_warrior.2bpp.lz"
@@ -474,7 +474,7 @@ CurseOfDragonGfx::      INCBIN "gfx/cards/curse_of_dragon.2bpp.lz"
 DragonPiperGfx::        INCBIN "gfx/cards/dragon_piper.2bpp.lz"
 bankfill "data/bank_fill/bank12.bin"
 
-SECTION "Gfx 4", ROMX, BANK[$13]
+SECTION "Gfx 4", ROMX
 	dw BANK(@)
 CelticGuardianGfx::     INCBIN "gfx/cards/celtic_guardian.2bpp.lz"
 IllusionFacelessGfx::   INCBIN "gfx/cards/illusion_faceless.2bpp.lz"
@@ -491,7 +491,7 @@ HerculesBeetleGfx::     INCBIN "gfx/cards/hercules_beetle.2bpp.lz"
 KillerNeedleGfx::       INCBIN "gfx/cards/killer_needle.2bpp.lz"
 bankfill "data/bank_fill/bank13.bin"
 
-SECTION "Gfx 5", ROMX, BANK[$14]
+SECTION "Gfx 5", ROMX
 	dw BANK(@)
 GokiboreGfx::           INCBIN "gfx/cards/gokibore.2bpp.lz"
 GiantFleaGfx::          INCBIN "gfx/cards/giant_flea.2bpp.lz"
@@ -508,7 +508,7 @@ SilverFangGfx::         INCBIN "gfx/cards/silver_fang.2bpp.lz"
 KojikocyGfx::           INCBIN "gfx/cards/kojikocy.2bpp.lz"
 bankfill "data/bank_fill/bank14.bin"
 
-SECTION "Gfx 6", ROMX, BANK[$15]
+SECTION "Gfx 6", ROMX
 	dw BANK(@)
 PerfectGreatMothGfx::   INCBIN "gfx/cards/perfect_great_moth.2bpp.lz"
 GaroozisGfx::           INCBIN "gfx/cards/garoozis.2bpp.lz"
@@ -525,7 +525,7 @@ AxeRaiderGfx::          INCBIN "gfx/cards/axe_raider.2bpp.lz"
 MegazowlerGfx::         INCBIN "gfx/cards/megazowler.2bpp.lz"
 bankfill "data/bank_fill/bank15.bin"
 
-SECTION "Gfx 7", ROMX, BANK[$16]
+SECTION "Gfx 7", ROMX
 	dw BANK(@)
 UrabyGfx::              INCBIN "gfx/cards/uraby.2bpp.lz"
 CrawlingDragon2Gfx::    INCBIN "gfx/cards/crawling_dragon_2.2bpp.lz"
@@ -542,7 +542,7 @@ MysticHorsemanGfx::     INCBIN "gfx/cards/mystic_horseman.2bpp.lz"
 RabidHorsemanGfx::      INCBIN "gfx/cards/rabid_horseman.2bpp.lz"
 bankfill "data/bank_fill/bank16.bin"
 
-SECTION "Gfx 8", ROMX, BANK[$17]
+SECTION "Gfx 8", ROMX
 	dw BANK(@)
 ZankiGfx::              INCBIN "gfx/cards/zanki.2bpp.lz"
 CrawlingDragonGfx::     INCBIN "gfx/cards/crawling_dragon.2bpp.lz"
@@ -559,7 +559,7 @@ CurtainOfDarkGfx::      INCBIN "gfx/cards/curtain_of_dark.2bpp.lz"
 TomozaurusGfx::         INCBIN "gfx/cards/tomozaurus.2bpp.lz"
 bankfill "data/bank_fill/bank17.bin"
 
-SECTION "Gfx 9", ROMX, BANK[$18]
+SECTION "Gfx 9", ROMX
 	dw BANK(@)
 SpiritOfTheWindGfx::    INCBIN "gfx/cards/spirit_of_the_wind.2bpp.lz"
 KageningenGfx::         INCBIN "gfx/cards/kageningen.2bpp.lz"
@@ -576,7 +576,7 @@ SpiritOfTheBookGfx::    INCBIN "gfx/cards/spirit_of_the_book.2bpp.lz"
 SupporterShadowsGfx::   INCBIN "gfx/cards/supporter_shadows.2bpp.lz"
 bankfill "data/bank_fill/bank18.bin"
 
-SECTION "Gfx 10", ROMX, BANK[$19]
+SECTION "Gfx 10", ROMX
 	dw BANK(@)
 TrialOfNightmareGfx::   INCBIN "gfx/cards/trial_of_nightmare.2bpp.lz"
 DreamClownGfx::         INCBIN "gfx/cards/dream_clown.2bpp.lz"
@@ -593,7 +593,7 @@ WeatherControlGfx::     INCBIN "gfx/cards/weather_control.2bpp.lz"
 OctoberserGfx::         INCBIN "gfx/cards/octoberser.2bpp.lz"
 bankfill "data/bank_fill/bank19.bin"
 
-SECTION "Gfx 11", ROMX, BANK[$1a]
+SECTION "Gfx 11", ROMX
 	dw BANK(@)
 The13thGraveGfx::       INCBIN "gfx/cards/the_13th_grave.2bpp.lz"
 CharubinTheFireGfx::    INCBIN "gfx/cards/charubin_the_fire.2bpp.lz"
@@ -610,7 +610,7 @@ NecrolancerGfx::        INCBIN "gfx/cards/necrolancer.2bpp.lz"
 DjinnTheWatcherGfx::    INCBIN "gfx/cards/djinn_the_watcher.2bpp.lz"
 bankfill "data/bank_fill/bank1a.bin"
 
-SECTION "Gfx 12", ROMX, BANK[$1b]
+SECTION "Gfx 12", ROMX
 	dw BANK(@)
 BewitchingPhantomGfx::  INCBIN "gfx/cards/bewitching_phantom.2bpp.lz"
 TempleOfSkullsGfx::     INCBIN "gfx/cards/temple_of_skulls.2bpp.lz"
@@ -627,7 +627,7 @@ HardArmorGfx::          INCBIN "gfx/cards/hard_armor.2bpp.lz"
 FiregrassGfx::          INCBIN "gfx/cards/firegrass.2bpp.lz"
 bankfill "data/bank_fill/bank1b.bin"
 
-SECTION "Gfx 13", ROMX, BANK[$1c]
+SECTION "Gfx 13", ROMX
 	dw BANK(@)
 ManEaterGfx::           INCBIN "gfx/cards/man_eater.2bpp.lz"
 DigBeakGfx::            INCBIN "gfx/cards/dig_beak.2bpp.lz"
@@ -644,7 +644,7 @@ DarkKingAbyssGfx::      INCBIN "gfx/cards/dark_king_abyss.2bpp.lz"
 SpiritOfTheHarpGfx::    INCBIN "gfx/cards/spirit_of_the_harp.2bpp.lz"
 bankfill "data/bank_fill/bank1c.bin"
 
-SECTION "Gfx 14", ROMX, BANK[$1d]
+SECTION "Gfx 14", ROMX
 	dw BANK(@)
 BigEyeGfx::             INCBIN "gfx/cards/big_eye.2bpp.lz"
 ArmaillGfx::            INCBIN "gfx/cards/armaill.2bpp.lz"
@@ -661,7 +661,7 @@ MaskedClownGfx::        INCBIN "gfx/cards/masked_clown.2bpp.lz"
 LuckyTrinketGfx::       INCBIN "gfx/cards/lucky_trinket.2bpp.lz"
 bankfill "data/bank_fill/bank1d.bin"
 
-SECTION "Gfx 15", ROMX, BANK[$1e]
+SECTION "Gfx 15", ROMX
 	dw BANK(@)
 GeninGfx::              INCBIN "gfx/cards/genin.2bpp.lz"
 EyearmorGfx::           INCBIN "gfx/cards/eyearmor.2bpp.lz"
@@ -678,7 +678,7 @@ DoronGfx::              INCBIN "gfx/cards/doron.2bpp.lz"
 PenguinKnightGfx::      INCBIN "gfx/cards/penguin_knight.2bpp.lz"
 bankfill "data/bank_fill/bank1e.bin"
 
-SECTION "Gfx 16", ROMX, BANK[$1f]
+SECTION "Gfx 16", ROMX
 	dw BANK(@)
 ArmaKnightGfx::         INCBIN "gfx/cards/arma_knight.2bpp.lz"
 MechMoleZombieGfx::     INCBIN "gfx/cards/mech_mole_zombie.2bpp.lz"
@@ -695,12 +695,12 @@ PetitAngelGfx::         INCBIN "gfx/cards/petit_angel.2bpp.lz"
 WingedCleaverGfx::      INCBIN "gfx/cards/winged_cleaver.2bpp.lz"
 bankfill "data/bank_fill/bank1f.bin"
 
-SECTION "Bank 20", ROMX, BANK[$20]
+SECTION "Bank 20", ROMX
 ; bank $20 intentionally left blank
 ; due to hardware inability to access it
 bankfill "data/bank_fill/bank20.bin"
 
-SECTION "Gfx 17", ROMX, BANK[$21]
+SECTION "Gfx 17", ROMX
 	dw BANK(@)
 HinotamaSoulGfx::       INCBIN "gfx/cards/hinotama_soul.2bpp.lz"
 ThunderKidGfx::         INCBIN "gfx/cards/thunder_kid.2bpp.lz"
@@ -717,7 +717,7 @@ KumootokoGfx::          INCBIN "gfx/cards/kumootoko.2bpp.lz"
 MidnightFiendGfx::      INCBIN "gfx/cards/midnight_fiend.2bpp.lz"
 bankfill "data/bank_fill/bank21.bin"
 
-SECTION "Gfx 18", ROMX, BANK[$22]
+SECTION "Gfx 18", ROMX
 	dw BANK(@)
 RoarOceanSnakeGfx::     INCBIN "gfx/cards/roar_ocean_snake.2bpp.lz"
 TrapMasterGfx::         INCBIN "gfx/cards/trap_master.2bpp.lz"
@@ -734,7 +734,7 @@ BeautifulHeadhuntGfx::  INCBIN "gfx/cards/beautiful_headhunt.2bpp.lz"
 WodanTheResidentGfx::   INCBIN "gfx/cards/wodan_the_resident.2bpp.lz"
 bankfill "data/bank_fill/bank22.bin"
 
-SECTION "Gfx 19", ROMX, BANK[$23]
+SECTION "Gfx 19", ROMX
 	dw BANK(@)
 GuardianLabyrinthGfx::  INCBIN "gfx/cards/guardian_labyrinth.2bpp.lz"
 HaniwaGfx::             INCBIN "gfx/cards/haniwa.2bpp.lz"
@@ -751,7 +751,7 @@ RootWaterGfx::          INCBIN "gfx/cards/root_water.2bpp.lz"
 MasterAndExpertGfx::    INCBIN "gfx/cards/master_and_expert.2bpp.lz"
 bankfill "data/bank_fill/bank23.bin"
 
-SECTION "Gfx 20", ROMX, BANK[$24]
+SECTION "Gfx 20", ROMX
 	dw BANK(@)
 WaterOmoticsGfx::       INCBIN "gfx/cards/water_omotics.2bpp.lz"
 HyoGfx::                INCBIN "gfx/cards/hyo.2bpp.lz"
@@ -768,7 +768,7 @@ LunarQueenElzaimGfx::   INCBIN "gfx/cards/lunar_queen_elzaim.2bpp.lz"
 ArchfiendMirrorGfx::    INCBIN "gfx/cards/archfiend_mirror.2bpp.lz"
 bankfill "data/bank_fill/bank24.bin"
 
-SECTION "Gfx 21", ROMX, BANK[$25]
+SECTION "Gfx 21", ROMX
 	dw BANK(@)
 SwordsmanOfAileGfx::    INCBIN "gfx/cards/swordsman_of_aile.2bpp.lz"
 RockOgreGrotto2Gfx::    INCBIN "gfx/cards/rock_ogre_grotto2.2bpp.lz"
@@ -785,7 +785,7 @@ AncientTreeGfx::        INCBIN "gfx/cards/ancient_tree.2bpp.lz"
 GreenPhantomKingGfx::   INCBIN "gfx/cards/green_phantom_king.2bpp.lz"
 bankfill "data/bank_fill/bank25.bin"
 
-SECTION "Gfx 22", ROMX, BANK[$26]
+SECTION "Gfx 22", ROMX
 	dw BANK(@)
 GroundAttackerGfx::     INCBIN "gfx/cards/ground_attacker.2bpp.lz"
 RayAndTemperatureGfx::  INCBIN "gfx/cards/ray_and_temperature.2bpp.lz"
@@ -802,7 +802,7 @@ GatekeeperGfx::         INCBIN "gfx/cards/gatekeeper.2bpp.lz"
 OgreOfTheBlackGfx::     INCBIN "gfx/cards/ogre_of_the_black.2bpp.lz"
 bankfill "data/bank_fill/bank26.bin"
 
-SECTION "Gfx 23", ROMX, BANK[$27]
+SECTION "Gfx 23", ROMX
 	dw BANK(@)
 DarkArtistGfx::         INCBIN "gfx/cards/dark_artist.2bpp.lz"
 ChangeSlimeGfx::        INCBIN "gfx/cards/change_slime.2bpp.lz"
@@ -819,7 +819,7 @@ SonicMaidGfx::          INCBIN "gfx/cards/sonic_maid.2bpp.lz"
 KuramaGfx::             INCBIN "gfx/cards/kurama.2bpp.lz"
 bankfill "data/bank_fill/bank27.bin"
 
-SECTION "Gfx 24", ROMX, BANK[$28]
+SECTION "Gfx 24", ROMX
 	dw BANK(@)
 LegendarySwordGfx::     INCBIN "gfx/cards/legendary_sword.2bpp.lz"
 SwordOfDarkGfx::        INCBIN "gfx/cards/sword_of_dark.2bpp.lz"
@@ -836,7 +836,7 @@ SilverBowAndArrowGfx::  INCBIN "gfx/cards/silver_bow_and_arrow.2bpp.lz"
 HornOfLightGfx::        INCBIN "gfx/cards/horn_of_light.2bpp.lz"
 bankfill "data/bank_fill/bank28.bin"
 
-SECTION "Gfx 25", ROMX, BANK[$29]
+SECTION "Gfx 25", ROMX
 	dw BANK(@)
 HornOfUnicornGfx::      INCBIN "gfx/cards/horn_of_unicorn.2bpp.lz"
 DragonTreasureGfx::     INCBIN "gfx/cards/dragon_treasure.2bpp.lz"
@@ -853,7 +853,7 @@ MachineConversionGfx::  INCBIN "gfx/cards/machine_conversion.2bpp.lz"
 RaiseBodyHeatGfx::      INCBIN "gfx/cards/raise_body_heat.2bpp.lz"
 bankfill "data/bank_fill/bank29.bin"
 
-SECTION "Gfx 26", ROMX, BANK[$2a]
+SECTION "Gfx 26", ROMX
 	dw BANK(@)
 FollowWindGfx::         INCBIN "gfx/cards/follow_wind.2bpp.lz"
 PowerOfKaishinGfx::     INCBIN "gfx/cards/power_of_kaishin.2bpp.lz"
@@ -870,7 +870,7 @@ MooyanCurryGfx::        INCBIN "gfx/cards/mooyan_curry.2bpp.lz"
 RedMedicineGfx::        INCBIN "gfx/cards/red_medicine.2bpp.lz"
 bankfill "data/bank_fill/bank2a.bin"
 
-SECTION "Gfx 27", ROMX, BANK[$2b]
+SECTION "Gfx 27", ROMX
 	dw BANK(@)
 GoblinsRemedyGfx::      INCBIN "gfx/cards/goblins_remedy.2bpp.lz"
 SoulOfThePureGfx::      INCBIN "gfx/cards/soul_of_the_pure.2bpp.lz"
@@ -887,7 +887,7 @@ YaranzoGfx::            INCBIN "gfx/cards/yaranzo.2bpp.lz"
 KananTheSwordGfx::      INCBIN "gfx/cards/kanan_the_sword.2bpp.lz"
 bankfill "data/bank_fill/bank2b.bin"
 
-SECTION "Gfx 28", ROMX, BANK[$2c]
+SECTION "Gfx 28", ROMX
 	dw BANK(@)
 TakriminosGfx::         INCBIN "gfx/cards/takriminos.2bpp.lz"
 StuffedAnimalGfx::      INCBIN "gfx/cards/stuffed_animal.2bpp.lz"
@@ -905,10 +905,10 @@ FiendsMirrorGfx::       INCBIN "gfx/cards/fiends_mirror.2bpp.lz"
 InvalidCardGfx::        INCBIN "gfx/cards/invalid_card.2bpp.lz"
 bankfill "data/bank_fill/bank2c.bin"
 
-SECTION "Bank 2d", ROMX, BANK[$2d]
+SECTION "Bank 2d", ROMX
 bankfill "data/bank_fill/bank2d.bin"
 
-SECTION "Gfx 29", ROMX, BANK[$2e]
+SECTION "Gfx 29", ROMX
 	dw BANK(@)
 WeevilGfx::             INCBIN "gfx/characters/weevil.2bpp.lz"
 MaiGfx::                INCBIN "gfx/characters/mai.2bpp.lz"
@@ -918,7 +918,7 @@ YamiYugiGfx::           INCBIN "gfx/characters/yami_yugi.2bpp.lz"
 YugiGfx::               INCBIN "gfx/characters/yugi.2bpp.lz"
 bankfill "data/bank_fill/bank2e.bin"
 
-SECTION "Gfx 30", ROMX, BANK[$2f]
+SECTION "Gfx 30", ROMX
 	dw BANK(@)
 TeaGfx::                INCBIN "gfx/characters/tea.2bpp.lz"
 JoeyGfx::               INCBIN "gfx/characters/joey.2bpp.lz"
@@ -928,7 +928,7 @@ TristanGfx::            INCBIN "gfx/characters/tristan.2bpp.lz"
 BakuraGfx::             INCBIN "gfx/characters/bakura.2bpp.lz"
 bankfill "data/bank_fill/bank2f.bin"
 
-SECTION "Gfx 31", ROMX, BANK[$30]
+SECTION "Gfx 31", ROMX
 	dw BANK(@)
 PuppeteerGfx::          INCBIN "gfx/characters/puppeteer.2bpp.lz"
 PanikGfx::              INCBIN "gfx/characters/panik.2bpp.lz"
@@ -937,3 +937,501 @@ MaximillionGfx::        INCBIN "gfx/characters/maximillion.2bpp.lz"
 SimonGfx::              INCBIN "gfx/characters/simon.2bpp.lz"
 ExodiaGfx::             INCBIN "gfx/characters/exodia.2bpp.lz"
 bankfill "data/bank_fill/bank30.bin"
+
+; uncompressed graphics, used in Early Days Collection
+IF DEF(_EARLY_DAYS)
+
+SECTION "Uncompressed Gfx 1", ROMX
+	dw BANK(@)
+BEyeWhiteDragonGfx_Uncompressed::    INCBIN "gfx/cards/b_eye_white_dragon.2bpp"
+MysticalElfGfx_Uncompressed::        INCBIN "gfx/cards/mystical_elf.2bpp"
+HitotsuMeGiantGfx_Uncompressed::     INCBIN "gfx/cards/hitotsu_me_giant.2bpp"
+BabyDragonGfx_Uncompressed::         INCBIN "gfx/cards/baby_dragon.2bpp"
+RyuKishinGfx_Uncompressed::          INCBIN "gfx/cards/ryu_kishin.2bpp"
+FeralImpGfx_Uncompressed::           INCBIN "gfx/cards/feral_imp.2bpp"
+WingedDragon1Gfx_Uncompressed::      INCBIN "gfx/cards/winged_dragon_1.2bpp"
+MushroomManGfx_Uncompressed::        INCBIN "gfx/cards/mushroom_man.2bpp"
+ShadowSpecterGfx_Uncompressed::      INCBIN "gfx/cards/shadow_specter.2bpp"
+BlacklandDragonGfx_Uncompressed::    INCBIN "gfx/cards/blackland_dragon.2bpp"
+SwordArmDragonGfx_Uncompressed::     INCBIN "gfx/cards/sword_arm_dragon.2bpp"
+SwampBattleguardGfx_Uncompressed::   INCBIN "gfx/cards/swamp_battleguard.2bpp"
+	ds $3fe, $00
+
+SECTION "Uncompressed Gfx 2", ROMX
+	dw BANK(@)
+TyhoneGfx_Uncompressed::             INCBIN "gfx/cards/tyhone.2bpp"
+BattleSteerGfx_Uncompressed::        INCBIN "gfx/cards/battle_steer.2bpp"
+FlameSwordsmanGfx_Uncompressed::     INCBIN "gfx/cards/flame_swordsman.2bpp"
+TimeWizardGfx_Uncompressed::         INCBIN "gfx/cards/time_wizard.2bpp"
+RLegOfForbiddenGfx_Uncompressed::    INCBIN "gfx/cards/r_leg_of_forbidden.2bpp"
+LLegOfForbiddenGfx_Uncompressed::    INCBIN "gfx/cards/l_leg_of_forbidden.2bpp"
+RArmOfForbiddenGfx_Uncompressed::    INCBIN "gfx/cards/r_arm_of_forbidden.2bpp"
+LArmOfForbiddenGfx_Uncompressed::    INCBIN "gfx/cards/l_arm_of_forbidden.2bpp"
+ExodiaForbiddenGfx_Uncompressed::    INCBIN "gfx/cards/exodia_forbidden.2bpp"
+SummonedSkullGfx_Uncompressed::      INCBIN "gfx/cards/summoned_skull.2bpp"
+WickedWormBeastGfx_Uncompressed::    INCBIN "gfx/cards/wicked_worm_beast.2bpp"
+SkullServantGfx_Uncompressed::       INCBIN "gfx/cards/skull_servant.2bpp"
+	ds $3fe, $00
+
+SECTION "Uncompressed Gfx 3", ROMX
+	dw BANK(@)
+HornImpGfx_Uncompressed::            INCBIN "gfx/cards/horn_imp.2bpp"
+BattleOxGfx_Uncompressed::           INCBIN "gfx/cards/battle_ox.2bpp"
+BeaverWarriorGfx_Uncompressed::      INCBIN "gfx/cards/beaver_warrior.2bpp"
+RockOgreGrotto1Gfx_Uncompressed::    INCBIN "gfx/cards/rock_ogre_grotto1.2bpp"
+MountainWarriorGfx_Uncompressed::    INCBIN "gfx/cards/mountain_warrior.2bpp"
+ZombieWarriorGfx_Uncompressed::      INCBIN "gfx/cards/zombie_warrior.2bpp"
+KoumoriDragonGfx_Uncompressed::      INCBIN "gfx/cards/koumori_dragon.2bpp"
+TwoHeadedKingRexGfx_Uncompressed::   INCBIN "gfx/cards/two_headed_king_rex.2bpp"
+JudgeManGfx_Uncompressed::           INCBIN "gfx/cards/judge_man.2bpp"
+SaggiTheClownGfx_Uncompressed::      INCBIN "gfx/cards/saggi_the_clown.2bpp"
+DarkMagicianGfx_Uncompressed::       INCBIN "gfx/cards/dark_magician.2bpp"
+TheSnakeHairGfx_Uncompressed::       INCBIN "gfx/cards/the_snake_hair.2bpp"
+	ds $3fe, $00
+
+SECTION "Uncompressed Gfx 4", ROMX
+	dw BANK(@)
+GaiaDragonChampGfx_Uncompressed::    INCBIN "gfx/cards/gaia_dragon_champ.2bpp"
+GaiaFierceKnightGfx_Uncompressed::   INCBIN "gfx/cards/gaia_fierce_knight.2bpp"
+CurseOfDragonGfx_Uncompressed::      INCBIN "gfx/cards/curse_of_dragon.2bpp"
+DragonPiperGfx_Uncompressed::        INCBIN "gfx/cards/dragon_piper.2bpp"
+CelticGuardianGfx_Uncompressed::     INCBIN "gfx/cards/celtic_guardian.2bpp"
+IllusionFacelessGfx_Uncompressed::   INCBIN "gfx/cards/illusion_faceless.2bpp"
+KarbonalaWarriorGfx_Uncompressed::   INCBIN "gfx/cards/karbonala_warrior.2bpp"
+RogueDollGfx_Uncompressed::          INCBIN "gfx/cards/rogue_doll.2bpp"
+WattkidGfx_Uncompressed::            INCBIN "gfx/cards/wattkid.2bpp"
+GrifforeGfx_Uncompressed::           INCBIN "gfx/cards/griffore.2bpp"
+TorikeGfx_Uncompressed::             INCBIN "gfx/cards/torike.2bpp"
+SanganGfx_Uncompressed::             INCBIN "gfx/cards/sangan.2bpp"
+	ds $3fe, $00
+
+SECTION "Uncompressed Gfx 5", ROMX
+	dw BANK(@)
+BigInsectGfx_Uncompressed::          INCBIN "gfx/cards/big_insect.2bpp"
+BasicInsectGfx_Uncompressed::        INCBIN "gfx/cards/basic_insect.2bpp"
+ArmoredLizardGfx_Uncompressed::      INCBIN "gfx/cards/armored_lizard.2bpp"
+HerculesBeetleGfx_Uncompressed::     INCBIN "gfx/cards/hercules_beetle.2bpp"
+KillerNeedleGfx_Uncompressed::       INCBIN "gfx/cards/killer_needle.2bpp"
+GokiboreGfx_Uncompressed::           INCBIN "gfx/cards/gokibore.2bpp"
+GiantFleaGfx_Uncompressed::          INCBIN "gfx/cards/giant_flea.2bpp"
+LarvaeMothGfx_Uncompressed::         INCBIN "gfx/cards/larvae_moth.2bpp"
+GreatMothGfx_Uncompressed::          INCBIN "gfx/cards/great_moth.2bpp"
+KuribohGfx_Uncompressed::            INCBIN "gfx/cards/kuriboh.2bpp"
+MammothGraveyardGfx_Uncompressed::   INCBIN "gfx/cards/mammoth_graveyard.2bpp"
+GreatWhiteGfx_Uncompressed::         INCBIN "gfx/cards/great_white.2bpp"
+	ds $3fe, $00
+
+SECTION "Uncompressed Gfx 6", ROMX
+	dw BANK(@)
+WolfGfx_Uncompressed::               INCBIN "gfx/cards/wolf.2bpp"
+HarpieLadyGfx_Uncompressed::         INCBIN "gfx/cards/harpie_lady.2bpp"
+HarpieLadySisterGfx_Uncompressed::   INCBIN "gfx/cards/harpie_lady_sister.2bpp"
+TigerAxeGfx_Uncompressed::           INCBIN "gfx/cards/tiger_axe.2bpp"
+SilverFangGfx_Uncompressed::         INCBIN "gfx/cards/silver_fang.2bpp"
+KojikocyGfx_Uncompressed::           INCBIN "gfx/cards/kojikocy.2bpp"
+PerfectGreatMothGfx_Uncompressed::   INCBIN "gfx/cards/perfect_great_moth.2bpp"
+GaroozisGfx_Uncompressed::           INCBIN "gfx/cards/garoozis.2bpp"
+ThousandDragonGfx_Uncompressed::     INCBIN "gfx/cards/thousand_dragon.2bpp"
+FiendKrakenGfx_Uncompressed::        INCBIN "gfx/cards/fiend_kraken.2bpp"
+JellyfishGfx_Uncompressed::          INCBIN "gfx/cards/jellyfish.2bpp"
+CocoonEvolutionGfx_Uncompressed::    INCBIN "gfx/cards/cocoon_evolution.2bpp"
+	ds $3fe, $00
+
+SECTION "Uncompressed Gfx 7", ROMX
+	dw BANK(@)
+KairyuShinGfx_Uncompressed::         INCBIN "gfx/cards/kairyu_shin.2bpp"
+SoldierOfStoneGfx_Uncompressed::     INCBIN "gfx/cards/soldier_of_stone.2bpp"
+ManEatingPlantGfx_Uncompressed::     INCBIN "gfx/cards/man_eating_plant.2bpp"
+KrokodilusGfx_Uncompressed::         INCBIN "gfx/cards/krokodilus.2bpp"
+GrapplerGfx_Uncompressed::           INCBIN "gfx/cards/grappler.2bpp"
+AxeRaiderGfx_Uncompressed::          INCBIN "gfx/cards/axe_raider.2bpp"
+MegazowlerGfx_Uncompressed::         INCBIN "gfx/cards/megazowler.2bpp"
+UrabyGfx_Uncompressed::              INCBIN "gfx/cards/uraby.2bpp"
+CrawlingDragon2Gfx_Uncompressed::    INCBIN "gfx/cards/crawling_dragon_2.2bpp"
+RedEyesBDragonGfx_Uncompressed::     INCBIN "gfx/cards/red_eyes_b_dragon.2bpp"
+CastleOfDarkGfx_Uncompressed::       INCBIN "gfx/cards/castle_of_dark.2bpp"
+ReaperOfTheCardGfx_Uncompressed::    INCBIN "gfx/cards/reaper_of_the_card.2bpp"
+	ds $3fe, $00
+
+SECTION "Uncompressed Gfx 8", ROMX
+	dw BANK(@)
+KingOfYamimakaiGfx_Uncompressed::    INCBIN "gfx/cards/king_of_yamimakai.2bpp"
+BaroxGfx_Uncompressed::              INCBIN "gfx/cards/barox.2bpp"
+DarkChimeraGfx_Uncompressed::        INCBIN "gfx/cards/dark_chimera.2bpp"
+MetalGuardianGfx_Uncompressed::      INCBIN "gfx/cards/metal_guardian.2bpp"
+CatapultTurtleGfx_Uncompressed::     INCBIN "gfx/cards/catapult_turtle.2bpp"
+GyakutennoMegamiGfx_Uncompressed::   INCBIN "gfx/cards/gyakutenno_megami.2bpp"
+MysticHorsemanGfx_Uncompressed::     INCBIN "gfx/cards/mystic_horseman.2bpp"
+RabidHorsemanGfx_Uncompressed::      INCBIN "gfx/cards/rabid_horseman.2bpp"
+ZankiGfx_Uncompressed::              INCBIN "gfx/cards/zanki.2bpp"
+CrawlingDragonGfx_Uncompressed::     INCBIN "gfx/cards/crawling_dragon.2bpp"
+CrassClownGfx_Uncompressed::         INCBIN "gfx/cards/crass_clown.2bpp"
+ArmoredZombieGfx_Uncompressed::      INCBIN "gfx/cards/armored_zombie.2bpp"
+	ds $3fe, $00
+
+SECTION "Uncompressed Gfx 9", ROMX
+	dw BANK(@)
+DragonZombieGfx_Uncompressed::       INCBIN "gfx/cards/dragon_zombie.2bpp"
+ClownZombieGfx_Uncompressed::        INCBIN "gfx/cards/clown_zombie.2bpp"
+PumpkingTheKingGfx_Uncompressed::    INCBIN "gfx/cards/pumpking_the_king.2bpp"
+BattleWarriorGfx_Uncompressed::      INCBIN "gfx/cards/battle_warrior.2bpp"
+WingsOfFlameGfx_Uncompressed::       INCBIN "gfx/cards/wings_of_flame.2bpp"
+MaskOfDarknessGfx_Uncompressed::     INCBIN "gfx/cards/mask_of_darkness.2bpp"
+JobChangeMirrorGfx_Uncompressed::    INCBIN "gfx/cards/job_change_mirror.2bpp"
+CurtainOfDarkGfx_Uncompressed::      INCBIN "gfx/cards/curtain_of_dark.2bpp"
+TomozaurusGfx_Uncompressed::         INCBIN "gfx/cards/tomozaurus.2bpp"
+SpiritOfTheWindGfx_Uncompressed::    INCBIN "gfx/cards/spirit_of_the_wind.2bpp"
+KageningenGfx_Uncompressed::         INCBIN "gfx/cards/kageningen.2bpp"
+GraveyardAndHandGfx_Uncompressed::   INCBIN "gfx/cards/graveyard_and_hand.2bpp"
+	ds $3fe, $00
+
+SECTION "Uncompressed Gfx 10", ROMX
+	dw BANK(@)
+GoddessThirdEyeGfx_Uncompressed::    INCBIN "gfx/cards/goddess_third_eye.2bpp"
+HeroOfTheEastGfx_Uncompressed::      INCBIN "gfx/cards/hero_of_the_east.2bpp"
+DomaTheAngelGfx_Uncompressed::       INCBIN "gfx/cards/doma_the_angel.2bpp"
+ThatWhichFeedsGfx_Uncompressed::     INCBIN "gfx/cards/that_which_feeds.2bpp"
+DarkGrayGfx_Uncompressed::           INCBIN "gfx/cards/dark_gray.2bpp"
+WhiteMagicalHatGfx_Uncompressed::    INCBIN "gfx/cards/white_magical_hat.2bpp"
+KamionwizardGfx_Uncompressed::       INCBIN "gfx/cards/kamionwizard.2bpp"
+NightmareScorpionGfx_Uncompressed::  INCBIN "gfx/cards/nightmare_scorpion.2bpp"
+SpiritOfTheBookGfx_Uncompressed::    INCBIN "gfx/cards/spirit_of_the_book.2bpp"
+SupporterShadowsGfx_Uncompressed::   INCBIN "gfx/cards/supporter_shadows.2bpp"
+TrialOfNightmareGfx_Uncompressed::   INCBIN "gfx/cards/trial_of_nightmare.2bpp"
+DreamClownGfx_Uncompressed::         INCBIN "gfx/cards/dream_clown.2bpp"
+	ds $3fe, $00
+
+SECTION "Uncompressed Gfx 11", ROMX
+	dw BANK(@)
+SleepingLionGfx_Uncompressed::       INCBIN "gfx/cards/sleeping_lion.2bpp"
+YamatanoScrollGfx_Uncompressed::     INCBIN "gfx/cards/yamatano_scroll.2bpp"
+DarkPlantGfx_Uncompressed::          INCBIN "gfx/cards/dark_plant.2bpp"
+AncientToolGfx_Uncompressed::        INCBIN "gfx/cards/ancient_tool.2bpp"
+FaithBirdGfx_Uncompressed::          INCBIN "gfx/cards/faith_bird.2bpp"
+OrionTheBattleGfx_Uncompressed::     INCBIN "gfx/cards/orion_the_battle.2bpp"
+AnsatsuGfx_Uncompressed::            INCBIN "gfx/cards/ansatsu.2bpp"
+LamoonGfx_Uncompressed::             INCBIN "gfx/cards/lamoon.2bpp"
+NemurikoGfx_Uncompressed::           INCBIN "gfx/cards/nemuriko.2bpp"
+WeatherControlGfx_Uncompressed::     INCBIN "gfx/cards/weather_control.2bpp"
+OctoberserGfx_Uncompressed::         INCBIN "gfx/cards/octoberser.2bpp"
+The13thGraveGfx_Uncompressed::       INCBIN "gfx/cards/the_13th_grave.2bpp"
+	ds $3fe, $00
+
+SECTION "Uncompressed Gfx 12", ROMX
+	dw BANK(@)
+CharubinTheFireGfx_Uncompressed::    INCBIN "gfx/cards/charubin_the_fire.2bpp"
+MysticalCaptureGfx_Uncompressed::    INCBIN "gfx/cards/mystical_capture.2bpp"
+FiendsHandGfx_Uncompressed::         INCBIN "gfx/cards/fiends_hand.2bpp"
+WittyPhantomGfx_Uncompressed::       INCBIN "gfx/cards/witty_phantom.2bpp"
+MysteryHandGfx_Uncompressed::        INCBIN "gfx/cards/mystery_hand.2bpp"
+DragonStatueGfx_Uncompressed::       INCBIN "gfx/cards/dragon_statue.2bpp"
+BEyedSilZombieGfx_Uncompressed::     INCBIN "gfx/cards/b_eyed_sil_zombie.2bpp"
+ToadMasterGfx_Uncompressed::         INCBIN "gfx/cards/toad_master.2bpp"
+SpikedSnailGfx_Uncompressed::        INCBIN "gfx/cards/spiked_snail.2bpp"
+FlameManipulatorGfx_Uncompressed::   INCBIN "gfx/cards/flame_manipulator.2bpp"
+NecrolancerGfx_Uncompressed::        INCBIN "gfx/cards/necrolancer.2bpp"
+DjinnTheWatcherGfx_Uncompressed::    INCBIN "gfx/cards/djinn_the_watcher.2bpp"
+	ds $3fe, $00
+
+SECTION "Uncompressed Gfx 13", ROMX
+	dw BANK(@)
+BewitchingPhantomGfx_Uncompressed::  INCBIN "gfx/cards/bewitching_phantom.2bpp"
+TempleOfSkullsGfx_Uncompressed::     INCBIN "gfx/cards/temple_of_skulls.2bpp"
+MonsterEggGfx_Uncompressed::         INCBIN "gfx/cards/monster_egg.2bpp"
+ShadowWhoControlGfx_Uncompressed::   INCBIN "gfx/cards/shadow_who_control.2bpp"
+LordOfTheLampGfx_Uncompressed::      INCBIN "gfx/cards/lord_of_the_lamp.2bpp"
+AkihironGfx_Uncompressed::           INCBIN "gfx/cards/akihiron.2bpp"
+RhaimundosRedGfx_Uncompressed::      INCBIN "gfx/cards/rhaimundos_red.2bpp"
+MeltingRedShadowGfx_Uncompressed::   INCBIN "gfx/cards/melting_red_shadow.2bpp"
+DokuroizoTheGrimGfx_Uncompressed::   INCBIN "gfx/cards/dokuroizo_the_grim.2bpp"
+FireReaperGfx_Uncompressed::         INCBIN "gfx/cards/fire_reaper.2bpp"
+LarvasGfx_Uncompressed::             INCBIN "gfx/cards/larvas.2bpp"
+HardArmorGfx_Uncompressed::          INCBIN "gfx/cards/hard_armor.2bpp"
+	ds $3fe, $00
+
+SECTION "Uncompressed Gfx 14", ROMX
+	dw BANK(@)
+FiregrassGfx_Uncompressed::          INCBIN "gfx/cards/firegrass.2bpp"
+ManEaterGfx_Uncompressed::           INCBIN "gfx/cards/man_eater.2bpp"
+DigBeakGfx_Uncompressed::            INCBIN "gfx/cards/dig_beak.2bpp"
+MWarrior1Gfx_Uncompressed::          INCBIN "gfx/cards/m_warrior_1.2bpp"
+MWarrior2Gfx_Uncompressed::          INCBIN "gfx/cards/m_warrior_2.2bpp"
+TaintedWisdomGfx_Uncompressed::      INCBIN "gfx/cards/tainted_wisdom.2bpp"
+LisarkGfx_Uncompressed::             INCBIN "gfx/cards/lisark.2bpp"
+LordOfZemiaGfx_Uncompressed::        INCBIN "gfx/cards/lord_of_zemia.2bpp"
+TheJudgementHandGfx_Uncompressed::   INCBIN "gfx/cards/the_judgement_hand.2bpp"
+MysteriousPuppetGfx_Uncompressed::   INCBIN "gfx/cards/mysterious_puppet.2bpp"
+AncientJarGfx_Uncompressed::         INCBIN "gfx/cards/ancient_jar.2bpp"
+DarkfireDragonGfx_Uncompressed::     INCBIN "gfx/cards/darkfire_dragon.2bpp"
+	ds $3fe, $00
+
+SECTION "Uncompressed Gfx 15", ROMX
+	dw BANK(@)
+DarkKingAbyssGfx_Uncompressed::      INCBIN "gfx/cards/dark_king_abyss.2bpp"
+SpiritOfTheHarpGfx_Uncompressed::    INCBIN "gfx/cards/spirit_of_the_harp.2bpp"
+BigEyeGfx_Uncompressed::             INCBIN "gfx/cards/big_eye.2bpp"
+ArmaillGfx_Uncompressed::            INCBIN "gfx/cards/armaill.2bpp"
+DarkPrisonerGfx_Uncompressed::       INCBIN "gfx/cards/dark_prisoner.2bpp"
+HurricailGfx_Uncompressed::          INCBIN "gfx/cards/hurricail.2bpp"
+AncientBrainGfx_Uncompressed::       INCBIN "gfx/cards/ancient_brain.2bpp"
+FireEyeGfx_Uncompressed::            INCBIN "gfx/cards/fire_eye.2bpp"
+MonsturtleGfx_Uncompressed::         INCBIN "gfx/cards/monsturtle.2bpp"
+ClawReacherGfx_Uncompressed::        INCBIN "gfx/cards/claw_reacher.2bpp"
+PhantomDewanGfx_Uncompressed::       INCBIN "gfx/cards/phantom_dewan.2bpp"
+ArlownayGfx_Uncompressed::           INCBIN "gfx/cards/arlownay.2bpp"
+	ds $3fe, $00
+
+SECTION "Uncompressed Gfx 16", ROMX
+	dw BANK(@)
+DarkShadeGfx_Uncompressed::          INCBIN "gfx/cards/dark_shade.2bpp"
+MaskedClownGfx_Uncompressed::        INCBIN "gfx/cards/masked_clown.2bpp"
+LuckyTrinketGfx_Uncompressed::       INCBIN "gfx/cards/lucky_trinket.2bpp"
+GeninGfx_Uncompressed::              INCBIN "gfx/cards/genin.2bpp"
+EyearmorGfx_Uncompressed::           INCBIN "gfx/cards/eyearmor.2bpp"
+FiendReflection2Gfx_Uncompressed::   INCBIN "gfx/cards/fiend_reflection2.2bpp"
+GateDeegGfx_Uncompressed::           INCBIN "gfx/cards/gate_deeg.2bpp"
+SyncharGfx_Uncompressed::            INCBIN "gfx/cards/synchar.2bpp"
+FusionistGfx_Uncompressed::          INCBIN "gfx/cards/fusionist.2bpp"
+AkakieisuGfx_Uncompressed::          INCBIN "gfx/cards/akakieisu.2bpp"
+LalaLiOonGfx_Uncompressed::          INCBIN "gfx/cards/lala_li_oon.2bpp"
+KeyMaceGfx_Uncompressed::            INCBIN "gfx/cards/key_mace.2bpp"
+	ds $3fe, $00
+
+SECTION "Uncompressed Gfx 17", ROMX
+	dw BANK(@)
+TurtleTigerGfx_Uncompressed::        INCBIN "gfx/cards/turtle_tiger.2bpp"
+TerraTheTerribleGfx_Uncompressed::   INCBIN "gfx/cards/terra_the_terrible.2bpp"
+DoronGfx_Uncompressed::              INCBIN "gfx/cards/doron.2bpp"
+ArmaKnightGfx_Uncompressed::         INCBIN "gfx/cards/arma_knight.2bpp"
+MechMoleZombieGfx_Uncompressed::     INCBIN "gfx/cards/mech_mole_zombie.2bpp"
+HappyLoverGfx_Uncompressed::         INCBIN "gfx/cards/happy_lover.2bpp"
+PenguinKnightGfx_Uncompressed::      INCBIN "gfx/cards/penguin_knight.2bpp"
+PetitDragonGfx_Uncompressed::        INCBIN "gfx/cards/petit_dragon.2bpp"
+FrenziedPandaGfx_Uncompressed::      INCBIN "gfx/cards/frenzied_panda.2bpp"
+ArchfiendMarmotGfx_Uncompressed::    INCBIN "gfx/cards/archfiend_marmot.2bpp"
+PhantomGhostGfx_Uncompressed::       INCBIN "gfx/cards/phantom_ghost.2bpp"
+MabarrelGfx_Uncompressed::           INCBIN "gfx/cards/mabarrel.2bpp"
+	ds $3fe, $00
+
+SECTION "Uncompressed Gfx 18", ROMX
+	dw BANK(@)
+DoroverGfx_Uncompressed::            INCBIN "gfx/cards/dorover.2bpp"
+TwinLongRods1Gfx_Uncompressed::      INCBIN "gfx/cards/twin_long_rods_1.2bpp"
+DrollBirdGfx_Uncompressed::          INCBIN "gfx/cards/droll_bird.2bpp"
+PetitAngelGfx_Uncompressed::         INCBIN "gfx/cards/petit_angel.2bpp"
+WingedCleaverGfx_Uncompressed::      INCBIN "gfx/cards/winged_cleaver.2bpp"
+HinotamaSoulGfx_Uncompressed::       INCBIN "gfx/cards/hinotama_soul.2bpp"
+ThunderKidGfx_Uncompressed::         INCBIN "gfx/cards/thunder_kid.2bpp"
+MeotokoGfx_Uncompressed::            INCBIN "gfx/cards/meotoko.2bpp"
+AquaMadoorGfx_Uncompressed::         INCBIN "gfx/cards/aqua_madoor.2bpp"
+KagemushaBlueGfx_Uncompressed::      INCBIN "gfx/cards/kagemusha_blue.2bpp"
+FlameGhostGfx_Uncompressed::         INCBIN "gfx/cards/flame_ghost.2bpp"
+DryadGfx_Uncompressed::              INCBIN "gfx/cards/dryad.2bpp"
+	ds $3fe, $00
+
+SECTION "Uncompressed Gfx 19", ROMX
+	dw BANK(@)
+BSkullDragonGfx_Uncompressed::       INCBIN "gfx/cards/b_skull_dragon.2bpp"
+TwoMouthDarkrulerGfx_Uncompressed::  INCBIN "gfx/cards/two_mouth_darkruler.2bpp"
+SolitudeGfx_Uncompressed::           INCBIN "gfx/cards/solitude.2bpp"
+MaskedSorcererGfx_Uncompressed::     INCBIN "gfx/cards/masked_sorcerer.2bpp"
+KumootokoGfx_Uncompressed::          INCBIN "gfx/cards/kumootoko.2bpp"
+MidnightFiendGfx_Uncompressed::      INCBIN "gfx/cards/midnight_fiend.2bpp"
+RoarOceanSnakeGfx_Uncompressed::     INCBIN "gfx/cards/roar_ocean_snake.2bpp"
+TrapMasterGfx_Uncompressed::         INCBIN "gfx/cards/trap_master.2bpp"
+FiendSwordGfx_Uncompressed::         INCBIN "gfx/cards/fiend_sword.2bpp"
+SkullStalkerGfx_Uncompressed::       INCBIN "gfx/cards/skull_stalker.2bpp"
+HitodenchakGfx_Uncompressed::        INCBIN "gfx/cards/hitodenchak.2bpp"
+WoodRemainsGfx_Uncompressed::        INCBIN "gfx/cards/wood_remains.2bpp"
+	ds $3fe, $00
+
+SECTION "Uncompressed Gfx 20", ROMX
+	dw BANK(@)
+HourglassOfLifeGfx_Uncompressed::    INCBIN "gfx/cards/hourglass_of_life.2bpp"
+RareFishGfx_Uncompressed::           INCBIN "gfx/cards/rare_fish.2bpp"
+WoodClownGfx_Uncompressed::          INCBIN "gfx/cards/wood_clown.2bpp"
+MadjinnGunnGfx_Uncompressed::        INCBIN "gfx/cards/madjinn_gunn.2bpp"
+DarkTitanTerrorGfx_Uncompressed::    INCBIN "gfx/cards/dark_titan_terror.2bpp"
+BeautifulHeadhuntGfx_Uncompressed::  INCBIN "gfx/cards/beautiful_headhunt.2bpp"
+WodanTheResidentGfx_Uncompressed::   INCBIN "gfx/cards/wodan_the_resident.2bpp"
+GuardianLabyrinthGfx_Uncompressed::  INCBIN "gfx/cards/guardian_labyrinth.2bpp"
+HaniwaGfx_Uncompressed::             INCBIN "gfx/cards/haniwa.2bpp"
+YashinokiGfx_Uncompressed::          INCBIN "gfx/cards/yashinoki.2bpp"
+VishwarRandiGfx_Uncompressed::       INCBIN "gfx/cards/vishwar_randi.2bpp"
+TheDrdekGfx_Uncompressed::           INCBIN "gfx/cards/the_drdek.2bpp"
+	ds $3fe, $00
+
+SECTION "Uncompressed Gfx 21", ROMX
+	dw BANK(@)
+DAssailantGfx_Uncompressed::         INCBIN "gfx/cards/d_assailant.2bpp"
+CandleOfFateGfx_Uncompressed::       INCBIN "gfx/cards/candle_of_fate.2bpp"
+WaterElementGfx_Uncompressed::       INCBIN "gfx/cards/water_element.2bpp"
+DissolverockGfx_Uncompressed::       INCBIN "gfx/cards/dissolverock.2bpp"
+MedaBatGfx_Uncompressed::            INCBIN "gfx/cards/meda_bat.2bpp"
+OneWhoHuntsSoulGfx_Uncompressed::    INCBIN "gfx/cards/one_who_hunts_soul.2bpp"
+RootWaterGfx_Uncompressed::          INCBIN "gfx/cards/root_water.2bpp"
+MasterAndExpertGfx_Uncompressed::    INCBIN "gfx/cards/master_and_expert.2bpp"
+WaterOmoticsGfx_Uncompressed::       INCBIN "gfx/cards/water_omotics.2bpp"
+HyoGfx_Uncompressed::                INCBIN "gfx/cards/hyo.2bpp"
+EnchantingMermaidGfx_Uncompressed::  INCBIN "gfx/cards/enchanting_mermaid.2bpp"
+Nekogal1Gfx_Uncompressed::           INCBIN "gfx/cards/nekogal_1.2bpp"
+	ds $3fe, $00
+
+SECTION "Uncompressed Gfx 22", ROMX
+	dw BANK(@)
+AngelwitchGfx_Uncompressed::         INCBIN "gfx/cards/angelwitch.2bpp"
+EmbryonicBeastGfx_Uncompressed::     INCBIN "gfx/cards/embryonic_beast.2bpp"
+PreventRatGfx_Uncompressed::         INCBIN "gfx/cards/prevent_rat.2bpp"
+DdWarriorGfx_Uncompressed::          INCBIN "gfx/cards/dd_warrior.2bpp"
+StoneArmadillerGfx_Uncompressed::    INCBIN "gfx/cards/stone_armadiller.2bpp"
+BeastkingOfSwampGfx_Uncompressed::   INCBIN "gfx/cards/beastking_of_swamp.2bpp"
+AncientSorcererGfx_Uncompressed::    INCBIN "gfx/cards/ancient_sorcerer.2bpp"
+LunarQueenElzaimGfx_Uncompressed::   INCBIN "gfx/cards/lunar_queen_elzaim.2bpp"
+ArchfiendMirrorGfx_Uncompressed::    INCBIN "gfx/cards/archfiend_mirror.2bpp"
+SwordsmanOfAileGfx_Uncompressed::    INCBIN "gfx/cards/swordsman_of_aile.2bpp"
+RockOgreGrotto2Gfx_Uncompressed::    INCBIN "gfx/cards/rock_ogre_grotto2.2bpp"
+WingEggElfGfx_Uncompressed::         INCBIN "gfx/cards/wing_egg_elf.2bpp"
+	ds $3fe, $00
+
+SECTION "Uncompressed Gfx 23", ROMX
+	dw BANK(@)
+FuriousSeaKingGfx_Uncompressed::     INCBIN "gfx/cards/furious_sea_king.2bpp"
+PrincessTsurugiGfx_Uncompressed::    INCBIN "gfx/cards/princess_tsurugi.2bpp"
+UnknownWarriorGfx_Uncompressed::     INCBIN "gfx/cards/unknown_warrior.2bpp"
+SectarianSecretGfx_Uncompressed::    INCBIN "gfx/cards/sectarian_secret.2bpp"
+VersagoDestroyerGfx_Uncompressed::   INCBIN "gfx/cards/versago_destroyer.2bpp"
+WethaGfx_Uncompressed::              INCBIN "gfx/cards/wetha.2bpp"
+MegirusLightGfx_Uncompressed::       INCBIN "gfx/cards/megirus_light.2bpp"
+MavelusGfx_Uncompressed::            INCBIN "gfx/cards/mavelus.2bpp"
+AncientTreeGfx_Uncompressed::        INCBIN "gfx/cards/ancient_tree.2bpp"
+GreenPhantomKingGfx_Uncompressed::   INCBIN "gfx/cards/green_phantom_king.2bpp"
+GroundAttackerGfx_Uncompressed::     INCBIN "gfx/cards/ground_attacker.2bpp"
+RayAndTemperatureGfx_Uncompressed::  INCBIN "gfx/cards/ray_and_temperature.2bpp"
+	ds $3fe, $00
+
+SECTION "Uncompressed Gfx 24", ROMX
+	dw BANK(@)
+GorgonEggGfx_Uncompressed::          INCBIN "gfx/cards/gorgon_egg.2bpp"
+PetitMothGfx_Uncompressed::          INCBIN "gfx/cards/petit_moth.2bpp"
+KingFogGfx_Uncompressed::            INCBIN "gfx/cards/king_fog.2bpp"
+ProtectorThroneGfx_Uncompressed::    INCBIN "gfx/cards/protector_throne.2bpp"
+MysticClownGfx_Uncompressed::        INCBIN "gfx/cards/mystic_clown.2bpp"
+MysticalSheep2Gfx_Uncompressed::     INCBIN "gfx/cards/mystical_sheep_2.2bpp"
+HolograhGfx_Uncompressed::           INCBIN "gfx/cards/holograh.2bpp"
+TaoTheChanterGfx_Uncompressed::      INCBIN "gfx/cards/tao_the_chanter.2bpp"
+SerpentMarauderGfx_Uncompressed::    INCBIN "gfx/cards/serpent_marauder.2bpp"
+GatekeeperGfx_Uncompressed::         INCBIN "gfx/cards/gatekeeper.2bpp"
+OgreOfTheBlackGfx_Uncompressed::     INCBIN "gfx/cards/ogre_of_the_black.2bpp"
+DarkArtistGfx_Uncompressed::         INCBIN "gfx/cards/dark_artist.2bpp"
+	ds $3fe, $00
+
+SECTION "Uncompressed Gfx 25", ROMX
+	dw BANK(@)
+ChangeSlimeGfx_Uncompressed::        INCBIN "gfx/cards/change_slime.2bpp"
+MoonEnvoyGfx_Uncompressed::          INCBIN "gfx/cards/moon_envoy.2bpp"
+FireyarouGfx_Uncompressed::          INCBIN "gfx/cards/fireyarou.2bpp"
+PsychicKappaGfx_Uncompressed::       INCBIN "gfx/cards/psychic_kappa.2bpp"
+MasakiTheLegendGfx_Uncompressed::    INCBIN "gfx/cards/masaki_the_legend.2bpp"
+DragonessWickedGfx_Uncompressed::    INCBIN "gfx/cards/dragoness_wicked.2bpp"
+BioPlantGfx_Uncompressed::           INCBIN "gfx/cards/bio_plant.2bpp"
+OneEyedShieldGfx_Uncompressed::      INCBIN "gfx/cards/one_eyed_shield.2bpp"
+CyberSoldierDarkGfx_Uncompressed::   INCBIN "gfx/cards/cyber_soldier_dark.2bpp"
+DragonErsatzHeadGfx_Uncompressed::   INCBIN "gfx/cards/dragon_ersatz_head.2bpp"
+SonicMaidGfx_Uncompressed::          INCBIN "gfx/cards/sonic_maid.2bpp"
+KuramaGfx_Uncompressed::             INCBIN "gfx/cards/kurama.2bpp"
+	ds $3fe, $00
+
+SECTION "Uncompressed Gfx 26", ROMX
+	dw BANK(@)
+LegendarySwordGfx_Uncompressed::     INCBIN "gfx/cards/legendary_sword.2bpp"
+SwordOfDarkGfx_Uncompressed::        INCBIN "gfx/cards/sword_of_dark.2bpp"
+DarkEnergyGfx_Uncompressed::         INCBIN "gfx/cards/dark_energy.2bpp"
+AxeOfDespairGfx_Uncompressed::       INCBIN "gfx/cards/axe_of_despair.2bpp"
+LazerCannonArmorGfx_Uncompressed::   INCBIN "gfx/cards/lazer_cannon_armor.2bpp"
+InsectArmorLaserGfx_Uncompressed::   INCBIN "gfx/cards/insect_armor_laser.2bpp"
+ElfsLightGfx_Uncompressed::          INCBIN "gfx/cards/elfs_light.2bpp"
+BeastFangsGfx_Uncompressed::         INCBIN "gfx/cards/beast_fangs.2bpp"
+SteelShellGfx_Uncompressed::         INCBIN "gfx/cards/steel_shell.2bpp"
+VileGermsGfx_Uncompressed::          INCBIN "gfx/cards/vile_germs.2bpp"
+BlackPendantGfx_Uncompressed::       INCBIN "gfx/cards/black_pendant.2bpp"
+SilverBowAndArrowGfx_Uncompressed::  INCBIN "gfx/cards/silver_bow_and_arrow.2bpp"
+	ds $3fe, $00
+
+SECTION "Uncompressed Gfx 27", ROMX
+	dw BANK(@)
+HornOfLightGfx_Uncompressed::        INCBIN "gfx/cards/horn_of_light.2bpp"
+HornOfUnicornGfx_Uncompressed::      INCBIN "gfx/cards/horn_of_unicorn.2bpp"
+DragonTreasureGfx_Uncompressed::     INCBIN "gfx/cards/dragon_treasure.2bpp"
+ElectroWhipGfx_Uncompressed::        INCBIN "gfx/cards/electro_whip.2bpp"
+CyberShieldGfx_Uncompressed::        INCBIN "gfx/cards/cyber_shield.2bpp"
+ElegantEgotistGfx_Uncompressed::     INCBIN "gfx/cards/elegant_egotist.2bpp"
+MysticalMoonGfx_Uncompressed::       INCBIN "gfx/cards/mystical_moon.2bpp"
+StopDefenseGfx_Uncompressed::        INCBIN "gfx/cards/stop_defense.2bpp"
+MalevolentNuzzlerGfx_Uncompressed::  INCBIN "gfx/cards/malevolent_nuzzler.2bpp"
+VioletCrystalGfx_Uncompressed::      INCBIN "gfx/cards/violet_crystal.2bpp"
+BookOfSecretArtGfx_Uncompressed::    INCBIN "gfx/cards/book_of_secret_art.2bpp"
+InvigorationGfx_Uncompressed::       INCBIN "gfx/cards/invigoration.2bpp"
+	ds $3fe, $00
+
+SECTION "Uncompressed Gfx 28", ROMX
+	dw BANK(@)
+MachineConversionGfx_Uncompressed::  INCBIN "gfx/cards/machine_conversion.2bpp"
+RaiseBodyHeatGfx_Uncompressed::      INCBIN "gfx/cards/raise_body_heat.2bpp"
+FollowWindGfx_Uncompressed::         INCBIN "gfx/cards/follow_wind.2bpp"
+PowerOfKaishinGfx_Uncompressed::     INCBIN "gfx/cards/power_of_kaishin.2bpp"
+DragonCaptureJarGfx_Uncompressed::   INCBIN "gfx/cards/dragon_capture_jar.2bpp"
+ForestGfx_Uncompressed::             INCBIN "gfx/cards/forest.2bpp"
+WastelandGfx_Uncompressed::          INCBIN "gfx/cards/wasteland.2bpp"
+MountainGfx_Uncompressed::           INCBIN "gfx/cards/mountain.2bpp"
+SogenGfx_Uncompressed::              INCBIN "gfx/cards/sogen.2bpp"
+UmiGfx_Uncompressed::                INCBIN "gfx/cards/umi.2bpp"
+YamiGfx_Uncompressed::               INCBIN "gfx/cards/yami.2bpp"
+DarkHoleGfx_Uncompressed::           INCBIN "gfx/cards/dark_hole.2bpp"
+	ds $3fe, $00
+
+SECTION "Uncompressed Gfx 29", ROMX
+	dw BANK(@)
+RaigekiGfx_Uncompressed::            INCBIN "gfx/cards/raigeki.2bpp"
+MooyanCurryGfx_Uncompressed::        INCBIN "gfx/cards/mooyan_curry.2bpp"
+RedMedicineGfx_Uncompressed::        INCBIN "gfx/cards/red_medicine.2bpp"
+GoblinsRemedyGfx_Uncompressed::      INCBIN "gfx/cards/goblins_remedy.2bpp"
+SoulOfThePureGfx_Uncompressed::      INCBIN "gfx/cards/soul_of_the_pure.2bpp"
+DianKetoTheCureGfx_Uncompressed::    INCBIN "gfx/cards/dian_keto_the_cure.2bpp"
+SparksGfx_Uncompressed::             INCBIN "gfx/cards/sparks.2bpp"
+HinotamaGfx_Uncompressed::           INCBIN "gfx/cards/hinotama.2bpp"
+FinalFlameGfx_Uncompressed::         INCBIN "gfx/cards/final_flame_edc.2bpp"
+OokaziGfx_Uncompressed::             INCBIN "gfx/cards/ookazi.2bpp"
+TremendousFireGfx_Uncompressed::     INCBIN "gfx/cards/tremendous_fire.2bpp"
+SwordsRevealingGfx_Uncompressed::    INCBIN "gfx/cards/swords_revealing.2bpp"
+	ds $3fe, $00
+
+SECTION "Uncompressed Gfx 30", ROMX
+	dw BANK(@)
+SpellbindCircleGfx_Uncompressed::    INCBIN "gfx/cards/spellbind_circle_edc.2bpp"
+DarkPierceLightGfx_Uncompressed::    INCBIN "gfx/cards/dark_pierce_light.2bpp"
+YaranzoGfx_Uncompressed::            INCBIN "gfx/cards/yaranzo.2bpp"
+KananTheSwordGfx_Uncompressed::      INCBIN "gfx/cards/kanan_the_sword.2bpp"
+TakriminosGfx_Uncompressed::         INCBIN "gfx/cards/takriminos.2bpp"
+StuffedAnimalGfx_Uncompressed::      INCBIN "gfx/cards/stuffed_animal.2bpp"
+MegasonicEyeGfx_Uncompressed::       INCBIN "gfx/cards/megasonic_eye.2bpp"
+SuperWarLionGfx_Uncompressed::       INCBIN "gfx/cards/super_war_lion.2bpp"
+YamadronGfx_Uncompressed::           INCBIN "gfx/cards/yamadron.2bpp"
+SeiyaryuGfx_Uncompressed::           INCBIN "gfx/cards/seiyaryu.2bpp"
+ThreeLeggedZombiesGfx_Uncompressed:: INCBIN "gfx/cards/three_legged_zombies.2bpp"
+ZeraTheMantGfx_Uncompressed::        INCBIN "gfx/cards/zera_the_mant.2bpp"
+	ds $3fe, $00
+
+SECTION "Uncompressed Gfx 31", ROMX
+	dw BANK(@)
+FlyingPenguinGfx_Uncompressed::      INCBIN "gfx/cards/flying_penguin.2bpp"
+MillenniumShieldGfx_Uncompressed::   INCBIN "gfx/cards/millennium_shield.2bpp"
+FairysGiftGfx_Uncompressed::         INCBIN "gfx/cards/fairys_gift.2bpp"
+BLusterSoldierGfx_Uncompressed::     INCBIN "gfx/cards/b_luster_soldier.2bpp"
+FiendsMirrorGfx_Uncompressed::       INCBIN "gfx/cards/fiends_mirror.2bpp"
+InvalidCardGfx_Uncompressed::        INCBIN "gfx/cards/invalid_card.2bpp"
+	ds $21fe, $00
+
+SECTION "Bank 7f", ROMX
+INCLUDE "engine/bank7f.asm"
+
+ENDC

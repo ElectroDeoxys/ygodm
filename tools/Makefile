@@ -4,6 +4,7 @@ CC := gcc
 CFLAGS := -O3 -std=c17 -Wall -Wextra -pedantic
 
 tools := \
+	fix_rom_size \
 	gfx \
 	scan_includes
 

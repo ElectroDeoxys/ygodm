@@ -20,7 +20,14 @@ bankfill "data/bank_fill/bank05.bin"
 
 SECTION "Bank 06", ROMX
 INCLUDE "engine/bank06.asm"
-bankfill "data/bank_fill/bank06.bin"
+
+IF DEF(_EARLY_DAYS)
+    bankfill "data/bank_fill/bank06.bin", $0, $27b4
+    INCLUDE "engine/bank06_edc.asm"
+    bankfill "data/bank_fill/bank06.bin", $2820, $94
+ELSE
+    bankfill "data/bank_fill/bank06.bin"
+ENDC
 
 SECTION "Bank 07", ROMX
 INCLUDE "engine/decompress_job.asm"

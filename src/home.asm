@@ -29,4 +29,10 @@ INCLUDE "home/link.asm"
 INCLUDE "home/rng.asm"
 INCLUDE "home/home.asm"
 
-bankfill "data/bank_fill/bank00.bin"
+IF DEF(_EARLY_DAYS)
+    bankfill "data/bank_fill/bank00.bin", $0, $1179
+    INCLUDE "home/skip_wait.asm"
+    bankfill "data/bank_fill/bank00.bin", $11CB, $ae
+ELSE
+    bankfill "data/bank_fill/bank00.bin"
+ENDC

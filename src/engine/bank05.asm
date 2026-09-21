@@ -778,7 +778,11 @@ ShowDuelTextBox:
 	ldh [rWY], a
 	dec c
 	dec c
-	call WaitForVBlank
+	IF DEF(_EARLY_DAYS)
+		call Func_3f2e
+	ELSE
+		call WaitForVBlank
+	ENDC
 	jr .loop
 .done
 	ld a, 103
@@ -798,7 +802,11 @@ HideDuelTextBox_FromTop:
 	ldh [rWY], a
 	inc c
 	inc c
-	call WaitForVBlank
+	IF DEF(_EARLY_DAYS)
+		call Func_3f2e
+	ELSE
+		call WaitForVBlank
+	ENDC
 	jr .loop
 .done
 	ld a, SCREEN_HEIGHT_PX - 1
@@ -819,7 +827,11 @@ HideDuelTextBox:
 	ldh [rWY], a
 	inc c
 	inc c
-	call WaitForVBlank
+	IF DEF(_EARLY_DAYS)
+		call Func_3f2e
+	ELSE
+		call WaitForVBlank
+	ENDC
 	jr .loop
 .done
 	ld a, SCREEN_HEIGHT_PX - 1
@@ -1163,8 +1175,14 @@ Func_1487e:
 	ld a, [wcf42]
 	cp CONTROL_CHAR
 	jr nc, .asm_14898
-	ld a, $02
-	ld [wcf41], a
+	IF DEF(_EARLY_DAYS)
+		call Func_3f38
+		nop
+		nop
+	ELSE
+		ld a, $02
+		ld [wcf41], a
+	ENDC
 	jr .asm_148a5
 .asm_14898
 	ld b, $00

@@ -1,4 +1,6 @@
-rom := ygodm.gb
+roms := \
+	ygodm.gb \
+	ygodm_edc_jp.gb
 
 rom_obj := \
 	src/audio.o \
@@ -7,8 +9,11 @@ rom_obj := \
 	src/main.o \
 	src/ram.o
 
-ygodm_obj := $(rom_obj:.o=.o)
+ygodm_obj        := $(rom_obj:.o=.o)
+ygodm_edc_jp_obj := $(rom_obj:.o=_edc_jp.o)
 
+ygodm_link        := src/layout.link
+ygodm_edc_jp_link := src/layout_edc.link
 
 ### Build tools
 
@@ -25,7 +30,7 @@ RGBGFX  ?= $(RGBDS)rgbgfx
 RGBLINK ?= $(RGBDS)rgblink
 
 RGBASMFLAGS  ?= -Weverything
-RGBLINKFLAGS ?= -Weverything -d
+RGBLINKFLAGS ?= -Weverything -d -p 0xff
 RGBFIXFLAGS  ?= -Weverything
 RGBGFXFLAGS  ?= -Weverything
 
@@ -39,6 +44,7 @@ RGBGFXFLAGS  ?= -Weverything
 .PHONY: \
 	all \
 	ygodm \
+	ygodm_edc_jp \
 	clean \
 	tidy \
 	compare \
@@ -46,6 +52,7 @@ RGBGFXFLAGS  ?= -Weverything
 
 all: ygodm
 ygodm: ygodm.gb
+ygodm_edc_jp: ygodm_edc_jp.gb
 
 clean: tidy
 	find src/gfx \
@@ -53,16 +60,17 @@ clean: tidy
 	     -delete
 
 tidy:
-	$(RM) $(rom) \
-	      $(rom:.gb=.sym) \
-	      $(rom:.gb=.map) \
+	$(RM) $(roms) \
+	      $(roms:.gb=.sym) \
+	      $(roms:.gb=.map) \
 	      $(ygodm_obj) \
+	      $(ygodm_edc_jp_obj) \
 	      src/rgbdscheck.o
 	$(MAKE) clean -C tools/
 
 compare: RGBASMFLAGS += -D_MATCHING
-compare: all
-	@$(SHA1) -c rom.sha1
+compare: $(roms)
+	@$(SHA1) -c roms.sha1
 
 tools:
 	$(MAKE) -C tools/
@@ -74,7 +82,8 @@ ifeq ($(DEBUG),1)
 RGBASMFLAGS += -E
 endif
 
-$(ygodm_obj): RGBASMFLAGS +=
+$(ygodm_obj):        RGBASMFLAGS +=
+$(ygodm_edc_jp_obj): RGBASMFLAGS += -D_EARLY_DAYS
 
 src/rgbdscheck.o: src/rgbdscheck.asm
 	$(RGBASM) -o $@ $<
@@ -96,15 +105,17 @@ endef
 
 # Dependencies for shared objects objects
 $(foreach obj, $(ygodm_obj), $(eval $(call DEP,$(obj),$(obj:.o=.asm))))
+$(foreach obj, $(ygodm_edc_jp_obj), $(eval $(call DEP,$(obj),$(obj:_edc_jp.o=.asm))))
 
 endif
 
 
 RGBFIXFLAGS += -sv -k A4 -l 0x33 -m MBC1+RAM+BATTERY -p 0xff -r 2 -t YUGIOU
 
-$(rom): $(ygodm_obj) src/layout.link
-	$(RGBLINK) $(RGBLINKFLAGS) -l src/layout.link -m $(rom:.gb=.map) -n $(rom:.gb=.sym) -o $@ $(filter %.o,$^)
+%.gb: $$(%_obj) $$(%_link)
+	$(RGBLINK) $(RGBLINKFLAGS) -l $($*_link) -n $*.sym -m $*.map -o $@ $(filter %.o,$^)
 	$(RGBFIX) $(RGBFIXFLAGS) $@
+	tools/fix_rom_size $@
 
 ### Special sprite rules
 
@@ -115,9 +126,11 @@ src/gfx/gfx_630b.2bpp: tools/gfx += --interleave --png=$<
 src/gfx/gfx_6675.2bpp: tools/gfx += --interleave --png=$<
 src/gfx/gfx_68f4.2bpp: tools/gfx += --interleave --png=$<
 src/gfx/gfx_6ce6.2bpp: tools/gfx += --interleave --png=$<
-src/gfx/characters/%.2bpp: tools/gfx += --interleave --png=$<
 src/gfx/duel/attack.2bpp: tools/gfx += --interleave --png=$<
 src/gfx/duel/destroy.2bpp: tools/gfx += --interleave --png=$<
+
+src/gfx/cards/%.2bpp: tools/gfx += --interleave --png=$<
+src/gfx/characters/%.2bpp: tools/gfx += --interleave --png=$<
 
 ### Catch-all graphics rules
 

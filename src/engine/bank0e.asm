@@ -61,7 +61,11 @@ Func_38039:
 	ld a, VBLANK_02
 	call SetPendingVBlankMode
 	call RequestVBlankMode
-	call WaitForVBlank
+	IF DEF(_EARLY_DAYS)
+		call Func_3f23
+	ELSE
+		call WaitForVBlank
+	ENDC
 	dec b
 	jr nz, .asm_3805d
 	inc c
@@ -110,7 +114,11 @@ Func_38089:
 	ld a, VBLANK_02
 	call SetPendingVBlankMode
 	call RequestVBlankMode
-	call WaitForVBlank
+	IF DEF(_EARLY_DAYS)
+		call Func_3f23
+	ELSE
+		call WaitForVBlank
+	ENDC
 	dec b
 	jr nz, .asm_380ad
 	inc c
@@ -321,7 +329,11 @@ Func_392da:
 	ld a, VBLANK_02
 	call SetPendingVBlankMode
 	call RequestVBlankMode
-	call WaitForVBlank
+	IF DEF(_EARLY_DAYS)
+		call Func_3f23
+	ELSE
+		call WaitForVBlank
+	ENDC
 	dec b
 	jr nz, .asm_392fe
 	inc c
@@ -379,7 +391,11 @@ Func_39344:
 	ld a, VBLANK_02
 	call SetPendingVBlankMode
 	call RequestVBlankMode
-	call WaitForVBlank
+	IF DEF(_EARLY_DAYS)
+		call Func_3f23
+	ELSE
+		call WaitForVBlank
+	ENDC
 	dec b
 	jr nz, .asm_39368
 	inc c

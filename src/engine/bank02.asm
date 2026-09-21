@@ -558,8 +558,14 @@ Func_8722:
 	ld a, [wcd46]
 	cp $b0
 	jr nc, .asm_873c
-	ld a, $02
-	ld [wcd45], a
+	IF DEF(_EARLY_DAYS)
+		call Func_3f45
+		nop
+		nop
+	ELSE
+		ld a, $02
+		ld [wcd45], a
+	ENDC
 	jr .asm_8749
 .asm_873c
 	ld b, $00

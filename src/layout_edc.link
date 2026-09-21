@@ -1,0 +1,66 @@
+INCLUDE "src/layout.link"
+
+ROMX $41
+	"Uncompressed Gfx 1"
+ROMX $42
+	"Uncompressed Gfx 2"
+ROMX $43
+	"Uncompressed Gfx 3"
+ROMX $44
+	"Uncompressed Gfx 4"
+ROMX $45
+	"Uncompressed Gfx 5"
+ROMX $46
+	"Uncompressed Gfx 6"
+ROMX $47
+	"Uncompressed Gfx 7"
+ROMX $48
+	"Uncompressed Gfx 8"
+ROMX $49
+	"Uncompressed Gfx 9"
+ROMX $4a
+	"Uncompressed Gfx 10"
+ROMX $4b
+	"Uncompressed Gfx 11"
+ROMX $4c
+	"Uncompressed Gfx 12"
+ROMX $4d
+	"Uncompressed Gfx 13"
+ROMX $4e
+	"Uncompressed Gfx 14"
+ROMX $4f
+	"Uncompressed Gfx 15"
+ROMX $51
+	"Uncompressed Gfx 16"
+ROMX $52
+	"Uncompressed Gfx 17"
+ROMX $53
+	"Uncompressed Gfx 18"
+ROMX $54
+	"Uncompressed Gfx 19"
+ROMX $55
+	"Uncompressed Gfx 20"
+ROMX $56
+	"Uncompressed Gfx 21"
+ROMX $57
+	"Uncompressed Gfx 22"
+ROMX $58
+	"Uncompressed Gfx 23"
+ROMX $59
+	"Uncompressed Gfx 24"
+ROMX $5a
+	"Uncompressed Gfx 25"
+ROMX $5b
+	"Uncompressed Gfx 26"
+ROMX $5c
+	"Uncompressed Gfx 27"
+ROMX $5d
+	"Uncompressed Gfx 28"
+ROMX $5e
+	"Uncompressed Gfx 29"
+ROMX $5f
+	"Uncompressed Gfx 30"
+ROMX $61
+	"Uncompressed Gfx 31"
+ROMX $7f
+	"Bank 7f"

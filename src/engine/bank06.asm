@@ -320,7 +320,11 @@ Func_1927f:
 	call Func_192f9
 	ld c, $28
 .asm_19292
-	call WaitForVBlank
+	IF DEF(_EARLY_DAYS)
+		call Func_3f18
+	ELSE
+		call WaitForVBlank
+	ENDC
 	dec c
 	jr nz, .asm_19292
 .asm_19298
@@ -537,7 +541,11 @@ Func_19405:
 	call Func_1947f
 	ld c, $28
 .asm_19418
-	call WaitForVBlank
+	IF DEF(_EARLY_DAYS)
+		call Func_3f18
+	ELSE
+		call WaitForVBlank
+	ENDC
 	dec c
 	jr nz, .asm_19418
 .asm_1941e
@@ -748,14 +756,22 @@ Func_1958b:
 	push bc
 	ld c, $14
 .asm_1958e
-	call WaitForVBlank
+	IF DEF(_EARLY_DAYS)
+		call Func_3f18
+	ELSE
+		call WaitForVBlank
+	ENDC
 	dec c
 	jr nz, .asm_1958e
 	call Func_195a4
 	call Func_19678
 	ld c, $28
 .asm_1959c
-	call WaitForVBlank
+	IF DEF(_EARLY_DAYS)
+		call Func_3f18
+	ELSE
+		call WaitForVBlank
+	ENDC
 	dec c
 	jr nz, .asm_1959c
 	pop bc
@@ -867,8 +883,15 @@ Func_1962f:
 	call AddByteToVBlankStruct
 	dec c
 	jr nz, .asm_19662
-	call RequestVBlankMode
-	call WaitForVBlank
+	IF DEF(_EARLY_DAYS)
+		call Func_1bf00
+		REPT 3
+			nop
+		ENDR
+	ELSE
+		call RequestVBlankMode
+		call WaitForVBlank
+	ENDC
 	pop hl
 	pop de
 	pop bc
@@ -984,8 +1007,15 @@ Func_19703:
 	call AddByteToVBlankStruct
 	dec c
 	jr nz, .asm_19736
-	call RequestVBlankMode
-	call WaitForVBlank
+	IF DEF(_EARLY_DAYS)
+		call Func_1bf00
+		REPT 3
+			nop
+		ENDR
+	ELSE
+		call RequestVBlankMode
+		call WaitForVBlank
+	ENDC
 	pop hl
 	pop de
 	pop bc
