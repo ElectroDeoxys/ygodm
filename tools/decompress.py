@@ -1,47 +1,55 @@
 import reader
 import argparse
+from collections import deque
+
+LOOKBACK_SIZE  = 0x400
+LOOKBACK_START = 0x3de
 
 def main():
-	parser = argparse.ArgumentParser(description='Parse text data.')
-	parser.add_argument('offsets', metavar='offsets', type=str, nargs='+',
-						help='offsets of text data')
-	args = parser.parse_args()
+    parser = argparse.ArgumentParser(description='Decompress .lz files.')
+    parser.add_argument('files', metavar='files', type=str, nargs='+')
+    args = parser.parse_args()
 
-	charmap = read_charmap()
+    for filename in args.files:
+        print(f"Decompressing {filename}")
 
-	for offset in [int(o, 16) for o in args.offsets]:
-		print(f"Text_{offset:0x}:")
+        with open(filename, "rb") as file:
+            compressed = deque(file.read())
 
-		out_str = ""
-		pos = offset
+        decompressed = []
+        lookback = [0x20] * LOOKBACK_SIZE
+        lb_idx = LOOKBACK_START
 
-		start_text = True
-		while True:
-			val = reader.get_rom_byte(pos)
-			pos += 1
+        def write_byte(val):
+            nonlocal decompressed
+            nonlocal lookback
+            nonlocal lb_idx
 
-			if val >= 0xb0:
-				control_char = charmap[val]
-				if control_char == "<LINE>":
-					out_str += "\"\n\tline \""
-				elif control_char == "<PROMPT>":
-					out_str += "\"\n\tprompt\n"
-					start_text = True
-				elif control_char == "<DONE>":
-					out_str += "\tdone\n"
-					break
-				else:
-					out_str += charmap[val]
-					# msg = f"Unknown control character 0x{val:02x}"
-					# raise RuntimeError(msg)
-			else:
-				if start_text:
-					out_str += "\ttext \""
-					start_text = False
+            decompressed.append(val)
+            lookback[lb_idx] = val
+            lb_idx = (lb_idx + 1) % LOOKBACK_SIZE
 
-				out_str += charmap[val]
+        while len(compressed) > 0:
+            cmd = compressed.popleft()
+            for i in range(8):
+                if cmd & (1 << i) != 0:
+                    # literal copy
+                    write_byte(compressed.popleft())
+                else:
+                    # lookback
+                    lo = compressed.popleft()
+                    hi = compressed.popleft()
+                    offs = lo | ((hi & 0x60) << 3)
+                    size = (hi & 0x1f) + 3
 
-		print(out_str)
+                    for i in range(size):
+                        write_byte(lookback[(offs + i) % LOOKBACK_SIZE])
+
+                if len(compressed) == 0:
+                    break
+
+        with open(filename[:-3], "wb") as file:
+            file.write(bytes(decompressed))
 
 if __name__ == "__main__":
-	main()
+    main()
