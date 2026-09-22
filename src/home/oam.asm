@@ -155,7 +155,7 @@ Func_12a4:
 	pop af
 	ret
 
-Func_12d2::
+ClearAndApplyOAM::
 	call ClearOAM
 	call CopyOAMDirect
 	ret

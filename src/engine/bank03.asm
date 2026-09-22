@@ -241,7 +241,7 @@ Func_c152:
 	ld c, CARD_LOCATION_PLAYER_HAND
 	call SetTargetCard
 	call LoadTargetCard
-	call Func_1d67
+	call GetCardIconTile
 	call Func_c226
 	pop bc
 	inc d
@@ -274,7 +274,7 @@ Func_c187:
 	ld c, CARD_LOCATION_PLAYER_FIELD
 	call SetTargetCard
 	call LoadTargetCard
-	call Func_1d67
+	call GetCardIconTile
 	call Func_c226
 	pop bc
 	inc d
@@ -307,7 +307,7 @@ Func_c1bc:
 	ld c, CARD_LOCATION_OPP_FIELD
 	call SetTargetCard
 	call LoadTargetCard
-	call Func_1d67
+	call GetCardIconTile
 	call Func_c226
 	pop bc
 	dec d
@@ -340,7 +340,7 @@ Func_c1f1:
 	ld c, CARD_LOCATION_OPP_HAND
 	call SetTargetCard
 	call LoadTargetCard
-	call Func_1d67
+	call GetCardIconTile
 	call Func_c226
 	pop bc
 	dec d
@@ -2545,14 +2545,15 @@ Func_d014:
 	farcall HandleExodiaWinCondition
 	call IsDuelOngoing
 	cp FALSE
-	jr z, .asm_d059
+	jr z, .duel_finished
 
 	farcall HandleEmptyHandWinCondition
 	call IsDuelOngoing
 	cp FALSE
-	jr z, .asm_d059
+	jr z, .duel_finished
 
-	farcall Func_1500c
+	farcall ShowDuelMessage_ItsYourTurn
+
 	call Func_d06c
 .asm_d036
 	call Func_d095
@@ -2572,7 +2573,7 @@ Func_d014:
 	jr nz, .asm_d036
 .asm_d056
 	call Func_d085
-.asm_d059
+.duel_finished
 	pop hl
 	pop de
 	pop bc
@@ -2890,10 +2891,13 @@ Func_d213:
 	pop af
 	ret
 
+; does some duel setup stuff, e.g.:
+; set starting LP values, clear hand/field cards
+; shuffle player's deck and draw player's initial hand
 SetupDuel:
 	call Func_2384
 	farcall Func_b85d
-	call Func_1c28
+	call InitDuelistsHandAndField
 	call SetInitialPlayerLP
 	call SetInitialOpponentLP
 	call CreatePlayerDuelDeck
@@ -2910,7 +2914,7 @@ DuelAgainstLinkOpponent:
 	call Func_1f5f
 	call SetupDuel
 	call Func_cd55
-	call Func_12d2
+	call ClearAndApplyOAM
 	call Func_db96
 	cp $00
 	jr nz, .asm_d262
@@ -2924,7 +2928,7 @@ DuelAgainstLinkOpponent:
 
 Func_d267:
 	call StopMusic
-	farcall Func_4068
+	farcall DrawDuelScreen
 	call PlayMusic_Duel1
 .asm_d270
 	ld a, [wcdff]
@@ -3001,7 +3005,7 @@ Func_d2e9:
 	jr nz, .asm_d307
 	farcall Func_14036
 	farcall Func_14185
-	farcall Func_4068
+	farcall DrawDuelScreen
 	call Func_d3ec
 	call EnableObjects
 .asm_d307
@@ -3027,7 +3031,7 @@ Func_d2e9:
 	jr nz, .asm_d340
 	farcall Func_14036
 	farcall Func_14185
-	farcall Func_4068
+	farcall DrawDuelScreen
 	call Func_d3ec
 	call EnableObjects
 .asm_d340
@@ -4533,7 +4537,7 @@ Func_dcdc:
 	call Func_200e
 	ld a, [wcfc0]
 	call Func_200e
-	ld a, [wcfc1]
+	ld a, [wSwordsOfRevealingLightTurnCount]
 	call Func_200e
 	pop af
 	ret
@@ -4557,7 +4561,7 @@ Func_dd1b:
 	call Func_2051
 	ld [wcfbe], a
 	call Func_2051
-	ld [wcfc1], a
+	ld [wSwordsOfRevealingLightTurnCount], a
 	call Func_2051
 	ld [wcfc0], a
 	pop af
@@ -4565,9 +4569,9 @@ Func_dd1b:
 
 Func_dd5a:
 	push af
-	ld a, [wcfb9]
+	ld a, [wcfb9 + 0]
 	call Func_200e
-	ld a, [wcfba]
+	ld a, [wcfb9 + 1]
 	call Func_200e
 	ld a, [wcfaf]
 	call Func_200e
@@ -5407,7 +5411,7 @@ Func_e30a:
 	farcall Func_191c5
 	call PlayMusic_Battle
 	farcall Func_19272
-	farcall Func_4068
+	farcall DrawDuelScreen
 	call PlayDuelMusic
 .asm_e346
 	call Func_c142
@@ -5440,7 +5444,7 @@ Func_e352:
 	call PlayMusic_Battle
 	farcall Func_19272
 	call Func_db63
-	farcall Func_4068
+	farcall DrawDuelScreen
 	call PlayDuelMusic
 .asm_e38b
 	ld a, [wcdff]
@@ -5462,7 +5466,7 @@ Func_e39e:
 	ret
 
 Func_e3ab:
-	farcall Func_4068
+	farcall DrawDuelScreen
 	call PlayDuelMusic
 	ret
 
@@ -5528,7 +5532,7 @@ Func_e407:
 	farcall Func_191c5
 	call PlayMusic_Battle
 	farcall Func_19272
-	farcall Func_4068
+	farcall DrawDuelScreen
 	call PlayDuelMusic
 	ld c, $64
 .asm_e439
@@ -5572,6 +5576,7 @@ CreatePlayerDuelDeck:
 	dec e
 	jr nz, .loop
 
+	; last sampled deck index
 	call Func_2639
 
 	pop hl

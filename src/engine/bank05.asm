@@ -6,8 +6,8 @@
 	farfunc Func_1420c ; $07
 	farfunc ShowDuelMessage ; $09
 	farfunc Func_148b6 ; $0b
-	farfunc Func_1500c ; $0d
-	farfunc Func_1501f ; $0f
+	farfunc ShowDuelMessage_ItsYourTurn ; $0d
+	farfunc ShowDuelMessage_ItsTheComputersTurn ; $0f
 	farfunc Func_15032 ; $11
 	farfunc Func_1508a ; $13
 	farfunc Func_1509a ; $15
@@ -35,7 +35,7 @@ Func_14036:
 	call DisableLCD
 	ld hl, ScreenConfig_1406e
 	call SetScreenConfig
-	call Func_12d2
+	call ClearAndApplyOAM
 	farcall LoadFontToVTiles2
 	farcall Func_28fae
 	call Func_140a3
@@ -1816,7 +1816,7 @@ Func_14fe8:
 .data
 	db $78, $00, $79, $00
 
-Func_1500c:
+ShowDuelMessage_ItsYourTurn:
 	push af
 	call Func_2b68
 	ld a, TRUE
@@ -1827,7 +1827,7 @@ Func_1500c:
 	pop af
 	ret
 
-Func_1501f:
+ShowDuelMessage_ItsTheComputersTurn:
 	push af
 	call Func_2b68
 	ld a, TRUE
@@ -2016,8 +2016,8 @@ Func_1512c::
 	ret
 
 .DuelMessages:
-	msg Text_14aba
-	msg Text_14ad5
+	msg Text_14aba ; $0
+	msg Text_14ad5 ; $1
 
 Func_15148:
 	push af

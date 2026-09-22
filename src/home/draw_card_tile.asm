@@ -1,4 +1,4 @@
-Func_1d67::
+GetCardIconTile::
 	push bc
 	push de
 	push hl

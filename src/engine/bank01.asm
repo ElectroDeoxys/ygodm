@@ -1,7 +1,7 @@
 	dw BANK(@)
 
 	farcall_table_start
-	farfunc Func_4068 ; $03
+	farfunc DrawDuelScreen ; $03
 	farfunc Func_551f ; $05
 	farfunc InitTrunk ; $07
 	farfunc GetTrunkTotalCardCount ; $09
@@ -53,24 +53,24 @@
 	farfunc Func_6da7 ; $65
 	farfunc Func_64b5 ; $67
 
-Func_4068:
+DrawDuelScreen:
 	push af
 	push hl
 	call Func_101d
 	call DisableLCD
-	ld hl, ScreenConfig_40a6
+	ld hl, ScreenConfig_Duel
 	call SetScreenConfig
 	farcall Func_cd9a
-	farcall Func_2801e
+	farcall DrawDuelBackdrop
 	farcall LoadFontToVTiles2
 	call DrawDuelistHands
 	call PrintPlayerLP
 	call PrintOpponentLP
-	call Func_4164
+	call PrintActiveField_Duel
 	call DrawPlayerField
 	call DrawOpponentField
-	call Func_41eb
-	call Func_42a7
+	call LoadDuelUIGfx
+	call ClearDuelOAM
 	call Func_42ae
 	call EnableLCD
 	call Func_fff
@@ -79,7 +79,7 @@ Func_4068:
 	pop af
 	ret
 
-ScreenConfig_40a6:
+ScreenConfig_Duel:
 	db LCDC_BG_ON | LCDC_OBJ_OFF | LCDC_OBJ_16 | LCDC_BG_9800 | LCDC_BLOCK21 | LCDC_WIN_ON | LCDC_WIN_9C00 ; LCDC
 	db STAT_LYC ; STAT
 	db   0 ; SCY
@@ -100,34 +100,34 @@ DrawDuelistHands:
 	hlbgcoord 10, 16
 	ld d, $00
 	ld e, HAND_SIZE
-.asm_40bb
+.loop_player
 	ld b, d
 	ld c, CARD_LOCATION_PLAYER_HAND
 	call SetTargetCard
 	call LoadTargetCard
-	call Func_1d67
-	call Func_40f1
+	call GetCardIconTile
+	call DrawCardIcon
 	inc hl
 	inc hl
 	inc d
 	dec e
-	jr nz, .asm_40bb
+	jr nz, .loop_player
 
 	hlbgcoord 10, 0
 	ld d, $04
 	ld e, HAND_SIZE
-.asm_40d7
+.loop_opp
 	ld b, d
 	ld c, CARD_LOCATION_OPP_HAND
 	call SetTargetCard
 	call LoadTargetCard
-	call Func_1d67
-	call Func_40f1
+	call GetCardIconTile
+	call DrawCardIcon
 	inc hl
 	inc hl
 	dec d
 	dec e
-	jr nz, .asm_40d7
+	jr nz, .loop_opp
 
 	pop hl
 	pop de
@@ -135,13 +135,17 @@ DrawDuelistHands:
 	pop af
 	ret
 
-Func_40f1:
+; input:
+; - a  = starting tile ID
+; - hl = BG map pointer
+DrawCardIcon:
 	push af
 	push bc
 	push hl
-	ld bc, $20
+	ld bc, TILEMAP_WIDTH
 	cp $d0
-	jr z, .asm_4107
+	jr z, .empty
+; not empty
 	ld [hli], a
 	inc a
 	inc a
@@ -152,14 +156,14 @@ Func_40f1:
 	inc a
 	inc a
 	ld [hl], a
-	jr .asm_410c
-.asm_4107
+	jr .done
+.empty
 	ld [hli], a
 	ld [hld], a
 	add hl, bc
 	ld [hli], a
 	ld [hl], a
-.asm_410c
+.done
 	pop hl
 	pop bc
 	pop af
@@ -223,7 +227,7 @@ PrintOpponentLP:
 	pop af
 	ret
 
-Func_4164:
+PrintActiveField_Duel:
 	push af
 	push bc
 	push de
@@ -255,7 +259,6 @@ Func_4164:
 	ld [hli], a
 	dec c
 	jr nz, .loop_chars
-
 	pop hl
 	pop de
 	pop bc
@@ -270,18 +273,18 @@ DrawPlayerField:
 	hlbgcoord 10, 14
 	ld d, $00
 	ld e, FIELD_SIZE
-.asm_41ac
+.loop
 	ld b, d
 	ld c, CARD_LOCATION_PLAYER_FIELD
 	call SetTargetCard
 	call LoadTargetCard
-	call Func_1d67
-	call Func_40f1
+	call GetCardIconTile
+	call DrawCardIcon
 	inc hl
 	inc hl
 	inc d
 	dec e
-	jr nz, .asm_41ac
+	jr nz, .loop
 	pop hl
 	pop de
 	pop bc
@@ -296,31 +299,31 @@ DrawOpponentField:
 	hlbgcoord 10, 2
 	ld d, $04
 	ld e, FIELD_SIZE
-.asm_41d1
+.loop
 	ld b, d
 	ld c, CARD_LOCATION_OPP_FIELD
 	call SetTargetCard
 	call LoadTargetCard
-	call Func_1d67
-	call Func_40f1
+	call GetCardIconTile
+	call DrawCardIcon
 	inc hl
 	inc hl
 	dec d
 	dec e
-	jr nz, .asm_41d1
+	jr nz, .loop
 	pop hl
 	pop de
 	pop bc
 	pop af
 	ret
 
-Func_41eb:
+LoadDuelUIGfx:
 	push af
 	push bc
 	push de
 	push hl
 	ld hl, vTiles0 tile $50
-	ld de, Gfx_4207
+	ld de, DuelUIGfx
 	ld b, 12 ; tiles, should be 10
 .loop_tiles
 	ld c, TILE_SIZE
@@ -338,11 +341,11 @@ Func_41eb:
 	pop af
 	ret
 
-Gfx_4207: INCBIN "gfx/gfx_4207.2bpp"
+DuelUIGfx: INCBIN "gfx/duel/ui.2bpp"
 
-Func_42a7:
-	call Func_12d2
-	call CopyOAMDirect
+ClearDuelOAM:
+	call ClearAndApplyOAM
+	call CopyOAMDirect ; redundant
 	ret
 
 Func_42ae:

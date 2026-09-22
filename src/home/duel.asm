@@ -57,7 +57,7 @@ Func_1c1d::
 	pop af
 	ret
 
-Func_1c28::
+InitDuelistsHandAndField::
 	push af
 	push bc
 	push hl
@@ -65,22 +65,22 @@ Func_1c28::
 	ld [wCardLocationIndex], a
 	ld a, CARD_LOCATION_OPP_HAND
 	ld [wCardLocation], a
-	ld hl, wOppHand
+	ld hl, wHandAndFieldCards
 	ld b, $04
-.asm_1c3a
+.loop_outer
 	ASSERT HAND_SIZE == FIELD_SIZE
 	ld c, HAND_SIZE ; aka FIELD_SIZE
-.asm_1c3c
+.loop_inner
 	ld a, LOW(INVALID_CARD)
 	ld [hli], a
 	ld a, HIGH(INVALID_CARD)
 	ld [hli], a
-	ld a, $10
+	ld a, CARDFLAG_UNK4
 	ld [hli], a
 	dec c
-	jr nz, .asm_1c3c
+	jr nz, .loop_inner
 	dec b
-	jr nz, .asm_1c3a
+	jr nz, .loop_outer
 	pop hl
 	pop bc
 	pop af

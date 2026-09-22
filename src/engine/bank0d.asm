@@ -774,9 +774,9 @@ ChoosePlayerAnteCard:
 	farcall SetPlayerDeckIndex
 	farcall GetPlayerDeckCard
 	ld a, c
-	ld [wcfb9], a
+	ld [wcfb9 + 0], a
 	ld a, b
-	ld [wcfba], a
+	ld [wcfb9 + 1], a
 	pop bc
 	pop af
 	ret

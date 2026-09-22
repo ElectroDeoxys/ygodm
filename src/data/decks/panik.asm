@@ -1,0 +1,41 @@
+PaniKDeckList:
+	card_freq_table_start
+	card_freq MOUNTAIN_WARRIOR,      38 ; / 2048
+	card_freq CASTLE_OF_DARK,        52 ; / 2048
+	card_freq REAPER_OF_THE_CARD,     9 ; / 2048
+	card_freq KING_OF_YAMIMAKAI,      2 ; / 2048
+	card_freq BAROX,                 12 ; / 2048
+	card_freq DARK_CHIMERA,           2 ; / 2048
+	card_freq METAL_GUARDIAN,        38 ; / 2048
+	card_freq JOB_CHANGE_MIRROR,     79 ; / 2048
+	card_freq DREAM_CLOWN,           79 ; / 2048
+	card_freq HARD_ARMOR,            24 ; / 2048
+	card_freq TAINTED_WISDOM,        73 ; / 2048
+	card_freq BIG_EYE,               75 ; / 2048
+	card_freq GENIN,                 30 ; / 2048
+	card_freq GATE_DEEG,             40 ; / 2048
+	card_freq SYNCHAR,               69 ; / 2048
+	card_freq TERRA_THE_TERRIBLE,    54 ; / 2048
+	card_freq SOLITUDE,              98 ; / 2048
+	card_freq MASKED_SORCERER,       82 ; / 2048
+	card_freq MIDNIGHT_FIEND,        46 ; / 2048
+	card_freq FIEND_SWORD,           50 ; / 2048
+	card_freq MADJINN_GUNN,          22 ; / 2048
+	card_freq GUARDIAN_LABYRINTH,    93 ; / 2048
+	card_freq MEDA_BAT,              37 ; / 2048
+	card_freq DD_WARRIOR,            74 ; / 2048
+	card_freq ARCHFIEND_MIRROR,      27 ; / 2048
+	card_freq SWORDSMAN_OF_AILE,     78 ; / 2048
+	card_freq VERSAGO_DESTROYER,     93 ; / 2048
+	card_freq MEGIRUS_LIGHT,         67 ; / 2048
+	card_freq RAY_AND_TEMPERATURE,   99 ; / 2048
+	card_freq GORGON_EGG,            30 ; / 2048
+	card_freq MYSTIC_CLOWN,          25 ; / 2048
+	card_freq MYSTICAL_SHEEP_2,      74 ; / 2048
+	card_freq TAO_THE_CHANTER,       78 ; / 2048
+	card_freq DARK_ARTIST,           56 ; / 2048
+	card_freq DRAGONESS_WICKED,      78 ; / 2048
+	card_freq BIO_PLANT,             55 ; / 2048
+	card_freq CYBER_SOLDIER_DARK,    22 ; / 2048
+	card_freq DRAGON_ERSATZ_HEAD,    88 ; / 2048
+	card_freq_table_end

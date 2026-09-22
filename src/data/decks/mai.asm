@@ -1,0 +1,42 @@
+MaiDeckList:
+	card_freq_table_start
+	card_freq TYHONE,                 5 ; / 2048
+	card_freq HARPIE_LADY,            2 ; / 2048
+	card_freq HARPIE_LADY_SISTER,     2 ; / 2048
+	card_freq SPIRIT_OF_THE_WIND,     2 ; / 2048
+	card_freq GODDESS_THIRD_EYE,     13 ; / 2048
+	card_freq SPIRIT_OF_THE_BOOK,     2 ; / 2048
+	card_freq YAMATANO_SCROLL,       90 ; / 2048
+	card_freq FAITH_BIRD,             2 ; / 2048
+	card_freq LAMOON,                 4 ; / 2048
+	card_freq NEMURIKO,             110 ; / 2048
+	card_freq DJINN_THE_WATCHER,    112 ; / 2048
+	card_freq LARVAS,                90 ; / 2048
+	card_freq SPIRIT_OF_THE_HARP,    53 ; / 2048
+	card_freq HURRICAIL,             83 ; / 2048
+	card_freq ARLOWNAY,              90 ; / 2048
+	card_freq FIEND_REFLECTION2,     12 ; / 2048
+	card_freq KEY_MACE,              36 ; / 2048
+	card_freq PETIT_DRAGON,         109 ; / 2048
+	card_freq DROLL_BIRD,            97 ; / 2048
+	card_freq PETIT_ANGEL,          109 ; / 2048
+	card_freq DRYAD,                  4 ; / 2048
+	card_freq HOURGLASS_OF_LIFE,    116 ; / 2048
+	card_freq BEAUTIFUL_HEADHUNT,     3 ; / 2048
+	card_freq VISHWAR_RANDI,         89 ; / 2048
+	card_freq WATER_ELEMENT,         89 ; / 2048
+	card_freq WATER_OMOTICS,          1 ; / 2048
+	card_freq ENCHANTING_MERMAID,    17 ; / 2048
+	card_freq NEKOGAL_1,             30 ; / 2048
+	card_freq ANGELWITCH,            89 ; / 2048
+	card_freq LUNAR_QUEEN_ELZAIM,    90 ; / 2048
+	card_freq WING_EGG_ELF,          74 ; / 2048
+	card_freq PRINCESS_TSURUGI,      89 ; / 2048
+	card_freq MAVELUS,               10 ; / 2048
+	card_freq RAY_AND_TEMPERATURE,   42 ; / 2048
+	card_freq PROTECTOR_THRONE,      58 ; / 2048
+	card_freq MOON_ENVOY,            24 ; / 2048
+	card_freq ONE_EYED_SHIELD,       79 ; / 2048
+	card_freq SONIC_MAID,            17 ; / 2048
+	card_freq KURAMA,               104 ; / 2048
+	card_freq_table_end

@@ -1,7 +1,7 @@
 	dw BANK(@)
 
 	farcall_table_start
-	farfunc Func_2801e ; $03
+	farfunc DrawDuelBackdrop ; $03
 	farfunc Func_28392 ; $05
 	farfunc Func_28776 ; $07
 	farfunc Func_289b8 ; $09
@@ -16,13 +16,13 @@
 	farfunc Func_2b9ed ; $1b
 	farfunc Func_2b9c2 ; $1f
 
-Func_2801e:
+DrawDuelBackdrop:
 	push af
 	push bc
 	push de
 	push hl
 	ld de, vTiles1 tile $50
-	ld hl, Gfx_2805a
+	ld hl, DuelMainGfx
 	ld b, $20 ; tiles
 .asm_2802a
 	ld c, TILE_SIZE
@@ -61,7 +61,7 @@ Func_2801e:
 	pop af
 	ret
 
-Gfx_2805a: INCBIN "gfx/gfx_2805a.2bpp"
+DuelMainGfx: INCBIN "gfx/duel/main.2bpp"
 Tilemap_2822a: INCBIN "data/tilemaps/bg_2822a.tilemap"
 
 Func_28392:
@@ -349,7 +349,7 @@ Func_28fae:
 	push de
 	push hl
 	ld de, vTiles1
-	ld hl, Gfx_2805a
+	ld hl, DuelMainGfx
 	ld b, $02 ; tiles
 .asm_28fba
 	ld c, TILE_SIZE
@@ -362,7 +362,7 @@ Func_28fae:
 	dec b
 	jr nz, .asm_28fba
 	ld de, vTiles1 tile $50
-	ld hl, Gfx_2805a
+	ld hl, DuelMainGfx
 	ld b, $30 ; tiles
 .asm_28fcd
 	ld c, TILE_SIZE

@@ -216,6 +216,7 @@ wcd62:: db ; cd62
 wPlayerDuelDeckIndex:: db ; cd63
 wPlayerDuelDeck:: ds DECK_SIZE * $2 ; cd64
 
+wHandAndFieldCards::
 wOppHand::     ds HAND_SIZE  * $3 ; cdb4
 wOppField::    ds FIELD_SIZE * $3 ; cdc3
 wPlayerField:: ds FIELD_SIZE * $3 ; cdd2
@@ -350,12 +351,9 @@ wcf06:: db ; cf06
 
 wcf07:: ds $9 ; cf07
 
-wcf10:: db ; cf10
-wcf11:: db ; cf11
-wcf12:: db ; cf12
-wcf13:: db ; cf13
-wcf14:: db ; cf14
-wcf15:: db ; cf15
+wcf10:: dw ; cf10
+wcf12:: dw ; cf12
+wcf14:: dw ; cf14
 
 wcf16:: db ; cf16
 wcf17:: db ; cf17
@@ -425,8 +423,7 @@ wcfb6:: db ; cfb6
 
 wcfb7:: db ; cfb7
 wcfb8:: db ; cfb8
-wcfb9:: db ; cfb9
-wcfba:: db ; cfba
+wcfb9:: dw ; cfb9
 wcfbb:: db ; cfbb
 wcfbc:: db ; cfbc
 
@@ -435,7 +432,7 @@ wcfbe:: db ; cfbe
 wcfbf:: db ; cfbf
 
 wcfc0:: db ; cfc0
-wcfc1:: db ; cfc1
+wSwordsOfRevealingLightTurnCount:: db ; cfc1
 wcfc2:: db ; cfc2
 wcfc3:: db ; cfc3
 wcfc4:: ds LINE_LENGTH ; cfc4

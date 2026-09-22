@@ -245,4 +245,4 @@ GetFusionCard:
 	pop af
 	ret
 
-INCLUDE "data/fusion_cards.asm"
+INCLUDE "data/card_lists/fusion_cards.asm"

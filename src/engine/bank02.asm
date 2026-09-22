@@ -1346,18 +1346,18 @@ Func_b595:
 	ld [wDialogueID], a
 	call Func_2c4a
 	ld e, $00
-	ld a, [wcf14]
+	ld a, [wcf14 + 0]
 	add $01
 	ld [wHexNumber + 0], a
-	ld a, [wcf15]
+	ld a, [wcf14 + 1]
 	adc $00
 	ld [wHexNumber + 1], a
 	call ConvertToDecimalRepresentation
 	call Func_2cf2
 	ld e, $04
-	ld a, [wcf14]
+	ld a, [wcf14 + 0]
 	ld c, a
-	ld a, [wcf15]
+	ld a, [wcf14 + 1]
 	ld b, a
 	call Func_2d01
 	call IsValidCard
@@ -1383,18 +1383,18 @@ Func_b5e1:
 	ld [wDialogueID], a
 	call Func_2c4a
 	ld e, $00
-	ld a, [wcf14]
+	ld a, [wcf14 + 0]
 	add $01
 	ld [wHexNumber + 0], a
-	ld a, [wcf15]
+	ld a, [wcf14 + 1]
 	adc $00
 	ld [wHexNumber + 1], a
 	call ConvertToDecimalRepresentation
 	call Func_2cf2
 	ld e, $04
-	ld a, [wcf14]
+	ld a, [wcf14 + 0]
 	ld c, a
-	ld a, [wcf15]
+	ld a, [wcf14 + 1]
 	ld b, a
 	call Func_2d01
 	call IsValidCard
@@ -1420,18 +1420,18 @@ Func_b62d:
 	ld [wDialogueID], a
 	call Func_2c4a
 	ld e, $00
-	ld a, [wcf10]
+	ld a, [wcf10 + 0]
 	add $01
 	ld [wHexNumber + 0], a
-	ld a, [wcf11]
+	ld a, [wcf10 + 1]
 	adc $00
 	ld [wHexNumber + 1], a
 	call ConvertToDecimalRepresentation
 	call Func_2cf2
 	ld e, $04
-	ld a, [wcf10]
+	ld a, [wcf10 + 0]
 	ld c, a
-	ld a, [wcf11]
+	ld a, [wcf10 + 1]
 	ld b, a
 	call Func_2d01
 	call IsValidCard
@@ -1457,18 +1457,18 @@ Func_b679:
 	ld [wDialogueID], a
 	call Func_2c4a
 	ld e, $00
-	ld a, [wcf12]
+	ld a, [wcf12 + 0]
 	add $01
 	ld [wHexNumber + 0], a
-	ld a, [wcf13]
+	ld a, [wcf12 + 1]
 	adc $00
 	ld [wHexNumber + 1], a
 	call ConvertToDecimalRepresentation
 	call Func_2cf2
 	ld e, $04
-	ld a, [wcf12]
+	ld a, [wcf12 + 0]
 	ld c, a
-	ld a, [wcf13]
+	ld a, [wcf12 + 1]
 	ld b, a
 	call Func_2d01
 	call IsValidCard
@@ -1494,18 +1494,18 @@ Func_b6c5:
 	ld [wDialogueID], a
 	call Func_2c4a
 	ld e, $00
-	ld a, [wcf12]
+	ld a, [wcf12 + 0]
 	add $01
 	ld [wHexNumber + 0], a
-	ld a, [wcf13]
+	ld a, [wcf12 + 1]
 	adc $00
 	ld [wHexNumber + 1], a
 	call ConvertToDecimalRepresentation
 	call Func_2cf2
 	ld e, $04
-	ld a, [wcf12]
+	ld a, [wcf12 + 0]
 	ld c, a
-	ld a, [wcf13]
+	ld a, [wcf12 + 1]
 	ld b, a
 	call Func_2d01
 	call IsValidCard
@@ -1794,44 +1794,44 @@ Func_b840:
 Func_b85d:
 	push af
 	ld a, LOW(INVALID_CARD)
-	ld [wcf10], a
+	ld [wcf10 + 0], a
 	ld a, HIGH(INVALID_CARD)
-	ld [wcf11], a
+	ld [wcf10 + 1], a
 	ld a, LOW(INVALID_CARD)
-	ld [wcf12], a
+	ld [wcf12 + 0], a
 	ld a, HIGH(INVALID_CARD)
-	ld [wcf13], a
+	ld [wcf12 + 1], a
 	ld a, LOW(INVALID_CARD)
-	ld [wcf14], a
+	ld [wcf14 + 0], a
 	ld a, HIGH(INVALID_CARD)
-	ld [wcf15], a
+	ld [wcf14 + 1], a
 	pop af
 	ret
 
 Func_b87e:
 	push af
 	ld a, c
-	ld [wcf10], a
+	ld [wcf10 + 0], a
 	ld a, b
-	ld [wcf11], a
+	ld [wcf10 + 1], a
 	pop af
 	ret
 
 Func_b889:
 	push af
 	ld a, c
-	ld [wcf12], a
+	ld [wcf12 + 0], a
 	ld a, b
-	ld [wcf13], a
+	ld [wcf12 + 1], a
 	pop af
 	ret
 
 Func_b894:
 	push af
 	ld a, c
-	ld [wcf14], a
+	ld [wcf14 + 0], a
 	ld a, b
-	ld [wcf15], a
+	ld [wcf14 + 1], a
 	pop af
 	ret
 

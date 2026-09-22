@@ -125,7 +125,7 @@ DoDuel:
 	farcall SetupDuel
 	farcall GenerateAIOpponentDeck
 	farcall AIOppDrawInitialHand
-	farcall Func_4068
+	farcall DrawDuelScreen
 	call PlayDuelMusic
 
 .loop
@@ -136,7 +136,7 @@ DoDuel:
 	jr z, .duel_finished
 
 	; opponent's turn
-	farcall Func_1501f
+	farcall ShowDuelMessage_ItsTheComputersTurn
 	call Func_2391
 	call Func_101f8
 	call Func_10302

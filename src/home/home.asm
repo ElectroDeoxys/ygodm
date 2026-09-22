@@ -401,32 +401,14 @@ GetDuelistClass:
 	ld b, $00
 	ld a, [wNPCDuelist]
 	ld c, a
-	ld hl, .Classes
+	ld hl, DuelistClasses
 	add hl, bc
 	ld a, [hl]
 	pop hl
 	pop bc
 	ret
 
-.Classes:
-	table_width 1
-	db DUELISTCLASS_1 ; DUELIST_WEEVIL
-	db DUELISTCLASS_1 ; DUELIST_MAI
-	db DUELISTCLASS_1 ; DUELIST_REX
-	db DUELISTCLASS_1 ; DUELIST_MAKO
-	db DUELISTCLASS_1 ; DUELIST_SETO_KAIBA
-	db DUELISTCLASS_1 ; DUELIST_MOKUBA
-	db DUELISTCLASS_1 ; DUELIST_PUPPETEER
-	db DUELISTCLASS_1 ; DUELIST_PANIK
-	db DUELISTCLASS_1 ; DUELIST_BANDIT_KEITH
-	db DUELISTCLASS_0 ; DUELIST_YUGI
-	db DUELISTCLASS_0 ; DUELIST_TRISTAN
-	db DUELISTCLASS_0 ; DUELIST_JOEY
-	db DUELISTCLASS_0 ; DUELIST_BAKURA
-	db DUELISTCLASS_1 ; DUELIST_SIMON
-	db DUELISTCLASS_2 ; DUELIST_MAXIMILLION
-	db DUELISTCLASS_1 ; DUELIST_YAMI_YUGI
-	assert_table_length NUM_DUELISTS
+INCLUDE "data/duelist_classes.asm"
 
 Func_2384::
 	push af
@@ -961,107 +943,7 @@ GenerateStartingDeckMonsterCards:
 	pop af
 	ret
 
-StartingDeckMonsterCards:
-	dw RYU_KISHIN
-	dw MUSHROOM_MAN
-	dw SHADOW_SPECTER
-	dw SKULL_SERVANT
-	dw MOUNTAIN_WARRIOR
-	dw WATTKID
-	dw SANGAN
-	dw KURIBOH
-	dw MAN_EATING_PLANT
-	dw WINGS_OF_FLAME
-	dw MASK_OF_DARKNESS
-	dw TOMOZAURUS
-	dw KAGENINGEN
-	dw DARK_PLANT
-	dw NEMURIKO
-	dw WEATHER_CONTROL
-	dw MYSTICAL_CAPTURE
-	dw B_EYED_SIL_ZOMBIE
-	dw TOAD_MASTER
-	dw FLAME_MANIPULATOR
-	dw NECROLANCER
-	dw DJINN_THE_WATCHER
-	dw BEWITCHING_PHANTOM
-	dw MONSTER_EGG
-	dw SHADOW_WHO_CONTROL
-	dw MELTING_RED_SHADOW
-	dw FIRE_REAPER
-	dw LARVAS
-	dw FIREGRASS
-	dw MAN_EATER
-	dw DIG_BEAK
-	dw M_WARRIOR_1
-	dw M_WARRIOR_2
-	dw ANCIENT_JAR
-	dw DARK_PRISONER
-	dw HURRICAIL
-	dw FIRE_EYE
-	dw MONSTURTLE
-	dw PHANTOM_DEWAN
-	dw ARLOWNAY
-	dw DARK_SHADE
-	dw MASKED_CLOWN
-	dw LUCKY_TRINKET
-	dw GENIN
-	dw EYEARMOR
-	dw GATE_DEEG
-	dw SYNCHAR
-	dw FUSIONIST
-	dw AKAKIEISU
-	dw LALA_LI_OON
-	dw KEY_MACE
-	dw TURTLE_TIGER
-	dw TERRA_THE_TERRIBLE
-	dw DORON
-	dw ARMA_KNIGHT
-	dw MECH_MOLE_ZOMBIE
-	dw HAPPY_LOVER
-	dw PENGUIN_KNIGHT
-	dw PETIT_DRAGON
-	dw ARCHFIEND_MARMOT
-	dw PHANTOM_GHOST
-	dw DOROVER
-	dw TWIN_LONG_RODS_1
-	dw DROLL_BIRD
-	dw PETIT_ANGEL
-	dw WINGED_CLEAVER
-	dw HINOTAMA_SOUL
-	dw THUNDER_KID
-	dw MEOTOKO
-	dw KAGEMUSHA_BLUE
-	dw FLAME_GHOST
-	dw TWO_MOUTH_DARKRULER
-	dw MIDNIGHT_FIEND
-	dw SKULL_STALKER
-	dw HITODENCHAK
-	dw WOOD_REMAINS
-	dw HOURGLASS_OF_LIFE
-	dw MADJINN_GUNN
-	dw HANIWA
-	dw YASHINOKI
-	dw VISHWAR_RANDI
-	dw THE_DRDEK
-	dw CANDLE_OF_FATE
-	dw WATER_ELEMENT
-	dw DISSOLVEROCK
-	dw MEDA_BAT
-	dw ROOT_WATER
-	dw ANGELWITCH
-	dw EMBRYONIC_BEAST
-	dw ARCHFIEND_MIRROR
-	dw SECTARIAN_SECRET
-	dw MEGIRUS_LIGHT
-	dw RAY_AND_TEMPERATURE
-	dw KING_FOG
-	dw MYSTICAL_SHEEP_2
-	dw SERPENT_MARAUDER
-	dw CHANGE_SLIME
-	dw PSYCHIC_KAPPA
-	dw DRAGON_ERSATZ_HEAD
-	dw KURAMA
+INCLUDE "data/card_lists/starting_monster_cards.asm"
 
 GenerateStartingDeckMagicCards:
 	push af
@@ -1092,16 +974,7 @@ GenerateStartingDeckMagicCards:
 	pop af
 	ret
 
-StartingDeckMagicCards:
-	table_width 2
-	dw RAIGEKI
-	dw SPARKS
-	dw SPARKS
-	dw HINOTAMA
-	dw MOOYAN_CURRY
-	dw RED_MEDICINE
-	dw DARK_PIERCE_LIGHT
-	assert_table_length DECK_SIZE - NUM_STARTING_DECK_MONSTERS
+INCLUDE "data/card_lists/starting_magic_cards.asm"
 
 RandomlyGiveGaiaFierceKnightOrDarkMagician:
 	push af
@@ -1665,6 +1538,8 @@ PlayMusic_Tea::
 	pop af
 	ret
 
+; plays duel music according to the opponent's duelist class
+; for link duels, always play Duel1
 PlayDuelMusic::
 	push af
 	ld a, [wGameMode]
@@ -1913,14 +1788,14 @@ Func_2bde::
 	push af
 	xor a
 	ld [wcfc0], a
-	ld [wcfc1], a
+	ld [wSwordsOfRevealingLightTurnCount], a
 	pop af
 	ret
 
 Func_2be8::
 	push af
 	ld a, $04
-	ld [wcfc1], a
+	ld [wSwordsOfRevealingLightTurnCount], a
 	pop af
 	ret
 
@@ -1937,12 +1812,12 @@ Func_2bf0::
 
 Func_2bfe::
 	push af
-	ld a, [wcfc1]
-	cp $00
-	jr z, .asm_2c0a
+	ld a, [wSwordsOfRevealingLightTurnCount]
+	cp 0
+	jr z, .skip
 	dec a
-	ld [wcfc1], a
-.asm_2c0a
+	ld [wSwordsOfRevealingLightTurnCount], a
+.skip
 	pop af
 	ret
 
@@ -1963,7 +1838,7 @@ Func_2c1c::
 	push bc
 	push hl
 	ld b, $00
-	ld a, [wcfc1]
+	ld a, [wSwordsOfRevealingLightTurnCount]
 	ld c, a
 	ld hl, Data_2c2c
 	add hl, bc
