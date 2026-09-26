@@ -551,13 +551,23 @@ LoadText_Field:
 	ret
 
 .Texts:
-	text " かくとうじょう"
-	text "      もり"
-	text "     こうや"
-	text "      やま"
-	text "    そうげん"
-	text "      うみ"
-	text "      やみ"
+	IF DEF(_EARLY_DAYS_EN)
+		text "   Arena"
+		text "  Forest"
+		text "Wastelnd"
+		text "Mountain"
+		text "   Sogen"
+		text "     Umi"
+		text "    Yami"
+	ELSE
+		text " かくとうじょう"
+		text "      もり"
+		text "     こうや"
+		text "      やま"
+		text "    そうげん"
+		text "      うみ"
+		text "      やみ"
+	ENDC
 
 ; input:
 ; - wTextArg = card ID
@@ -572,12 +582,18 @@ LoadText_CardName:
 
 	call ClearTextBuffer
 
-	ld de, CardNamePointers
-	ld a, [wTextArg + 0]
-	ld l, a
-	ld a, [wTextArg + 1]
-	ld h, a
-	add hl, hl ; *2
+	IF DEF(_EARLY_DAYS_EN)
+		farcall Func_e400a
+		jr .break
+		db $ca, $6f, $fa, $b7, $ca, $67, $29
+	ELSE
+		ld de, CardNamePointersJp
+		ld a, [wTextArg + 0]
+		ld l, a
+		ld a, [wTextArg + 1]
+		ld h, a
+		add hl, hl ; *2
+	ENDC
 	ld b, h
 	ld c, l
 	add hl, de
@@ -619,8 +635,8 @@ LoadText_CardName:
 	pop af
 	ret
 
-INCLUDE "text/card_name_pointers.asm"
-INCLUDE "text/card_names.asm"
+INCLUDE "text/jp/card_name_pointers.asm"
+INCLUDE "text/jp/card_names.asm"
 
 Func_52a5:
 	push af
@@ -651,8 +667,13 @@ Func_52a5:
 	ret
 
 Text_52c8:
-	text "  ディテイル "
-	text "  フィ-ルド "
+	IF DEF(_EARLY_DAYS_EN)
+		text "Detail  "
+		text "Field   "
+	ELSE
+		text "  ディテイル "
+		text "  フィ-ルド "
+	ENDC
 
 Func_52d8:
 	push af
@@ -683,9 +704,15 @@ Func_52d8:
 	ret
 
 Text_52fb:
-	text "        "
-	text "    こうげき"
-	text "    ぼうぎょ"
+	IF DEF(_EARLY_DAYS_EN)
+		text "        "
+		text "Attack  "
+		text "Defense "
+	ELSE
+		text "        "
+		text "    こうげき"
+		text "    ぼうぎょ"
+	ENDC
 
 Func_5313:
 	push af
@@ -780,27 +807,51 @@ LoadText_CardType:
 	ret
 
 Text_538e:
-	text "ドラゴン    "
-	text "まほうつかい  "
-	text "アンデット   "
-	text "せんし     "
-	text "じゅうせんし  "
-	text "けもの     "
-	text "ちょうじゅう  "
-	text "あくま     "
-	text "てんし     "
-	text "こんちゅう   "
-	text "きょうりゅう  "
-	text "はちゅうるい  "
-	text "さかな     "
-	text "かいりゅう   "
-	text "きかい     "
-	text "いかずち    "
-	text "みず      "
-	text "ほのお     "
-	text "がんせき    "
-	text "しょくぶつ   "
-	text "まほう     "
+	IF DEF(_EARLY_DAYS_EN)
+		text "Dragon  "
+		text "Spellcst"
+		text "Zombie  "
+		text "Warrior "
+		text "BeastWar"
+		text "Beast   "
+		text "WngBeast"
+		text "Fiend   "
+		text "Fairy   "
+		text "Insect  "
+		text "Dinosaur"
+		text "Reptile "
+		text "Fish    "
+		text "SeaSerp "
+		text "Machine "
+		text "Thunder "
+		text "Aqua    "
+		text "Pyro    "
+		text "Rock    "
+		text "Plant   "
+		text "Spell   "
+	ELSE
+		text "ドラゴン    "
+		text "まほうつかい  "
+		text "アンデット   "
+		text "せんし     "
+		text "じゅうせんし  "
+		text "けもの     "
+		text "ちょうじゅう  "
+		text "あくま     "
+		text "てんし     "
+		text "こんちゅう   "
+		text "きょうりゅう  "
+		text "はちゅうるい  "
+		text "さかな     "
+		text "かいりゅう   "
+		text "きかい     "
+		text "いかずち    "
+		text "みず      "
+		text "ほのお     "
+		text "がんせき    "
+		text "しょくぶつ   "
+		text "まほう     "
+	ENDC
 
 Func_5436:
 	push af
@@ -830,25 +881,46 @@ Func_5436:
 	ret
 
 Text_5457:
-	text "インセクタ-はが"
-	text "くじゃくまい  "
-	text "りゅうざき   "
-	text "カジキりょうた "
-	text "かいばせと   "
-	text "かいばモクバ  "
-	text "ふくわじゅつし "
-	text "やみつかい   "
-	text "キ-ス     "
-	text "むとうゆうぎ  "
-	text "ほんだヒロト  "
-	text "じょうのうち  "
-	text "ばくらりょう  "
-	text "シモン·ム-ラン"
-	text "<ぺ>ガサス    "
-	text "やみ·ゆうぎ  "
-	text "つうしんたいせん"
-	text "たいせんにんずう"
-	text "なまえ     "
+	IF DEF(_EARLY_DAYS_EN)
+		text "Weevil  "
+		text "Mai     "
+		text "Rex     "
+		text "Mako    "
+		text "Kaiba   "
+		text "Mokuba  "
+		text "Puppet. "
+		text "PaniK   "
+		text "Keith   "
+		text "Yugi    "
+		text "Tristan "
+		text "Joey    "
+		text "Bakura  "
+		text "Shimon  "
+		text "Pegasus "
+		text "YamiYugi"
+		text "Link Btl"
+		text "# PlayerName    "
+	ELSE
+		text "インセクタ-はが"
+		text "くじゃくまい  "
+		text "りゅうざき   "
+		text "カジキりょうた "
+		text "かいばせと   "
+		text "かいばモクバ  "
+		text "ふくわじゅつし "
+		text "やみつかい   "
+		text "キ-ス     "
+		text "むとうゆうぎ  "
+		text "ほんだヒロト  "
+		text "じょうのうち  "
+		text "ばくらりょう  "
+		text "シモン·ム-ラン"
+		text "<ぺ>ガサス    "
+		text "やみ·ゆうぎ  "
+		text "つうしんたいせん"
+		text "たいせんにんずう"
+		text "なまえ     "
+	ENDC
 
 Func_54ef:
 	push af
@@ -1650,8 +1722,13 @@ Func_5a3a:
 	call SetPendingVBlankMode
 	bcbgcoord 0, 1
 	call AddWordToVBlankStruct
-	ld a, $80
-	call AddByteToVBlankStruct
+	IF DEF(_EARLY_DAYS_EN)
+		farcall Func_e5579
+		jr .asm_5a67
+	ELSE
+		ld a, $80
+		call AddByteToVBlankStruct
+	ENDC
 	ld a, $10
 	call AddByteToVBlankStruct
 	ld a, $24
@@ -1664,6 +1741,7 @@ Func_5a3a:
 	call AddByteToVBlankStruct
 	dec c
 	jr nz, .asm_5a61
+.asm_5a67
 	ld a, TEXTLOAD_NUMBER
 	call SetTextLoadMode
 	ld a, [wcad8]

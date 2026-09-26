@@ -166,7 +166,12 @@ LoadCharTileToVBlankStruct:
 	pop af
 	ret
 
-FontGfx: INCBIN "gfx/font.1bpp"
+FontGfx:
+IF DEF(_EARLY_DAYS_EN)
+	INCBIN "gfx/font/en.1bpp"
+ELSE
+	INCBIN "gfx/font/jp.1bpp"
+ENDC
 
 Func_84e1:
 	push af
@@ -183,7 +188,11 @@ Func_84e1:
 	ld [wTextLine], a
 	ld a, $00
 	ld [wcd44], a
-	call Func_86ec
+	IF DEF(_EARLY_DAYS_EN)
+		call Func_bf42
+	ELSE
+		call Func_86ec
+	ENDC
 	pop af
 	ret
 
@@ -219,28 +228,57 @@ Func_8511:
 	dec e
 	jr nz, .asm_852c
 
-	ld hl, TILEMAP_WIDTH
-	add hl, bc
-	ld b, h
-	ld c, l
-	call AddWordToVBlankStruct
-	ld hl, wcd32
-	ld e, LINE_LENGTH
-.asm_8541
-	ld a, [hli]
-	call AddByteToVBlankStruct
-	dec e
-	jr nz, .asm_8541
-	pop hl
-	pop de
-	pop bc
-	pop af
-	ret
+	IF DEF(_EARLY_DAYS_EN)
+		pop hl
+		pop de
+		pop bc
+		pop af
+		ret
 
-.BGCoords:
-	dwcoord 1, 11 ; LINE_1
-	dwcoord 1, 13 ; LINE_2
-	dwcoord 1, 15 ; LINE_3
+	.BGCoords:
+		dwcoord 1, 12
+		dwcoord 1, 13
+		dwcoord 1, 14
+		dwcoord 1, 15
+		dwcoord 1, 16
+
+		; unreachable
+		call AddByteToVBlankStruct
+		dec e
+		db $20, $f9
+		pop hl
+		pop de
+		pop bc
+		pop af
+		ret
+
+		dwcoord 1, 11 ; LINE_1
+		dwcoord 1, 13 ; LINE_2
+		dwcoord 1, 15 ; LINE_3
+	ELSE
+		ld hl, TILEMAP_WIDTH
+		add hl, bc
+		ld b, h
+		ld c, l
+		call AddWordToVBlankStruct
+		ld hl, wcd32
+		ld e, LINE_LENGTH
+	.asm_8541
+		ld a, [hli]
+		call AddByteToVBlankStruct
+		dec e
+		jr nz, .asm_8541
+		pop hl
+		pop de
+		pop bc
+		pop af
+		ret
+
+	.BGCoords:
+		dwcoord 1, 11 ; LINE_1
+		dwcoord 1, 13 ; LINE_2
+		dwcoord 1, 15 ; LINE_3
+	ENDC
 
 Func_8553:
 	push af
@@ -355,8 +393,13 @@ Func_85e3:
 	call Func_8710
 	ld a, [wcd46]
 	call ProcessChar
-	ld b, $00
-	ld a, [wcd48 + 1]
+	IF DEF(_EARLY_DAYS_EN)
+		call Func_bf00
+		jr .asm_8613
+	ELSE
+		ld b, $00
+		ld a, [wcd48 + 1]
+	ENDC
 	ld c, a
 	ld hl, wcd20
 	add hl, bc
@@ -365,6 +408,7 @@ Func_85e3:
 	call Func_8631
 	call Func_8511
 	call Func_8553
+.asm_8613
 	call Func_861b
 .asm_8616
 	pop hl
@@ -451,19 +495,34 @@ Func_867a:
 	call Func_8788
 	jr .asm_86cc
 .asm_868c
-	cp $14
-	jr nz, .asm_86a2
-	ld a, $00
-	ld [wcd48 + 1], a
-	; set last line
-	ld a, LINE_3
-	ld [wTextLine], a
-	call Func_86ec
-	call Func_8511
-	jr .asm_86cc
-.asm_86a2
-	cp $13
-	jr nz, .asm_86b8
+	IF DEF(_EARLY_DAYS_EN)
+		sub $10
+		cp NUM_TEXTBOX_LINES
+		jr nc, .asm_86cc
+		ld [wTextLine], a
+		xor a
+		ld [wcd48 + 1], a
+		call Func_86ec
+		call Func_8511
+		jr .asm_86cc
+		ld a, [hli]
+		cp $13
+		jr nz, .asm_86b8
+	ELSE
+		cp $14
+		jr nz, .asm_86a2
+		ld a, $00
+		ld [wcd48 + 1], a
+		; set last line
+		ld a, LINE_3
+		ld [wTextLine], a
+		call Func_86ec
+		call Func_8511
+		jr .asm_86cc
+	.asm_86a2
+		cp $13
+		jr nz, .asm_86b8
+	ENDC
 	ld a, $00
 	ld [wcd48 + 1], a
 	; set second line
@@ -517,12 +576,18 @@ Func_86ec:
 	ld a, ' '
 	call ProcessChar
 	ld a, [wCharHeadTile]
-	ld hl, wcd20
-	ld c, LINE_LENGTH
+	IF DEF(_EARLY_DAYS_EN)
+		ld hl, wcd20
+		jr .asm_8703
+	ELSE
+		ld hl, wcd20
+		ld c, LINE_LENGTH
+	ENDC
 .asm_86ff
 	ld [hli], a
 	dec c
 	jr nz, .asm_86ff
+.asm_8703
 	ld a, [wCharTile]
 	ld c, LINE_LENGTH
 .asm_8708
@@ -686,7 +751,11 @@ Func_87e3:
 	push af
 	push bc
 	push hl
-	call Func_8565
+	IF DEF(_EARLY_DAYS_EN)
+		call Func_bf58
+	ELSE
+		call Func_8565
+	ENDC
 	ld b, $00
 	ld a, [wcd52]
 	dec a

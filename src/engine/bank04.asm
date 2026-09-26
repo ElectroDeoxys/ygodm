@@ -1260,18 +1260,34 @@ Func_1074e:
 	dw .Tiles2
 
 .Tiles1:
-	db $d3, $d3, $d3, $7d, $d3, $d4, $00, $d3, $d3, $d3, $d3, $d3, $d3, $d3, $d3, $d3, $d3, $d3
-	db $00, $14, $0d, $13, $11, $d6, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
-	db $00, $00, $00, $71, $00, $d6, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
-	db $00, $16, $3b, $25, $00, $d6, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
-	db $d8, $d8, $d8, $d8, $d8, $d9, $00, $d8, $d8, $d8, $d8, $d8, $d8, $d8, $d8, $d8, $d8, $d8
+	IF DEF(_EARLY_DAYS_EN)
+		db $d3, $d3, $d3, $d3, $d3, $d4, $00, $d3, $d3, $d3, $d3, $d3, $d3, $d3, $d3, $d3, $d3, $d3
+		db $00, $0b, $1e, $15, $00, $d6, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
+		db $00, $00, $00, $00, $00, $d6, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
+		db $00, $0e, $10, $0e, $00, $d6, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
+		db $d8, $d8, $d8, $d8, $d8, $d9, $00, $d8, $d8, $d8, $d8, $d8, $d8, $d8, $d8, $d8, $d8, $d8
+	ELSE
+		db $d3, $d3, $d3, $7d, $d3, $d4, $00, $d3, $d3, $d3, $d3, $d3, $d3, $d3, $d3, $d3, $d3, $d3
+		db $00, $14, $0d, $13, $11, $d6, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
+		db $00, $00, $00, $71, $00, $d6, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
+		db $00, $16, $3b, $25, $00, $d6, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
+		db $d8, $d8, $d8, $d8, $d8, $d9, $00, $d8, $d8, $d8, $d8, $d8, $d8, $d8, $d8, $d8, $d8, $d8
+	ENDC
 
 .Tiles2:
-	db $d3, $7d, $d3, $d3, $d3, $d3, $d3, $d3, $d3, $d3, $d3, $d3, $d3, $d3, $d3, $d3, $d3, $d3
-	db $03, $1e, $1e, $00, $10, $0e, $31, $34, $29, $18, $38, $00, $00, $00, $00, $24, $0c, $00
-	db $00, $00, $00, $00, $00, $71, $00, $00, $00, $71, $00, $00, $00, $00, $00, $00, $00, $00
-	db $14, $23, $1f, $29, $0e, $1d, $00, $0c, $0c, $1d, $17, $10, $75, $00, $00, $0c, $0c, $0e
-	db $d8, $d8, $d8, $d8, $d8, $d8, $d8, $d8, $d8, $d8, $d8, $d8, $d8, $d8, $d8, $d8, $d8, $d8
+	IF DEF(_EARLY_DAYS_EN)
+		db $d3, $d3, $d3, $d3, $d3, $d3, $d3, $d3, $d3, $d3, $d3, $d3, $d3, $d3, $d3, $d3, $d3, $d3
+		db $13, $37, $00, $38, $2c, $2d, $37, $00, $32, $25, $31, $29, $00, $00, $00, $23, $29, $37
+		db $00, $19, $15, $75, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
+		db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $18, $33, $00
+		db $d8, $d8, $d8, $d8, $d8, $d8, $d8, $d8, $d8, $d8, $d8, $d8, $d8, $d8, $d8, $d8, $d8, $d8
+	ELSE
+		db $d3, $7d, $d3, $d3, $d3, $d3, $d3, $d3, $d3, $d3, $d3, $d3, $d3, $d3, $d3, $d3, $d3, $d3
+		db $03, $1e, $1e, $00, $10, $0e, $31, $34, $29, $18, $38, $00, $00, $00, $00, $24, $0c, $00
+		db $00, $00, $00, $00, $00, $71, $00, $00, $00, $71, $00, $00, $00, $00, $00, $00, $00, $00
+		db $14, $23, $1f, $29, $0e, $1d, $00, $0c, $0c, $1d, $17, $10, $75, $00, $00, $0c, $0c, $0e
+		db $d8, $d8, $d8, $d8, $d8, $d8, $d8, $d8, $d8, $d8, $d8, $d8, $d8, $d8, $d8, $d8, $d8, $d8
+	ENDC
 
 Func_10846:
 	push af
@@ -1734,10 +1750,17 @@ Func_10b4a:
 	ret
 
 .data_1
-	db $f1, $f0, $f0, $f0, $f0, $f0, $f0, $f2, $f0, $0b, $10, $15, $1a, $1f, $24, $29
-	db $2e, $31, $0c, $11, $16, $1b, $20, $25, $2a, $2f, $32, $0d, $12, $17, $1c, $21
-	db $26, $2b, $30, $33, $0e, $13, $18, $1d, $22, $27, $2c, $36, $34, $0f, $14, $19
-	db $1e, $23, $28, $2d, $38, $35, $39, $3a, $3b, $3c, $00, $f5, $f6, $f3, $f0
+	IF DEF(_EARLY_DAYS_EN)
+		db $f0, $f0, $f0, $f0, $f0, $f0, $f0, $f2, $f0, $0b, $0c, $0d, $0e, $0f, $10, $11
+		db $12, $13, $14, $15, $16, $17, $18, $19, $1a, $1b, $1c, $1d, $1e, $1f, $20, $21
+		db $22, $23, $24, $25, $26, $27, $28, $29, $2a, $2b, $2c, $2d, $2e, $2f, $30, $31
+		db $32, $33, $34, $35, $36, $37, $38, $39, $3a, $3b, $3c, $3d, $3e, $f3, $f0
+	ELSE
+		db $f1, $f0, $f0, $f0, $f0, $f0, $f0, $f2, $f0, $0b, $10, $15, $1a, $1f, $24, $29
+		db $2e, $31, $0c, $11, $16, $1b, $20, $25, $2a, $2f, $32, $0d, $12, $17, $1c, $21
+		db $26, $2b, $30, $33, $0e, $13, $18, $1d, $22, $27, $2c, $36, $34, $0f, $14, $19
+		db $1e, $23, $28, $2d, $38, $35, $39, $3a, $3b, $3c, $00, $f5, $f6, $f3, $f0
+	ENDC
 	
 .data_2
 	db $f4, $f0, $f0, $f0, $f0, $f0, $f0, $f2, $f0, $3d, $42, $47, $4c, $51, $56, $5b
@@ -1812,14 +1835,25 @@ Func_10c4e:
 	ret
 
 Func_10c56:
-	push bc
-	push de
-	push hl
-	ld de, NULL
-	ld a, [wcfac]
-	ld c, a
-	cp $00
-	jr z, .asm_10c92
+	IF DEF(_EARLY_DAYS_EN)
+		; unknown pointers
+		dw Data_10fc7
+		dw Data_10fcf
+		dw Data_10fcf
+		dw Data_10fcf
+		dw Data_10fcf
+		dw Data_10fcf
+		dw Data_10fcf
+	ELSE
+		push bc
+		push de
+		push hl
+		ld de, NULL
+		ld a, [wcfac]
+		ld c, a
+		cp $00
+		jr z, .asm_10c92
+	ENDC
 	dec c
 	call Func_109e6
 	ld b, a
@@ -2162,42 +2196,87 @@ Func_10eab:
 	dw .data_3
 
 .data_1
-	db $00, $07
+	IF DEF(_EARLY_DAYS_EN)
+		db $07, $07
+	ELSE
+		db $00, $07
+	ENDC
 .data_2
-	db $00, $00, $00, $00, $00, $07, $07, $07, $07
+	IF DEF(_EARLY_DAYS_EN)
+		db $07, $07, $07, $07, $07, $07, $07, $07, $07
+	ELSE
+		db $00, $00, $00, $00, $00, $07, $07, $07, $07
+	ENDC
 .data_3
 	db $00, $01, $02, $03, $04, $05, $06, $07, $08
 
 Func_10f17:
-	push af
-	push bc
-	push de
-	push hl
-	ld a, [wcfa9]
-	cp $02
-	jr z, .asm_10f50
-	ld a, [wcfaa]
-	ld e, a
-	cp $00
-	jr nz, .asm_10f2f
-	ld hl, .ptrs_1
-	jr .asm_10f32
-.asm_10f2f
-	ld hl, .ptrs_2
-.asm_10f32
-	ld b, $00
-	ld a, [wcfab]
-	ld c, a
-	sla c
-	add hl, bc
-	ld a, [hli]
-	ld h, [hl]
-	ld l, a
-	ld a, [wcfaa]
-	ld c, a
-	add hl, bc
-	ld a, [hl]
-	ld [wcfaa], a
+	IF DEF(_EARLY_DAYS_EN)
+		push af
+		push bc
+		push de
+		push hl
+		ld hl, wcfa9
+		ld a, [hli]
+		cp $02
+		jr z, .asm_10f42
+		ld e, [hl]
+		inc hl
+		ld b, $00
+		ld c, [hl]
+		sla c
+		cp $00
+		ld hl, .ptrs_1
+		jr z, .asm_10f34
+		ld hl, .ptrs_2
+	.asm_10f34
+		add hl, bc
+		ld a, [hli]
+		ld h, [hl]
+		ld l, a
+		ld c, e
+		add hl, bc
+		ld a, [hl]
+		ld [wcfaa], a
+		cp e
+		call nz, Func_2aef
+	.asm_10f42
+		pop hl
+		pop de
+		pop bc
+		pop af
+		ret
+	ELSE
+		push af
+		push bc
+		push de
+		push hl
+		ld a, [wcfa9]
+		cp $02
+		jr z, .asm_10f50
+		ld a, [wcfaa]
+		ld e, a
+		cp $00
+		jr nz, .asm_10f2f
+		ld hl, .ptrs_1
+		jr .asm_10f32
+	.asm_10f2f
+		ld hl, .ptrs_2
+	.asm_10f32
+		ld b, $00
+		ld a, [wcfab]
+		ld c, a
+		sla c
+		add hl, bc
+		ld a, [hli]
+		ld h, [hl]
+		ld l, a
+		ld a, [wcfaa]
+		ld c, a
+		add hl, bc
+		ld a, [hl]
+		ld [wcfaa], a
+	ENDC
 	ld a, [wcfaa]
 	cp e
 	jr z, .asm_10f50
@@ -2225,58 +2304,100 @@ Func_10f17:
 	dw .data_2
 	dw .data_2
 	dw .data_2
-	dw .data_3
-
+	IF DEF(_EARLY_DAYS_EN)
+		dw .data_2
+	ELSE
+		dw .data_3
+	ENDC
 .data_1
-	db $07, $00, $00, $00, $00, $00, $00, $07
+	IF DEF(_EARLY_DAYS_EN)
+		db $07, $07, $07, $07, $07, $07, $07, $07
+	ELSE
+		db $07, $00, $00, $00, $00, $00, $00, $07
+	ENDC
 .data_2
 	db $01, $02, $03, $04, $05, $06, $07, $08, $08
 .data_3
 	db $01, $02, $03, $04, $05, $06, $07, $07
 
 Func_10f8a:
-	push af
-	ld a, [wcfa9]
-	cp $02
-	jr z, .asm_10fb7
-	ld a, [wcfaa]
-	ld e, a
-	ld b, $00
-	ld a, [wcfab]
-	ld c, a
-	sla c
-	ld hl, .ptrs
-	add hl, bc
-	ld a, [hli]
-	ld h, [hl]
-	ld l, a
-	ld a, [wcfaa]
-	ld c, a
-	add hl, bc
-	ld a, [hl]
-	ld [wcfaa], a
-	ld a, [wcfaa]
-	cp e
-	jr z, .asm_10fb7
+	IF DEF(_EARLY_DAYS_EN)
+		push af
+		ld hl, wcfa9
+		ld a, [hli]
+		cp $02
+		jr z, .asm_10fb2
+		ld e, [hl]
+		ld b, $00
+		inc hl
+		ld c, [hl]
+		sla c
+		ld hl, .ptrs
+		cp $00
+		jr z, .asm_10fa4
+		ld hl, Func_10c56
+	.asm_10fa4
+		add hl, bc
+		ld a, [hli]
+		ld h, [hl]
+		ld l, a
+		ld c, e
+		add hl, bc
+		ld a, [hl]
+		ld [wcfaa], a
+		cp e
+		call nz, Func_2aef
+	.asm_10fb2
+		pop af
+		ret
+	ELSE
+		push af
+		ld a, [wcfa9]
+		cp $02
+		jr z, .asm_10fb7
+		ld a, [wcfaa]
+		ld e, a
+		ld b, $00
+		ld a, [wcfab]
+		ld c, a
+		sla c
+		ld hl, .ptrs
+		add hl, bc
+		ld a, [hli]
+		ld h, [hl]
+		ld l, a
+		ld a, [wcfaa]
+		ld c, a
+		add hl, bc
+		ld a, [hl]
+		ld [wcfaa], a
+		ld a, [wcfaa]
+		cp e
+		jr z, .asm_10fb7
+	ENDC
 	call Func_2aef
 .asm_10fb7
 	pop af
 	ret
 
 .ptrs
-	dw .data_1
-	dw .data_2
-	dw .data_2
-	dw .data_2
-	dw .data_2
-	dw .data_2
-	dw .data_3
+	dw Data_10fc7
+	dw Data_10fcf
+	dw Data_10fcf
+	dw Data_10fcf
+	dw Data_10fcf
+	dw Data_10fcf
+	dw Data_10fd8
 
-.data_1
-	db $00, $00, $00, $00, $00, $00, $00, $00
-.data_2
+Data_10fc7:
+	IF DEF(_EARLY_DAYS_EN)
+		db $07, $07, $07, $07, $07, $07, $07, $07
+	ELSE
+		db $00, $00, $00, $00, $00, $00, $00, $00
+	ENDC
+Data_10fcf:
 	db $00, $00, $01, $02, $03, $04, $05, $06, $07
-.data_3
+Data_10fd8:
 	db $00, $00, $01, $02, $03, $04, $05, $06
 
 Func_10fe0:
@@ -3007,9 +3128,15 @@ Func_114aa:
 	ld [hli], a
 	ld a, [wTextBuffer + $3]
 	ld [hli], a
-	ld a, $20
-	ld [hli], a
-	ld a, $38
+	IF DEF(_EARLY_DAYS_EN)
+		ld a, $1a
+		ld [hli], a
+		ld a, $30
+	ELSE
+		ld a, $20
+		ld [hli], a
+		ld a, $38
+	ENDC
 	ld [hli], a
 	pop hl
 	pop bc
@@ -3045,7 +3172,11 @@ Func_114e9:
 	ld [hli], a
 	ld a, [wTextBuffer + $3]
 	ld [hli], a
-	ld a, $18
+	IF DEF(_EARLY_DAYS_EN)
+		ld a, $0c
+	ELSE
+		ld a, $18
+	ENDC
 	ld [hli], a
 	ld a, $38
 	ld [hli], a
@@ -3066,11 +3197,19 @@ Func_114e9:
 	ld [hli], a
 	ld a, [wTextBuffer + $3]
 	ld [hli], a
-	ld a, $16
-	ld [hli], a
-	ld a, $3c
-	ld [hli], a
-	ld [hl], $0d
+	IF DEF(_EARLY_DAYS_EN)
+		ld a, $21
+		ld [hli], a
+		ld a, $2d
+		ld [hli], a
+		ld [hl], $32
+	ELSE
+		ld a, $16
+		ld [hli], a
+		ld a, $3c
+		ld [hli], a
+		ld [hl], $0d
+	ENDC
 	pop hl
 	pop de
 	pop bc
@@ -3483,8 +3622,13 @@ PtrTable_117bd:
 	dw wTextBuffer + $1
 	dw wTextBuffer + $2
 	dw wTextBuffer + $3
-	dw Data_57e9
-	dw Data_57ea
+	IF DEF(_EARLY_DAYS_EN)
+		dw $551b
+		dw $551e
+	ELSE
+		dw Data_57e9
+		dw Data_57ea
+	ENDC
 	dw Data_57ee
 
 PtrTable_117cb:
@@ -3492,9 +3636,15 @@ PtrTable_117cb:
 	dw wTextBuffer + $1
 	dw wTextBuffer + $2
 	dw wTextBuffer + $3
-	dw Data_57eb
-	dw Data_57ec
-	dw Data_57ed
+	IF DEF(_EARLY_DAYS_EN)
+		dw $5540
+		dw $5543
+		dw $5546
+	ELSE
+		dw Data_57eb
+		dw Data_57ec
+		dw Data_57ed
+	ENDC
 	dw Data_57ee
 
 PtrTable_117db:
@@ -3502,8 +3652,13 @@ PtrTable_117db:
 	dw wTextBuffer + $1
 	dw wTextBuffer + $2
 	dw wTextBuffer + $3
-	dw Data_57ef
-	dw Data_57ea
+	IF DEF(_EARLY_DAYS_EN)
+		dw $54e0
+		dw $54e3
+	ELSE
+		dw Data_57ef
+		dw Data_57ea
+	ENDC
 	dw Data_57ee
 
 Data_57e9:

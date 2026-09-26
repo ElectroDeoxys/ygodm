@@ -231,38 +231,83 @@ Func_3824c:
 	ret
 
 LoadAttackGfx:
-	push af
-	push bc
-	push de
-	push hl
-	ld bc, vTiles0
-	ld hl, AttackGfx
-	ld e, $10
-.asm_38280
-	ld a, VBLANK_08
-	call SetPendingVBlankMode
-	call AddWordToVBlankStruct
-	push hl
-	ld hl, 8 tiles
-	add hl, bc
-	ld b, h
-	ld c, l
-	pop hl
-	ld d, 8 tiles
-.asm_38292
-	ld a, [hli]
-	call AddByteToVBlankStruct
-	dec d
-	jr nz, .asm_38292
-	call RequestVBlankMode
-	call WaitForVBlank
-	dec e
-	jr nz, .asm_38280
-	pop hl
-	pop de
-	pop bc
-	pop af
-	ret
+	IF DEF(_EARLY_DAYS_EN)
+		push af
+		push bc
+		push de
+		push hl
+		ld hl, AttackGfx
+	.LoadTiles:
+		ld bc, vTiles0
+		ld d, $80 ; tiles
+	.asm_38280
+		ld e, TILE_SIZE
+	.asm_38282
+		ld a, [hli]
+		ld [bc], a
+		inc c
+		dec e
+		jr nz, .asm_38282
+		ld a, c
+		or a
+		jr nz, .asm_3828d
+		inc b
+	.asm_3828d
+		dec d
+		jr nz, .asm_38280
+		pop hl
+		pop de
+		pop bc
+		pop af
+		ret
+
+		; vestigial code
+		rrca
+		dec d
+		db $20, $f9
+		call RequestVBlankMode
+		call WaitForVBlank
+		dec e
+		db $20, $de
+		pop hl
+		pop de
+		pop bc
+		pop af
+		ret
+	ELSE
+		push af
+		push bc
+		push de
+		push hl
+		ld bc, vTiles0
+		ld hl, AttackGfx
+		ld e, $10
+	.asm_38280
+		ld a, VBLANK_08
+		call SetPendingVBlankMode
+		call AddWordToVBlankStruct
+		push hl
+		ld hl, 8 tiles
+		add hl, bc
+		ld b, h
+		ld c, l
+		pop hl
+		ld d, 8 tiles
+	.asm_38292
+		ld a, [hli]
+		call AddByteToVBlankStruct
+		dec d
+		jr nz, .asm_38292
+		call RequestVBlankMode
+		call WaitForVBlank
+		dec e
+		jr nz, .asm_38280
+		pop hl
+		pop de
+		pop bc
+		pop af
+		ret
+	ENDC
 
 AttackGfx: INCBIN "gfx/duel/attack.2bpp"
 
@@ -271,8 +316,13 @@ LoadDestroyGfx:
 	push bc
 	push de
 	push hl
-	ld bc, vTiles0
-	ld hl, DestroyGfx
+	IF DEF(_EARLY_DAYS_EN)
+		ld hl, DestroyGfx
+		jp LoadAttackGfx.LoadTiles
+	ELSE
+		ld bc, vTiles0
+		ld hl, DestroyGfx
+	ENDC
 	ld e, $10
 .asm_38ab3
 	ld a, VBLANK_08

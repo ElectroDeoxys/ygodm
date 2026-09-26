@@ -1,6 +1,7 @@
 roms := \
 	ygodm.gb \
-	ygodm_edc_jp.gb
+	ygodm_edc_jp.gb \
+	ygodm_edc_en.gb
 
 rom_obj := \
 	src/audio.o \
@@ -11,9 +12,11 @@ rom_obj := \
 
 ygodm_obj        := $(rom_obj:.o=.o)
 ygodm_edc_jp_obj := $(rom_obj:.o=_edc_jp.o)
+ygodm_edc_en_obj := $(rom_obj:.o=_edc_en.o)
 
 ygodm_link        := src/layout.link
 ygodm_edc_jp_link := src/layout_edc.link
+ygodm_edc_en_link := src/layout_edc.link
 
 ### Build tools
 
@@ -45,6 +48,7 @@ RGBGFXFLAGS  ?= -Weverything
 	all \
 	ygodm \
 	ygodm_edc_jp \
+	ygodm_edc_en \
 	clean \
 	tidy \
 	compare \
@@ -53,6 +57,7 @@ RGBGFXFLAGS  ?= -Weverything
 all: ygodm
 ygodm: ygodm.gb
 ygodm_edc_jp: ygodm_edc_jp.gb
+ygodm_edc_en: ygodm_edc_en.gb
 
 clean: tidy
 	find src/gfx \
@@ -65,6 +70,7 @@ tidy:
 	      $(roms:.gb=.map) \
 	      $(ygodm_obj) \
 	      $(ygodm_edc_jp_obj) \
+	      $(ygodm_edc_en_obj) \
 	      src/rgbdscheck.o
 	$(MAKE) clean -C tools/
 
@@ -83,7 +89,8 @@ RGBASMFLAGS += -E
 endif
 
 $(ygodm_obj):        RGBASMFLAGS +=
-$(ygodm_edc_jp_obj): RGBASMFLAGS += -D_EARLY_DAYS
+$(ygodm_edc_jp_obj): RGBASMFLAGS += -D_EARLY_DAYS -D_EARLY_DAYS_JP
+$(ygodm_edc_en_obj): RGBASMFLAGS += -D_EARLY_DAYS -D_EARLY_DAYS_EN
 
 src/rgbdscheck.o: src/rgbdscheck.asm
 	$(RGBASM) -o $@ $<
@@ -106,6 +113,7 @@ endef
 # Dependencies for shared objects objects
 $(foreach obj, $(ygodm_obj), $(eval $(call DEP,$(obj),$(obj:.o=.asm))))
 $(foreach obj, $(ygodm_edc_jp_obj), $(eval $(call DEP,$(obj),$(obj:_edc_jp.o=.asm))))
+$(foreach obj, $(ygodm_edc_en_obj), $(eval $(call DEP,$(obj),$(obj:_edc_en.o=.asm))))
 
 endif
 
@@ -119,7 +127,6 @@ RGBFIXFLAGS += -sv -k A4 -l 0x33 -m MBC1+RAM+BATTERY -p 0xff -r 2 -t YUGIOU
 
 ### Special sprite rules
 
-src/gfx/font.1bpp: tools/gfx += --remove-whitespace
 src/gfx/gfx_f40e8.1bpp: RGBGFXFLAGS += -x 6
 
 src/gfx/gfx_630b.2bpp: tools/gfx += --interleave --png=$<
@@ -131,6 +138,7 @@ src/gfx/duel/destroy.2bpp: tools/gfx += --interleave --png=$<
 
 src/gfx/cards/%.2bpp: tools/gfx += --interleave --png=$<
 src/gfx/characters/%.2bpp: tools/gfx += --interleave --png=$<
+src/gfx/font/%.1bpp: tools/gfx += --remove-whitespace
 
 ### Catch-all graphics rules
 

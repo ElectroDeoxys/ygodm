@@ -2,6 +2,10 @@
 	const LINE_1 ; $0
 	const LINE_2 ; $1
 	const LINE_3 ; $2
+	IF DEF(_EARLY_DAYS_EN)
+		const LINE_4 ; $3
+		const LINE_5 ; $4
+	ENDC
 DEF NUM_TEXTBOX_LINES EQU const_value
 
 DEF LINE_LENGTH EQU 18

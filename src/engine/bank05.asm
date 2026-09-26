@@ -887,27 +887,48 @@ Func_146aa:
 
 Func_146b6:
 	push af
-	ld a, VBLANK_10
-	call SetPendingVBlankMode
-	ld a, $00
-	ld [wcf45], a
-	ld a, $00
-	ld [wcf46], a
-	call Func_14830
-	call Func_146ef
-	call RequestVBlankMode
-	call WaitForVBlank
 
-	ld a, VBLANK_10
-	call SetPendingVBlankMode
-	ld a, $00
-	ld [wcf45], a
+	IF DEF(_EARLY_DAYS_EN)
+		ld a, $00
+	.asm_146b9
+		ld [wcf46], a
+		ld a, $10
+		call SetPendingVBlankMode
+		ld a, $00
+		ld [wcf45], a
+		call Func_14830
+		call Func_146ef
+		call RequestVBlankMode
+		call WaitForVBlank
+		ld a, [wcf46]
+		inc a
+		cp $03
+		jr nz, .asm_146b9
+		jr .asm_146ed
+	ELSE
+		ld a, VBLANK_10
+		call SetPendingVBlankMode
+		ld a, $00
+		ld [wcf45], a
+		ld a, $00
+		ld [wcf46], a
+		call Func_14830
+		call Func_146ef
+		call RequestVBlankMode
+		call WaitForVBlank
+		ld a, VBLANK_10
+		call SetPendingVBlankMode
+		ld a, $00
+		ld [wcf45], a
+	ENDC
+
 	ld a, $01
 	ld [wcf46], a
 	call Func_14830
 	call Func_146ef
 	call RequestVBlankMode
 	call WaitForVBlank
+.asm_146ed
 	pop af
 	ret
 
@@ -933,28 +954,59 @@ Func_146ef:
 	call AddByteToVBlankStruct
 	dec e
 	jr nz, .asm_1470a
-	ld hl, TILEMAP_WIDTH
-	add hl, bc
-	ld b, h
-	ld c, l
-	call AddWordToVBlankStruct
-	ld hl, wcf2f
-	ld e, LINE_LENGTH
-.asm_1471f
-	ld a, [hli]
-	call AddByteToVBlankStruct
-	dec e
-	jr nz, .asm_1471f
-	pop hl
-	pop de
-	pop bc
-	pop af
-	ret
 
-.Coords:
-	dwcoord 1, 0, vBGMap1
-	dwcoord 1, 2, vBGMap1
-	dwcoord 1, 4, vBGMap1
+	IF DEF(_EARLY_DAYS_EN)
+		pop hl
+		pop de
+		pop bc
+		pop af
+		ret
+
+	.Coords:
+		dwcoord 1, 1, vBGMap1
+		dwcoord 1, 2, vBGMap1
+		dwcoord 1, 3, vBGMap1
+
+		db $cf
+		ld e, LINE_LENGTH
+	.asm_1471f
+		ld a, [hli]
+		call AddByteToVBlankStruct
+		dec e
+		jr nz, .asm_1471f
+		pop hl
+		pop de
+		pop bc
+		pop af
+		ret
+	
+		dwcoord 1, 0, vBGMap1
+		dwcoord 1, 2, vBGMap1
+		dwcoord 1, 4, vBGMap1
+	ELSE
+		ld hl, TILEMAP_WIDTH
+		add hl, bc
+		ld b, h
+		ld c, l
+		call AddWordToVBlankStruct
+		ld hl, wcf2f
+		ld e, LINE_LENGTH
+	.asm_1471f
+		ld a, [hli]
+		call AddByteToVBlankStruct
+		dec e
+		jr nz, .asm_1471f
+		pop hl
+		pop de
+		pop bc
+		pop af
+		ret
+	
+	.Coords:
+		dwcoord 1, 0, vBGMap1
+		dwcoord 1, 2, vBGMap1
+		dwcoord 1, 4, vBGMap1
+	ENDC
 
 Func_14731:
 	push af
@@ -1005,12 +1057,20 @@ Func_14761:
 	ld c, a
 	ld hl, wcf1d
 	add hl, bc
-	ld a, [wCharHeadTile]
-	ld [hl], a
-	ld a, [wcf45]
-	ld c, a
-	ld hl, wcf2f
-	add hl, bc
+	IF DEF(_EARLY_DAYS_EN)
+	jr .skip_head_tile
+		REPT 10
+			nop
+		ENDR
+	.skip_head_tile
+	ELSE
+		ld a, [wCharHeadTile]
+		ld [hl], a
+		ld a, [wcf45]
+		ld c, a
+		ld hl, wcf2f
+		add hl, bc
+	ENDC
 	ld a, [wCharTile]
 	ld [hl], a
 	call Func_146ef
@@ -1044,7 +1104,11 @@ Func_147b0:
 	ld a, $00
 	ld [wcf45], a
 	ld a, [wcf46]
-	cp $02
+	IF DEF(_EARLY_DAYS_EN)
+		cp $03
+	ELSE
+		cp $02
+	ENDC
 	jr nc, .asm_147c5
 	inc a
 .asm_147c5
@@ -1068,16 +1132,29 @@ Func_147d4:
 	call Func_14f90
 	jr .asm_14810
 .asm_147e6
-	cp $13
-	jr nz, .asm_147fc
-	ld a, $00
-	ld [wcf45], a
-	ld a, $01
-	ld [wcf46], a
-	call Func_14830
-	call Func_146ef
-	jr .asm_14810
-.asm_147fc
+	IF DEF(_EARLY_DAYS_EN)
+		sub $12
+		cp $03
+		jr nc, .asm_147fa
+		ld [wcf46], a
+		ld a, $00
+		ld [wcf45], a
+		call Func_14830
+		call Func_146ef
+	.asm_147fa
+		jr .asm_14810
+	ELSE
+		cp $13
+		jr nz, .asm_147fc
+		ld a, $00
+		ld [wcf45], a
+		ld a, $01
+		ld [wcf46], a
+		call Func_14830
+		call Func_146ef
+		jr .asm_14810
+	.asm_147fc
+	ENDC
 	cp $12
 	jr nz, .asm_14810
 	ld a, $00
@@ -1120,19 +1197,29 @@ Func_14830:
 	call Func_14854
 	ld a, ' '
 	call ProcessChar
-	ld a, [wCharHeadTile]
+	IF DEF(_EARLY_DAYS_EN)
+		ld a, [wCharTile]
+	ELSE
+		ld a, [wCharHeadTile]
+	ENDC
 	ld hl, wcf1d
 	ld c, LINE_LENGTH
 .asm_14843
 	ld [hli], a
 	dec c
 	jr nz, .asm_14843
-	ld a, [wCharTile]
+	IF DEF(_EARLY_DAYS_EN)
+		jr .done
+		db $ca
+	ELSE
+		ld a, [wCharTile]
+	ENDC
 	ld c, LINE_LENGTH
 .asm_1484c
 	ld [hli], a
 	dec c
 	jr nz, .asm_1484c
+.done
 	pop hl
 	pop bc
 	pop af
@@ -1297,9 +1384,14 @@ Func_14934:
 	ld c, a
 	sla c
 	rl b
-	ld hl, DuelMessages
-	add hl, bc
-	ld a, [hli]
+	IF DEF(_EARLY_DAYS_EN)
+		farcall Func_e559a
+		jr .asm_1495e
+	ELSE
+		ld hl, DuelMessagesJp
+		add hl, bc
+		ld a, [hli]
+	ENDC
 	ld h, [hl]
 	ld l, a
 	ld a, [wcf43 + 1]
@@ -1315,6 +1407,7 @@ Func_14934:
 .asm_1495c
 	add hl, bc
 	ld a, [hl]
+.asm_1495e
 	pop hl
 	pop bc
 	ret
@@ -1346,158 +1439,158 @@ Func_14970:
 
 	const_def
 
-DuelMessages:
-	message_ptr Text_ItsYourTurn ; $00
-	message_ptr Text_ItsTheComputersTurn ; $01
-	message_ptr Text_149f4 ; $02
-	message_ptr Text_149ff ; $03
-	message_ptr Text_TurnFinished ; $04
-	message_ptr Text_CommunicationError ; $05
-	message_ptr Text_TheDeckIsNotComplete ; $06
-	message_ptr Text_TheTradeHasEnded ; $07
-	message_ptr Text_YourOpponentIsCurrentlySearching ; $08
-	message_ptr Text_CommunicationHasBeenEstablished ; $09
-	message_ptr Text_14a8a ; $0a
-	message_ptr Text_14a96 ; $0b
-	message_ptr Text_14aa2 ; $0c
-	message_ptr Text_14aae ; $0d
-	message_ptr Text_14aba ; $0e
-	message_ptr Text_14ad5 ; $0f
-	message_ptr Text_14aec ; $10
-	message_ptr Text_14b09 ; $11
-	message_ptr Text_14b20 ; $12
-	message_ptr Text_14b3d ; $13
-	message_ptr Text_14b6f ; $14
-	message_ptr Text_14bad ; $15
-	message_ptr Text_14be9 ; $16
-	message_ptr Text_14c23 ; $17
-	message_ptr Text_14c5c ; $18
-	message_ptr Text_14ca3 ; $19
-	message_ptr Text_14cdd ; $1a
-	message_ptr Text_14d06 ; $1b
-	message_ptr Text_14d2d ; $1c
-	message_ptr Text_14d4a ; $1d
-	message_ptr Text_14d67 ; $1e
-	message_ptr Text_14d84 ; $1f
-	message_ptr Text_14da2 ; $20
-	message_ptr Text_14dc9 ; $21
-	message_ptr Text_14de5 ; $22
-	message_ptr Text_14e06 ; $23
-	message_ptr Text_14e26 ; $24
-	message_ptr Text_14e48 ; $25
-	message_ptr Text_14e67 ; $26
-	message_ptr Text_14ea8 ; $27
-	message_ptr Text_14ed4 ; $28
-	message_ptr Text_14f04 ; $29
-	message_ptr Text_14f19 ; $2a
-	message_ptr Text_14f2d ; $2b
-	message_ptr Text_14f40 ; $2c
+DuelMessagesJp:
+	message_ptr Text_ItsYourTurn_Jp ; $00
+	message_ptr Text_ItsTheComputersTurn_Jp ; $01
+	message_ptr Text_149f4_Jp ; $02
+	message_ptr Text_149ff_Jp ; $03
+	message_ptr Text_TurnFinished_Jp ; $04
+	message_ptr Text_CommunicationError_Jp ; $05
+	message_ptr Text_TheDeckIsNotComplete_Jp ; $06
+	message_ptr Text_TheTradeHasEnded_Jp ; $07
+	message_ptr Text_YourOpponentIsCurrentlySearching_Jp ; $08
+	message_ptr Text_CommunicationHasBeenEstablished_Jp ; $09
+	message_ptr Text_14a8a_Jp ; $0a
+	message_ptr Text_14a96_Jp ; $0b
+	message_ptr Text_14aa2_Jp ; $0c
+	message_ptr Text_14aae_Jp ; $0d
+	message_ptr Text_14aba_Jp ; $0e
+	message_ptr Text_14ad5_Jp ; $0f
+	message_ptr Text_14aec_Jp ; $10
+	message_ptr Text_14b09_Jp ; $11
+	message_ptr Text_14b20_Jp ; $12
+	message_ptr Text_14b3d_Jp ; $13
+	message_ptr Text_14b6f_Jp ; $14
+	message_ptr Text_14bad_Jp ; $15
+	message_ptr Text_14be9_Jp ; $16
+	message_ptr Text_14c23_Jp ; $17
+	message_ptr Text_14c5c_Jp ; $18
+	message_ptr Text_14ca3_Jp ; $19
+	message_ptr Text_14cdd_Jp ; $1a
+	message_ptr Text_14d06_Jp ; $1b
+	message_ptr Text_14d2d_Jp ; $1c
+	message_ptr Text_14d4a_Jp ; $1d
+	message_ptr Text_14d67_Jp ; $1e
+	message_ptr Text_14d84_Jp ; $1f
+	message_ptr Text_14da2_Jp ; $20
+	message_ptr Text_14dc9_Jp ; $21
+	message_ptr Text_14de5_Jp ; $22
+	message_ptr Text_14e06_Jp ; $23
+	message_ptr Text_14e26_Jp ; $24
+	message_ptr Text_14e48_Jp ; $25
+	message_ptr Text_14e67_Jp ; $26
+	message_ptr Text_14ea8_Jp ; $27
+	message_ptr Text_14ed4_Jp ; $28
+	message_ptr Text_14f04_Jp ; $29
+	message_ptr Text_14f19_Jp ; $2a
+	message_ptr Text_14f2d_Jp ; $2b
+	message_ptr Text_14f40_Jp ; $2c
 
-Text_ItsYourTurn:
+Text_ItsYourTurn_Jp:
 	text "あなたのタ-ンです"
 	prompt
 	done
 
-Text_ItsTheComputersTurn:
+Text_ItsTheComputersTurn_Jp:
 	text "コンピュ-タ-のタ-ンです"
 	prompt
 	done
 
-Text_149f4:
+Text_149f4_Jp:
 	text "つうしんちゅうです"
 	prompt
 	done
 
-Text_149ff:
+Text_149ff_Jp:
 	text "てふだから 1まい えらんでください"
 	line ""
 	prompt
 	done
 
-Text_TurnFinished:
+Text_TurnFinished_Jp:
 	text "タ-ンしゅうりょうです"
 	prompt
 	done
 
-Text_CommunicationError:
+Text_CommunicationError_Jp:
 	text "つうしんエラ-です"
 	line "もういちど やりなおしてください"
 	prompt
 	done
 
-Text_TheDeckIsNotComplete:
+Text_TheDeckIsNotComplete_Jp:
 	text "デッキが40まい そろぅていません"
 	prompt
 	done
 
-Text_TheTradeHasEnded:
+Text_TheTradeHasEnded_Jp:
 	text "トレ-ドはしゅうりょうしました"
 	prompt
 	done
 
-Text_YourOpponentIsCurrentlySearching:
+Text_YourOpponentIsCurrentlySearching_Jp:
 	text "たいせんあいてが そうさちゅうです"
 	done
 
-Text_CommunicationHasBeenEstablished:
+Text_CommunicationHasBeenEstablished_Jp:
 	text "つうしんゆうごうがはぅせいした"
 	prompt
 	text "<B5>になぅた"
 	prompt
 	done
 
-Text_14a8a:
+Text_14a8a_Jp:
 	text "<B5>は <B6>にしんかした"
 	prompt
 	done
 
-Text_14a96:
+Text_14a96_Jp:
 	text "<B5>は <B6>にしんかした"
 	prompt
 	done
 
-Text_14aa2:
+Text_14aa2_Jp:
 	text "<B5>は <B6>にしんかした"
 	prompt
 	done
 
-Text_14aae:
+Text_14aae_Jp:
 	text "<B5>は <B6>にしんかした"
 	prompt
 	done
 
-Text_14aba:
+Text_14aba_Jp:
 	text "ひかりのごふうけん のこうかは"
 	line "まだ つづいている"
 	prompt
 	done
 
-Text_14ad5:
+Text_14ad5_Jp:
 	text "ひかりのごふうけん のこうかが"
 	line "なくなぅた"
 	prompt
 	done
 
-Text_14aec:
+Text_14aec_Jp:
 	text "でんせつのけんをつかぅた"
 	line "モンスタ-はパワ-アップした"
 	prompt
 	done
 
-Text_14b09:
+Text_14b09_Jp:
 	text "<B5>をつかぅた"
 	prompt
 	text "<B6>はぶんしんして <B7>になぅた"
 	prompt
 	done
 
-Text_14b20:
+Text_14b20_Jp:
 	text "しゅびふうじをつかぅた"
 	line "あいては こうげきしかできない"
 	prompt
 	done
 
-Text_14b3d:
+Text_14b3d_Jp:
 	text "ドラゴンぞく·ふういんのつぼを"
 	line "つかぅた"
 	prompt
@@ -1506,7 +1599,7 @@ Text_14b3d:
 	prompt
 	done
 
-Text_14b6f:
+Text_14b6f_Jp:
 	text "もりカ-ドをつかぅた"
 	line "フィ-ルドはもりにへんかした"
 	prompt
@@ -1515,7 +1608,7 @@ Text_14b6f:
 	prompt
 	done
 
-Text_14bad:
+Text_14bad_Jp:
 	text "こうやカ-ドをつかぅた"
 	line "フィ-ルドはこうやにへんかした"
 	prompt
@@ -1524,7 +1617,7 @@ Text_14bad:
 	prompt
 	done
 
-Text_14be9:
+Text_14be9_Jp:
 	text "やまカ-ドをつかぅた"
 	line "フィ-ルドはやまにへんかした"
 	prompt
@@ -1533,7 +1626,7 @@ Text_14be9:
 	prompt
 	done
 
-Text_14c23:
+Text_14c23_Jp:
 	text "そうげんカ-ドをつかぅた"
 	line "フィ-ルドはそうげんにへんかした"
 	prompt
@@ -1542,7 +1635,7 @@ Text_14c23:
 	prompt
 	done
 
-Text_14c5c:
+Text_14c5c_Jp:
 	text "うみカ-ドをつかぅた"
 	line "フィ-ルドはうみにへんかした"
 	prompt
@@ -1553,7 +1646,7 @@ Text_14c5c:
 	prompt
 	done
 
-Text_14ca3:
+Text_14ca3_Jp:
 	text "やみカ-ドをつかぅた"
 	line "フィ-ルドはやみにへんかした"
 	prompt
@@ -1562,7 +1655,7 @@ Text_14ca3:
 	prompt
 	done
 
-Text_14cdd:
+Text_14cdd_Jp:
 	text "ブラック·ホ-ルをつかぅた"
 	prompt
 	text "フィ-ルドのモンスタ-は すべて"
@@ -1570,7 +1663,7 @@ Text_14cdd:
 	prompt
 	done
 
-Text_14d06:
+Text_14d06_Jp:
 	text "サンダ-·ボルトをつかぅた"
 	prompt
 	text "てきのフィ-ルドモンスタ-は"
@@ -1578,31 +1671,31 @@ Text_14d06:
 	prompt
 	done
 
-Text_14d2d:
+Text_14d2d_Jp:
 	text "モウヤンのカレ-をつかぅた"
 	line "ライフポイントが かいふく"
 	prompt
 	done
 
-Text_14d4a:
+Text_14d4a_Jp:
 	text "レッドポ-ションをつかぅた"
 	line "ライフポイントが かいふく"
 	prompt
 	done
 
-Text_14d67:
+Text_14d67_Jp:
 	text "ゴブりンのひやくをつかぅた"
 	line "ライフポイントが かいふく"
 	prompt
 	done
 
-Text_14d84:
+Text_14d84_Jp:
 	text "てんしのいきちをつかぅた"
 	line "ライフポイントが かいふくした"
 	prompt
 	done
 
-Text_14da2:
+Text_14da2_Jp:
 	text "ちりょうのかみ ディアン·ケトを"
 	line "つかぅた"
 	prompt
@@ -1610,37 +1703,37 @@ Text_14da2:
 	prompt
 	done
 
-Text_14dc9:
+Text_14dc9_Jp:
 	text "ひのこ をつかぅた"
 	line "あいてのライフポイントにダメ-ジ"
 	prompt
 	done
 
-Text_14de5:
+Text_14de5_Jp:
 	text "ファイア-ボ-ル をつかぅた"
 	line "あいてのライフポイントにダメ-ジ"
 	prompt
 	done
 
-Text_14e06:
+Text_14e06_Jp:
 	text "ひあぶりのけい をつかぅた"
 	line "あいてのライフポイントにダメ-ジ"
 	prompt
 	done
 
-Text_14e26:
+Text_14e26_Jp:
 	text "ちゅうやのおおかじ をつかぅた"
 	line "あいてのライフポイントにダメ-ジ"
 	prompt
 	done
 
-Text_14e48:
+Text_14e48_Jp:
 	text "かえんじごく をつかぅた"
 	line "あいてのライフポイントにダメ-ジ"
 	prompt
 	done
 
-Text_14e67:
+Text_14e67_Jp:
 	text "ひかりのごふうけん をつかぅた"
 	line "あいては 3タ-ンこうげきできない"
 	prompt
@@ -1649,7 +1742,7 @@ Text_14e67:
 	prompt
 	done
 
-Text_14ea8:
+Text_14ea8_Jp:
 	text "ろくぼうせいのじゅばく をつかぅた"
 	prompt
 	text "フィ-ルドにいるてきのモンスタ-は"
@@ -1657,7 +1750,7 @@ Text_14ea8:
 	prompt
 	done
 
-Text_14ed4:
+Text_14ed4_Jp:
 	text "やみをかきけすひかり をつかぅた"
 	prompt
 	text "フィ-ルドにいるモンスタ-は"
@@ -1665,26 +1758,26 @@ Text_14ed4:
 	prompt
 	done
 
-Text_14f04:
+Text_14f04_Jp:
 	text "つうしんエラ- バッファがあふれました"
 	prompt
 	done
 
-Text_14f19:
+Text_14f19_Jp:
 	text "<B5>と <B6>は"
 	prompt
 	text "ゆうごうして <B7>になぅた"
 	prompt
 	done
 
-Text_14f2d:
+Text_14f2d_Jp:
 	text "<B5>をつかぅた"
 	prompt
 	text "<B6>はパワ-アップした"
 	prompt
 	done
 
-Text_14f40:
+Text_14f40_Jp:
 	text "<B5>をつかぅた"
 	prompt
 	text "しかし パワ-アップはできなかぅた"
@@ -1803,7 +1896,11 @@ Func_14fe8:
 	ld e, l
 	ld a, [wcf45]
 	ld c, a
-	ld hl, wcf2f
+	IF DEF(_EARLY_DAYS_EN)
+		ld hl, wcf1d
+	ELSE
+		ld hl, wcf2f
+	ENDC
 	add hl, bc
 	ld a, [de]
 	ld [hli], a
@@ -1821,7 +1918,7 @@ ShowDuelMessage_ItsYourTurn:
 	call Func_2b68
 	ld a, TRUE
 	ld [wcf18], a
-	ldmsg a, Text_ItsYourTurn
+	ldmsg a, Text_ItsYourTurn_Jp
 	ld [wDuelMsg], a
 	call Func_145fd
 	pop af
@@ -1832,7 +1929,7 @@ ShowDuelMessage_ItsTheComputersTurn:
 	call Func_2b68
 	ld a, TRUE
 	ld [wcf18], a
-	ldmsg a, Text_ItsTheComputersTurn
+	ldmsg a, Text_ItsTheComputersTurn_Jp
 	ld [wDuelMsg], a
 	call ShowDuelMessage
 	pop af
@@ -1845,7 +1942,7 @@ Func_15032:
 	jr nz, .asm_15047
 	ld a, TRUE
 	ld [wcf18], a
-	ldmsg a, Text_YourOpponentIsCurrentlySearching
+	ldmsg a, Text_YourOpponentIsCurrentlySearching_Jp
 	ld [wDuelMsg], a
 	call Func_145e8
 .asm_15047
@@ -1857,7 +1954,7 @@ Func_15049:
 	push af
 	ld a, $01
 	ld [wcf18], a
-	ldmsg a, Text_149f4
+	ldmsg a, Text_149f4_Jp
 	ld [wDuelMsg], a
 	call ShowDuelMessage
 	pop af
@@ -1868,7 +1965,7 @@ Func_15059:
 	push bc
 	ld a, FALSE
 	ld [wcf18], a
-	ldmsg a, Text_TheTradeHasEnded
+	ldmsg a, Text_TheTradeHasEnded_Jp
 	ld [wDuelMsg], a
 	call ShowDuelMessage
 	call Func_2c4a
@@ -1880,7 +1977,7 @@ Func_15059:
 	call Func_2cf2
 	ld a, FALSE
 	ld [wcf18], a
-	ldmsg a, Text_CommunicationHasBeenEstablished
+	ldmsg a, Text_CommunicationHasBeenEstablished_Jp
 	ld [wDuelMsg], a
 	call ShowDuelMessage
 .asm_15087
@@ -1893,7 +1990,7 @@ Func_1508a:
 	push af
 	ld a, $00
 	ld [wcf18], a
-	ldmsg a, Text_149ff
+	ldmsg a, Text_149ff_Jp
 	ld [wDuelMsg], a
 	call ShowDuelMessage
 	pop af
@@ -1904,7 +2001,7 @@ Func_1509a:
 	call Func_2b68
 	ld a, TRUE
 	ld [wcf18], a
-	ldmsg a, Text_TurnFinished
+	ldmsg a, Text_TurnFinished_Jp
 	ld [wDuelMsg], a
 	call ShowDuelMessage
 	pop af
@@ -1914,7 +2011,7 @@ Func_150ad:
 	push af
 	ld a, FALSE
 	ld [wcf18], a
-	ldmsg a, Text_CommunicationError
+	ldmsg a, Text_CommunicationError_Jp
 	ld [wDuelMsg], a
 	call ShowDuelMessage
 	pop af
@@ -1924,7 +2021,7 @@ Func_150bd:
 	push af
 	ld a, FALSE
 	ld [wcf18], a
-	ldmsg a, Text_TheDeckIsNotComplete
+	ldmsg a, Text_TheDeckIsNotComplete_Jp
 	ld [wDuelMsg], a
 	call ShowDuelMessage
 	pop af
@@ -1935,7 +2032,7 @@ Func_150cd:
 	push af
 	ld a, $01
 	ld [wcf18], a
-	ldmsg a, Text_14f04
+	ldmsg a, Text_14f04_Jp
 	ld [wDuelMsg], a
 	call ShowDuelMessage
 	pop af
@@ -1980,10 +2077,10 @@ Func_150dd:
 	ret
 
 .DuelMessages:
-	msg Text_14a8a
-	msg Text_14a96
-	msg Text_14aa2
-	msg Text_14aae
+	msg Text_14a8a_Jp
+	msg Text_14a96_Jp
+	msg Text_14aa2_Jp
+	msg Text_14aae_Jp
 
 .data_1
 	db $15, $01
@@ -2016,8 +2113,8 @@ Func_1512c::
 	ret
 
 .DuelMessages:
-	msg Text_14aba ; $0
-	msg Text_14ad5 ; $1
+	msg Text_14aba_Jp ; $0
+	msg Text_14ad5_Jp ; $1
 
 Func_15148:
 	push af
@@ -2038,56 +2135,56 @@ Func_15148:
 	ret
 
 .DuelMessages:
-	msg Text_14aec
-	msg Text_14aec
-	msg Text_14aec
-	msg Text_14aec
-	msg Text_14aec
-	msg Text_14aec
-	msg Text_14aec
-	msg Text_14aec
-	msg Text_14aec
-	msg Text_14aec
-	msg Text_14aec
-	msg Text_14aec
-	msg Text_14aec
-	msg Text_14aec
-	msg Text_14aec
-	msg Text_14aec
-	msg Text_14aec
-	msg Text_14aec
-	msg Text_14aec
-	msg Text_14b20
-	msg Text_14aec
-	msg Text_14aec
-	msg Text_14aec
-	msg Text_14aec
-	msg Text_14aec
-	msg Text_14aec
-	msg Text_14aec
-	msg Text_14aec
-	msg Text_14b3d
-	msg Text_14b6f
-	msg Text_14bad
-	msg Text_14be9
-	msg Text_14c23
-	msg Text_14c5c
-	msg Text_14ca3
-	msg Text_14cdd
-	msg Text_14d06
-	msg Text_14d2d
-	msg Text_14d4a
-	msg Text_14d67
-	msg Text_14d84
-	msg Text_14da2
-	msg Text_14dc9
-	msg Text_14de5
-	msg Text_14e06
-	msg Text_14e26
-	msg Text_14e48
-	msg Text_14e67
-	msg Text_14ea8
-	msg Text_14ed4
+	msg Text_14aec_Jp
+	msg Text_14aec_Jp
+	msg Text_14aec_Jp
+	msg Text_14aec_Jp
+	msg Text_14aec_Jp
+	msg Text_14aec_Jp
+	msg Text_14aec_Jp
+	msg Text_14aec_Jp
+	msg Text_14aec_Jp
+	msg Text_14aec_Jp
+	msg Text_14aec_Jp
+	msg Text_14aec_Jp
+	msg Text_14aec_Jp
+	msg Text_14aec_Jp
+	msg Text_14aec_Jp
+	msg Text_14aec_Jp
+	msg Text_14aec_Jp
+	msg Text_14aec_Jp
+	msg Text_14aec_Jp
+	msg Text_14b20_Jp
+	msg Text_14aec_Jp
+	msg Text_14aec_Jp
+	msg Text_14aec_Jp
+	msg Text_14aec_Jp
+	msg Text_14aec_Jp
+	msg Text_14aec_Jp
+	msg Text_14aec_Jp
+	msg Text_14aec_Jp
+	msg Text_14b3d_Jp
+	msg Text_14b6f_Jp
+	msg Text_14bad_Jp
+	msg Text_14be9_Jp
+	msg Text_14c23_Jp
+	msg Text_14c5c_Jp
+	msg Text_14ca3_Jp
+	msg Text_14cdd_Jp
+	msg Text_14d06_Jp
+	msg Text_14d2d_Jp
+	msg Text_14d4a_Jp
+	msg Text_14d67_Jp
+	msg Text_14d84_Jp
+	msg Text_14da2_Jp
+	msg Text_14dc9_Jp
+	msg Text_14de5_Jp
+	msg Text_14e06_Jp
+	msg Text_14e26_Jp
+	msg Text_14e48_Jp
+	msg Text_14e67_Jp
+	msg Text_14ea8_Jp
+	msg Text_14ed4_Jp
 
 Func_15194:
 	push af
@@ -2096,7 +2193,7 @@ Func_15194:
 	push hl
 	ld a, TRUE
 	ld [wcf18], a
-	ldmsg a, Text_14f19
+	ldmsg a, Text_14f19_Jp
 	ld [wDuelMsg], a
 	call Func_2c4a
 	ld e, $04
@@ -2134,7 +2231,7 @@ Func_151db:
 	push de
 	ld a, TRUE
 	ld [wcf18], a
-	ldmsg a, Text_14f2d
+	ldmsg a, Text_14f2d_Jp
 	ld [wDuelMsg], a
 	call Func_2c4a
 	ld e, $04
@@ -2157,7 +2254,7 @@ Func_15204:
 	push de
 	ld a, TRUE
 	ld [wcf18], a
-	ldmsg a, Text_14b09
+	ldmsg a, Text_14b09_Jp
 	ld [wDuelMsg], a
 	call Func_2c4a
 	ld e, $04

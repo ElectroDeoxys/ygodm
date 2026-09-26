@@ -1611,8 +1611,13 @@ Func_c9df:
 	call SetPendingVBlankMode
 	bcbgcoord 0, 1
 	call AddWordToVBlankStruct
-	ld a, $80
-	call AddByteToVBlankStruct
+	IF DEF(_EARLY_DAYS_EN)
+		farcall Func_e5558
+		jr .asm_ca0c
+	ELSE
+		ld a, $80
+		call AddByteToVBlankStruct
+	ENDC
 	ld a, $4f
 	call AddByteToVBlankStruct
 	ld a, $6d
@@ -1625,6 +1630,7 @@ Func_c9df:
 	call AddByteToVBlankStruct
 	dec c
 	jr nz, .asm_ca06
+.asm_ca0c
 	ld a, TEXTLOAD_NUMBER
 	farcall SetTextLoadMode
 	ld a, [wcc56]
@@ -7131,7 +7137,13 @@ Func_edfe:
 	ret
 
 .Tiles:
-	db $80, $42, $73, $50, $23, $10, $12, $20, $38, $80, $80, $80, $80, $80, $80, $80, $80, $80, $80, $80
+	IF DEF(_EARLY_DAYS_EN)
+		text "Check cards"
+		ds $9, $80
+	ELSE
+		text "ぐカ-トのかくにん"
+		ds $b, $80
+	ENDC
 
 Func_ee30:
 	push hl

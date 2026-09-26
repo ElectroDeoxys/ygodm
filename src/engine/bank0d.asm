@@ -1279,22 +1279,42 @@ Func_3714f:
 	dw .data_8
 	dw .data_9
 
-.data_1
-	db $4c, $42, $56, $48, $42, $99, $43, $00
-.data_2
-	db $60, $5b, $9c, $55, $a3, $57, $67, $00
-.data_3
-	db $48, $5f, $5d, $63, $47, $50, $48, $00
-.data_4
-	db $4d, $9c, $4c, $44, $32, $00, $00, $00
-.data_5
-	db $56, $48, $5f, $50, $42, $51, $46, $00
-.data_6
-	db $27, $3e, $48, $62, $48, $57, $47, $00
-.data_7
-	db $43, $4c, $3f, $40, $42, $99, $5c, $00
-.data_8
-	db $50, $32, $48, $5b, $42, $99, $57, $46
-.data_9
-	db $4c, $42, $56, $48, $50, $48, $5b, $47
-
+IF DEF(_EARLY_DAYS_EN)
+	.data_1
+		text "Shikazuk"
+	.data_2
+		text "Nobuhiro"
+	.data_3
+		text "Satoshi "
+	.data_4
+		text "Chidatak"
+	.data_5
+		text "Kanako H"
+	.data_6
+		text "Heishi Y"
+	.data_7
+		text "Kazumi K"
+	.data_8
+		text "Kazuhiko"
+	.data_9
+		text "Takahash"
+ELSE
+	.data_1
+		text "タカハシカズキ "
+	.data_2
+		text "ヤマダノブヒロ "
+	.data_3
+		text "シモムラサトシ "
+	.data_4
+		text "チダタクり   "
+	.data_5
+		text "ハシモトカナコ "
+	.data_6
+		text "へイシヨシヒサ "
+	.data_7
+		text "キタウエカズミ "
+	.data_8
+		text "トりシマカズヒコ"
+	.data_9
+		text "タカハシトシマサ"
+ENDC

@@ -480,6 +480,11 @@ wAudioJobStack:: ; dbfe
 	ds $100
 wAudioJobStackBottom:: ; dcfe
 
+	ds $102
+
+wde00:: ds $80 ; de00
+wde80:: db ; de80
+
 wStack::
-	ds $302
+	ds $17f
 wStackBottom:: ; e000

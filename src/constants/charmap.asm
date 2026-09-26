@@ -93,7 +93,7 @@
 	CHARMAP "ハ",         $56
 	CHARMAP "ヒ",         $57
 	CHARMAP "フ",         $58
-	CHARMAP "…",         $59
+	CHARMAP "⋯",         $59
 	CHARMAP "ホ",         $5a
 	CHARMAP "マ",         $5b
 	CHARMAP "ミ",         $5c
@@ -109,7 +109,7 @@
 	CHARMAP "レ",         $66
 	CHARMAP "ロ",         $67
 	CHARMAP "ワ",         $68
-	CHARMAP "+",         $69
+	CHARMAP "十",         $69
 	CHARMAP "ン",         $6a
 	CHARMAP "ァ",         $6b
 	CHARMAP "ィ",         $6c
@@ -129,6 +129,8 @@
 	CHARMAP "♥",         $7a
 	CHARMAP "(",         $7b
 	CHARMAP ")",         $7c
+	CHARMAP "<゛>",         $7d
+	CHARMAP "<゜>",         $7e
 
 	; characters with diacritics
 DEF DIACRITIC_CHAR EQU $7d
@@ -185,6 +187,85 @@ DEF DIACRITIC_CHAR EQU $7d
 	CHARMAP "<ぺ>",      $ae
 	CHARMAP "ポ",        $af
 
+	; alphabet characters
+	CHARMAP "A",         $0b
+	CHARMAP "B",         $0c
+	CHARMAP "C",         $0d
+	CHARMAP "D",         $0e
+	CHARMAP "E",         $0f
+	CHARMAP "F",         $10
+	CHARMAP "G",         $11
+	CHARMAP "H",         $12
+	CHARMAP "I",         $13
+	CHARMAP "J",         $14
+	CHARMAP "K",         $15
+	CHARMAP "L",         $16
+	CHARMAP "M",         $17
+	CHARMAP "N",         $18
+	CHARMAP "O",         $19
+	CHARMAP "P",         $1a
+	CHARMAP "Q",         $1b
+	CHARMAP "R",         $1c
+	CHARMAP "S",         $1d
+	CHARMAP "T",         $1e
+	CHARMAP "U",         $1f
+	CHARMAP "V",         $20
+	CHARMAP "W",         $21
+	CHARMAP "X",         $22
+	CHARMAP "Y",         $23
+	CHARMAP "Z",         $24
+	CHARMAP "a",         $25
+	CHARMAP "b",         $26
+	CHARMAP "c",         $27
+	CHARMAP "d",         $28
+	CHARMAP "e",         $29
+	CHARMAP "f",         $2a
+	CHARMAP "g",         $2b
+	CHARMAP "h",         $2c
+	CHARMAP "i",         $2d
+	CHARMAP "j",         $2e
+	CHARMAP "k",         $2f
+	CHARMAP "l",         $30
+	CHARMAP "m",         $31
+	CHARMAP "n",         $32
+	CHARMAP "o",         $33
+	CHARMAP "p",         $34
+	CHARMAP "q",         $35
+	CHARMAP "r",         $36
+	CHARMAP "s",         $37
+	CHARMAP "t",         $38
+	CHARMAP "u",         $39
+	CHARMAP "v",         $3a
+	CHARMAP "w",         $3b
+	CHARMAP "x",         $3c
+	CHARMAP "y",         $3d
+	CHARMAP "z",         $3e
+
+	CHARMAP ",",         $3f
+	CHARMAP ".",         $40
+	CHARMAP "'",         $41
+	CHARMAP ":",         $42
+	CHARMAP ";",         $43
+	CHARMAP "#",         $44
+	CHARMAP "*",         $45
+
+
+	CHARMAP "•",          $48
+	CHARMAP "&",          $49
+	CHARMAP "=",          $4a
+	CHARMAP "α",          $4b
+
+	CHARMAP "É",          $5a
+	CHARMAP "é",          $5b
+
+	CHARMAP "+",          $63
+
+	CHARMAP "…",          $70
+	CHARMAP "\"",         $71
+	CHARMAP "/",          $76
+	CHARMAP "\\",         $77
+	CHARMAP "%",          $7a
+
 	; control characters
 DEF CONTROL_CHAR EQU $b0
 
@@ -212,6 +293,18 @@ DEF CONTROL_CHAR EQU $b0
 	const SYM_CORNER_UPPER_LEFT  ; $c5
 	const SYM_DAKUTEN            ; $c6
 	const SYM_HANDAKUTEN         ; $c7
+
+	; box drawing characters
+	CHARMAP "~", $80 ; empty tile
+	CHARMAP "⁄", $81
+	CHARMAP "┌", $82
+	CHARMAP "─", $83 ; box top
+	CHARMAP "┐", $84
+	CHARMAP "│", $85 ; box left
+	CHARMAP "║", $86 ; box right
+	CHARMAP "└", $87
+	CHARMAP "═", $88 ; box bottom
+	CHARMAP "╝", $89
 
 PUSHC
 	NEWCHARMAP credits
@@ -298,7 +391,7 @@ PUSHC
 	CHARMAP "ハ",         $4c
 	CHARMAP "ヒ",         $4d
 	CHARMAP "フ",         $4e
-	CHARMAP "…",         $4f
+	CHARMAP "⋯",         $4f
 	CHARMAP "ホ",         $50
 	CHARMAP "マ",         $51
 	CHARMAP "ミ",         $52
@@ -314,7 +407,7 @@ PUSHC
 	CHARMAP "レ",         $5c
 	CHARMAP "ロ",         $5d
 	CHARMAP "ワ",         $5e
-	CHARMAP "+",         $5f
+	CHARMAP "十",         $5f
 	CHARMAP "ン",         $60
 	CHARMAP "ァ",         $61
 	CHARMAP "ィ",         $62

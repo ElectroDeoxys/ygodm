@@ -63,8 +63,19 @@ Func_3000e:
 	pop af
 	ret
 
-Gfx_30055: INCBIN "gfx/gfx_30055.2bpp"
-Tilemap_30ff5: INCBIN "data/tilemaps/bg_30ff5.tilemap"
+Gfx_30055:
+IF DEF(_EARLY_DAYS_EN)
+	INCBIN "gfx/gfx_30055_en.2bpp"
+ELSE
+	INCBIN "gfx/gfx_30055_jp.2bpp"
+ENDC
+
+Tilemap_30ff5: 
+IF DEF(_EARLY_DAYS_EN)
+	INCBIN "data/tilemaps/bg_30ff5_en.tilemap"
+ELSE
+	INCBIN "data/tilemaps/bg_30ff5_jp.tilemap"
+ENDC
 
 Func_3115d:
 	push af
@@ -121,8 +132,19 @@ Func_3115d:
 	pop af
 	ret
 
-Gfx_311a4: INCBIN "gfx/gfx_311a4.2bpp"
-Tilemap_321a4: INCBIN "data/tilemaps/bg_321a4.tilemap"
+Gfx_311a4:
+IF DEF(_EARLY_DAYS_EN)
+	INCBIN "gfx/gfx_311a4_en.2bpp"
+ELSE
+	INCBIN "gfx/gfx_311a4_jp.2bpp"
+ENDC
+
+Tilemap_321a4:
+IF DEF(_EARLY_DAYS_EN)
+	INCBIN "data/tilemaps/bg_321a4_en.tilemap"
+ELSE
+	INCBIN "data/tilemaps/bg_321a4_jp.tilemap"
+ENDC
 
 Func_3230c:
 	push af
@@ -179,8 +201,19 @@ Func_3230c:
 	pop af
 	ret
 
-Gfx_32353: INCBIN "gfx/gfx_32353.2bpp"
-Tilemap_33353: INCBIN "data/tilemaps/bg_33353.tilemap"
+Gfx_32353:
+IF DEF(_EARLY_DAYS_EN)
+	INCBIN "gfx/gfx_32353_en.2bpp"
+ELSE
+	INCBIN "gfx/gfx_32353_jp.2bpp"
+ENDC
+
+Tilemap_33353:
+IF DEF(_EARLY_DAYS_EN)
+	INCBIN "data/tilemaps/bg_33353_en.tilemap"
+ELSE
+	INCBIN "data/tilemaps/bg_33353_jp.tilemap"
+ENDC
 
 Func_334bb:
 	push af
@@ -227,7 +260,12 @@ Func_334bb:
 	ret
 
 Gfx_334f5: INCBIN "gfx/gfx_334f5.2bpp"
-Tilemap_335c5: INCBIN "data/tilemaps/bg_335c5.tilemap"
+Tilemap_335c5:
+IF DEF(_EARLY_DAYS_EN)
+	INCBIN "data/tilemaps/bg_335c5_en.tilemap"
+ELSE
+	INCBIN "data/tilemaps/bg_335c5_jp.tilemap"
+ENDC
 
 Func_3372d:
 	push af
@@ -259,7 +297,12 @@ Func_3372d:
 	pop af
 	ret
 
-Tilemap_33751: INCBIN "data/tilemaps/bg_33751.tilemap"
+Tilemap_33751:
+IF DEF(_EARLY_DAYS_EN)
+	INCBIN "data/tilemaps/bg_33751_en.tilemap"
+ELSE
+	INCBIN "data/tilemaps/bg_33751_jp.tilemap"
+ENDC
 
 Func_338b9:
 	push af
@@ -304,4 +347,43 @@ Func_338b9:
 	pop af
 	ret
 
-Tilemap_338f0: INCBIN "data/tilemaps/bg_338f0.tilemap"
+Tilemap_338f0:
+	IF DEF(_EARLY_DAYS_EN)
+		text "                    "
+		text " Versus             "
+		text "                    "
+		text "                    "
+		text "                    "
+		text "                    "
+		text "                    "
+		text "                    "
+		text "                    "
+		text "                    "
+		text "                    "
+		text "                    "
+		text "                    "
+		text "                    "
+		text "                    "
+		text "                    "
+		text "                    "
+		text "                    "
+	ELSE
+		text "                    "
+		text " せいせき               "
+		text "                    "
+		text "                    "
+		text "                    "
+		text "                    "
+		text "                    "
+		text "                    "
+		text "                    "
+		text "                    "
+		text "                    "
+		text "                    "
+		text "                    "
+		text "                    "
+		text "                    "
+		text "                    "
+		text "                    "
+		text "                    "
+	ENDC

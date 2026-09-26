@@ -4,7 +4,14 @@ bankfill "data/bank_fill/bank01.bin"
 
 SECTION "Bank 02", ROMX
 INCLUDE "engine/bank02.asm"
-bankfill "data/bank_fill/bank02.bin"
+
+IF DEF(_EARLY_DAYS_EN)
+	bankfill "data/bank_fill/bank02.bin", $0, $5d1
+	INCLUDE "engine/bank02_edc.asm"
+	bankfill "data/bank_fill/bank02.bin", $639
+ELSE
+	bankfill "data/bank_fill/bank02.bin"
+ENDC
 
 SECTION "Bank 03", ROMX
 INCLUDE "engine/bank03.asm"
@@ -22,11 +29,11 @@ SECTION "Bank 06", ROMX
 INCLUDE "engine/bank06.asm"
 
 IF DEF(_EARLY_DAYS)
-    bankfill "data/bank_fill/bank06.bin", $0, $27b4
-    INCLUDE "engine/bank06_edc.asm"
-    bankfill "data/bank_fill/bank06.bin", $2820, $94
+	bankfill "data/bank_fill/bank06.bin", $0, $27b4
+	INCLUDE "engine/bank06_edc.asm"
+	bankfill "data/bank_fill/bank06.bin", $2820
 ELSE
-    bankfill "data/bank_fill/bank06.bin"
+	bankfill "data/bank_fill/bank06.bin"
 ENDC
 
 SECTION "Bank 07", ROMX
@@ -64,8 +71,14 @@ bankfill "data/bank_fill/bank0e.bin"
 SECTION "Bank 0f", ROMX
 INCLUDE "engine/bank0f.asm"
 INCLUDE "text/dialogue_pointers.asm"
-INCLUDE "text/dialogue.asm"
-bankfill "data/bank_fill/bank0f.bin"
+
+IF DEF(_EARLY_DAYS_EN)
+	INCLUDE "text/dialogue_en.asm"
+	bankfill "data/bank_fill/bank0f.bin", $97a
+ELSE
+	INCLUDE "text/jp/dialogue.asm"
+	bankfill "data/bank_fill/bank0f.bin"
+ENDC
 
 SECTION "Bank 31", ROMX
 bankfill "data/bank_fill/bank31.bin"
@@ -92,7 +105,12 @@ SECTION "Bank 38", ROMX
 bankfill "data/bank_fill/bank38.bin"
 
 SECTION "Bank 39", ROMX
-bankfill "data/bank_fill/bank39.bin"
+IF DEF(_EARLY_DAYS_EN)
+	INCLUDE "engine/bank39.asm"
+	bankfill "data/bank_fill/bank39.bin", $1ddc
+ELSE
+	bankfill "data/bank_fill/bank39.bin"
+ENDC
 
 SECTION "Bank 3a", ROMX
 bankfill "data/bank_fill/bank3a.bin"
@@ -107,7 +125,11 @@ bankfill "data/bank_fill/bank3c.bin"
 
 SECTION "Bank 3d", ROMX
 INCLUDE "engine/bank3d.asm"
-bankfill "data/bank_fill/bank3d.bin"
+IF DEF(_EARLY_DAYS_EN)
+	bankfill "data/bank_fill/bank3d.bin", $40c
+ELSE
+	bankfill "data/bank_fill/bank3d.bin"
+ENDC
 
 SECTION "Bank 3f", ROMX
 INCLUDE "engine/sgb.asm"

@@ -13,7 +13,7 @@ Text_3c179:
 
 Text_3c1b0:
 	text "あたしのなまえは くじゃくまい"
-	line "フフ… シロ-トのボ-ヤに わたしを"
+	line "フフ⋯ シロ-トのボ-ヤに わたしを"
 	line "5かいも たおせるかしら?"
 	prompt
 	done
@@ -56,7 +56,7 @@ Text_3c2a8:
 Text_3c2dd:
 	text "オレのなまえは かいばせと オレの"
 	line "ブル-アイズに 5かい かつことなど"
-	line "ふかのうだ あきらめろ ハハハ…"
+	line "ふかのうだ あきらめろ ハハハ⋯"
 	prompt
 	done
 
@@ -84,7 +84,7 @@ Text_3c381:
 Text_3c3b3:
 	text "きさまをたおすために おくりこまれた"
 	line "しかく ししゃのふくわじゅつし だ"
-	line "オレに 5かいかてるかね キキキ…"
+	line "オレに 5かいかてるかね キキキ⋯"
 	prompt
 	done
 
@@ -125,7 +125,7 @@ Text_3c4bd:
 
 Text_3c4ef:
 	text "あたしのまえに たちはだかるものは"
-	line "みんなようしゃしない…"
+	line "みんなようしゃしない⋯"
 	line "つぶすわよ!"
 	prompt
 	done
@@ -144,7 +144,7 @@ Text_3c531:
 	done
 
 Text_3c561:
-	text "ふふぅ…"
+	text "ふふぅ⋯"
 	line "オレから にげなかぅたのは"
 	line "ほめてやるぜ!"
 	prompt
@@ -165,13 +165,13 @@ Text_3c5a8:
 	done
 
 Text_3c5d2:
-	text "フッ… オレに えんりょはするな!"
+	text "フッ⋯ オレに えんりょはするな!"
 	line "さいこうのデッキで いどんでこい!"
 	prompt
 	done
 
 Text_3c5f7:
-	text "にいさまには わるいが…"
+	text "にいさまには わるいが⋯"
 	line "オレが おまえをたおす!!"
 	prompt
 	done
@@ -191,13 +191,13 @@ Text_3c638:
 	done
 
 Text_3c664:
-	text "キキキ… きょうこそ おまえを"
+	text "キキキ⋯ きょうこそ おまえを"
 	line "たおしてやる!!"
 	prompt
 	done
 
 Text_3c67e:
-	text "デュエルのじかんだ… フフフフ…"
+	text "デュエルのじかんだ⋯ フフフフ⋯"
 	line "やみ こそが オレのカ-ドに"
 	line "パワ-をあたえるのだ!!"
 	prompt
@@ -211,16 +211,16 @@ Text_3c6ac:
 	done
 
 Text_3c6dd:
-	text "ユ-は わたしには かてない…"
+	text "ユ-は わたしには かてない⋯"
 	line "ユ-の マインドは わたしに"
 	line "スキャニング されているのですから"
 	prompt
 	done
 
 Text_3c70f:
-	text "ホホホ… ゲ-ムマスタ-を めざす"
+	text "ホホホ⋯ ゲ-ムマスタ-を めざす"
 	line "ならば 1まい 1まいのカ-ドを"
-	line "たいせつにすることじゃ…"
+	line "たいせつにすることじゃ⋯"
 	prompt
 	done
 
@@ -269,13 +269,13 @@ Text_3c824:
 Text_3c85b:
 	text "おぅしゃあ ! いけるぜ!!"
 	line "なんどでも かかぅてきやがれ!!"
-	line "(なんとか じりきで かてたぜ…)"
+	line "(なんとか じりきで かてたぜ⋯)"
 	prompt
 	done
 
 Text_3c88e:
 	text "なんて レ<べ>ルのひくい たたかい"
-	line "なんだ… きさまには じめんを"
+	line "なんだ⋯ きさまには じめんを"
 	line "はいつくばるすがたが おにあいだ!"
 	prompt
 	done
@@ -301,7 +301,7 @@ Text_3c90e:
 	done
 
 Text_3c944:
-	text "ククク… あきらめろ!"
+	text "ククク⋯ あきらめろ!"
 	line "おまえにかちめはない!"
 	prompt
 	done
@@ -316,7 +316,7 @@ Text_3c95d:
 Text_3c98c:
 	text "たしょうは たおしがいの あるやつ"
 	line "かと おもぅたが こんなこんじょうの"
-	line "ねえ やろうだとはなあ…"
+	line "ねえ やろうだとはなあ⋯"
 	prompt
 	done
 
@@ -335,22 +335,22 @@ Text_3c9ef:
 	done
 
 Text_3ca22:
-	text "ギョエエエ… インセクトぐんだん"
+	text "ギョエエエ⋯ インセクトぐんだん"
 	line "ぜんめつ- オレのせんりゃくの"
-	line "うらをかいていたのか…"
+	line "うらをかいていたのか⋯"
 	prompt
 	done
 
 Text_3ca50:
-	text "まけたの… わたしが!!"
+	text "まけたの⋯ わたしが!!"
 	line "しろうとの まぐれよネ!"
 	line "つぎはまけないわ かくごしなさい!"
 	prompt
 	done
 
 Text_3ca7d:
-	text "なぅ… なんやと! ワイの"
-	line "ダイナソ-カ-ドがやられた…!"
+	text "なぅ⋯ なんやと! ワイの"
+	line "ダイナソ-カ-ドがやられた⋯!"
 	line "つぎは まけんで! かくごしいや!"
 	prompt
 	done
@@ -370,7 +370,7 @@ Text_3cae3:
 
 Text_3caf8:
 	text "こんどこそ ボクは じ-ちゃんに"
-	line "もらぅた このカ-ドを しんじて…"
+	line "もらぅた このカ-ドを しんじて⋯"
 	line "かならず かぅてみせるよ!!"
 	prompt
 	done
@@ -383,13 +383,13 @@ Text_3cb2b:
 
 Text_3cb4d:
 	text "オレたちにかわぅて うんめいを"
-	line "きめるのは… カ-ドのみ!!"
+	line "きめるのは⋯ カ-ドのみ!!"
 	line "つぎはかならずかつ!"
 	prompt
 	done
 
 Text_3cb78:
-	text "まて…!"
+	text "まて⋯!"
 	line "オレはしんじないぞ!"
 	line "オレがまけるわけないんだ!!"
 	prompt
@@ -409,7 +409,7 @@ Text_3cbb4:
 	done
 
 Text_3cbea:
-	text "まさか… やられるとは"
+	text "まさか⋯ やられるとは"
 	line "なあに きせきは 2どもおこらんさ"
 	prompt
 	done
@@ -423,33 +423,33 @@ Text_3cc09:
 Text_3cc2a:
 	text "カ-ド·プロフェッサ-とよばれた"
 	line "オレの かんぺきな せんじゅつが"
-	line "やぶられるとは…"
+	line "やぶられるとは⋯"
 	prompt
 	done
 
 Text_3cc56:
 	text "オ-ノ-!! イッツァ"
 	line "アクシデ-ント!! ユ-とは"
-	line "ふたたび たたかうよかんがします…"
+	line "ふたたび たたかうよかんがします⋯"
 	prompt
 	done
 
 Text_3cc84:
 	text "カ-ドのつかいかたは まだまだだが"
 	line "なかなかやりおるな このつぎは"
-	line "まけはせんぞ…"
+	line "まけはせんぞ⋯"
 	prompt
 	done
 
 Text_3ccaf:
-	text "くそ-… もう5かいも まけたぜ"
+	text "くそ-⋯ もう5かいも まけたぜ"
 	line "つぎこそは こうかいさせてやるぅ!"
 	line "オレをほんきにさせたことをなぅ!!"
 	prompt
 	done
 
 Text_3cce5:
-	text "ウソ… 5かいも まけたの? この"
+	text "ウソ⋯ 5かいも まけたの? この"
 	line "わたしが! でも いずれあなたとは"
 	line "けぅちゃくをつけるわよ!"
 	prompt
@@ -457,8 +457,8 @@ Text_3cce5:
 
 Text_3cd17:
 	text "ワイが 5かいも まけたやと-!!"
-	line "ちぅ… まずいで… ちょぅと"
-	line "ちょうし づかしてもうたワ…"
+	line "ちぅ⋯ まずいで⋯ ちょぅと"
+	line "ちょうし づかしてもうたワ⋯"
 	prompt
 	done
 
@@ -490,16 +490,16 @@ Text_3cdc7:
 	done
 
 Text_3cdf6:
-	text "くぅ オ… オレの ブル-アイズが…"
+	text "くぅ オ⋯ オレの ブル-アイズが⋯"
 	line "もう5かいも まけただとぅ! バカな"
 	line "オレは まだデュエルできるぜ!"
 	prompt
 	done
 
 Text_3ce2d:
-	text "まけた…!"
-	line "このオレが 5かいも…!!"
-	line "くぅ… ウソだ ウソだ!!"
+	text "まけた⋯!"
+	line "このオレが 5かいも⋯!!"
+	line "くぅ⋯ ウソだ ウソだ!!"
 	prompt
 	done
 
@@ -518,8 +518,8 @@ Text_3ce7e:
 	done
 
 Text_3ceae:
-	text "まさか… もう5かいも まけたのか"
-	line "な… なぜ… なぜだ …"
+	text "まさか⋯ もう5かいも まけたのか"
+	line "な⋯ なぜ⋯ なぜだ ⋯"
 	prompt
 	done
 
@@ -533,19 +533,19 @@ Text_3cece:
 Text_3cefd:
 	text "ふはいでんせつを うちたてた この"
 	line "バンデット·キ-スさまが 5かいも"
-	line "まけただとぅ… そんなバカなぅ!"
+	line "まけただとぅ⋯ そんなバカなぅ!"
 	prompt
 	done
 
 Text_3cf33:
 	text "この ミレニアム·アイの ちから"
 	line "マインド·スキャンを 5かいも"
-	line "みやぶられるとは…"
+	line "みやぶられるとは⋯"
 	prompt
 	done
 
 Text_3cf5f:
-	text "なんと… ワシの5かいめのまけじゃ…"
+	text "なんと⋯ ワシの5かいめのまけじゃ⋯"
 	line "さきにすすむがよい これからも"
 	line "カ-ドを たいせつにするんじゃぞ"
 	prompt

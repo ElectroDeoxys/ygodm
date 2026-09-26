@@ -1,1098 +1,1098 @@
-BEyeWhiteDragonName:
+BEyeWhiteDragonNameJp:
 	text "ブル-アイズ·ホワイトドラゴン"
 
-MysticalElfName:
+MysticalElfNameJp:
 	text "ホ-り-·エルフ"
 
-HitotsuMeGiantName:
+HitotsuMeGiantNameJp:
 	text "サイクロプス"
 
-BabyDragonName:
+BabyDragonNameJp:
 	text "<べ>ビ-ドラゴン"
 
-RyuKishinName:
+RyuKishinNameJp:
 	text "ガ-ゴイル"
 
-FeralImpName:
+FeralImpNameJp:
 	text "グレムりン"
 
-WingedDragon1Name:
+WingedDragon1NameJp:
 	text "とりでをまもるよくりゅう"
 
-MushroomManName:
+MushroomManNameJp:
 	text "きのこマン"
 
-ShadowSpecterName:
+ShadowSpecterNameJp:
 	text "へルバウンド"
 
-BlacklandDragonName:
+BlacklandDragonNameJp:
 	text "あんこくのドラゴン"
 
-SwordArmDragonName:
+SwordArmDragonNameJp:
 	text "ソ-ドドラゴン"
 
-SwampBattleguardName:
+SwampBattleguardNameJp:
 	text "バ-バりアン2ごう"
 
-TyhoneName:
+TyhoneNameJp:
 	text "タイホ-ン"
 
-BattleSteerName:
+BattleSteerNameJp:
 	text "ぎゅうまじん"
 
-FlameSwordsmanName:
+FlameSwordsmanNameJp:
 	text "ほのおのけんし"
 
-TimeWizardName:
+TimeWizardNameJp:
 	text "ときのまじゅつし"
 
-RLegOfForbiddenName:
+RLegOfForbiddenNameJp:
 	text "ふういんされしもののみぎあし"
 
-LLegOfForbiddenName:
+LLegOfForbiddenNameJp:
 	text "ふういんされしもののひだりあし"
 
-RArmOfForbiddenName:
+RArmOfForbiddenNameJp:
 	text "ふういんされしもののみぎうで"
 
-LArmOfForbiddenName:
+LArmOfForbiddenNameJp:
 	text "ふういんされしもののひだりうで"
 
-ExodiaForbiddenName:
+ExodiaForbiddenNameJp:
 	text "ふういんされしエクゾディア"
 
-SummonedSkullName:
+SummonedSkullNameJp:
 	text "デ-モンのしょうかん"
 
-WickedWormBeastName:
+WickedWormBeastNameJp:
 	text "じゃあくなるワ-ム·ビ-スト"
 
-SkullServantName:
+SkullServantNameJp:
 	text "ワイト"
 
-HornImpName:
+HornImpNameJp:
 	text "インプ"
 
-BattleOxName:
+BattleOxNameJp:
 	text "ミノタウルス"
 
-BeaverWarriorName:
+BeaverWarriorNameJp:
 	text "ルイ-ズ"
 
-RockOgreGrotto1Name:
+RockOgreGrotto1NameJp:
 	text "がんくつまじんオ-ガ·ロック"
 
-MountainWarriorName:
+MountainWarriorNameJp:
 	text "マウンテン·ウォ-りア-"
 
-ZombieWarriorName:
+ZombieWarriorNameJp:
 	text "アンデット·ウォ-りア-"
 
-KoumoriDragonName:
+KoumoriDragonNameJp:
 	text "デビル·ドラゴン"
 
-TwoHeadedKingRexName:
+TwoHeadedKingRexNameJp:
 	text "にとうをもつキング·レックス"
 
-JudgeManName:
+JudgeManNameJp:
 	text "ジャッジ·マン"
 
-SaggiTheClownName:
+SaggiTheClownNameJp:
 	text "やみ·どうけしのサギ-"
 
-DarkMagicianName:
+DarkMagicianNameJp:
 	text "ブラック·マジシャン"
 
-TheSnakeHairName:
+TheSnakeHairNameJp:
 	text "メデュ-サのぼうれい"
 
-GaiaDragonChampName:
+GaiaDragonChampNameJp:
 	text "りゅうきしガイア"
 
-GaiaFierceKnightName:
+GaiaFierceKnightNameJp:
 	text "あんこくきしガイア"
 
-CurseOfDragonName:
+CurseOfDragonNameJp:
 	text "カ-ス·オブ·ドラゴン"
 
-DragonPiperName:
+DragonPiperNameJp:
 	text "つぼまじん"
 
-CelticGuardianName:
+CelticGuardianNameJp:
 	text "エルフのけんし"
 
-IllusionFacelessName:
+IllusionFacelessNameJp:
 	text "イりュ-ジョニスト·ノ-·フェイス"
 
-KarbonalaWarriorName:
+KarbonalaWarriorNameJp:
 	text "カルボナ-ラせんし"
 
-RogueDollName:
+RogueDollNameJp:
 	text "ホ-り-·ド-ル"
 
-WattkidName:
+WattkidNameJp:
 	text "エレキッズ"
 
-GrifforeName:
+GrifforeNameJp:
 	text "グりフォ-ル"
 
-TorikeName:
+TorikeNameJp:
 	text "サイガ-"
 
-SanganName:
+SanganNameJp:
 	text "クりッタ-"
 
-BigInsectName:
+BigInsectNameJp:
 	text "ビック·アント"
 
-BasicInsectName:
+BasicInsectNameJp:
 	text "<べ>-シック·インセクト"
 
-ArmoredLizardName:
+ArmoredLizardNameJp:
 	text "ア-マ-·りザ-ド"
 
-HerculesBeetleName:
+HerculesBeetleNameJp:
 	text "へラクレス·ビ-トル"
 
-KillerNeedleName:
+KillerNeedleNameJp:
 	text "キラ-·ビ-"
 
-GokiboreName:
+GokiboreNameJp:
 	text "ゴキボ-ル"
 
-GiantFleaName:
+GiantFleaNameJp:
 	text "きゅうけつノミ"
 
-LarvaeMothName:
+LarvaeMothNameJp:
 	text "ラ-バモス"
 
-GreatMothName:
+GreatMothNameJp:
 	text "グレ-トモス"
 
-KuribohName:
+KuribohNameJp:
 	text "クりボ-"
 
-MammothGraveyardName:
+MammothGraveyardNameJp:
 	text "マンモスのはかば"
 
-GreatWhiteName:
+GreatWhiteNameJp:
 	text "グレ-ト·ホワイト"
 
-WolfName:
+WolfNameJp:
 	text "オオカミ"
 
-HarpieLadyName:
+HarpieLadyNameJp:
 	text "ハ-ピィ·レディ"
 
-HarpieLadySisterName:
+HarpieLadySisterNameJp:
 	text "ハ-ピィ·レディ さんしまい"
 
-TigerAxeName:
+TigerAxeNameJp:
 	text "タイガ-·アックス"
 
-SilverFangName:
+SilverFangNameJp:
 	text "シルバ-·フォング"
 
-KojikocyName:
+KojikocyNameJp:
 	text "まもののかりうど"
 
-PerfectGreatMothName:
+PerfectGreatMothNameJp:
 	text "かんぜんきゅうきょくたいグレ-トモス"
 
-GaroozisName:
+GaroozisNameJp:
 	text "ガル-ザス"
 
-ThousandDragonName:
+ThousandDragonNameJp:
 	text "サウザンド·ドラゴン"
 
-FiendKrakenName:
+FiendKrakenNameJp:
 	text "デビル·クラ-ケン"
 
-JellyfishName:
+JellyfishNameJp:
 	text "ジェり-フィッシュ"
 
-CocoonEvolutionName:
+CocoonEvolutionNameJp:
 	text "しんかのまゆ"
 
-KairyuShinName:
+KairyuShinNameJp:
 	text "りバイアサン"
 
-SoldierOfStoneName:
+SoldierOfStoneNameJp:
 	text "がんせきのきょへい"
 
-ManEatingPlantName:
+ManEatingPlantNameJp:
 	text "ひとくいしょくぶつ"
 
-KrokodilusName:
+KrokodilusNameJp:
 	text "クロコダイラス"
 
-GrapplerName:
+GrapplerNameJp:
 	text "グラップラ-"
 
-AxeRaiderName:
+AxeRaiderNameJp:
 	text "アックス·レイダ-"
 
-MegazowlerName:
+MegazowlerNameJp:
 	text "メガザウラ-"
 
-UrabyName:
+UrabyNameJp:
 	text "ワイルド·ラプタ-"
 
-CrawlingDragon2Name:
+CrawlingDragon2NameJp:
 	text "しかばねをむさぼるりゅう"
 
-RedEyesBDragonName:
+RedEyesBDragonNameJp:
 	text "レッドアイズ·ブラックドラゴン"
 
-CastleOfDarkName:
+CastleOfDarkNameJp:
 	text "やみくらましのしろ"
 
-ReaperOfTheCardName:
+ReaperOfTheCardNameJp:
 	text "カ-ドをかるしにがみ"
 
-KingOfYamimakaiName:
+KingOfYamimakaiNameJp:
 	text "やみまかいのはおう"
 
-BaroxName:
+BaroxNameJp:
 	text "バロックス"
 
-DarkChimeraName:
+DarkChimeraNameJp:
 	text "ダ-ク·キメラ"
 
-MetalGuardianName:
+MetalGuardianNameJp:
 	text "メタル·ガ-ディアン"
 
-CatapultTurtleName:
+CatapultTurtleNameJp:
 	text "カタパルト·タ-トル"
 
-GyakutennoMegamiName:
+GyakutennoMegamiNameJp:
 	text "ぎゃくてんのめがみ"
 
-MysticHorsemanName:
+MysticHorsemanNameJp:
 	text "ケンタウロス"
 
-RabidHorsemanName:
+RabidHorsemanNameJp:
 	text "ミノケンタウロス"
 
-ZankiName:
+ZankiNameJp:
 	text "よろいむしゃザンキ"
 
-CrawlingDragonName:
+CrawlingDragonNameJp:
 	text "ちをはうドラゴン"
 
-CrassClownName:
+CrassClownNameJp:
 	text "マ-ダ-サ-カス"
 
-ArmoredZombieName:
+ArmoredZombieNameJp:
 	text "よろいむしゃゾンビ"
 
-DragonZombieName:
+DragonZombieNameJp:
 	text "ドラゴン·ゾンビ"
 
-ClownZombieName:
+ClownZombieNameJp:
 	text "マ-ダ-サ-カス·ゾンビ"
 
-PumpkingTheKingName:
+PumpkingTheKingNameJp:
 	text "ゴ-ストおう -パンプキング-"
 
-BattleWarriorName:
+BattleWarriorNameJp:
 	text "かくとうせんしアルティメ-タ-"
 
-WingsOfFlameName:
+WingsOfFlameNameJp:
 	text "じゃえんのつばさ"
 
-MaskOfDarknessName:
+MaskOfDarknessNameJp:
 	text "やみのかめん"
 
-JobChangeMirrorName:
+JobChangeMirrorNameJp:
 	text "てんしょくのまきょう"
 
-CurtainOfDarkName:
+CurtainOfDarkNameJp:
 	text "くろまぞくのカ-テン"
 
-TomozaurusName:
+TomozaurusNameJp:
 	text "トモザウルス"
 
-SpiritOfTheWindName:
+SpiritOfTheWindNameJp:
 	text "かぜのせいれい"
 
-KageningenName:
+KageningenNameJp:
 	text "シャドウ·ファイタ-"
 
-GraveyardAndHandName:
+GraveyardAndHandNameJp:
 	text "てまねきするはかば"
 
-GoddessThirdEyeName:
+GoddessThirdEyeNameJp:
 	text "しんがんのめがみ"
 
-HeroOfTheEastName:
+HeroOfTheEastNameJp:
 	text "とうほうのえいゆう"
 
-DomaTheAngelName:
+DomaTheAngelNameJp:
 	text "しのちんもくのてんし ドマ"
 
-ThatWhichFeedsName:
+ThatWhichFeedsNameJp:
 	text "いのちをしょくするもの"
 
-DarkGrayName:
+DarkGrayNameJp:
 	text "ダ-ク·グレイ"
 
-WhiteMagicalHatName:
+WhiteMagicalHatNameJp:
 	text "ホワイト·シ-フ"
 
-KamionwizardName:
+KamionwizardNameJp:
 	text "カオス·ウィザ-ド"
 
-NightmareScorpionName:
+NightmareScorpionNameJp:
 	text "ナイトメア·スコ-ピオン"
 
-SpiritOfTheBookName:
+SpiritOfTheBookNameJp:
 	text "ほんのせいれい ホ-ク·ビショップ"
 
-SupporterShadowsName:
+SupporterShadowsNameJp:
 	text "ものかげのきょうりょくしゃ"
 
-TrialOfNightmareName:
+TrialOfNightmareNameJp:
 	text "じごくのさいばん"
 
-DreamClownName:
+DreamClownNameJp:
 	text "ドり-ム·ピエロ"
 
-SleepingLionName:
+SleepingLionNameJp:
 	text "ねむれるシシ"
 
-YamatanoScrollName:
+YamatanoScrollNameJp:
 	text "ヤマタノドラゴンえまき"
 
-DarkPlantName:
+DarkPlantNameJp:
 	text "ダ-ク·プラント"
 
-AncientToolName:
+AncientToolNameJp:
 	text "アイアン·ハ-ト"
 
-FaithBirdName:
+FaithBirdNameJp:
 	text "セイント·バ-ド"
 
-OrionTheBattleName:
+OrionTheBattleNameJp:
 	text "たたかいのかみ オりオン"
 
-AnsatsuName:
+AnsatsuNameJp:
 	text "アサシン"
 
-LamoonName:
+LamoonNameJp:
 	text "ラム-ン"
 
-NemurikoName:
+NemurikoNameJp:
 	text "ねむりこ"
 
-WeatherControlName:
+WeatherControlNameJp:
 	text "ウェザ-·コントロ-ル"
 
-OctoberserName:
+OctoberserNameJp:
 	text "オクトバ-サ-"
 
-The13thGraveName:
+The13thGraveNameJp:
 	text "13にんめのまいそうしゃ"
 
-CharubinTheFireName:
+CharubinTheFireNameJp:
 	text "ほのおのきし キラ-"
 
-MysticalCaptureName:
+MysticalCaptureNameJp:
 	text "せいなるくさり"
 
-FiendsHandName:
+FiendsHandNameJp:
 	text "ししゃのうで"
 
-WittyPhantomName:
+WittyPhantomNameJp:
 	text "まじん デスサタン"
 
-MysteryHandName:
+MysteryHandNameJp:
 	text "なぞのて"
 
-DragonStatueName:
+DragonStatueNameJp:
 	text "ドラゴン·ソウル·スタチュ-"
 
-BEyedSilZombieName:
+BEyedSilZombieNameJp:
 	text "ブル-アイド·シルバ-ゾンビ"
 
-ToadMasterName:
+ToadMasterNameJp:
 	text "ト-ドマスタ-"
 
-SpikedSnailName:
+SpikedSnailNameJp:
 	text "デビルツムり"
 
-FlameManipulatorName:
+FlameManipulatorNameJp:
 	text "ほのおをあやつるもの"
 
-NecrolancerName:
+NecrolancerNameJp:
 	text "ときのまじん ネクロランサ"
 
-DjinnTheWatcherName:
+DjinnTheWatcherNameJp:
 	text "かぜのばんにん ジン"
 
-BewitchingPhantomName:
+BewitchingPhantomNameJp:
 	text "みわくのかいとう"
 
-TempleOfSkullsName:
+TempleOfSkullsNameJp:
 	text "ドクロのじいん"
 
-MonsterEggName:
+MonsterEggNameJp:
 	text "モンスタ-·エッグ"
 
-ShadowWhoControlName:
+ShadowWhoControlNameJp:
 	text "やみをつかさどるかげ"
 
-LordOfTheLampName:
+LordOfTheLampNameJp:
 	text "ランプのまじん"
 
-AkihironName:
+AkihironNameJp:
 	text "カクタス"
 
-RhaimundosRedName:
+RhaimundosRedNameJp:
 	text "あかきけんのライムンドス"
 
-MeltingRedShadowName:
+MeltingRedShadowNameJp:
 	text "とろけるあかきかげ"
 
-DokuroizoTheGrimName:
+DokuroizoTheGrimNameJp:
 	text "しにがみのドクロイゾ"
 
-FireReaperName:
+FireReaperNameJp:
 	text "ファイヤ-·デビル"
 
-LarvasName:
+LarvasNameJp:
 	text "ラ-バス"
 
-HardArmorName:
+HardArmorNameJp:
 	text "ハ-ドア-マ-"
 
-FiregrassName:
+FiregrassNameJp:
 	text "かえんそう"
 
-ManEaterName:
+ManEaterNameJp:
 	text "マンイ-タ-"
 
-DigBeakName:
+DigBeakNameJp:
 	text "ディッグ·ビ-ク"
 
-MWarrior1Name:
+MWarrior1NameJp:
 	text "マグネッツ1ごう"
 
-MWarrior2Name:
+MWarrior2NameJp:
 	text "マグネッツ2ごう"
 
-TaintedWisdomName:
+TaintedWisdomNameJp:
 	text "あくまのちえ"
 
-LisarkName:
+LisarkNameJp:
 	text "サファイヤ·りサ-ク"
 
-LordOfZemiaName:
+LordOfZemiaNameJp:
 	text "ゼミアのかみ"
 
-TheJudgementHandName:
+TheJudgementHandNameJp:
 	text "ジャジメント·ザ·ハンド"
 
-MysteriousPuppetName:
+MysteriousPuppetNameJp:
 	text "なぞのくぐつし"
 
-AncientJarName:
+AncientJarNameJp:
 	text "たいこのつぼ"
 
-DarkfireDragonName:
+DarkfireDragonNameJp:
 	text "あんこくかえんりゅう"
 
-DarkKingAbyssName:
+DarkKingAbyssNameJp:
 	text "しんえんのめいおう"
 
-SpiritOfTheHarpName:
+SpiritOfTheHarpNameJp:
 	text "ハ-プのせい"
 
-BigEyeName:
+BigEyeNameJp:
 	text "だいおうめだま"
 
-ArmaillName:
+ArmaillNameJp:
 	text "ア-メイル"
 
-DarkPrisonerName:
+DarkPrisonerNameJp:
 	text "ダ-ク·プりズナ-"
 
-HurricailName:
+HurricailNameJp:
 	text "ハりケル"
 
-AncientBrainName:
+AncientBrainNameJp:
 	text "まてんろう"
 
-FireEyeName:
+FireEyeNameJp:
 	text "ファイヤ-·アイ"
 
-MonsturtleName:
+MonsturtleNameJp:
 	text "モンスタ-トル"
 
-ClawReacherName:
+ClawReacherNameJp:
 	text "キラ-·ザ·クロ-"
 
-PhantomDewanName:
+PhantomDewanNameJp:
 	text "サタ-ナ"
 
-ArlownayName:
+ArlownayNameJp:
 	text "アルラウネ"
 
-DarkShadeName:
+DarkShadeNameJp:
 	text "ダ-ク·シェイド"
 
-MaskedClownName:
+MaskedClownNameJp:
 	text "かめんどうけ"
 
-LuckyTrinketName:
+LuckyTrinketNameJp:
 	text "ホ-り-·パワ-"
 
-GeninName:
+GeninNameJp:
 	text "ジャグラ-"
 
-EyearmorName:
+EyearmorNameJp:
 	text "コピックス"
 
-FiendReflection2Name:
+FiendReflection2NameJp:
 	text "ミラ-ジュ"
 
-GateDeegName:
+GateDeegNameJp:
 	text "へルゲ-ト·ディ-グ"
 
-SyncharName:
+SyncharNameJp:
 	text "ファランクス"
 
-FusionistName:
+FusionistNameJp:
 	text "フュ-ジョニスト"
 
-AkakieisuName:
+AkakieisuNameJp:
 	text "レッド·エ-ス"
 
-LalaLiOonName:
+LalaLiOonNameJp:
 	text "ララ·ライウ-ン"
 
-KeyMaceName:
+KeyMaceNameJp:
 	text "キ-メイス"
 
-TurtleTigerName:
+TurtleTigerNameJp:
 	text "タ-トル·タイガ-"
 
-TerraTheTerribleName:
+TerraTheTerribleNameJp:
 	text "まじん テラ"
 
-DoronName:
+DoronNameJp:
 	text "ドロ-ン"
 
-ArmaKnightName:
+ArmaKnightNameJp:
 	text "アンモ·ナイト"
 
-MechMoleZombieName:
+MechMoleZombieNameJp:
 	text "ゾンビランプ"
 
-HappyLoverName:
+HappyLoverNameJp:
 	text "ハッピ-·ラヴァ-"
 
-PenguinKnightName:
+PenguinKnightNameJp:
 	text "<ぺ>ンギン·ナイト"
 
-PetitDragonName:
+PetitDragonNameJp:
 	text "プチりュウ"
 
-FrenziedPandaName:
+FrenziedPandaNameJp:
 	text "キラ-パンダ"
 
-ArchfiendMarmotName:
+ArchfiendMarmotNameJp:
 	text "デ-モン·ビ-バ-"
 
-PhantomGhostName:
+PhantomGhostNameJp:
 	text "ゴ-スト"
 
-MabarrelName:
+MabarrelNameJp:
 	text "マキャノン"
 
-DoroverName:
+DoroverNameJp:
 	text "ドロ-バ"
 
-TwinLongRods1Name:
+TwinLongRods1NameJp:
 	text "グロス"
 
-DrollBirdName:
+DrollBirdNameJp:
 	text "スピック"
 
-PetitAngelName:
+PetitAngelNameJp:
 	text "プチテンシ"
 
-WingedCleaverName:
+WingedCleaverNameJp:
 	text "ダ-クキラ-"
 
-HinotamaSoulName:
+HinotamaSoulNameJp:
 	text "スティング"
 
-ThunderKidName:
+ThunderKidNameJp:
 	text "サンダ-·キッズ"
 
-MeotokoName:
+MeotokoNameJp:
 	text "バビロン"
 
-AquaMadoorName:
+AquaMadoorNameJp:
 	text "アクア·マド-ル"
 
-KagemushaBlueName:
+KagemushaBlueNameJp:
 	text "シエンのかげむしゃ"
 
-FlameGhostName:
+FlameGhostNameJp:
 	text "フレイム·ゴ-スト"
 
-DryadName:
+DryadNameJp:
 	text "ドりア-ド"
 
-BSkullDragonName:
+BSkullDragonNameJp:
 	text "ブラック·デ-モンズ·ドラゴン"
 
-TwoMouthDarkrulerName:
+TwoMouthDarkrulerNameJp:
 	text "ツ-マウス·ダ-クル-ラ-"
 
-SolitudeName:
+SolitudeNameJp:
 	text "ソりテュ-ド"
 
-MaskedSorcererName:
+MaskedSorcererNameJp:
 	text "かめんまどうし"
 
-KumootokoName:
+KumootokoNameJp:
 	text "クモおとこ"
 
-MidnightFiendName:
+MidnightFiendNameJp:
 	text "ミッドナイト·デビル"
 
-RoarOceanSnakeName:
+RoarOceanSnakeNameJp:
 	text "とどろきのおおうみへび"
 
-TrapMasterName:
+TrapMasterNameJp:
 	text "トラップ·マスタ-"
 
-FiendSwordName:
+FiendSwordNameJp:
 	text "のろわれしまけん"
 
-SkullStalkerName:
+SkullStalkerNameJp:
 	text "デス·スト-カ-"
 
-HitodenchakName:
+HitodenchakNameJp:
 	text "ヒトデンチャク"
 
-WoodRemainsName:
+WoodRemainsNameJp:
 	text "もりのしかばね"
 
-HourglassOfLifeName:
+HourglassOfLifeNameJp:
 	text "いのちのすなどけい"
 
-RareFishName:
+RareFishNameJp:
 	text "レア·フィッシュ"
 
-WoodClownName:
+WoodClownNameJp:
 	text "ウッド·ジョ-カ-"
 
-MadjinnGunnName:
+MadjinnGunnNameJp:
 	text "マジンガン"
 
-DarkTitanTerrorName:
+DarkTitanTerrorNameJp:
 	text "あんこくまじん ナイトメア"
 
-BeautifulHeadhuntName:
+BeautifulHeadhuntNameJp:
 	text "ざんしゅのびじょ"
 
-WodanTheResidentName:
+WodanTheResidentNameJp:
 	text "もりのじゅうにん ウダン"
 
-GuardianLabyrinthName:
+GuardianLabyrinthNameJp:
 	text "めいかいのばんにん"
 
-HaniwaName:
+HaniwaNameJp:
 	text "はにわ"
 
-YashinokiName:
+YashinokiNameJp:
 	text "ヤシのき"
 
-VishwarRandiName:
+VishwarRandiNameJp:
 	text "ヴィシュワ·ランディ-"
 
-TheDrdekName:
+TheDrdekNameJp:
 	text "デス·フット"
 
-DAssailantName:
+DAssailantNameJp:
 	text "やみのあんさつしゃ"
 
-CandleOfFateName:
+CandleOfFateNameJp:
 	text "うんめいのろうそく"
 
-WaterElementName:
+WaterElementNameJp:
 	text "ウォ-タ-·エレメント"
 
-DissolverockName:
+DissolverockNameJp:
 	text "マグマン"
 
-MedaBatName:
+MedaBatNameJp:
 	text "ダ-ク·ナポレオン"
 
-OneWhoHuntsSoulName:
+OneWhoHuntsSoulNameJp:
 	text "たましいをかるもの"
 
-RootWaterName:
+RootWaterNameJp:
 	text "ル-ト·ウォ-タ-"
 
-MasterAndExpertName:
+MasterAndExpertNameJp:
 	text "マスタ-·アン·エキスパ-ト"
 
-WaterOmoticsName:
+WaterOmoticsNameJp:
 	text "みずのおどりこ"
 
-HyoName:
+HyoNameJp:
 	text "ヒョウ"
 
-EnchantingMermaidName:
+EnchantingMermaidNameJp:
 	text "こうこつのマ-メイド"
 
-Nekogal1Name:
+Nekogal1NameJp:
 	text "キャッツ·フェアり-"
 
-AngelwitchName:
+AngelwitchNameJp:
 	text "エンジェル·まじょ"
 
-EmbryonicBeastName:
+EmbryonicBeastNameJp:
 	text "みじゅくなあくま"
 
-PreventRatName:
+PreventRatNameJp:
 	text "プりヴェント·ラット"
 
-DdWarriorName:
+DdWarriorNameJp:
 	text "いじげんのせんし"
 
-StoneArmadillerName:
+StoneArmadillerNameJp:
 	text "スト-ン·アルマジラ-"
 
-BeastkingOfSwampName:
+BeastkingOfSwampNameJp:
 	text "ぬまちのまじゅうおう"
 
-AncientSorcererName:
+AncientSorcererNameJp:
 	text "こだいまどうし"
 
-LunarQueenElzaimName:
+LunarQueenElzaimNameJp:
 	text "つきのめがみ エルザェム"
 
-ArchfiendMirrorName:
+ArchfiendMirrorNameJp:
 	text "デ-モンズ·ミラ-"
 
-SwordsmanOfAileName:
+SwordsmanOfAileNameJp:
 	text "アイルのこびとけんし"
 
-RockOgreGrotto2Name:
+RockOgreGrotto2NameJp:
 	text "ウォ-·ア-ス"
 
-WingEggElfName:
+WingEggElfNameJp:
 	text "ウィング·エッグ·エルフ"
 
-FuriousSeaKingName:
+FuriousSeaKingNameJp:
 	text "いかりのかいおう"
 
-PrincessTsurugiName:
+PrincessTsurugiNameJp:
 	text "つるぎのじょおう"
 
-UnknownWarriorName:
+UnknownWarriorNameJp:
 	text "あくのむめいせんし"
 
-SectarianSecretName:
+SectarianSecretNameJp:
 	text "やみにしたがうもの"
 
-VersagoDestroyerName:
+VersagoDestroyerNameJp:
 	text "はかいしん ヴァサ-ゴ"
 
-WethaName:
+WethaNameJp:
 	text "ウェザ"
 
-MegirusLightName:
+MegirusLightNameJp:
 	text "メギラス·ライト"
 
-MavelusName:
+MavelusNameJp:
 	text "マブラス"
 
-AncientTreeName:
+AncientTreeNameJp:
 	text "さとりのろうじゅ"
 
-GreenPhantomKingName:
+GreenPhantomKingNameJp:
 	text "りょくじゅのれいおう"
 
-GroundAttackerName:
+GroundAttackerNameJp:
 	text "りくせんがた バグロス"
 
-RayAndTemperatureName:
+RayAndTemperatureNameJp:
 	text "きたかぜとたいよう"
 
-GorgonEggName:
+GorgonEggNameJp:
 	text "ゴ-ゴン·エッグ"
 
-PetitMothName:
+PetitMothNameJp:
 	text "プチモス"
 
-KingFogName:
+KingFogNameJp:
 	text "キング·スモ-ク"
 
-ProtectorThroneName:
+ProtectorThroneNameJp:
 	text "おうざのしゅごしゃ"
 
-MysticClownName:
+MysticClownNameJp:
 	text "バ-サ-カ-"
 
-MysticalSheep2Name:
+MysticalSheep2NameJp:
 	text "スり-ピィ"
 
-HolograhName:
+HolograhNameJp:
 	text "ホログラ-"
 
-TaoTheChanterName:
+TaoTheChanterNameJp:
 	text "おんみょうし タオ"
 
-SerpentMarauderName:
+SerpentMarauderNameJp:
 	text "デビル·スネ-ク"
 
-GatekeeperName:
+GatekeeperNameJp:
 	text "ゲ-ト·キ-パ-"
 
-OgreOfTheBlackName:
+OgreOfTheBlackNameJp:
 	text "くろいかげのオ-ガ"
 
-DarkArtistName:
+DarkArtistNameJp:
 	text "ダ-ク·ア-ティスト"
 
-ChangeSlimeName:
+ChangeSlimeNameJp:
 	text "チェンジ·スライム"
 
-MoonEnvoyName:
+MoonEnvoyNameJp:
 	text "つきのししゃ"
 
-FireyarouName:
+FireyarouNameJp:
 	text "ほのおのまじん"
 
-PsychicKappaName:
+PsychicKappaNameJp:
 	text "サイコ·カッパ-"
 
-MasakiTheLegendName:
+MasakiTheLegendNameJp:
 	text "でんせつのけんごう マサキ"
 
-DragonessWickedName:
+DragonessWickedNameJp:
 	text "まそうきし ドラゴネス"
 
-BioPlantName:
+BioPlantNameJp:
 	text "バイオ·プラント"
 
-OneEyedShieldName:
+OneEyedShieldNameJp:
 	text "ワンアイド·シ-ルドドラゴン"
 
-CyberSoldierDarkName:
+CyberSoldierDarkNameJp:
 	text "まかいのきかいへい"
 
-DragonErsatzHeadName:
+DragonErsatzHeadNameJp:
 	text "まとうをもつじゃりゅう"
 
-SonicMaidName:
+SonicMaidNameJp:
 	text "オトメ"
 
-KuramaName:
+KuramaNameJp:
 	text "ドレイク"
 
-LegendarySwordName:
+LegendarySwordNameJp:
 	text "でんせつのけん"
 
-SwordOfDarkName:
+SwordOfDarkNameJp:
 	text "やみのはしんけん"
 
-DarkEnergyName:
+DarkEnergyNameJp:
 	text "やみ·エネルギ-"
 
-AxeOfDespairName:
+AxeOfDespairNameJp:
 	text "デ-モンのおの"
 
-LazerCannonArmorName:
+LazerCannonArmorNameJp:
 	text "レ-ザ-キャノンア-マ-"
 
-InsectArmorLaserName:
+InsectArmorLaserNameJp:
 	text "かきつきインセクトア-マ-"
 
-ElfsLightName:
+ElfsLightNameJp:
 	text "エルフのひかり"
 
-BeastFangsName:
+BeastFangsNameJp:
 	text "もうじゅうのは"
 
-SteelShellName:
+SteelShellNameJp:
 	text "はがねのこうら"
 
-VileGermsName:
+VileGermsNameJp:
 	text "まきん"
 
-BlackPendantName:
+BlackPendantNameJp:
 	text "ブラック·<ぺ>ンダント"
 
-SilverBowAndArrowName:
+SilverBowAndArrowNameJp:
 	text "ぎんのゆみや"
 
-HornOfLightName:
+HornOfLightNameJp:
 	text "ひかりのつの"
 
-HornOfUnicornName:
+HornOfUnicornNameJp:
 	text "いぅかくじゅうのホ-ン"
 
-DragonTreasureName:
+DragonTreasureNameJp:
 	text "ドラゴンのひほう"
 
-ElectroWhipName:
+ElectroWhipNameJp:
 	text "でんげきむち"
 
-CyberShieldName:
+CyberShieldNameJp:
 	text "サイバ-·ボンテ-ジ"
 
-ElegantEgotistName:
+ElegantEgotistNameJp:
 	text "まんげきょう -かれいなるぶんしん-"
 
-MysticalMoonName:
+MysticalMoonNameJp:
 	text "ましょうのつき"
 
-StopDefenseName:
+StopDefenseNameJp:
 	text "しゅびふうじ"
 
-MalevolentNuzzlerName:
+MalevolentNuzzlerNameJp:
 	text "あくまのくちづけ"
 
-VioletCrystalName:
+VioletCrystalNameJp:
 	text "むらさきすいしょう"
 
-BookOfSecretArtName:
+BookOfSecretArtNameJp:
 	text "ひじゅつのしょ"
 
-InvigorationName:
+InvigorationNameJp:
 	text "かくせい"
 
-MachineConversionName:
+MachineConversionNameJp:
 	text "きかいかいぞうこうじょう"
 
-RaiseBodyHeatName:
+RaiseBodyHeatNameJp:
 	text "たいおんのじょうしょう"
 
-FollowWindName:
+FollowWindNameJp:
 	text "フォロ-·ウィンド"
 
-PowerOfKaishinName:
+PowerOfKaishinNameJp:
 	text "ポセイドンのちから"
 
-DragonCaptureJarName:
+DragonCaptureJarNameJp:
 	text "ドラゴンぞく·ふういんのつぼ"
 
-ForestName:
+ForestNameJp:
 	text "もり"
 
-WastelandName:
+WastelandNameJp:
 	text "こうや"
 
-MountainName:
+MountainNameJp:
 	text "やま"
 
-SogenName:
+SogenNameJp:
 	text "そうげん"
 
-UmiName:
+UmiNameJp:
 	text "うみ"
 
-YamiName:
+YamiNameJp:
 	text "やみ"
 
-DarkHoleName:
+DarkHoleNameJp:
 	text "ブラック·ホ-ル"
 
-RaigekiName:
+RaigekiNameJp:
 	text "サンダ-·ボルト"
 
-MooyanCurryName:
+MooyanCurryNameJp:
 	text "モウヤンのカレ-"
 
-RedMedicineName:
+RedMedicineNameJp:
 	text "レッド·ポ-ション"
 
-GoblinsRemedyName:
+GoblinsRemedyNameJp:
 	text "ゴブりンのひやく"
 
-SoulOfThePureName:
+SoulOfThePureNameJp:
 	text "てんしのいきち"
 
-DianKetoTheCureName:
+DianKetoTheCureNameJp:
 	text "ちりょうのかみ ディアン·ケト"
 
-SparksName:
+SparksNameJp:
 	text "ひのこ"
 
-HinotamaName:
+HinotamaNameJp:
 	text "ファイヤ-·ボ-ル"
 
-FinalFlameName:
+FinalFlameNameJp:
 	text "ひあぶりのけい"
 
-OokaziName:
+OokaziNameJp:
 	text "ちゅうやのおおかじ"
 
-TremendousFireName:
+TremendousFireNameJp:
 	text "かえんじごく"
 
-SwordsRevealingName:
+SwordsRevealingNameJp:
 	text "ひかりのごふうけん"
 
-SpellbindCircleName:
+SpellbindCircleNameJp:
 	text "ろくぼうせいのじゅばく"
 
-DarkPierceLightName:
+DarkPierceLightNameJp:
 	text "やみをかきけすひかり"
 
-YaranzoName:
+YaranzoNameJp:
 	text "ヤランゾ"
 
-KananTheSwordName:
+KananTheSwordNameJp:
 	text "おんなけんし カナン"
 
-TakriminosName:
+TakriminosNameJp:
 	text "タクりミノス"
 
-StuffedAnimalName:
+StuffedAnimalNameJp:
 	text "くいぐるみ"
 
-MegasonicEyeName:
+MegasonicEyeNameJp:
 	text "メガソニック·アイ"
 
-SuperWarLionName:
+SuperWarLionNameJp:
 	text "ス-パ-·ウォ-·ライオン"
 
-YamadronName:
+YamadronNameJp:
 	text "ヤマドラン"
 
-SeiyaryuName:
+SeiyaryuNameJp:
 	text "ホ-り-·ナイト·ドラゴン"
 
-ThreeLeggedZombiesName:
+ThreeLeggedZombiesNameJp:
 	text "2にん3きゃくゾンビ"
 
-ZeraTheMantName:
+ZeraTheMantNameJp:
 	text "ゼラ"
 
-FlyingPenguinName:
+FlyingPenguinNameJp:
 	text "トビ<ぺ>ンギン"
 
-MillenniumShieldName:
+MillenniumShieldNameJp:
 	text "せんねんのたて"
 
-FairysGiftName:
+FairysGiftNameJp:
 	text "ようせいのおくりもの"
 
-BLusterSoldierName:
+BLusterSoldierNameJp:
 	text "カオス·ソルジャ-"
 
-FiendsMirrorName:
+FiendsMirrorNameJp:
 	text "デビルズ·ミラ-"
 
-InvalidCardName:
+InvalidCardNameJp:
 	text "                  "
 .end

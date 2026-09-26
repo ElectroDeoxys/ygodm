@@ -244,8 +244,12 @@ VBlank:
 		inc c
 	ENDR
 
-	ld a, [bc]
-	ld l, a
+	IF DEF(_EARLY_DAYS_EN)
+		jr .asm_8a4
+	ELSE
+		ld a, [bc]
+		ld l, a
+	ENDC
 	inc c
 	ld a, [bc]
 	ld h, a
@@ -256,6 +260,7 @@ VBlank:
 		inc c
 	ENDR
 
+.asm_8a4
 	ld a, [bc]
 	ld l, a
 	inc c
